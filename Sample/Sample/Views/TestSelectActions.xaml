@@ -1,0 +1,38 @@
+﻿<?xml version = "1.0"
+	  encoding = "utf-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:shared="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 mc:Ignorable="d"
+			 x:Class="Sample.Views.TestSelectActions">
+	<ContentPage.Content>
+		<shared:SettingsView>
+			<shared:Section Title="Test EntryCell On Select Actions">
+				<cells:EntryCell Title="None"
+								 Description="Description"
+								 ValueText="Value"
+								 HintText="Hint"
+								 OnSelectAction="None" />
+				<cells:EntryCell Title="Start"
+								 Description="Description"
+								 ValueText="Value"
+								 HintText="Hint"
+								 OnSelectAction="Start" />
+				<cells:EntryCell Title="End"
+								 Description="Description"
+								 ValueText="Value"
+								 HintText="Hint"
+								 OnSelectAction="End" />
+				<cells:EntryCell Title="All"
+								 Description="Description"
+								 ValueText="Value"
+								 HintText="Hint"
+								 OnSelectAction="All" />
+			</shared:Section>
+		</shared:SettingsView>
+	</ContentPage.Content>
+</ContentPage>

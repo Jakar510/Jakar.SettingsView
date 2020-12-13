@@ -1,0 +1,28 @@
+<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.GlobalDataTemplate">
+
+	<settingsView:SettingsView ItemsSource="{Binding ItemsSource}"
+							   BackgroundColor="#EFEFEF"
+							   CellBackgroundColor="White"
+							   x:Name="settings">
+		<settingsView:SettingsView.ItemTemplate>
+			<DataTemplate>
+				<settingsView:Section Title="SectionTitle"
+									  ItemsSource="{Binding}">
+					<settingsView:Section.ItemTemplate>
+						<DataTemplate>
+							<cells:LabelCell Title="{Binding Title}"
+											 ValueText="{Binding Name}" />
+						</DataTemplate>
+					</settingsView:Section.ItemTemplate>
+				</settingsView:Section>
+			</DataTemplate>
+		</settingsView:SettingsView.ItemTemplate>
+	</settingsView:SettingsView>
+</ContentPage>

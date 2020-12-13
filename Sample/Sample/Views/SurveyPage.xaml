@@ -1,0 +1,35 @@
+﻿<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:shared="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.SurveyPage">
+
+	<Grid>
+		<shared:SettingsView x:Name="settings"
+							 HasUnevenRows="True"
+							 HeaderPadding="10"
+							 HeaderFontSize="16"
+							 HeaderTextVerticalAlign="Center"
+							 VerticalOptions="Start"
+							 BackgroundColor="AliceBlue">
+			<shared:Section>
+				<cells:CustomCell x:Name="customCell">
+					<Label Text="{Binding Text.Value}" />
+				</cells:CustomCell>
+			</shared:Section>
+		</shared:SettingsView>
+
+		<Button VerticalOptions="End"
+				Text="Layout"
+				Margin="0,0,0,60"
+				Clicked="Button_Clicked" />
+		<Button VerticalOptions="End"
+				Text="Change"
+				Command="{Binding ChangeCommand}" />
+	</Grid>
+
+
+</ContentPage>

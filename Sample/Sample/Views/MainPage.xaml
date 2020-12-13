@@ -1,0 +1,82 @@
+<?xml version = "1.0"
+	  encoding = "utf-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 prism:ViewModelLocator.AutowireViewModel="True"
+			 x:Class="Sample.Views.MainPage"
+			 Title="MainPage">
+	<settingsView:SettingsView>
+		<settingsView:Section HeaderHeight="10">
+			<cells:ButtonCell Title="TestSelectActions"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="TestSelectActions" />
+			<cells:ButtonCell Title="SurveyPage"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="SurveyPage" />
+			<cells:ButtonCell Title="CustomFontTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="CustomFontTest" />
+			<cells:ButtonCell Title="RowManipulation"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RowManipulation" />
+			<cells:ButtonCell Title="RowManipulationTemplate"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RowManipulationTemplate" />
+			<cells:ButtonCell Title="ReorderTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="ReorderTest" />
+			<cells:ButtonCell Title="DataTemplateTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="DataTemplateTest" />
+			<cells:ButtonCell Title="SettingsView"
+							  Command="{Binding GoToPage}"
+							  CommandParameter="SettingsView" />
+			<cells:ButtonCell Title="DefaultPropTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="DefaultPropTest" />
+			<cells:ButtonCell Title="ParentPropTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="ParentPropTest" />
+			<cells:ButtonCell Title="CollectionChangedTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="CollectionChangedTest" />
+			<cells:ButtonCell Title="CustomCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="CustomCellTest" />
+			<cells:ButtonCell Title="LabelCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="LabelCellTest" />
+			<cells:ButtonCell Title="SwitchCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="SwitchCellTest" />
+			<cells:ButtonCell Title="PickerCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="PickerCellTest" />
+			<cells:ButtonCell Title="EntryCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="EntryCellTest" />
+			<cells:ButtonCell Title="ButtonCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="ButtonCellTest" />
+			<cells:ButtonCell Title="RadioCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RadioCellTest" />
+			<cells:ButtonCell Title="RadioCellTemplateTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RadioCellTemplateTest" />
+			<cells:ButtonCell Title="GlobalDataTemplate"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="GlobalDataTemplate" />
+			<cells:ButtonCell Title="FormsCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="FormsCellTest" />
+			<cells:ButtonCell Title="OnTableViewTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="OnTableViewTest" />
+		</settingsView:Section>
+	</settingsView:SettingsView>
+</ContentPage>

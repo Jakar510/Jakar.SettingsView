@@ -1,0 +1,39 @@
+<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.RadioCellTemplateTest">
+
+	<settingsView:SettingsView HeaderHeight="22"
+							   HeaderPadding="10,0,0,2">
+		<settingsView:Section>
+			<cells:LabelCell Title="ValueType Selected"
+							 ValueText="{Binding SelectedValue.Value}" />
+			<cells:LabelCell Title="ReferenceType Selected"
+							 ValueText="{Binding SelectedRef.Value.Name}" />
+		</settingsView:Section>
+		<settingsView:Section Title="ValueType Test"
+							  cells:RadioCell.SelectedValue="{Binding SelectedValue.Value}"
+							  ItemsSource="{Binding ValueTypes}">
+			<settingsView:Section.ItemTemplate>
+				<DataTemplate>
+					<cells:RadioCell Title="{Binding}"
+									 Value="{Binding}" />
+				</DataTemplate>
+			</settingsView:Section.ItemTemplate>
+		</settingsView:Section>
+		<settingsView:Section Title="ReferenceType Test"
+							  cells:RadioCell.SelectedValue="{Binding SelectedRef.Value}"
+							  ItemsSource="{Binding RefTypes}">
+			<settingsView:Section.ItemTemplate>
+				<DataTemplate>
+					<cells:RadioCell Title="{Binding Name}"
+									 Value="{Binding}" />
+				</DataTemplate>
+			</settingsView:Section.ItemTemplate>
+		</settingsView:Section>
+	</settingsView:SettingsView>
+</ContentPage>

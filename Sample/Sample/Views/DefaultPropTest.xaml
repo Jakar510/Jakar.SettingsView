@@ -1,0 +1,98 @@
+<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.DefaultPropTest">
+	<StackLayout>
+		<settingsView:SettingsView>
+			<settingsView:Section Title="Section1"
+								  FooterText="Footer1">
+				<cells:LabelCell IconSource="icon.png"
+								 Title="LabelCell"
+								 Description="HogeFuga"
+								 HintText="hint"
+								 ValueText="Value" />
+				<cells:CommandCell IconSource="icon.png"
+								   Title="CommandCell"
+								   Description="HogeFuga"
+								   HintText="hint"
+								   ValueText="Value" />
+				<cells:SwitchCell IconSource="icon.png"
+								  Title="SwitchCell"
+								  Description="HogeFuga"
+								  HintText="hint" />
+				<cells:CheckboxCell IconSource="icon.png"
+									Title="CheckboxCell"
+									Description="HogeFuga"
+									HintText="hint" />
+				<cells:NumberPickerCell IconSource="icon.png"
+										Title="NumberPickerCell"
+										Description="HogeFuga"
+										HintText="hint"
+										Number="20" />
+				<cells:TimePickerCell IconSource="icon.png"
+									  Title="TimePickerCell"
+									  Description="HogeFuga"
+									  HintText="hint"
+									  Time="15:15" />
+				<cells:DatePickerCell IconSource="icon.png"
+									  Title="DatePickerCell"
+									  Description="HogeFuga"
+									  HintText="hint"
+									  Date="2017/10/10" />
+				<cells:PickerCell IconSource="icon.png"
+								  Title="PickerCell"
+								  Description="HogeFuga"
+								  HintText="hint"
+								  ValueText="selected" />
+				<cells:EntryCell IconSource="icon.png"
+								 Title="EntryCell"
+								 Description="HogeFuga"
+								 HintText="hint"
+								 ValueText="inputText" />
+				<cells:ButtonCell IconSource="icon.png"
+								  Title="ButtonCell"
+								  HintText="hint" />
+			</settingsView:Section>
+			<settingsView:Section Title="Section2"
+								  FooterText="Footer2">
+				<cells:LabelCell Title="LabelCell"
+								 ValueText="Value" />
+				<cells:CommandCell Title="CommandCell"
+								   ValueText="Value" />
+				<cells:SwitchCell Title="SwitchCell" />
+				<cells:CheckboxCell Title="CheckboxCell" />
+				<cells:NumberPickerCell Title="NumberPickerCell"
+										Number="20" />
+				<cells:TimePickerCell Title="TimePickerCell"
+									  Time="15:15" />
+				<cells:DatePickerCell Title="DatePickerCell"
+									  Date="2017/10/10" />
+				<cells:PickerCell Title="PickerCell"
+								  ValueText="selected" />
+				<cells:EntryCell Title="EntryCell"
+								 ValueText="inputText" />
+				<cells:ButtonCell Title="ButtonCell"
+								  HintText="hint" />
+			</settingsView:Section>
+			<settingsView:Section Title="Section3"
+								  FooterText="Footer3">
+				<cells:LabelCell />
+				<cells:CommandCell />
+				<cells:SwitchCell />
+				<cells:CheckboxCell />
+				<cells:NumberPickerCell />
+				<cells:TimePickerCell />
+				<cells:DatePickerCell />
+				<cells:PickerCell />
+				<cells:EntryCell />
+				<cells:ButtonCell />
+			</settingsView:Section>
+
+		</settingsView:SettingsView>
+	</StackLayout>
+
+</ContentPage>

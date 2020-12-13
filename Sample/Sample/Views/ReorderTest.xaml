@@ -1,0 +1,106 @@
+﻿<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.ReorderTest">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style TargetType="Button">
+				<Setter Property="ef:ToFlatButton.On"
+						Value="True" />
+				<Setter Property="ef:ToFlatButton.RippleColor"
+						Value="#80FFBF00" />
+				<Setter Property="Padding"
+						Value="0" />
+				<Setter Property="FontSize"
+						Value="Small" />
+				<Setter Property="HeightRequest"
+						Value="30" />
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="100" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<StackLayout Grid.Column="0"
+					 Spacing="1">
+			<Label TextColor="Blue"
+				   Text="Source1"
+				   HorizontalTextAlignment="Center" />
+			<StackLayout BindableLayout.ItemsSource="{Binding ItemsSource}">
+				<BindableLayout.ItemTemplate>
+					<DataTemplate>
+						<Label Text="{Binding}" />
+					</DataTemplate>
+				</BindableLayout.ItemTemplate>
+			</StackLayout>
+			<Label TextColor="Blue"
+				   Text="Source2"
+				   HorizontalTextAlignment="Center" />
+			<StackLayout BindableLayout.ItemsSource="{Binding ItemsSource2}">
+				<BindableLayout.ItemTemplate>
+					<DataTemplate>
+						<Label Text="{Binding}" />
+					</DataTemplate>
+				</BindableLayout.ItemTemplate>
+			</StackLayout>
+		</StackLayout>
+
+		<settingsView:SettingsView Grid.Column="1"
+								   Style="{StaticResource settingsView}"
+								   x:Name="settings">
+			<settingsView:Section Title="DisReordableSection">
+				<cells:LabelCell Title="Abc" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+				<cells:LabelCell Title="Def" />
+			</settingsView:Section>
+
+			<settingsView:Section UseDragSort="True"
+								  Title="ReordableSection"
+								  ItemsSource="{Binding ItemsSource}">
+				<settingsView:Section.ItemTemplate>
+					<DataTemplate>
+						<cells:LabelCell Title="{Binding}" />
+					</DataTemplate>
+				</settingsView:Section.ItemTemplate>
+			</settingsView:Section>
+
+			<settingsView:Section UseDragSort="True"
+								  Title="ReordableSection2"
+								  ItemsSource="{Binding ItemsSource2}">
+				<settingsView:Section.ItemTemplate>
+					<DataTemplate>
+						<cells:LabelCell Title="{Binding}" />
+					</DataTemplate>
+				</settingsView:Section.ItemTemplate>
+			</settingsView:Section>
+
+			<settingsView:Section Title="DisReordableSection">
+				<cells:LabelCell Title="Abc" />
+				<cells:LabelCell Title="Def" />
+			</settingsView:Section>
+		</settingsView:SettingsView>
+	</Grid>
+</ContentPage>

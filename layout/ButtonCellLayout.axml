@@ -1,0 +1,22 @@
+﻿
+<GridLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/ButtonCellLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minHeight="44dp"
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingTop="4dp"
+	android:paddingBottom="4dp">
+	<android.support.v7.widget.AppCompatButton
+		android:id="@+id/Button"
+		android:ellipsize="none"
+		android:minLines="1"
+		android:maxLines="100"
+		android:scrollHorizontally="false"
+		android:breakStrategy="high_quality"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+</GridLayout>

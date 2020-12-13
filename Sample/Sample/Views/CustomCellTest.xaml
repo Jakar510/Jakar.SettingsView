@@ -1,0 +1,45 @@
+﻿<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:cell="clr-namespace:Sample.Views.Cells"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.CustomCellTest">
+
+	<settingsView:SettingsView Style="{StaticResource settingsView}"
+							   HasUnevenRows="True">
+		<settingsView:Section Title="CustomCell">
+			<cell:SliderCell IconSource="icon.png"
+							 Min="0"
+							 Max="1.0"
+							 Value="0.7"
+							 ChangedCommand="{Binding ChangedCommand}" />
+			<cell:MyCellA Text="FirstText"
+						  IconSource="icon.png" />
+			<cell:MyCellB IconSource="icon.png" />
+			<cell:MyCellC IconSource="icon.png" />
+
+		</settingsView:Section>
+
+		<settingsView:Section ItemsSource="{Binding ItemsSource}">
+			<settingsView:Section.ItemTemplate>
+				<DataTemplate>
+					<cells:LabelCell Title="{Binding}" />
+				</DataTemplate>
+			</settingsView:Section.ItemTemplate>
+		</settingsView:Section>
+
+		<settingsView:Section Title="CustomCell">
+			<cell:SliderCell IconSource="icon.png"
+							 Min="0"
+							 Max="1.0"
+							 Value="0.3"
+							 ChangedCommand="{Binding ChangedCommand}" />
+			<cell:MyCellA Text="LastText" />
+			<cell:MyCellB />
+			<cell:MyCellC />
+		</settingsView:Section>
+	</settingsView:SettingsView>
+</ContentPage>

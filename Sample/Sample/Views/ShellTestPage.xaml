@@ -1,0 +1,29 @@
+﻿<?xml version = "1.0"
+	  encoding = "UTF-8" ?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 x:Class="Sample.Views.ShellTestPage"
+			 NavigationPage.BackButtonTitle=""
+			 Title="ShellTest">
+	<settingsView:SettingsView BackgroundColor="AliceBlue"
+							   SeparatorColor="Brown">
+		<settingsView:Section Title="Section1"
+							  FooterText="Footer1">
+
+			<cells:PickerCell PageTitle="Hoge"
+							  ItemsSource="{Binding ItemsSource}"
+							  BackgroundColor="Beige"
+							  DisplayMember="Name"
+							  SubDisplayMember="Age"
+							  UsePickToClose="True"
+							  SelectionMode="Single"
+							  AccentColor="Red"
+							  TitleColor="Chocolate"
+							  DescriptionColor="BlueViolet"
+							  ValueTextColor="MediumSeaGreen" />
+		</settingsView:Section>
+	</settingsView:SettingsView>
+</ContentPage>
