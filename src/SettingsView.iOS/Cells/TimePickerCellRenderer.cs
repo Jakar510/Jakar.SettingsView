@@ -32,7 +32,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		/// <value>The dummy field.</value>
 		public UITextField DummyField { get; set; }
 
-		private UILabel _titleLabel;
+		private UILabel _Title;
 		private NSDate _preSelectedDate;
 
 		/// <summary>
@@ -100,8 +100,8 @@ namespace Jakar.SettingsView.iOS.Cells
 				DummyField = null;
 				_picker.Dispose();
 				_picker = null;
-				_titleLabel?.Dispose();
-				_titleLabel = null;
+				_Title?.Dispose();
+				_Title = null;
 			}
 
 			base.Dispose(disposing);
@@ -126,8 +126,8 @@ namespace Jakar.SettingsView.iOS.Cells
 					  };
 			if ( UIDevice.CurrentDevice.CheckSystemVersion(13, 4) ) { _picker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels; }
 
-			_titleLabel = new UILabel();
-			_titleLabel.TextAlignment = UITextAlignment.Center;
+			_Title = new UILabel();
+			_Title.TextAlignment = UITextAlignment.Center;
 
 			nfloat width = UIScreen.MainScreen.Bounds.Width;
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
@@ -141,7 +141,7 @@ namespace Jakar.SettingsView.iOS.Cells
 																					 Canceled();
 																				 });
 
-			var labelButton = new UIBarButtonItem(_titleLabel);
+			var labelButton = new UIBarButtonItem(_Title);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, ( o, a ) =>
 																			 {
@@ -180,9 +180,9 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdatePickerTitle()
 		{
-			_titleLabel.Text = _TimePickerCell.PickerTitle;
-			_titleLabel.SizeToFit();
-			_titleLabel.Frame = new CGRect(0, 0, 160, 44);
+			_Title.Text = _TimePickerCell.PickerTitle;
+			_Title.SizeToFit();
+			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}
 	}
 }

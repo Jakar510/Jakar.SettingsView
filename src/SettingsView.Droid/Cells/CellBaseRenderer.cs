@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Android.Content;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms.Platform.Android;

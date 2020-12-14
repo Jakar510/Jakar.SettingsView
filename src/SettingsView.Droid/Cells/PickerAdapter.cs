@@ -10,187 +10,164 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
-	internal class PickerAdapter : BaseAdapter<object>, AdapterView.IOnItemClickListener
+	public class PickerAdapter : BaseAdapter<object>, AdapterView.IOnItemClickListener
 	{
-		public Action CloseAction { get; set; }
+		public Action? CloseAction { get; set; }
 
-		private Android.Content.Context _context;
-		private Shared.SettingsView _parent;
-		private PickerCell _pickerCell;
-		private ListView _listview;
-		private IList _source;
-		private bool _unLimited => _pickerCell.MaxSelectedNumber == 0;
+		protected Android.Content.Context _Context { get; set; }
+		protected Shared.SettingsView? _Parent { get; set; }
+		protected PickerCell _PickerCell { get; set; }
+		protected ListView _ListView { get; set; }
+		protected IList _Source { get; set; }
+		protected bool _UnLimited => _PickerCell.MaxSelectedNumber == 0;
 
-		internal Color _accentColor;
-		internal Color _titleColor;
-		internal Color _background;
-		internal Color _detailColor;
-		internal double _fontSize;
-		internal double _detailFontSize;
+		internal Color AccentColor { get; set; }
+		internal Color TitleColor { get; set; }
+		internal Color Background { get; set; }
+		internal Color DetailColor { get; set; }
+		internal double FontSize { get; set; }
+		internal double DetailFontSize { get; set; }
 
-		internal PickerAdapter( Android.Content.Context context, PickerCell pickerCell, ListView listview )
+		internal PickerAdapter( Android.Content.Context context, PickerCell pickerCell, ListView listView )
 		{
-			_context = context;
-			_listview = listview;
-			_pickerCell = pickerCell;
-			_parent = pickerCell.Parent as Shared.SettingsView;
-			_source = pickerCell.ItemsSource as IList;
+			_Context = context;
+			_ListView = listView;
+			_PickerCell = pickerCell;
+			_Parent = pickerCell.Parent as Shared.SettingsView;
+			_Source = pickerCell.ItemsSource as IList;
 
-			if ( pickerCell.SelectedItems == null ) { pickerCell.SelectedItems = new List<object>(); }
+			pickerCell.SelectedItems ??= new List<object>();
 
-			if ( _parent != null )
+			if ( _Parent != null )
 			{
-				_listview.SetBackgroundColor(_parent.BackgroundColor.ToAndroid());
-				_listview.Divider = new ColorDrawable(_parent.SeparatorColor.ToAndroid());
-				_listview.DividerHeight = 1;
+				_ListView.SetBackgroundColor(_Parent.BackgroundColor.ToAndroid());
+				_ListView.Divider = new ColorDrawable(_Parent.SeparatorColor.ToAndroid());
+				_ListView.DividerHeight = 1;
 			}
 
 			SetUpProperties();
 		}
 
-		private void SetUpProperties()
+		protected void SetUpProperties()
 		{
-			if ( _pickerCell.AccentColor != Xamarin.Forms.Color.Default ) { _accentColor = _pickerCell.AccentColor.ToAndroid(); }
-			else if ( _parent.CellAccentColor != Xamarin.Forms.Color.Default ) { _accentColor = _parent.CellAccentColor.ToAndroid(); }
+			if ( _PickerCell.AccentColor != Xamarin.Forms.Color.Default ) { AccentColor = _PickerCell.AccentColor.ToAndroid(); }
+			else if ( _Parent.CellAccentColor != Xamarin.Forms.Color.Default ) { AccentColor = _Parent.CellAccentColor.ToAndroid(); }
 
-			if ( _pickerCell.TitleColor != Xamarin.Forms.Color.Default ) { _titleColor = _pickerCell.TitleColor.ToAndroid(); }
-			else if ( _parent != null &&
-					  _parent.CellTitleColor != Xamarin.Forms.Color.Default ) { _titleColor = _parent.CellTitleColor.ToAndroid(); }
-			else { _titleColor = Color.Black; }
+			if ( _PickerCell.TitleColor != Xamarin.Forms.Color.Default ) { TitleColor = _PickerCell.TitleColor.ToAndroid(); }
+			else if ( _Parent != null &&
+					  _Parent.CellTitleColor != Xamarin.Forms.Color.Default ) { TitleColor = _Parent.CellTitleColor.ToAndroid(); }
+			else { TitleColor = Color.Black; }
 
-			if ( _pickerCell.TitleFontSize > 0 ) { _fontSize = _pickerCell.TitleFontSize; }
-			else if ( _parent != null ) { _fontSize = _parent.CellTitleFontSize; }
+			if ( _PickerCell.TitleFontSize > 0 ) { FontSize = _PickerCell.TitleFontSize; }
+			else if ( _Parent != null ) { FontSize = _Parent.CellTitleFontSize; }
 
-			if ( _pickerCell.DescriptionColor != Xamarin.Forms.Color.Default ) { _detailColor = _pickerCell.DescriptionColor.ToAndroid(); }
-			else if ( _parent != null &&
-					  _parent.CellDescriptionColor != Xamarin.Forms.Color.Default ) { _detailColor = _parent.CellDescriptionColor.ToAndroid(); }
+			if ( _PickerCell.DescriptionColor != Xamarin.Forms.Color.Default ) { DetailColor = _PickerCell.DescriptionColor.ToAndroid(); }
+			else if ( _Parent != null &&
+					  _Parent.CellDescriptionColor != Xamarin.Forms.Color.Default ) { DetailColor = _Parent.CellDescriptionColor.ToAndroid(); }
 
-			if ( _pickerCell.DescriptionFontSize > 0 ) { _detailFontSize = _pickerCell.DescriptionFontSize; }
-			else if ( _parent != null ) { _detailFontSize = _parent.CellDescriptionFontSize; }
+			if ( _PickerCell.DescriptionFontSize > 0 ) { DetailFontSize = _PickerCell.DescriptionFontSize; }
+			else if ( _Parent != null ) { DetailFontSize = _Parent.CellDescriptionFontSize; }
 
-			if ( _pickerCell.BackgroundColor != Xamarin.Forms.Color.Default ) { _background = _pickerCell.BackgroundColor.ToAndroid(); }
-			else if ( _parent != null &&
-					  _parent.CellBackgroundColor != Xamarin.Forms.Color.Default ) { _background = _parent.CellBackgroundColor.ToAndroid(); }
+			if ( _PickerCell.BackgroundColor != Xamarin.Forms.Color.Default ) { Background = _PickerCell.BackgroundColor.ToAndroid(); }
+			else if ( _Parent != null &&
+					  _Parent.CellBackgroundColor != Xamarin.Forms.Color.Default ) { Background = _Parent.CellBackgroundColor.ToAndroid(); }
 		}
 
-		public void OnItemClick( AdapterView parent,
-								 AView view,
+		public void OnItemClick( AdapterView? parent,
+								 AView? view,
 								 int position,
 								 long id )
 		{
-			if ( _listview.ChoiceMode == ChoiceMode.Single || _unLimited )
+			if ( _ListView.ChoiceMode == ChoiceMode.Single || _UnLimited )
 			{
 				DoPickToClose();
 				return;
 			}
 
-			if ( _listview.CheckedItemCount > _pickerCell.MaxSelectedNumber )
+			if ( _ListView.CheckedItemCount > _PickerCell.MaxSelectedNumber )
 			{
-				_listview.SetItemChecked(position, false);
+				_ListView.SetItemChecked(position, false);
 				return;
 			}
 
 			DoPickToClose();
 		}
 
-		private void DoPickToClose()
+		protected void DoPickToClose()
 		{
-			if ( _pickerCell.UsePickToClose &&
-				 _listview.CheckedItemCount == _pickerCell.MaxSelectedNumber ) { CloseAction?.Invoke(); }
+			if ( _PickerCell.UsePickToClose &&
+				 _ListView.CheckedItemCount == _PickerCell.MaxSelectedNumber ) { CloseAction?.Invoke(); }
 		}
-
 		internal void DoneSelect()
 		{
-			_pickerCell.SelectedItems.Clear();
+			_PickerCell.SelectedItems.Clear();
 
-			SparseBooleanArray? positions = _listview.CheckedItemPositions;
+			SparseBooleanArray? positions = _ListView.CheckedItemPositions;
 
 			for ( var i = 0; i < positions.Size(); i++ )
 			{
 				if ( !positions.ValueAt(i) ) continue;
 
 				int index = positions.KeyAt(i);
-				_pickerCell.SelectedItems.Add(_source[index]);
+				_PickerCell.SelectedItems.Add(_Source[index]);
 			}
 
-			_pickerCell.SelectedItem = _pickerCell.SelectedItems.Count > 0 ? _pickerCell.SelectedItems[0] : null;
+			_PickerCell.SelectedItem = _PickerCell.SelectedItems.Count > 0 ? _PickerCell.SelectedItems[0] : null;
 		}
-
 		internal void RestoreSelect()
 		{
-			IList selectedList = _pickerCell.MergedSelectedList;
+			IList selectedList = _PickerCell.MergedSelectedList;
 
 			if ( selectedList.Count == 0 ) { return; }
 
 			for ( var i = 0; i < selectedList.Count; i++ )
 			{
-				if ( _pickerCell.MaxSelectedNumber >= 1 &&
-					 i >= _pickerCell.MaxSelectedNumber ) { break; }
+				if ( _PickerCell.MaxSelectedNumber >= 1 &&
+					 i >= _PickerCell.MaxSelectedNumber ) { break; }
 
 				object item = selectedList[i];
-				int pos = _source.IndexOf(item);
+				int pos = _Source.IndexOf(item);
 				if ( pos < 0 ) { continue; }
 
-				_listview.SetItemChecked(pos, true);
+				_ListView.SetItemChecked(pos, true);
 			}
 
-			if ( _listview.CheckedItemPositions.IndexOfKey(0) < 0 ) { return; }
+			if ( _ListView.CheckedItemPositions is null ||
+				 _ListView.CheckedItemPositions.IndexOfKey(0) < 0 ) { return; }
 
-			_listview.SetSelection(_listview.CheckedItemPositions.KeyAt(0));
+			_ListView.SetSelection(_ListView.CheckedItemPositions.KeyAt(0));
 		}
 
-		/// <summary>
-		/// Gets the <see cref="T:Jakar.SettingsView.Droid.Cells.PickerAdapter"/> with the specified position.
-		/// </summary>
-		/// <param name="position">Position.</param>
-		public override object this[ int position ] => _source[position];
 
-		/// <summary>
-		/// Gets the count.
-		/// </summary>
-		/// <value>The count.</value>
-		public override int Count => _source.Count;
-
-		/// <summary>
-		/// Gets the item identifier.
-		/// </summary>
-		/// <returns>The item identifier.</returns>
-		/// <param name="position">Position.</param>
+		public override object this[ int position ] => _Source[position];
+		public override int Count => _Source.Count;
 		public override long GetItemId( int position ) => position;
 
-		/// <summary>
-		/// Gets the view.
-		/// </summary>
-		/// <returns>The view.</returns>
-		/// <param name="position">Position.</param>
-		/// <param name="convertView">Convert view.</param>
-		/// <param name="parent">Parent.</param>
-		public override AView GetView( int position, AView convertView, ViewGroup parent )
-		{
-			if ( convertView == null ) { convertView = new PickerInnerView(_context, this); }
 
-			( convertView as PickerInnerView ).UpdateCell(_pickerCell.DisplayValue(_source[position]), _pickerCell.SubDisplayValue(_source[position]));
+		public override AView GetView( int position, AView? convertView, ViewGroup? parent )
+		{
+			convertView ??= new PickerInnerView(_Context, this);
+
+			if ( !( convertView is PickerInnerView view ) ) { return convertView; }
+
+			view.UpdateCell(_PickerCell.DisplayValue(_Source[position]), _PickerCell.SubDisplayValue(_Source[position]));
 
 			return convertView;
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_parent = null;
-				_pickerCell = null;
-				_source = null;
-				_listview = null;
-				_context = null;
+				_Parent = null;
+				_PickerCell = null;
+				_Source = null;
+				_ListView = null;
+				_Context = null;
 				CloseAction = null;
 			}
 
@@ -201,10 +178,10 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class PickerInnerView : RelativeLayout, ICheckable
 	{
-		private TextView _textLabel;
-		private TextView _detailLabel;
-		private SimpleCheck _checkBox;
-		private LinearLayout _textContainr;
+		protected TextView _TextLabel { get; set; }
+		protected TextView _DetailLabel { get; set; }
+		protected SimpleCheck _CheckBox { get; set; }
+		protected LinearLayout _TextContainer { get; set; }
 
 		internal PickerInnerView( Android.Content.Context context, PickerAdapter adapter ) : base(context)
 		{
@@ -213,38 +190,46 @@ namespace Jakar.SettingsView.Droid.Cells
 			var padding = (int) context.ToPixels(8);
 			SetPadding(padding, padding, padding, padding);
 
-			SetBackgroundColor(adapter._background);
+			SetBackgroundColor(adapter.Background);
 
-			_textLabel = new TextView(context);
-			_textLabel.Id = GenerateViewId();
+			_TextLabel = new TextView(context)
+						 {
+							 Id = GenerateViewId()
+						 };
 
-			_detailLabel = new TextView(context);
-			_detailLabel.Id = GenerateViewId();
+			_DetailLabel = new TextView(context)
+						   {
+							   Id = GenerateViewId()
+						   };
 
-			_textContainr = new LinearLayout(context);
-			_textContainr.Orientation = Orientation.Vertical;
+			_TextContainer = new LinearLayout(context)
+							 {
+								 Orientation = Orientation.Vertical
+							 };
 
 			using ( var param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent) )
 			{
-				_textContainr.AddView(_textLabel, param);
-				_textContainr.AddView(_detailLabel, param);
+				_TextContainer.AddView(_TextLabel, param);
+				_TextContainer.AddView(_DetailLabel, param);
 			}
 
-			_checkBox = new SimpleCheck(context);
-			_checkBox.Focusable = false;
+			_CheckBox = new SimpleCheck(context)
+						{
+							Focusable = false,
+							Color = adapter.AccentColor
+						};
 
-			_textLabel.SetTextColor(adapter._titleColor);
-			_textLabel.SetTextSize(ComplexUnitType.Sp, (float) adapter._fontSize);
-			_detailLabel.SetTextColor(adapter._detailColor);
-			_detailLabel.SetTextSize(ComplexUnitType.Sp, (float) adapter._detailFontSize);
-			_checkBox.Color = adapter._accentColor;
-			SetBackgroundColor(adapter._background);
+			_TextLabel.SetTextColor(adapter.TitleColor);
+			_TextLabel.SetTextSize(ComplexUnitType.Sp, (float) adapter.FontSize);
+			_DetailLabel.SetTextColor(adapter.DetailColor);
+			_DetailLabel.SetTextSize(ComplexUnitType.Sp, (float) adapter.DetailFontSize);
+			SetBackgroundColor(adapter.Background);
 
 			using ( var param = new LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent) )
 			{
 				param.AddRule(LayoutRules.AlignParentStart);
 				param.AddRule(LayoutRules.CenterVertical);
-				AddView(_textContainr, param);
+				AddView(_TextContainer, param);
 			}
 
 			using ( var param = new LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent)
@@ -255,55 +240,35 @@ namespace Jakar.SettingsView.Droid.Cells
 			{
 				param.AddRule(LayoutRules.AlignParentEnd);
 				param.AddRule(LayoutRules.CenterVertical);
-				AddView(_checkBox, param);
+				AddView(_CheckBox, param);
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Droid.Cells.PickerInnerView"/> is checked.
-		/// </summary>
-		/// <value><c>true</c> if checked; otherwise, <c>false</c>.</value>
+
 		public bool Checked
 		{
-			get => _checkBox.Selected;
-			set => _checkBox.Selected = value;
+			get => _CheckBox.Selected;
+			set => _CheckBox.Selected = value;
 		}
 
-		/// <summary>
-		/// Toggle this instance.
-		/// </summary>
-		public void Toggle() { _checkBox.Selected = !_checkBox.Selected; }
+		public void Toggle() { Checked = !Checked; }
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		/// <param name="displayValue">Display value.</param>
-		/// <param name="subDisplayValue">Sub display value.</param>
 		public void UpdateCell( object displayValue, object subDisplayValue )
 		{
-			_textLabel.Text = $"{displayValue}";
-			_detailLabel.Text = $"{subDisplayValue}";
+			_TextLabel.Text = $"{displayValue}";
+			_DetailLabel.Text = $"{subDisplayValue}";
 
-			_detailLabel.Visibility = string.IsNullOrEmpty(_detailLabel.Text) ? ViewStates.Gone : ViewStates.Visible;
+			_DetailLabel.Visibility = string.IsNullOrEmpty(_DetailLabel.Text) ? ViewStates.Gone : ViewStates.Visible;
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_textLabel?.Dispose();
-				_textLabel = null;
-				_detailLabel?.Dispose();
-				_detailLabel = null;
-				_checkBox?.Dispose();
-				_checkBox = null;
-				_textContainr?.Dispose();
-				_textContainr = null;
+				_TextLabel.Dispose();
+				_DetailLabel.Dispose();
+				_CheckBox.Dispose();
+				_TextContainer.Dispose();
 			}
 
 			base.Dispose(disposing);

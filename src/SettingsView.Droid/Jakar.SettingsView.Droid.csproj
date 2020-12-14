@@ -45,15 +45,12 @@
     <Reference Include="Java.Interop" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IBaseLayout.cs" />
-    <Compile Include="Interfaces\ICellDescription.cs" />
-    <Compile Include="Interfaces\ICellEntryText.cs" />
-    <Compile Include="Interfaces\ICellHint.cs" />
-    <Compile Include="Interfaces\ICellIcon.cs" />
-    <Compile Include="Interfaces\ICellSelectable.cs" />
-    <Compile Include="Interfaces\ICellTitle.cs" />
-    <Compile Include="Interfaces\ICellValueText.cs" />
-    <Compile Include="Interfaces\IBaseCell.cs" />
+    <Compile Include="Cells\Base\BaseView.cs" />
+    <Compile Include="Cells\Base\DescriptionView.cs" />
+    <Compile Include="Cells\Base\HintView.cs" />
+    <Compile Include="Cells\Base\IconView.cs" />
+    <Compile Include="Cells\Base\TitleView.cs" />
+    <Compile Include="Cells\Base\ValueView.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DrawableUtility.cs" />
@@ -61,10 +58,10 @@
     <Compile Include="MemoryLimitedLruCache.cs" />
     <Compile Include="SettingsViewRenderer.cs" />
     <Compile Include="Cells\CellBaseRenderer.cs" />
-    <Compile Include="Cells\CellBaseView.cs" />
+    <Compile Include="Cells\Base\CellBaseView.cs" />
     <Compile Include="Cells\CommandCellRenderer.cs" />
     <Compile Include="Cells\LabelCellRenderer.cs" />
-    <Compile Include="Cells\NumberPickerCellRenderer.cs" />
+    <Compile Include="Cells\NumberPickerCell.cs" />
     <Compile Include="Cells\PickerAdapter.cs" />
     <Compile Include="Cells\PickerCellRenderer.cs" />
     <Compile Include="Extensions\LayoutAlignmentExtensions.cs" />

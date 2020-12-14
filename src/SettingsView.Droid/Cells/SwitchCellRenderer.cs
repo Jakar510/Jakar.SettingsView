@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using SwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
@@ -13,137 +14,112 @@ using SwitchCellRenderer = Jakar.SettingsView.Droid.Cells.SwitchCellRenderer;
 
 [assembly: ExportRenderer(typeof(SwitchCell), typeof(SwitchCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Switch cell renderer.
-	/// </summary>
-	[Preserve(AllMembers = true)]
-	public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
+	[Preserve(AllMembers = true)] public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
-	/// <summary>
-	/// Switch cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class SwitchCellView : CellBaseView, CompoundButton.IOnCheckedChangeListener
 	{
-		private SwitchCompat _switch { get; set; }
-		private SwitchCell _SwitchCell => Cell as SwitchCell;
+		protected SwitchCompat _Switch { get; set; }
+		protected SwitchCell _SwitchCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_SwitchCell));
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.SwitchCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+		protected LinearLayout _AccessoryStack { get; set; }
+
+		protected IconView _Icon { get; set; }
+		protected TitleView _Title { get; set; }
+		protected DescriptionView _Description { get; set; }
+
+
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			_switch = new SwitchCompat(context);
+			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-			_switch.SetOnCheckedChangeListener(this);
-			_switch.Gravity = GravityFlags.Right;
+			_Switch = new SwitchCompat(AndroidContext)
+					  {
+						  Gravity = GravityFlags.Right,
+						  Focusable = false
+					  };
+			AddAccessory(_AccessoryStack, _Switch);
 
-			var switchParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
-							  { };
+			_Switch.SetOnCheckedChangeListener(this);
 
-			using ( switchParam ) { AccessoryStack.AddView(_switch, switchParam); }
-
-			_switch.Focusable = false;
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
 
-		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		{
+			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+			_Switch = new SwitchCompat(AndroidContext)
+					  {
+						  Gravity = GravityFlags.Right,
+						  Focusable = false
+					  };
+			AddAccessory(_AccessoryStack, _Switch);
+
+			_Switch.SetOnCheckedChangeListener(this);
+
+			Focusable = false;
+			DescendantFocusability = DescendantFocusability.AfterDescendants;
+		}
+
+		protected override void UpdateCell()
 		{
 			UpdateAccentColor();
 			UpdateOn();
 			base.UpdateCell();
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == SwitchCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
 			if ( e.PropertyName == SwitchCell.OnProperty.PropertyName ) { UpdateOn(); }
 		}
-
-		/// <summary>
-		/// Parents the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 
-		/// <summary>
-		/// Ons the checked changed.
-		/// </summary>
-		/// <param name="buttonView">Button view.</param>
-		/// <param name="isChecked">If set to <c>true</c> is checked.</param>
-		public void OnCheckedChanged( CompoundButton buttonView, bool isChecked ) { _SwitchCell.On = isChecked; }
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _switch.Checked = !_switch.Checked; }
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Switch.Checked = !_Switch.Checked; }
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
+		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _SwitchCell.On = isChecked; }
+
+		protected override void EnableCell()
 		{
-			if ( disposing )
-			{
-				_switch.SetOnCheckedChangeListener(null);
-				_switch.Background?.Dispose();
-				_switch.Background = null;
-				_switch.ThumbDrawable?.Dispose();
-				_switch.ThumbDrawable = null;
-				_switch.Dispose();
-				_switch = null;
-			}
-
-			base.Dispose(disposing);
+			base.EnableCell();
+			_Title.Enable();
+			_Description.Enable();
+			_Switch.Enabled = true;
+			_Switch.Alpha = ENABLED_ALPHA;
+		}
+		protected override void DisableCell()
+		{
+			base.DisableCell();
+			_Title.Disable();
+			_Description.Disable();
+			_Switch.Enabled = false;
+			_Switch.Alpha = DISABLED_ALPHA;
 		}
 
-		/// <summary>
-		/// Sets the enabled appearance.
-		/// </summary>
-		/// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
-		protected override void SetEnabledAppearance( bool isEnabled )
-		{
-			if ( isEnabled )
-			{
-				_switch.Enabled = true;
-				_switch.Alpha = 1.0f;
-			}
-			else
-			{
-				_switch.Enabled = false;
-				_switch.Alpha = 0.3f;
-			}
-
-			base.SetEnabledAppearance(isEnabled);
-		}
-
-		private void UpdateOn() { _switch.Checked = _SwitchCell.On; }
+		private void UpdateOn() { _Switch.Checked = _SwitchCell.On; }
 
 		private void UpdateAccentColor()
 		{
@@ -154,13 +130,13 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		private void ChangeSwitchColor( Android.Graphics.Color accent )
 		{
-			var trackColors = new ColorStateList(new int[][]
+			var trackColors = new ColorStateList(new[]
 												 {
-													 new int[]
+													 new[]
 													 {
 														 Android.Resource.Attribute.StateChecked
 													 },
-													 new int[]
+													 new[]
 													 {
 														 -Android.Resource.Attribute.StateChecked
 													 },
@@ -171,15 +147,15 @@ namespace Jakar.SettingsView.Droid.Cells
 													});
 
 
-			_switch.TrackDrawable.SetTintList(trackColors);
+			_Switch.TrackDrawable.SetTintList(trackColors);
 
-			var thumbColors = new ColorStateList(new int[][]
+			var thumbColors = new ColorStateList(new[]
 												 {
-													 new int[]
+													 new[]
 													 {
 														 Android.Resource.Attribute.StateChecked
 													 },
-													 new int[]
+													 new[]
 													 {
 														 -Android.Resource.Attribute.StateChecked
 													 },
@@ -189,10 +165,29 @@ namespace Jakar.SettingsView.Droid.Cells
 														Android.Graphics.Color.Argb(255, 244, 244, 244)
 													});
 
-			_switch.ThumbDrawable.SetTintList(thumbColors);
+			_Switch.ThumbDrawable.SetTintList(thumbColors);
 
-			var ripple = _switch.Background as RippleDrawable;
-			ripple.SetColor(trackColors);
+			var ripple = _Switch.Background as RippleDrawable;
+			Ripple.SetColor(trackColors);
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				_Switch.SetOnCheckedChangeListener(null);
+				_Switch.Background?.Dispose();
+				_Switch.Background = null;
+				_Switch.ThumbDrawable?.Dispose();
+				_Switch.ThumbDrawable = null;
+				_Switch.Dispose();
+
+				_CellLayout.Dispose();
+				_AccessoryStack.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

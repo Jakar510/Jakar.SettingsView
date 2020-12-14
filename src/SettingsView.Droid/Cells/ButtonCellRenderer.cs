@@ -1,127 +1,138 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using Android.Content;
+using Android.Graphics.Drawables;
 using Android.Runtime;
+using Android.Views;
+using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
+using AButton = Android.Widget.Button;
+using AColor = Android.Graphics.Color;
 
 [assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Button cell renderer.
-	/// </summary>
-	[Preserve(AllMembers = true)]
-	public class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
+	[Preserve(AllMembers = true)] internal class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
 
-	/// <summary>
-	/// Button cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class ButtonCellView : CellBaseView
 	{
-		internal Action Execute { get; set; }
-		private ButtonCell _ButtonCell => Cell as ButtonCell;
-		private ICommand _command;
+		protected internal AColor DefaultTextColor { get; set; }
+		protected internal float DefaultFontSize { get; set; }
+		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.ButtonCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
-		public ButtonCellView( Context context, Cell cell ) : base(context, cell) => DescriptionLabel.Visibility = Android.Views.ViewStates.Gone;
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+		protected AButton _Button { get; set; }
 
-		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+		internal Action? Execute { get; set; }
+		protected ICommand? _Command { get; set; }
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public ButtonCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			base.CellPropertyChanged(sender, e);
+			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+		}
+		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		{
+			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+		}
+
+
+		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		{
 			if ( e.PropertyName == ButtonCell.CommandProperty.PropertyName ||
 				 e.PropertyName == ButtonCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
+			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
+		}
+		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
+		protected override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
+
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Execute?.Invoke(); }
+
+		protected override void EnableCell()
+		{
+			base.EnableCell();
+			_Button.Alpha = ENABLED_ALPHA;
+		}
+		protected override void DisableCell()
+		{
+			base.DisableCell();
+			_Button.Alpha = DISABLED_ALPHA;
 		}
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Execute?.Invoke(); }
-
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+		protected override void UpdateCell()
 		{
-			base.UpdateCell();
 			UpdateCommand();
+			UpdateTitle();
 			UpdateTitleAlignment();
+			base.UpdateCell();
 		}
-
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
-
-				Execute = null;
-				_command = null;
-			}
-
-			base.Dispose(disposing);
-		}
-
-		private void UpdateTitleAlignment() { TitleLabel.Gravity = _ButtonCell.TitleAlignment.ToGravityFlags(); }
+		protected void UpdateTitle() { _Button.Text = _ButtonCell.Title; }
+		protected void UpdateTitleAlignment() { _Button.Gravity = _ButtonCell.TitleAlignment.ToGravityFlags(); }
 
 		private void UpdateCommand()
 		{
-			if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-			_command = _ButtonCell.Command;
+			_Command = _ButtonCell.Command;
 
-			if ( _command != null )
+			if ( _Command != null )
 			{
-				_command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_command, EventArgs.Empty);
+				_Command.CanExecuteChanged += Command_CanExecuteChanged;
+				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
 
-			Execute = () =>
-					  {
-						  if ( _command == null ) { return; }
+			Execute = Run;
+		}
+		protected void Run()
+		{
+			if ( _Command == null ) { return; }
 
-						  if ( _command.CanExecute(_ButtonCell.CommandParameter) ) { _command.Execute(_ButtonCell.CommandParameter); }
-					  };
+			if ( _Command.CanExecute(_ButtonCell.CommandParameter) ) { _Command.Execute(_ButtonCell.CommandParameter); }
 		}
 
-		/// <summary>
-		/// Updates the is enabled.
-		/// </summary>
 		protected override void UpdateIsEnabled()
 		{
-			if ( _command != null &&
-				 !_command.CanExecute(_ButtonCell.CommandParameter) ) { return; }
+			if ( _Command != null &&
+				 !_Command.CanExecute(_ButtonCell.CommandParameter) ) { return; }
 
 			base.UpdateIsEnabled();
 		}
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !_CellBase.IsEnabled ) { return; }
+			if ( !CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_command.CanExecute(_ButtonCell.CommandParameter));
+			SetEnabledAppearance(_Command?.CanExecute(_ButtonCell.CommandParameter) ?? true);
+		}
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+
+				Execute = null;
+				_Command = null;
+
+				_Button.Dispose();
+				_CellLayout.Dispose(); 
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using Android.Content;
 using Android.Runtime;
@@ -6,142 +7,126 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ARelativeLayout = Android.Widget.RelativeLayout;
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
+	[Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
 
 	[Preserve(AllMembers = true)]
 	public class CustomCellView : CellBaseView
 	{
-		protected Action Execute { get; set; }
-		protected CustomCell CustomCell => Cell as CustomCell;
-		protected ICommand _command;
-		protected ImageView _indicatorView;
-		protected LinearLayout _coreView;
-		private FormsViewContainer _container;
+		protected Action? _Execute { get; set; }
+		protected CustomCell _CustomCell => Cell as CustomCell ?? throw new NullReferenceException(nameof(_CustomCell));
+		protected ICommand? _Command { get; set; }
+		protected ImageView _IndicatorView { get; set; }
+		protected LinearLayout _CoreView { get; set; }
+		private FormsViewContainer _Container { get; set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.CommandCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+		protected LinearLayout _AccessoryStack { get; set; }
+
+		protected IconView _Icon { get; set; }
+		protected TitleView _Title { get; set; }
+		protected DescriptionView _Description { get; set; }
+		protected HintView _HintView { get; set; }
+
+
 		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			if ( !CustomCell.ShowArrowIndicator ) { return; }
+			if ( !_CustomCell.ShowArrowIndicator ) { return; }
 
-			_indicatorView = new ImageView(context);
-			_indicatorView.SetImageResource(Resource.Drawable.ic_navigate_next);
+			_IndicatorView = new ImageView(context);
+			_IndicatorView.SetImageResource(Resource.Drawable.ic_navigate_next);
 
-			var param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
-						{ };
-
-			using ( param ) { AccessoryStack.AddView(_indicatorView, param); }
-		}
-
-		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
-
-		protected override void CreateContentView()
-		{
-			base.CreateContentView();
-
-			_container = new FormsViewContainer(Context);
-
-
-			_coreView = FindViewById<LinearLayout>(Resource.Id.CellBody);
-			ContentStack.RemoveFromParent();
-			DescriptionLabel.RemoveFromParent();
-
-			if ( CustomCell.UseFullSize )
+			using var param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
 			{
-				IconView.RemoveFromParent();
-				var layout = FindViewById<ARelativeLayout>(Resource.Id.CellLayout);
-				float rMargin = CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
-				layout.SetPadding(0, 0, (int) rMargin, 0);
-				_coreView.SetPadding(0, 0, 0, 0);
+				_AccessoryStack.AddView(_IndicatorView, param);
 			}
 
-			_coreView.AddView(_container);
-		}
+			_Container = new FormsViewContainer(Context);
 
-		public void UpdateContent()
-		{
-			_container.CustomCell = CustomCell;
-			_container.FormsCell = CustomCell.Content;
-		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+			_CoreView = FindViewById<LinearLayout>(Resource.Id.ContentCellBody);
+
+			if ( _CustomCell.UseFullSize )
+			{
+				_Icon.RemoveFromParent();
+				var layout = FindViewById<ARelativeLayout>(Resource.Id.CellLayout);
+				float rMargin = _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
+				layout.SetPadding(0, 0, (int) rMargin, 0);
+				_CoreView.SetPadding(0, 0, 0, 0);
+			}
+
+			_CoreView.AddView(_Container);
+		}
+		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+
+
+		
+		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 		}
+		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( !CustomCell.IsSelectable ) { return; }
+			if ( !_CustomCell.IsSelectable ) { return; }
 
-			Execute?.Invoke();
-			if ( CustomCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
+			_Execute?.Invoke();
+			if ( _CustomCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
 		}
-
-		public override bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position )
+		protected override bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( CustomCell.LongCommand == null ) { return false; }
+			if ( _CustomCell.LongCommand == null ) { return false; }
 
-			CustomCell.SendLongCommand();
+			_CustomCell.SendLongCommand();
 
 			return true;
 		}
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+		public void UpdateContent()
+		{
+			_Container.CustomCell = _CustomCell;
+			_Container.FormsCell = _CustomCell.Content;
+		}
+		protected override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateContent();
 			UpdateCommand();
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Execute = null;
-				_command = null;
-				_indicatorView?.RemoveFromParent();
-				_indicatorView?.SetImageDrawable(null);
-				_indicatorView?.SetImageBitmap(null);
-				_indicatorView?.Dispose();
-				_indicatorView = null;
+				_Execute = null;
+				_Command = null;
+				_IndicatorView?.RemoveFromParent();
+				_IndicatorView?.SetImageDrawable(null);
+				_IndicatorView?.SetImageBitmap(null);
+				_IndicatorView?.Dispose();
 
-				_coreView?.RemoveFromParent();
-				_coreView?.Dispose();
-				_coreView = null;
+				_CoreView?.RemoveFromParent();
+				_CoreView?.Dispose();
 
-				_container?.RemoveFromParent();
-				_container?.Dispose();
-				_container = null;
+				_Container?.RemoveFromParent();
+				_Container?.Dispose();
 			}
 
 			base.Dispose(disposing);
@@ -149,40 +134,37 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		private void UpdateCommand()
 		{
-			if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-			_command = CustomCell.Command;
+			_Command = _CustomCell.Command;
 
-			if ( _command != null )
+			if ( _Command != null )
 			{
-				_command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_command, EventArgs.Empty);
+				_Command.CanExecuteChanged += Command_CanExecuteChanged;
+				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
 
-			Execute = () =>
-					  {
-						  if ( _command == null ) { return; }
+			_Execute = () =>
+					   {
+						   if ( _Command == null ) { return; }
 
-						  if ( _command.CanExecute(CustomCell.CommandParameter) ) { _command.Execute(CustomCell.CommandParameter); }
-					  };
+						   if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
+					   };
 		}
 
-		/// <summary>
-		/// Updates the is enabled.
-		/// </summary>
 		protected override void UpdateIsEnabled()
 		{
-			if ( _command != null &&
-				 !_command.CanExecute(CustomCell.CommandParameter) ) { return; }
+			if ( _Command != null &&
+				 !_Command.CanExecute(_CustomCell.CommandParameter) ) { return; }
 
 			base.UpdateIsEnabled();
 		}
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !_CellBase.IsEnabled ) { return; }
+			if ( !CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_command.CanExecute(CustomCell.CommandParameter));
+			SetEnabledAppearance(_Command.CanExecute(_CustomCell.CommandParameter));
 		}
 	}
 }

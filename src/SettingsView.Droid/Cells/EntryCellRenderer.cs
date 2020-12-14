@@ -8,6 +8,7 @@ using Android.Text.Method;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Java.Lang;
 using Xamarin.Forms;
@@ -18,6 +19,7 @@ using EntryCellRenderer = Jakar.SettingsView.Droid.Cells.EntryCellRenderer;
 
 [assembly: ExportRenderer(typeof(AiEntryCell), typeof(EntryCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
 	[Preserve(AllMembers = true)]
@@ -26,8 +28,8 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class EntryCellView : CellBaseView, ITextWatcher, Android.Views.View.IOnFocusChangeListener, TextView.IOnEditorActionListener
 	{
-		private AiEntryCell _EntryCell => Cell as AiEntryCell;
-		private AiEditText _EditText { get; set; }
+		protected AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
+		protected AiEditText _EditText { get; set; }
 
 		public EntryCellView( Context context, Cell cell ) : base(context, cell)
 		{
@@ -66,7 +68,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		public EntryCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		public override void UpdateCell()
+		protected override void UpdateCell()
 		{
 			UpdateValueText();
 			UpdateValueTextColor();
@@ -80,7 +82,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.UpdateCell();
 		}
 
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == AiEntryCell.ValueTextProperty.PropertyName ) { UpdateValueText(); }
@@ -94,7 +96,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			else if ( e.PropertyName == AiEntryCell.IsPasswordProperty.PropertyName ) { UpdateIsPassword(); }
 			else if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { UpdateSelectAction(); }
 		}
-		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
@@ -104,64 +106,49 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		protected override void SetEnabledAppearance( bool isEnabled )
-		{
-			if ( isEnabled )
-			{
-				_EditText.Enabled = true;
-				_EditText.Alpha = 1.0f;
-			}
-			else
-			{
-				_EditText.Enabled = false;
-				_EditText.Alpha = 0.3f;
-			}
-
-			base.SetEnabledAppearance(isEnabled);
-		}
 
 
-		private void UpdateValueText()
+		protected void UpdateValueText()
 		{
 			_EditText.RemoveTextChangedListener(this);
 			if ( _EditText.Text != _EntryCell.ValueText ) { _EditText.Text = _EntryCell.ValueText; }
 
 			_EditText.AddTextChangedListener(this);
 		}
-		private void UpdateValueTextFontSize()
+		protected void UpdateValueTextFontSize()
 		{
 			if ( _EntryCell.ValueTextFontSize > 0 ) { _EditText.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _EntryCell.ValueTextFontSize); }
 			else if ( CellParent != null ) { _EditText.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) CellParent.CellValueTextFontSize); }
 		}
-		private void UpdateValueTextFont()
+		protected void UpdateValueTextFont()
 		{
 			string family = _EntryCell.ValueTextFontFamily ?? CellParent?.CellValueTextFontFamily;
 			FontAttributes attr = _EntryCell.ValueTextFontAttributes ?? CellParent.CellValueTextFontAttributes;
 
 			_EditText.Typeface = FontUtility.CreateTypeface(family, attr);
 		}
-		private void UpdateValueTextColor()
+		protected void UpdateValueTextColor()
 		{
 			if ( _EntryCell.ValueTextColor != Xamarin.Forms.Color.Default ) { _EditText.SetTextColor(_EntryCell.ValueTextColor.ToAndroid()); }
 			else if ( CellParent != null && CellParent.CellValueTextColor != Xamarin.Forms.Color.Default ) { _EditText.SetTextColor(CellParent.CellValueTextColor.ToAndroid()); }
 		}
-		private void UpdateKeyboard() { _EditText.InputType = _EntryCell.Keyboard.ToInputType() | InputTypes.TextFlagNoSuggestions; }
-		private void UpdateIsPassword() { _EditText.TransformationMethod = _EntryCell.IsPassword ? new PasswordTransformationMethod() : null; }
-		private void UpdatePlaceholder()
+		protected void UpdateKeyboard() { _EditText.InputType = _EntryCell.Keyboard.ToInputType() | InputTypes.TextFlagNoSuggestions; }
+		protected void UpdateIsPassword() { _EditText.TransformationMethod = _EntryCell.IsPassword ? new PasswordTransformationMethod() : null; }
+		protected void UpdatePlaceholder()
 		{
 			_EditText.Hint = _EntryCell.Placeholder;
 
 			Color placeholderColor = _EntryCell.PlaceholderColor.IsDefault ? Color.Rgb(210, 210, 210) : _EntryCell.PlaceholderColor.ToAndroid();
 			_EditText.SetHintTextColor(placeholderColor);
 		}
-		private void UpdateTextAlignment() { _EditText.Gravity = _EntryCell.TextAlignment.ToGravityFlags(); }
-		private void UpdateAccentColor()
+		protected void UpdateTextAlignment() { _EditText.Gravity = _EntryCell.TextAlignment.ToGravityFlags(); }
+		protected void UpdateAccentColor()
 		{
 			if ( _EntryCell.AccentColor != Xamarin.Forms.Color.Default ) { ChangeTextViewBack(_EntryCell.AccentColor.ToAndroid()); }
 			else if ( CellParent != null && CellParent.CellAccentColor != Xamarin.Forms.Color.Default ) { ChangeTextViewBack(CellParent.CellAccentColor.ToAndroid()); }
 		}
 
-		private void ChangeTextViewBack( Color accent )
+		protected void ChangeTextViewBack( Color accent )
 		{
 			var colorlist = new ColorStateList(new int[][]
 											   {
@@ -182,7 +169,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		bool TextView.IOnEditorActionListener.OnEditorAction( TextView v, ImeAction actionId, KeyEvent e )
+		bool TextView.IOnEditorActionListener.OnEditorAction( TextView? v, ImeAction actionId, KeyEvent? e )
 		{
 			if ( actionId == ImeAction.Done || ( actionId == ImeAction.ImeNull && e.KeyCode == Keycode.Enter ) )
 			{
@@ -193,7 +180,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			return true;
 		}
 
-		private void DoneEdit()
+		protected void DoneEdit()
 		{
 			var entryCell = (IEntryCellController) Cell;
 			//entryCell.SendCompleted();
@@ -201,13 +188,13 @@ namespace Jakar.SettingsView.Droid.Cells
 			ClearFocus();
 		}
 
-		private void HideKeyboard( Android.Views.View inputView )
+		protected void HideKeyboard( Android.Views.View inputView )
 		{
 			using var inputMethodManager = (InputMethodManager) AndroidContext.GetSystemService(Context.InputMethodService);
 			IBinder windowToken = inputView.WindowToken;
 			if ( windowToken != null ) { inputMethodManager?.HideSoftInputFromWindow(windowToken, HideSoftInputFlags.None); }
 		}
-		private void ShowKeyboard( Android.Views.View inputView )
+		protected void ShowKeyboard( Android.Views.View inputView )
 		{
 			using var inputMethodManager = (InputMethodManager) AndroidContext.GetSystemService(Context.InputMethodService);
 			if ( inputMethodManager is null ) return;
@@ -215,14 +202,14 @@ namespace Jakar.SettingsView.Droid.Cells
 			inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
 		}
 
-		private void EditTextOnClick( object sender, EventArgs e ) { PerformSelectAction(); }
-		private void EntryCellView_Click( object sender, EventArgs e )
+		protected void EditTextOnClick( object sender, EventArgs e ) { PerformSelectAction(); }
+		protected void EntryCellView_Click( object sender, EventArgs e )
 		{
 			_EditText.RequestFocus();
 			PerformSelectAction();
 			ShowKeyboard(_EditText); // EntryCellView_Click
 		}
-		private void EntryCell_Focused( object sender, EventArgs e )
+		protected void EntryCell_Focused( object sender, EventArgs e )
 		{
 			_EditText.RequestFocus();
 			ShowKeyboard(_EditText);

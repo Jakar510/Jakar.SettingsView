@@ -7,128 +7,149 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(LabelCell), typeof(LabelCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Label cell renderer.
-	/// </summary>
-	[Preserve(AllMembers = true)]
-	public class LabelCellRenderer : CellBaseRenderer<LabelCellView> { }
+	[Preserve(AllMembers = true)] public class LabelCellRenderer : CellBaseRenderer<LabelCellView> { }
 
-	/// <summary>
-	/// Label cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class LabelCellView : CellBaseView
 	{
-		private LabelCell _LabelCell => Cell as LabelCell;
+		protected LabelCell _LabelCell => Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
 
-		public TextView ValueLabel { get; set; }
-		public TextView VValueLabel { get; set; }
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+
+		protected IconView _Icon { get; set; }
+		protected TitleView _Title { get; set; }
+		protected DescriptionView _Description { get; set; }
+		protected HintView _Hint { get; set; }
+		protected ValueView _Value { get; set; }
 
 
 		public LabelCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ValueLabel = new TextView(context)
+			ContentView = CreateContentView(Resource.Layout.DisplayCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.DisplayCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.DisplayCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellDescription));
+			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellHintText));
+			_Value = new ValueView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellValueText))
+					 {
+						 Label =
 						 {
 							 Ellipsize = TextUtils.TruncateAt.End,
 							 Gravity = GravityFlags.Right
-						 };
-			ValueLabel.SetSingleLine(true);
+						 }
+					 };
 
-			using var textParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-			{
-				ContentStack.AddView(ValueLabel, textParams);
-			}
+			_Value.Label.SetSingleLine(true);
 		}
-		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		{
+			ContentView = CreateContentView(Resource.Layout.DisplayCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.DisplayCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.DisplayCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellDescription));
+			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellHintText));
+			_Value = new ValueView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellValueText))
+					 {
+						 Label =
+						 {
+							 Ellipsize = TextUtils.TruncateAt.End,
+							 Gravity = GravityFlags.Right
+						 }
+					 };
 
-		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+			_Value.Label.SetSingleLine(true);
+		}
+
+		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+			if ( _Value.Update(sender, e) ) { return; }
 
-			if ( e.PropertyName == LabelCell.ValueTextProperty.PropertyName ) { UpdateValueText(); }
-			else if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-			else if ( e.PropertyName == LabelCell.ValueTextFontFamilyProperty.PropertyName || e.PropertyName == LabelCell.ValueTextFontAttributesProperty.PropertyName ) { UpdateValueTextFont(); }
-			else if ( e.PropertyName == LabelCell.ValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
-			else if ( e.PropertyName == LabelCell.IgnoreUseDescriptionAsValueProperty.PropertyName ) { UpdateUseDescriptionAsValue(); }
+			if ( _Title.Update(sender, e) ) { return; }
+
+			if ( _Description.Update(sender, e) ) { return; }
+
+			if ( _Hint.Update(sender, e) ) { return; }
+
+			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
-		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.ParentPropertyChanged(sender, e);
+			if ( _Value.UpdateParent(sender, e) ) { return; }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName || e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateValueTextFont(); }
+			if ( _Title.UpdateParent(sender, e) ) { return; }
+
+			if ( _Description.UpdateParent(sender, e) ) { return; }
+
+			if ( _Hint.UpdateParent(sender, e) ) { return; }
 		}
 
 
-		protected override void SetEnabledAppearance( bool isEnabled )
+		protected override void EnableCell()
 		{
-			if ( isEnabled ) { ValueLabel.Alpha = 1f; }
-			else { ValueLabel.Alpha = 0.3f; }
-
-			base.SetEnabledAppearance(isEnabled);
+			base.EnableCell();
+			_Title.Enable();
+			_Description.Enable();
+			_Hint.Enable();
+			_Value.Enable();
 		}
-
-
-		public override void UpdateCell()
+		protected override void DisableCell()
+		{
+			base.DisableCell();
+			_Title.Disable();
+			_Description.Disable();
+			_Hint.Disable();
+			_Value.Disable();
+		}
+		protected override void UpdateCell()
 		{
 			base.UpdateCell();
-			UpdateUseDescriptionAsValue(); //at first after base
-			UpdateValueText();
-			UpdateValueTextColor();
-			UpdateValueTextFontSize();
-			UpdateValueTextFont();
+			_Title.Update();
+			_Description.Update();
+			_Hint.Update();
+			_Value.Update();
+			_Icon.Update();
 		}
-		private void UpdateUseDescriptionAsValue()
-		{
-			if ( !_LabelCell.IgnoreUseDescriptionAsValue && CellParent != null && CellParent.UseDescriptionAsValue )
-			{
-				VValueLabel = DescriptionLabel;
-				DescriptionLabel.Visibility = ViewStates.Visible;
-				ValueLabel.Visibility = ViewStates.Gone;
-			}
-			else
-			{
-				VValueLabel = ValueLabel;
-				ValueLabel.Visibility = ViewStates.Visible;
-			}
-		}
-		protected void UpdateValueText() { VValueLabel.Text = _LabelCell.ValueText; }
-		private void UpdateValueTextFontSize()
-		{
-			if ( _LabelCell.ValueTextFontSize > 0 ) { ValueLabel.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _LabelCell.ValueTextFontSize); }
-			else if ( CellParent != null ) { ValueLabel.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) CellParent.CellValueTextFontSize); }
-
-			Invalidate();
-		}
-		private void UpdateValueTextFont()
-		{
-			string family = _LabelCell.ValueTextFontFamily ?? CellParent?.CellValueTextFontFamily;
-			FontAttributes attr = _LabelCell.ValueTextFontAttributes ?? CellParent.CellValueTextFontAttributes;
-
-			ValueLabel.Typeface = FontUtility.CreateTypeface(family, attr);
-			Invalidate();
-		}
-		private void UpdateValueTextColor()
-		{
-			if ( _LabelCell.ValueTextColor != Color.Default ) { ValueLabel.SetTextColor(_LabelCell.ValueTextColor.ToAndroid()); }
-			else if ( CellParent != null && CellParent.CellValueTextColor != Color.Default ) { ValueLabel.SetTextColor(CellParent.CellValueTextColor.ToAndroid()); }
-		}
+		// private void UpdateUseDescriptionAsValue()
+		// {
+		// 	if ( !_LabelCell.IgnoreUseDescriptionAsValue &&
+		// 		 CellParent != null &&
+		// 		 CellParent.UseDescriptionAsValue )
+		// 	{
+		// 		// _Value = DescriptionLabel;
+		// 		_Description.Label.Visibility = ViewStates.Visible;
+		// 		_Value.Label.Visibility = ViewStates.Gone;
+		// 	}
+		// 	else
+		// 	{
+		// 		// _Value = _Value.Label;
+		// 		_Value.Label.Visibility = ViewStates.Visible;
+		// 	}
+		// }
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				ValueLabel?.Dispose();
-				ValueLabel = null;
-				VValueLabel = null;
+				_Title.Dispose();
+				_Description.Dispose();
+				_Hint.Dispose();
+				_Value.Dispose();
+				_Icon.Dispose();
+
+				_CellLayout.Dispose();
 			}
 
 			base.Dispose(disposing);

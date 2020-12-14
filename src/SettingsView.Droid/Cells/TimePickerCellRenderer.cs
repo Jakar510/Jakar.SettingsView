@@ -10,50 +10,31 @@ using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(TimePickerCell), typeof(TimePickerCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Time picker cell renderer.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
-	/// <summary>
-	/// Time picker cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class TimePickerCellView : LabelCellView
 	{
-		private TimePickerCell _TimePickerCell => Cell as TimePickerCell;
-		private TimePickerDialog _dialog;
-		private readonly Context _context;
-		private string _title;
+		protected TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));
+		protected TimePickerDialog? _Dialog { get; set; }
+		protected string _PopupTitle { get; set; } = string.Empty;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.TimePickerCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
-		public TimePickerCellView( Context context, Cell cell ) : base(context, cell) => _context = context;
 
+		public TimePickerCellView( Context context, Cell cell ) : base(context, cell) { }
 		public TimePickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+		protected override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateTime();
 			UpdatePickerTitle();
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
@@ -61,68 +42,52 @@ namespace Jakar.SettingsView.Droid.Cells
 			else if ( e.PropertyName == TimePickerCell.PickerTitleProperty.PropertyName ) { UpdatePickerTitle(); }
 		}
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
 
-
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_dialog?.Dispose();
-				_dialog = null;
-			}
-
-			base.Dispose(disposing);
-		}
 
 		private void CreateDialog()
 		{
-			if ( _dialog == null )
+			if ( _Dialog != null ) return;
+			_Dialog = new TimePickerDialog(AndroidContext, TimeSelected, _TimePickerCell.Time.Hours, _TimePickerCell.Time.Minutes, DateFormat.Is24HourFormat(AndroidContext));
+
+			var title = new TextView(AndroidContext);
+
+			if ( !string.IsNullOrEmpty(_PopupTitle) )
 			{
-				bool is24HourFormat = DateFormat.Is24HourFormat(_context);
-				_dialog = new TimePickerDialog(_context, TimeSelected, _TimePickerCell.Time.Hours, _TimePickerCell.Time.Minutes, is24HourFormat);
-
-				var title = new TextView(_context);
-
-				if ( !string.IsNullOrEmpty(_title) )
-				{
-					title.Gravity = Android.Views.GravityFlags.Center;
-					title.SetPadding(10, 10, 10, 10);
-					title.Text = _title;
-					_dialog.SetCustomTitle(title);
-				}
-
-				_dialog.SetCanceledOnTouchOutside(true);
-
-				_dialog.DismissEvent += ( ss, ee ) =>
-										{
-											title.Dispose();
-											_dialog.Dispose();
-											_dialog = null;
-										};
-
-				_dialog.Show();
+				title.Gravity = Android.Views.GravityFlags.Center;
+				title.SetPadding(10, 10, 10, 10);
+				title.Text = _PopupTitle;
+				_Dialog.SetCustomTitle(title);
 			}
+
+			_Dialog.SetCanceledOnTouchOutside(true);
+
+			_Dialog.DismissEvent += ( ss, ee ) =>
+									{
+										title.Dispose();
+										_Dialog.Dispose();
+										_Dialog = null;
+									};
+
+			_Dialog.Show();
 		}
-
-		private void UpdateTime() { VValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
-
-		private void UpdatePickerTitle() { _title = _TimePickerCell.PickerTitle; }
-
+		private void UpdateTime() { _Value.Label.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
+		private void UpdatePickerTitle() { _PopupTitle = _TimePickerCell.PickerTitle; }
 		private void TimeSelected( object sender, TimePickerDialog.TimeSetEventArgs e )
 		{
 			_TimePickerCell.Time = new TimeSpan(e.HourOfDay, e.Minute, 0);
 			UpdateTime();
+		}
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				_Dialog?.Dispose();
+				_Dialog = null;
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

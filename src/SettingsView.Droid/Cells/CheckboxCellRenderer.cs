@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Android.Content;
 using Android.Content.Res;
 using Android.Graphics.Drawables;
@@ -8,146 +9,125 @@ using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(CheckboxCell), typeof(CheckboxCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Checkbox cell renderer.
-	/// </summary>
-	[Preserve(AllMembers = true)]
-	public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
+	[Preserve(AllMembers = true)] public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
-	/// <summary>
-	/// Checkbox cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class CheckboxCellView : CellBaseView, CompoundButton.IOnCheckedChangeListener
 	{
-		private AppCompatCheckBox _checkbox;
-		private CheckboxCell _CheckboxCell => Cell as CheckboxCell;
+		protected AppCompatCheckBox _Checkbox { get; set; }
+		protected CheckboxCell _CheckboxCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_CheckboxCell));
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.CheckboxCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+		protected LinearLayout _AccessoryStack { get; set; }
+
+		protected TitleView _Title { get; set; }
+		protected DescriptionView _Description { get; set; }
+
+
 		public CheckboxCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			_checkbox = new AppCompatCheckBox(context);
-			_checkbox.SetOnCheckedChangeListener(this);
-			_checkbox.Gravity = GravityFlags.Right;
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellLayout));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-			var lparam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
-						 {
-							 Width = (int) context.ToPixels(30),
-							 Height = (int) context.ToPixels(30)
-						 };
+			_Checkbox = new AppCompatCheckBox(context)
+						{
+							Focusable = false,
+							Gravity = GravityFlags.Right
+						};
+			_Checkbox.SetOnCheckedChangeListener(this);
+			AddAccessory(_AccessoryStack, _Checkbox);
 
-			using ( lparam ) { AccessoryStack.AddView(_checkbox, lparam); }
+			Focusable = false;
+			DescendantFocusability = DescendantFocusability.AfterDescendants;
+		}
+		public CheckboxCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		{
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellLayout));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-			_checkbox.Focusable = false;
+			_Checkbox = new AppCompatCheckBox(AndroidContext)
+						{
+							Focusable = false,
+							Gravity = GravityFlags.Right
+						};
+			_Checkbox.SetOnCheckedChangeListener(this);
+			AddAccessory(_AccessoryStack, _Checkbox);
+
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
 
-		public CheckboxCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		{
+			base.CellPropertyChanged(sender, e);
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+			if ( _Title.Update(sender, e) ) { return; }
+
+			if ( _Description.Update(sender, e) ) { return; }
+
+
+			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+
+			if ( e.PropertyName == CheckboxCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
+
+			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
+		}
+		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		{
+			if ( _Title.UpdateParent(sender, e) ) { return; }
+
+			if ( _Description.UpdateParent(sender, e) ) { return; }
+
+
+			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+		}
+
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Checkbox.Checked = !_Checkbox.Checked; }
+
+
+		protected override void EnableCell()
+		{
+			base.EnableCell();
+			_Title.Enable();
+			_Description.Enable();
+		}
+		protected override void DisableCell()
+		{
+			base.DisableCell();
+			_Title.Disable();
+			_Description.Disable();
+		}
+		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked )
+		{
+			_CheckboxCell.Checked = isChecked;
+			buttonView?.JumpDrawablesToCurrentState();
+		}
+
+		protected override void UpdateCell()
 		{
 			UpdateAccentColor();
 			UpdateChecked();
 			base.UpdateCell();
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
-
-			if ( e.PropertyName == CheckboxCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
-		}
-
-		/// <summary>
-		/// Parents the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
-		{
-			base.ParentPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
-		}
-
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _checkbox.Checked = !_checkbox.Checked; }
-
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_checkbox.SetOnCheckedChangeListener(null);
-				_checkbox.Dispose();
-				_checkbox = null;
-			}
-
-			base.Dispose(disposing);
-		}
-
-		/// <summary>
-		/// Sets the enabled appearance.
-		/// </summary>
-		/// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
-		protected override void SetEnabledAppearance( bool isEnabled )
-		{
-			if ( isEnabled )
-			{
-				_checkbox.Enabled = true;
-				_checkbox.Alpha = 1.0f;
-			}
-			else
-			{
-				_checkbox.Enabled = false;
-				_checkbox.Alpha = 0.3f;
-			}
-
-			base.SetEnabledAppearance(isEnabled);
-		}
-
-		/// <summary>
-		/// Ons the checked changed.
-		/// </summary>
-		/// <param name="buttonView">Button view.</param>
-		/// <param name="isChecked">If set to <c>true</c> is checked.</param>
-		public void OnCheckedChanged( CompoundButton buttonView, bool isChecked )
-		{
-			_CheckboxCell.Checked = isChecked;
-			buttonView.JumpDrawablesToCurrentState();
-		}
-
-		private void UpdateChecked() { _checkbox.Checked = _CheckboxCell.Checked; }
-
-		private void UpdateAccentColor()
+		protected void UpdateChecked() { _Checkbox.Checked = _CheckboxCell.Checked; }
+		protected void UpdateAccentColor()
 		{
 			if ( _CheckboxCell.AccentColor != Color.Default ) { ChangeCheckColor(_CheckboxCell.AccentColor.ToAndroid()); }
 			else if ( CellParent != null &&
@@ -155,7 +135,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		private void ChangeCheckColor( Android.Graphics.Color accent )
+		protected void ChangeCheckColor( Android.Graphics.Color accent )
 		{
 			var colorList = new ColorStateList(new int[][]
 											   {
@@ -173,7 +153,7 @@ namespace Jakar.SettingsView.Droid.Cells
 													  accent
 												  });
 
-			_checkbox.SupportButtonTintList = colorList;
+			_Checkbox.SupportButtonTintList = colorList;
 
 			var rippleColor = new ColorStateList(new int[][]
 												 {
@@ -190,9 +170,27 @@ namespace Jakar.SettingsView.Droid.Cells
 														Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
 														Android.Graphics.Color.Argb(76, 117, 117, 117)
 													});
-			var ripple = _checkbox.Background as RippleDrawable;
+			var ripple = _Checkbox.Background as RippleDrawable;
 			ripple.SetColor(rippleColor);
-			_checkbox.Background = ripple;
+			_Checkbox.Background = ripple;
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				_Checkbox.SetOnCheckedChangeListener(null);
+				_Checkbox.Dispose();
+
+				_Title.Dispose();
+				_Description.Dispose();
+
+				_CellLayout.Dispose();
+				_AccessoryStack.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

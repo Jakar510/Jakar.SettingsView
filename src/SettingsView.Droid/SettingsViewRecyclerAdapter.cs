@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
 using Xamarin.Forms;

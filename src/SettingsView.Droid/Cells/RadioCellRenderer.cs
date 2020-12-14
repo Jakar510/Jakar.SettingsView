@@ -6,151 +6,163 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms.Platform.Android;
-using XF = Xamarin.Forms;
+using Xamarin.Forms;
 
-[assembly: XF.ExportRenderer(typeof(RadioCell), typeof(RadioCellRenderer))]
+[assembly: ExportRenderer(typeof(RadioCell), typeof(RadioCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Radio cell renderer.
-	/// </summary>
-	[Preserve(AllMembers = true)]
-	public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
+	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
-	/// <summary>
-	/// Radio cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class RadioCellView : CellBaseView
 	{
-		private SimpleCheck _simpleCheck;
-		private RadioCell _radioCell => Cell as RadioCell;
+		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
-		private object SelectedValue
+		protected internal Android.Views.View ContentView { get; set; }
+		protected GridLayout _CellLayout { get; set; }
+		protected LinearLayout _AccessoryStack { get; set; }
+
+		private SimpleCheck _SimpleCheck { get; set; }
+		protected IconView _Icon { get; set; }
+		protected TitleView _Title { get; set; }
+		protected DescriptionView _Description { get; set; }
+
+		private object _SelectedValue
 		{
-			get => RadioCell.GetSelectedValue(_radioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
+			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
 			set
 			{
-				if ( RadioCell.GetSelectedValue(_radioCell.Section) != null ) { RadioCell.SetSelectedValue(_radioCell.Section, value); }
+				if ( RadioCell.GetSelectedValue(_RadioCell.Section) != null ) { RadioCell.SetSelectedValue(_RadioCell.Section, value); }
 				else { RadioCell.SetSelectedValue(CellParent, value); }
 			}
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.RadioCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
-		public RadioCellView( Context context, XF.Cell cell ) : base(context, cell)
+
+		public RadioCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			_simpleCheck = new SimpleCheck(context);
-			_simpleCheck.Focusable = false;
+			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-			var lparam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
-						 {
-							 Width = (int) context.ToPixels(30),
-							 Height = (int) context.ToPixels(30)
-						 };
+			_SimpleCheck = new SimpleCheck(AndroidContext)
+						   {
+							   Focusable = false
+						   };
+			AddAccessory(_AccessoryStack, _SimpleCheck);
+		}
+		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		{
+			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
-			using ( lparam ) { AccessoryStack.AddView(_simpleCheck, lparam); }
+			_SimpleCheck = new SimpleCheck(AndroidContext)
+						   {
+							   Focusable = false
+						   };
+			AddAccessory(_AccessoryStack, _SimpleCheck);
 		}
 
-		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_simpleCheck.RemoveFromParent();
-				_simpleCheck.Dispose();
-				_simpleCheck = null;
-			}
-
-			base.Dispose(disposing);
-		}
-
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
-		{
-			UpdateAccentColor();
-			UpdateSelectedValue();
-			base.UpdateCell();
-		}
-
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+
+			if ( _Title.Update(sender, e) ) { return; }
+
+			if ( _Description.Update(sender, e) ) { return; }
+
 			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName )
 			{
 				UpdateAccentColor();
-				_simpleCheck.Invalidate();
+				_SimpleCheck.Invalidate();
 			}
-		}
 
-		/// <summary>
-		/// Parents the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
+		}
+		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.ParentPropertyChanged(sender, e);
+			if ( _Title.UpdateParent(sender, e) ) { return; }
+
+			if ( _Description.UpdateParent(sender, e) ) { return; }
+
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName )
 			{
 				UpdateAccentColor();
-				_simpleCheck.Invalidate();
+				_SimpleCheck.Invalidate();
 			}
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
-
-		/// <summary>
-		/// Sections the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.SectionPropertyChanged(sender, e);
 			if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( !_simpleCheck.Selected ) { SelectedValue = _radioCell.Value; }
+			if ( !_SimpleCheck.Selected ) { _SelectedValue = _RadioCell.Value; }
 		}
 
-		private void UpdateSelectedValue()
-		{
-			bool result;
-			if ( _radioCell.Value.GetType().IsValueType ) { result = Equals(_radioCell.Value, SelectedValue); }
-			else { result = ReferenceEquals(_radioCell.Value, SelectedValue); }
 
-			_simpleCheck.Selected = result;
+		protected override void EnableCell()
+		{
+			base.EnableCell();
+			_Title.Enable();
+			_Description.Enable();
+			_SimpleCheck.Enabled = true;
+			_SimpleCheck.Alpha = ENABLED_ALPHA;
+		}
+		protected override void DisableCell()
+		{
+			base.DisableCell();
+			_Title.Disable();
+			_Description.Disable();
+			_SimpleCheck.Enabled = false;
+			_SimpleCheck.Alpha = DISABLED_ALPHA;
 		}
 
+		protected override void UpdateCell()
+		{
+			UpdateAccentColor();
+			UpdateSelectedValue();
+			base.UpdateCell();
+		}
+		private void UpdateSelectedValue() { _SimpleCheck.Selected = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
 		private void UpdateAccentColor()
 		{
-			if ( !_radioCell.AccentColor.IsDefault ) { _simpleCheck.Color = _radioCell.AccentColor.ToAndroid(); }
+			if ( !_RadioCell.AccentColor.IsDefault ) { _SimpleCheck.Color = _RadioCell.AccentColor.ToAndroid(); }
 			else if ( CellParent != null &&
-					  !CellParent.CellAccentColor.IsDefault ) { _simpleCheck.Color = CellParent.CellAccentColor.ToAndroid(); }
+					  !CellParent.CellAccentColor.IsDefault ) { _SimpleCheck.Color = CellParent.CellAccentColor.ToAndroid(); }
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				_SimpleCheck.RemoveFromParent();
+				_SimpleCheck.Dispose();
+
+				_Title.Dispose();
+
+				_Description.Dispose();
+
+				_CellLayout.Dispose();
+				_AccessoryStack.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

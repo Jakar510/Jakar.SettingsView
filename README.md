@@ -32,12 +32,12 @@ You need to install this nuget package to .NETStandard project and each platform
 AppDelegate.cs
 
 ```csharp
-public override bool FinishedLaunching(UIApplication app, NSDictionary options) {
-    global::Xamarin.Forms.Forms.Init();
-    AiForms.Renderers.iOS.SettingsViewInit.Init(); //need to write here
+public override bool FinishedLaunching(UIApplication app, NSDictionary options) 
+{
+    Xamarin.Forms.Forms.Init();
+    Jakar.SettingsView.iOS.SettingsViewInit.Init(); //need to write here
 
-    LoadApplication(new App());
-    return base.FinishedLaunching(app, options);
+    ...
 }
 ```
 
@@ -50,8 +50,10 @@ protected override void OnCreate(Bundle bundle)
 {
     base.OnCreate(bundle);
 
-    global::Xamarin.Forms.Forms.Init(this, bundle);
-    AiForms.Renderers.Droid.SettingsViewInit.Init(); // need to write here
+    Xamarin.Forms.Forms.Init(this, bundle);
+    Jakar.SettingsView.Droid.SettingsViewInit.Init(this); // need to write here
+
+    ...
 }
 ```
 

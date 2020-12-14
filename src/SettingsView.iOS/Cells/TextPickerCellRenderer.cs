@@ -32,7 +32,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public UITextField DummyField { get; set; }
 
 		private TextPickerSource _model;
-		private UILabel _titleLabel;
+		private UILabel _Title;
 		private UIPickerView _picker;
 		private ICommand _command;
 
@@ -106,8 +106,8 @@ namespace Jakar.SettingsView.iOS.Cells
 				DummyField.RemoveFromSuperview();
 				DummyField?.Dispose();
 				DummyField = null;
-				_titleLabel?.Dispose();
-				_titleLabel = null;
+				_Title?.Dispose();
+				_Title = null;
 				_model?.Dispose();
 				_model = null;
 				_picker?.Dispose();
@@ -124,8 +124,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			nfloat width = UIScreen.MainScreen.Bounds.Width;
 
-			_titleLabel = new UILabel();
-			_titleLabel.TextAlignment = UITextAlignment.Center;
+			_Title = new UILabel();
+			_Title.TextAlignment = UITextAlignment.Center;
 
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
 						  {
@@ -138,7 +138,7 @@ namespace Jakar.SettingsView.iOS.Cells
 																					 Select(_model.PreSelectedItem);
 																				 });
 
-			var labelButton = new UIBarButtonItem(_titleLabel);
+			var labelButton = new UIBarButtonItem(_Title);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, ( o, a ) =>
 																			 {
@@ -184,9 +184,9 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateTitle()
 		{
-			_titleLabel.Text = _TextPickerCell.PickerTitle;
-			_titleLabel.SizeToFit();
-			_titleLabel.Frame = new CGRect(0, 0, 160, 44);
+			_Title.Text = _TextPickerCell.PickerTitle;
+			_Title.SizeToFit();
+			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}
 
 		private void UpdateCommand() { _command = _TextPickerCell.SelectedCommand; }

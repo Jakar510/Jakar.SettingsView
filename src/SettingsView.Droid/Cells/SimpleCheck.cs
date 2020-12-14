@@ -2,37 +2,24 @@
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Simple check.
-	/// </summary>
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SimpleCheck : AView
 	{
-		/// <summary>
-		/// Gets or sets the color.
-		/// </summary>
-		/// <value>The color.</value>
 		public Color Color { get; set; }
 
-		private Paint _paint = new Paint();
-		private Android.Content.Context _context;
+		protected Paint _paint = new Paint();
+		protected  Android.Content.Context _context;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.SimpleCheck"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
+
 		public SimpleCheck( Android.Content.Context context ) : base(context)
 		{
 			_context = context;
 			SetWillNotDraw(false);
 		}
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Droid.Cells.SimpleCheck"/> is selected.
-		/// </summary>
-		/// <value><c>true</c> if selected; otherwise, <c>false</c>.</value>
 		public override bool Selected
 		{
 			get => base.Selected;
@@ -43,15 +30,12 @@ namespace Jakar.SettingsView.Droid.Cells
 			}
 		}
 
-		/// <summary>
-		/// Ons the draw.
-		/// </summary>
-		/// <param name="canvas">Canvas.</param>
-		protected override void OnDraw( Canvas canvas )
+		protected override void OnDraw( Canvas? canvas )
 		{
 			base.OnDraw(canvas);
 
-			if ( !base.Selected ) { return; }
+			if ( !base.Selected ||
+				 canvas is null ) { return; }
 
 			_paint.SetStyle(Paint.Style.Stroke);
 			_paint.Color = Color;
@@ -74,18 +58,11 @@ namespace Jakar.SettingsView.Droid.Cells
 			canvas.DrawLine(fromX, fromY, toX, toY, _paint);
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_paint?.Dispose();
-				_paint = null;
-				_context = null;
+				_paint.Dispose();
 			}
 
 			base.Dispose(disposing);
