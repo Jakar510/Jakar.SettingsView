@@ -55,7 +55,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected void SetUpProperties()
 		{
 			if ( _PickerCell.AccentColor != Xamarin.Forms.Color.Default ) { AccentColor = _PickerCell.AccentColor.ToAndroid(); }
-			else if ( _Parent.CellAccentColor != Xamarin.Forms.Color.Default ) { AccentColor = _Parent.CellAccentColor.ToAndroid(); }
+			else if ( _Parent != null &&
+					  _Parent.CellAccentColor != Xamarin.Forms.Color.Default ) { AccentColor = _Parent.CellAccentColor.ToAndroid(); }
 
 			if ( _PickerCell.TitleColor != Xamarin.Forms.Color.Default ) { TitleColor = _PickerCell.TitleColor.ToAndroid(); }
 			else if ( _Parent != null &&
@@ -108,12 +109,15 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			SparseBooleanArray? positions = _ListView.CheckedItemPositions;
 
-			for ( var i = 0; i < positions.Size(); i++ )
+			if ( positions != null )
 			{
-				if ( !positions.ValueAt(i) ) continue;
+				for ( var i = 0; i < positions.Size(); i++ )
+				{
+					if ( !positions.ValueAt(i) ) continue;
 
-				int index = positions.KeyAt(i);
-				_PickerCell.SelectedItems.Add(_Source[index]);
+					int index = positions.KeyAt(i);
+					_PickerCell.SelectedItems.Add(_Source[index]);
+				}
 			}
 
 			_PickerCell.SelectedItem = _PickerCell.SelectedItems.Count > 0 ? _PickerCell.SelectedItems[0] : null;
@@ -164,10 +168,6 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( disposing )
 			{
 				_Parent = null;
-				_PickerCell = null;
-				_Source = null;
-				_ListView = null;
-				_Context = null;
 				CloseAction = null;
 			}
 

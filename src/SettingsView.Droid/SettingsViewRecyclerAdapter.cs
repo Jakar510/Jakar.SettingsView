@@ -13,23 +13,24 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewRecyclerAdapter : RecyclerView.Adapter, AView.IOnClickListener, AView.IOnLongClickListener
 	{
-		private float _MinRowHeight => _Context.ToPixels(44);
+		protected float _MinRowHeight => _Context.ToPixels(44);
 
 		//Item click. correspond to AdapterView.IOnItemClickListener
-		private int _SelectedIndex { get; set; } = -1;
-		private AView _PreSelectedCell { get; set; }
+		protected int _SelectedIndex { get; set; } = -1;
+		protected AView? _PreSelectedCell { get; set; }
 
-		private Context _Context { get; }
-		private Shared.SettingsView _SettingsView { get; set; }
-		private RecyclerView _RecyclerView { get; }
-		private ModelProxy _Proxy { get; set; }
+		protected Context _Context { get; }
+		protected Shared.SettingsView _SettingsView { get; set; }
+		protected RecyclerView _RecyclerView { get; }
+		protected ModelProxy _Proxy { get; set; }
 
-		private List<CustomViewHolder> _viewHolders = new List<CustomViewHolder>();
+		protected List<CustomViewHolder> _viewHolders = new List<CustomViewHolder>();
 
 
 		public SettingsViewRecyclerAdapter( Context context, Shared.SettingsView settingsView, RecyclerView recyclerView )
@@ -43,7 +44,7 @@ namespace Jakar.SettingsView.Droid
 			_SettingsView.SectionPropertyChanged += OnSectionPropertyChanged;
 		}
 
-		private void SettingsView_ModelChanged( object sender, EventArgs e )
+		protected void SettingsView_ModelChanged( object sender, EventArgs e )
 		{
 			if ( _RecyclerView != null )
 			{
@@ -52,14 +53,18 @@ namespace Jakar.SettingsView.Droid
 			}
 		}
 
-		private void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible((Section) sender); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName || e.PropertyName == Section.HeaderViewProperty.PropertyName || e.PropertyName == Section.HeaderHeightProperty.PropertyName ) { UpdateSectionHeader((Section) sender); }
-			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName || e.PropertyName == Section.FooterViewProperty.PropertyName || e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter((Section) sender); }
+			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
+					  e.PropertyName == Section.HeaderViewProperty.PropertyName ||
+					  e.PropertyName == Section.HeaderHeightProperty.PropertyName ) { UpdateSectionHeader((Section) sender); }
+			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName ||
+					  e.PropertyName == Section.FooterViewProperty.PropertyName ||
+					  e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter((Section) sender); }
 		}
 
-		private void UpdateSectionVisible( Section section )
+		protected void UpdateSectionVisible( Section section )
 		{
 			List<int> indexes = _Proxy.Select(( x, idx ) => new
 															{
@@ -71,12 +76,12 @@ namespace Jakar.SettingsView.Droid
 									  .ToList();
 			NotifyItemRangeChanged(indexes[0], indexes.Count);
 		}
-		private void UpdateSectionHeader( Section section )
+		protected void UpdateSectionHeader( Section section )
 		{
 			int index = _Proxy.FindIndex(x => x.Section == section);
 			NotifyItemChanged(index);
 		}
-		private void UpdateSectionFooter( Section section )
+		protected void UpdateSectionFooter( Section section )
 		{
 			int index = _Proxy.FindLastIndex(x => x.Section == section);
 			NotifyItemChanged(index);
@@ -92,14 +97,13 @@ namespace Jakar.SettingsView.Droid
 
 		public override RecyclerView.ViewHolder OnCreateViewHolder( ViewGroup parent, int viewType )
 		{
-			using LayoutInflater inflater = LayoutInflater.FromContext(_Context);
-			if ( inflater is null ) return null;
+			using LayoutInflater inflater = LayoutInflater.FromContext(_Context) ?? throw new NullReferenceException(nameof(LayoutInflater.FromContext));
 
 			CustomViewHolder viewHolder = ( (ViewType) viewType ) switch
 										  {
-											  ViewType.TextHeader => new HeaderViewHolder(inflater.Inflate(Resource.Layout.DefaultHeaderCell, parent, false)),
+											  ViewType.TextHeader => new HeaderViewHolder(inflater.Inflate(Resource.Layout.DefaultHeaderCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultHeaderCell))),
 
-											  ViewType.TextFooter => new FooterViewHolder(inflater.Inflate(Resource.Layout.DefaultFooterCell, parent, false)),
+											  ViewType.TextFooter => new FooterViewHolder(inflater.Inflate(Resource.Layout.DefaultFooterCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultFooterCell))),
 
 											  ViewType.CustomHeader => new CustomHeaderViewHolder(new HeaderFooterContainer(_Context)),
 
@@ -112,9 +116,10 @@ namespace Jakar.SettingsView.Droid
 
 			return viewHolder;
 		}
-		private ContentBodyViewHolder CreateHolder( LayoutInflater inflater, ViewGroup parent )
+		protected ContentBodyViewHolder CreateHolder( LayoutInflater inflater, ViewGroup parent )
 		{
-			var viewHolder = new ContentBodyViewHolder(inflater.Inflate(Resource.Layout.ContentCell, parent, false));
+			AView view = inflater.Inflate(Resource.Layout.ContentCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.CellLayout));
+			var viewHolder = new ContentBodyViewHolder(view);
 			viewHolder.ItemView.SetOnClickListener(this);
 			viewHolder.ItemView.SetOnLongClickListener(this);
 			return viewHolder;
@@ -143,15 +148,19 @@ namespace Jakar.SettingsView.Droid
 				case ViewType.TextHeader:
 					BindHeaderView((HeaderViewHolder) viewHolder);
 					break;
+
 				case ViewType.TextFooter:
 					BindFooterView((FooterViewHolder) viewHolder);
 					break;
+
 				case ViewType.CustomHeader:
 					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.HeaderView);
 					break;
+
 				case ViewType.CustomFooter:
 					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.FooterView);
 					break;
+
 				default:
 					BindContentView((ContentBodyViewHolder) viewHolder, position);
 					break;
@@ -159,7 +168,7 @@ namespace Jakar.SettingsView.Droid
 		}
 
 
-		public void OnClick( AView view )
+		public void OnClick( AView? view )
 		{
 			int position = _RecyclerView.GetChildAdapterPosition(view);
 
@@ -167,10 +176,10 @@ namespace Jakar.SettingsView.Droid
 			//      But do it at a later as iOS side doesn't have that process.
 			DeselectRow();
 
-			if ( !( view.FindViewById<FormsViewContainer>(Resource.Id.ContentCellBody)?.GetChildAt(0) is CellBaseView cell ) ) return;
-			if ( !_Proxy[position].Cell.IsEnabled )
+			AView? child = GetChild(view);
+			if ( !( child is CellBaseView cell ) ||
+				 !( _Proxy[position].Cell?.IsEnabled ?? false ) ) //if Xamarin.Forms.Cell.IsEnable is false, does nothing. 
 			{
-				//if FormsCell IsEnable is false, does nothing. 
 				return;
 			}
 
@@ -178,8 +187,7 @@ namespace Jakar.SettingsView.Droid
 
 			cell.RowSelected(this, position);
 		}
-
-		public virtual bool OnLongClick( AView view )
+		public virtual bool OnLongClick( AView? view )
 		{
 			int position = _RecyclerView.GetChildAdapterPosition(view);
 
@@ -187,8 +195,10 @@ namespace Jakar.SettingsView.Droid
 
 			if ( _Proxy[position].Section.UseDragSort ) { return false; }
 
-			if ( !( view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody)?.GetChildAt(0) is CellBaseView cell ) ) return true;
-			if ( !_Proxy[position].Cell.IsEnabled )
+			bool? result = null;
+			if ( GetChild(view) is CellBaseView cell ) { result = cell.RowLongPressed(this, position); }
+
+			if ( !( _Proxy[position].Cell?.IsEnabled ?? false ) )
 			{
 				//if FormsCell IsEnable is false, does nothing. 
 				return false;
@@ -196,11 +206,9 @@ namespace Jakar.SettingsView.Droid
 
 			_SettingsView.Model.RowLongPressed(_Proxy[position].Cell);
 
-			cell.RowLongPressed(this, position);
-
-
-			return true;
+			return result ?? true;
 		}
+		protected AView? GetChild( AView? view ) => view?.FindViewById<LinearLayout>(Resource.Id.ContentCellBody)?.GetChildAt(0);
 
 
 		public void DeselectRow()
@@ -213,7 +221,6 @@ namespace Jakar.SettingsView.Droid
 
 			_SelectedIndex = -1;
 		}
-
 		public void SelectedRow( AView cell, int position )
 		{
 			_PreSelectedCell = cell;
@@ -222,17 +229,17 @@ namespace Jakar.SettingsView.Droid
 		}
 
 
-		private void BindHeaderView( HeaderViewHolder holder )
+		protected void BindHeaderView( HeaderViewHolder holder )
 		{
 			if ( holder is null ) throw new NullReferenceException(nameof(holder));
 			if ( holder.RowInfo is null ) throw new NullReferenceException(nameof(holder.RowInfo));
 			if ( holder.ItemView is null ) throw new NullReferenceException(nameof(holder.ItemView));
-			
+
 			Section section = holder.RowInfo.Section;
 			AView view = holder.ItemView;
 
 			//judging cell height
-			int cellHeight =(int) _MinRowHeight;
+			int cellHeight = (int) _MinRowHeight;
 			double individualHeight = section.HeaderHeight;
 
 			if ( individualHeight > 0d ) { cellHeight = (int) _Context.ToPixels(individualHeight); }
@@ -267,13 +274,13 @@ namespace Jakar.SettingsView.Droid
 			//update text
 			holder.TextView.Text = section.Title;
 		}
-		private void BindFooterView( FooterViewHolder holder )
+		protected void BindFooterView( FooterViewHolder holder )
 		{
-			Section section = holder.RowInfo.Section;
+			Section? section = holder.RowInfo?.Section;
 			AView view = holder.ItemView;
 
 			//footer visible setting
-			if ( string.IsNullOrEmpty(section.FooterText) )
+			if ( string.IsNullOrEmpty(section?.FooterText) )
 			{
 				//if text is empty, hidden (height 0)
 				holder.TextView.Visibility = ViewStates.Gone;
@@ -294,10 +301,10 @@ namespace Jakar.SettingsView.Droid
 			if ( _SettingsView.FooterTextColor != Color.Default ) { holder.TextView.SetTextColor(_SettingsView.FooterTextColor.ToAndroid()); }
 
 			//update text
-			holder.TextView.Text = section.FooterText;
+			holder.TextView.Text = section?.FooterText;
 		}
 
-		private void BindCustomHeaderFooterView( CustomViewHolder holder, Xamarin.Forms.View formsView )
+		protected void BindCustomHeaderFooterView( CustomViewHolder holder, Xamarin.Forms.View formsView )
 		{
 			if ( holder is null ) throw new NullReferenceException(nameof(holder));
 
@@ -305,20 +312,18 @@ namespace Jakar.SettingsView.Droid
 			nativeCell.ViewHolder = holder;
 			nativeCell.FormsCell = formsView;
 		}
-
-
-		private void BindContentView( ContentBodyViewHolder holder, int position )
+		protected void BindContentView( ContentBodyViewHolder holder, int position )
 		{
 			if ( holder is null ) throw new NullReferenceException(nameof(holder));
 			if ( holder.RowInfo is null ) throw new NullReferenceException(nameof(holder.RowInfo));
 			if ( holder.ItemView is null ) throw new NullReferenceException(nameof(holder.ItemView));
 
-			Cell formsCell = holder.RowInfo.Cell;
+			Cell? formsCell = holder.RowInfo.Cell;
 			AView layout = holder.ItemView;
 
 			holder.RowInfo = _Proxy[position];
 
-			AView nativeCell = holder.Body.GetChildAt(0);
+			AView? nativeCell = holder.Body.GetChildAt(0);
 			if ( nativeCell != null ) { holder.Body.RemoveViewAt(0); }
 
 			nativeCell = CellFactory.GetCell(formsCell, nativeCell, _RecyclerView, _Context, _SettingsView);
@@ -343,7 +348,8 @@ namespace Jakar.SettingsView.Droid
 				// if not Uneven, set the larger one of RowHeight and MinRowHeight.
 				layout.LayoutParameters.Height = minHeight;
 			}
-			else if ( formsCell.Height > -1 )
+			else if ( formsCell != null &&
+					  formsCell.Height > -1 )
 			{
 				// if the cell itself was specified height, set it.
 				layout.SetMinimumHeight((int) _Context.ToPixels(formsCell.Height));
@@ -357,10 +363,7 @@ namespace Jakar.SettingsView.Droid
 				viewCell.View.Layout(new Rectangle(0, 0, size.Request.Width, size.Request.Height));
 				layout.LayoutParameters.Height = (int) _Context.ToPixels(size.Request.Height);
 			}
-			else
-			{
-				layout.LayoutParameters.Height = -2; //wrap_content
-			}
+			else { layout.LayoutParameters.Height = ViewGroup.LayoutParams.WrapContent; }
 
 			holder.Body.AddView(nativeCell, 0);
 		}
@@ -380,14 +383,11 @@ namespace Jakar.SettingsView.Droid
 			{
 				_SettingsView.ModelChanged -= SettingsView_ModelChanged;
 				_SettingsView.SectionPropertyChanged -= OnSectionPropertyChanged;
-				_Proxy?.Dispose();
-				_Proxy = null;
-				_SettingsView = null;
+				_Proxy.Dispose();
 
 				foreach ( CustomViewHolder holder in _viewHolders ) { holder.Dispose(); }
 
 				_viewHolders.Clear();
-				_viewHolders = null;
 			}
 
 			base.Dispose(disposing);

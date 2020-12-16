@@ -32,7 +32,7 @@
 			  android:breakStrategy="high_quality"
 			  android:maxLines="1"
 			  android:singleLine="false"
-			  android:text="Title"
+			  android:text="AccessoryCellTitle"
 			  android:textAlignment="center" />
 
 	<TextView android:id="@+id/AccessoryCellDescription"
@@ -46,7 +46,7 @@
 			  android:breakStrategy="high_quality"
 			  android:minLines="1"
 			  android:singleLine="false"
-			  android:text="Description"
+			  android:text="AccessoryCellDescription"
 			  android:textAlignment="center" />
 
 	<LinearLayout android:id="@+id/AccessoryCellStack"

@@ -35,7 +35,7 @@
 			  android:breakStrategy="high_quality"
 			  android:minLines="1"
 			  android:singleLine="false"
-			  android:text="Title"
+			  android:text="CommandCellTitle"
 			  android:textAlignment="center" />
 
 	<TextView android:id="@+id/CommandCellDescription"
@@ -52,7 +52,7 @@
 			  android:breakStrategy="high_quality"
 			  android:minLines="1"
 			  android:singleLine="false"
-			  android:text="Description"
+			  android:text="CommandCellDescription"
 			  android:textAlignment="center" />
 	
 	<ImageView android:id="@+id/CommandCellIndicator"

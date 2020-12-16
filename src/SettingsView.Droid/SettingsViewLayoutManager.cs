@@ -35,7 +35,7 @@ namespace Jakar.SettingsView.Droid
 		{
 			_Context = context ?? throw new NullReferenceException(nameof(context));
 		}
-		public SettingsViewLayoutManager( Context context, Shared.SettingsView settingsView ) : this(context, 3, Horizontal, false)
+		public SettingsViewLayoutManager( Context context, Shared.SettingsView settingsView ) : this(context, 1, Vertical, false)
 		{
 			_Context = context ?? throw new NullReferenceException(nameof(context));
 			_SettingsView = settingsView ?? throw new NullReferenceException(nameof(settingsView));
@@ -49,6 +49,16 @@ namespace Jakar.SettingsView.Droid
 			return height;
 		}
 
+		public override void OnLayoutCompleted( RecyclerView.State state )
+		{
+			base.OnLayoutCompleted(state);
+
+			int total = _ItemHeights?.Sum(x => x.Value) ?? 0;
+
+			if ( _SettingsView != null ) _SettingsView.VisibleContentHeight = _Context.FromPixels(total);
+		}
+
+
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
@@ -60,15 +70,6 @@ namespace Jakar.SettingsView.Droid
 			}
 
 			base.Dispose(disposing);
-		}
-
-		public override void OnLayoutCompleted( RecyclerView.State state )
-		{
-			base.OnLayoutCompleted(state);
-
-			int total = _ItemHeights?.Sum(x => x.Value) ?? 0;
-
-			if ( _SettingsView != null ) _SettingsView.VisibleContentHeight = _Context.FromPixels(total);
 		}
 	}
 }

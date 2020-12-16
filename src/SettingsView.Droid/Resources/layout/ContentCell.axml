@@ -2,62 +2,15 @@
 	  encoding = "utf-8" ?>
 
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/ContentCell"
-			android:layout_width="match_parent"
-			android:layout_height="80dp">
-
-
-	<ImageView android:id="@+id/ContentCellIcon"
-			   android:layout_width="wrap_content"
-			   android:layout_height="wrap_content"
-			   android:layout_row="0"
-			   android:layout_rowSpan="2"
-			   android:layout_column="0"
-			   android:layout_columnSpan="1"
-			   android:layout_columnWeight="1.5"
-			   android:scaleType="fitXY" />
-
-	<TextView android:id="@+id/ContentCellTitle"
-			  android:layout_row="0"
-			  android:layout_rowSpan="1"
-			  android:layout_column="1"
-			  android:layout_columnSpan="1"
-			  android:layout_columnWeight="10"
-			  android:breakStrategy="high_quality"
-			  android:maxLines="1"
-			  android:singleLine="false"
-			  android:text="Title"
-			  android:layout_width="wrap_content"
-			  android:layout_height="wrap_content"
-			  android:textAlignment="center" />
-
-	<TextView android:id="@+id/ContentCellDescription"
-			  android:layout_row="1"
-			  android:layout_rowSpan="1"
-			  android:layout_column="1"
-			  android:layout_columnSpan="1"
-			  android:layout_columnWeight="10"
-			  android:minLines="1"
-			  android:ellipsize="none"
-			  android:maxLines="100"
-			  android:scrollHorizontally="false"
-			  android:breakStrategy="high_quality"
-			  android:singleLine="false"
-			  android:text="Description"
-			  android:layout_width="wrap_content"
-			  android:layout_height="wrap_content"
-			  android:textAlignment="center" />
-
-	<Jakar.SettingsView.Droid.FormsViewContainer android:id="@+id/ContentCellBody"
-												 android:layout_row="2"
-												 android:layout_rowSpan="1"
-												 android:layout_column="0"
-												 android:layout_columnSpan="2"
-												 android:orientation="horizontal"
-												 android:layout_alignParentTop="true"
-												 android:layout_alignParentRight="true"
-												 android:layout_alignParentBottom="true"
-												 android:layout_alignParentLeft="true"
-												 android:layout_width="match_parent"
-												 android:layout_height="wrap_content" />
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minHeight="44dp">
+	<LinearLayout android:id="@+id/ContentCellBody"
+				  android:layout_alignParentTop="true"
+				  android:layout_alignParentRight="true"
+				  android:layout_alignParentBottom="true"
+				  android:layout_alignParentLeft="true"
+				  android:layout_width="match_parent"
+				  android:layout_height="match_parent"
+				  android:orientation="vertical" />
 </GridLayout>

@@ -19,57 +19,21 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class LabelCellRenderer : CellBaseRenderer<LabelCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class LabelCellView : CellBaseView
+	public class LabelCellView : BaseValueCell
 	{
 		protected LabelCell _LabelCell => Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
 
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
 
-		protected IconView _Icon { get; set; }
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-		protected HintView _Hint { get; set; }
-		protected ValueView _Value { get; set; }
 
 
 		public LabelCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.DisplayCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.DisplayCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.DisplayCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellDescription));
-			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellHintText));
-			_Value = new ValueView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellValueText))
-					 {
-						 Label =
-						 {
-							 Ellipsize = TextUtils.TruncateAt.End,
-							 Gravity = GravityFlags.Right
-						 }
-					 };
-
-			_Value.Label.SetSingleLine(true);
+			_Value.SetSingleLine(false);
 		}
+
 		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.DisplayCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.DisplayCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.DisplayCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellDescription));
-			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellHintText));
-			_Value = new ValueView(this, ContentView.FindViewById<TextView>(Resource.Id.DisplayCellValueText))
-					 {
-						 Label =
-						 {
-							 Ellipsize = TextUtils.TruncateAt.End,
-							 Gravity = GravityFlags.Right
-						 }
-					 };
-
-			_Value.Label.SetSingleLine(true);
+			_Value.SetSingleLine(false);
 		}
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )

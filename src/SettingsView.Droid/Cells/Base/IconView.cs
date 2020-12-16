@@ -25,6 +25,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Cell = baseView ?? throw new NullReferenceException(nameof(baseView));
 		}
 
+
 		protected internal bool UpdateIconRadius()
 		{
 			if ( _Cell.CellBase.IconRadius >= 0 ) { _IconRadius = _Cell.AndroidContext.ToPixels(_Cell.CellBase.IconRadius); }

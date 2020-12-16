@@ -11,9 +11,9 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewSimpleCallback : ItemTouchHelper.SimpleCallback
 	{
-		private Shared.SettingsView _SettingsView { get; set; }
-		private RowInfo? _FromInfo { get; set; }
-		private Queue<(RowInfo from, RowInfo to)> _moveHistory = new Queue<(RowInfo from, RowInfo to)>();
+		protected Shared.SettingsView _SettingsView { get; set; }
+		protected RowInfo? _FromInfo { get; set; }
+		protected Queue<(RowInfo from, RowInfo to)> _moveHistory = new Queue<(RowInfo from, RowInfo to)>();
 
 		public SettingsViewSimpleCallback( Shared.SettingsView settingsView, int dragDirs, int swipeDirs ) : base(dragDirs, swipeDirs) => _SettingsView = settingsView;
 
@@ -51,7 +51,7 @@ namespace Jakar.SettingsView.Droid
 
 			if ( target is CustomViewHolder toContentHolder )
 			{
-				Section section = fromContentHolder.RowInfo.Section;
+				Section? section = fromContentHolder.RowInfo?.Section;
 				if ( section == null ||
 					 !section.UseDragSort )
 				{
@@ -59,15 +59,14 @@ namespace Jakar.SettingsView.Droid
 					return false;
 				}
 
-				Section toSection = toContentHolder.RowInfo.Section;
-				if ( toSection == null ||
-					 !toSection.UseDragSort )
+				RowInfo toInfo = toContentHolder.RowInfo ?? throw new ArgumentNullException(nameof(toContentHolder.RowInfo));
+				Section toSection = toInfo.Section;
+				if ( !toSection.UseDragSort )
 				{
 					System.Diagnostics.Debug.WriteLine("To Section Not UseDragSort");
 					return false;
 				}
 
-				RowInfo toInfo = toContentHolder.RowInfo;
 				System.Diagnostics.Debug.WriteLine($"Set ToInfo Section:{_SettingsView.Root.IndexOf(toInfo.Section)} Cell:{toInfo.Section.IndexOf(toInfo.Cell)}");
 
 				// save moved changes 
@@ -87,22 +86,24 @@ namespace Jakar.SettingsView.Droid
 			return true;
 		}
 
-		private void DataSourceMoved()
+		protected void DataSourceMoved()
 		{
 			if ( !_moveHistory.Any() ) { return; }
 
-			Cell cell = _moveHistory.Peek().from.Cell;
+			Cell? cell = _moveHistory.Peek().from.Cell;
+			if ( cell is null ) return;
+
 			Section section = _moveHistory.Last().to.Section;
 			while ( _moveHistory.Any() )
 			{
-				(RowInfo @from, RowInfo to) pos = _moveHistory.Dequeue();
-				DataSourceMoved(pos.from, pos.to);
+				(RowInfo from, RowInfo to) = _moveHistory.Dequeue();
+				DataSourceMoved(from, to);
 			}
 
 			_SettingsView.SendItemDropped(section, cell);
 		}
 
-		private void DataSourceMoved( RowInfo from, RowInfo to )
+		protected void DataSourceMoved( RowInfo from, RowInfo to )
 		{
 			int fromPos = from.Section.IndexOf(from.Cell);
 			int toPos = to.Section.IndexOf(to.Cell);
@@ -121,8 +122,8 @@ namespace Jakar.SettingsView.Droid
 			else
 			{
 				System.Diagnostics.Debug.WriteLine($"UpdateSource from:{fromPos} to:{toPos}");
-				(Cell Cell, object Item) deletedSet = from.Section.DeleteSourceItemWithoutNotify(fromPos);
-				to.Section.InsertSourceItemWithoutNotify(deletedSet.Cell, deletedSet.Item, toPos);
+				( Cell? cell, object? item ) = @from.Section.DeleteSourceItemWithoutNotify(fromPos);
+				to.Section.InsertSourceItemWithoutNotify(cell, item, toPos);
 			}
 
 			from.Section = to.Section;
@@ -148,19 +149,17 @@ namespace Jakar.SettingsView.Droid
 		{
 			if ( !( viewHolder is ContentBodyViewHolder contentHolder ) ) return base.GetDragDirs(recyclerView, viewHolder);
 
-			if ( contentHolder.RowInfo != null )
-			{
-				Section? section = contentHolder.RowInfo.Section; // ?? throw new NullReferenceException(nameof(contentHolder.RowInfo.Section));
+			if ( contentHolder.RowInfo == null ) return base.GetDragDirs(recyclerView, viewHolder);
+			
+			Section section = contentHolder.RowInfo.Section; 
 
-				if ( section != null &&
-					 !section.UseDragSort ) { return 0; }
+			if ( !section.UseDragSort ) { return 0; }
 
-				if ( !contentHolder.RowInfo.Cell.IsEnabled ) { return 0; }
+			if ( !( contentHolder.RowInfo.Cell?.IsEnabled ?? false ) ) { return 0; }
 
-				// save start info.
-				_FromInfo = contentHolder.RowInfo;
-				System.Diagnostics.Debug.WriteLine($"DragDirs Section:{_SettingsView.Root.IndexOf(_FromInfo.Section)} Cell:{_FromInfo.Section.IndexOf(_FromInfo.Cell)}");
-			}
+			// save start info.
+			_FromInfo = contentHolder.RowInfo;
+			System.Diagnostics.Debug.WriteLine($"DragDirs Section:{_SettingsView.Root.IndexOf(_FromInfo.Section)} Cell:{_FromInfo.Section.IndexOf(_FromInfo.Cell)}");
 
 			return base.GetDragDirs(recyclerView, viewHolder);
 		}
@@ -183,9 +182,7 @@ namespace Jakar.SettingsView.Droid
 		{
 			if ( disposing )
 			{
-				_SettingsView = null;
 				_moveHistory.Clear();
-				_moveHistory = null;
 			}
 
 			base.Dispose(disposing);

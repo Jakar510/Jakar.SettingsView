@@ -4,18 +4,19 @@ using Android.Graphics.Drawables;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public class SVItemdecoration : RecyclerView.ItemDecoration
+	public class SVItemDecoration : RecyclerView.ItemDecoration
 	{
-		private Drawable _drawable;
-		private Shared.SettingsView _settingsView;
+		private Drawable _Drawable { get; set; }
+		private Shared.SettingsView _SettingsView { get; set; }
 
-		public SVItemdecoration( Drawable drawable, Shared.SettingsView settingsView )
+		public SVItemDecoration( Drawable drawable, Shared.SettingsView settingsView )
 		{
-			_drawable = drawable;
-			_settingsView = settingsView;
+			_Drawable = drawable;
+			_SettingsView = settingsView;
 		}
 
 		public override void GetItemOffsets( Rect outRect,
@@ -23,7 +24,7 @@ namespace Jakar.SettingsView.Droid
 											 RecyclerView parent,
 											 RecyclerView.State state )
 		{
-			outRect.Set(0, _drawable.IntrinsicHeight, 0, 0);
+			outRect.Set(0, _Drawable.IntrinsicHeight, 0, 0);
 		}
 
 		public override void OnDraw( Canvas c, RecyclerView parent, RecyclerView.State state )
@@ -32,26 +33,27 @@ namespace Jakar.SettingsView.Droid
 			int right = parent.Right;
 
 			int childCount = parent.ChildCount;
-			CustomViewHolder prevHolder = null;
+			CustomViewHolder? prevHolder = null;
 			for ( var i = 0; i < childCount; i++ )
 			{
 				View? child = parent.GetChildAt(i);
-				var holder = parent.GetChildViewHolder(child) as CustomViewHolder;
 
-				if ( prevHolder != null && prevHolder is IHeaderViewHolder && !_settingsView.ShowSectionTopBottomBorder ||
-					 holder is IFooterViewHolder && !_settingsView.ShowSectionTopBottomBorder ||
-					 holder is IFooterViewHolder && !holder.RowInfo.Section.Any() ||
-					 holder is IHeaderViewHolder ||
-					 !holder.RowInfo.Section.IsVisible )
+				if ( child is null ) continue;
+				if ( !( parent.GetChildViewHolder(child) is CustomViewHolder holder ) ) continue;
+				if ( holder.RowInfo is null ) continue;
+				if ( ( prevHolder is IHeaderViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
+					 ( holder is IFooterViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
+					 ( holder is IFooterViewHolder && !holder.RowInfo.Section.Any() ) ||
+					 ( holder is IHeaderViewHolder || !holder.RowInfo.Section.IsVisible ) )
 				{
 					prevHolder = holder;
 					continue;
 				}
 
 				int bottom = child.Top;
-				int top = bottom - _drawable.IntrinsicHeight;
-				_drawable.SetBounds(left, top, right, bottom);
-				_drawable.Draw(c);
+				int top = bottom - _Drawable.IntrinsicHeight;
+				_Drawable.SetBounds(left, top, right, bottom);
+				_Drawable.Draw(c);
 
 				prevHolder = holder;
 			}
@@ -59,11 +61,7 @@ namespace Jakar.SettingsView.Droid
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing )
-			{
-				_settingsView = null;
-				_drawable = null;
-			}
+			if ( disposing ) { }
 
 			base.Dispose(disposing);
 		}

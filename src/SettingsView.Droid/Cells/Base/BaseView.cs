@@ -1,29 +1,45 @@
 ﻿using System;
 using System.ComponentModel;
+using Android.Content;
 using Android.Graphics;
+using Android.Util;
 using Android.Widget;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseView : IDisposable
+	public abstract class BaseTextView : TextView
 	{
-		private bool _disposedValue;
-
 		protected internal Color DefaultTextColor { get; }
 		protected internal float DefaultFontSize { get; }
-		protected CellBaseView _Cell { get; set; }
-		protected internal TextView Label { get; protected set; }
-		protected BaseView( CellBaseView baseView, TextView? view )
-		{
-			Label = view ?? throw new NullReferenceException(nameof(view));
-			_Cell = baseView ?? throw new NullReferenceException(nameof(baseView));
 
-			DefaultFontSize = Label.TextSize;
-			DefaultTextColor = new Color(Label.CurrentTextColor);
+		protected CellBaseView _Cell { get; set; }
+		// protected internal TextView Label { get; protected set; }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+		protected BaseTextView( Context context ) : base(context)
+		{
+			DefaultFontSize = TextSize;
+			DefaultTextColor = new Color(CurrentTextColor);
 		}
-		protected internal void Enable() { Label.Alpha = CellBaseView.ENABLED_ALPHA; }
-		protected internal void Disable() { Label.Alpha = CellBaseView.DISABLED_ALPHA; }
+		protected BaseTextView( CellBaseView cell, Context context ) : this(context) => SetCell(cell);
+		protected BaseTextView( Context context, IAttributeSet attributes ) : base(context, attributes)
+		{
+			DefaultFontSize = TextSize;
+			DefaultTextColor = new Color(CurrentTextColor);
+		}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+		protected internal void SetCell( CellBaseView cell ) { _Cell = cell ?? throw new NullReferenceException(nameof(cell)); }
+		public static TCell Create<TCell>( Android.Views.View view, CellBaseView cell, int id ) where TCell : BaseTextView
+		{
+			TCell hint = view.FindViewById<TCell>(id) ?? throw new NullReferenceException(nameof(id));
+			hint.SetCell(cell);
+			return hint;
+		}
+
+
+		protected internal void Enable() { Alpha = CellBaseView.ENABLED_ALPHA; }
+		protected internal void Disable() { Alpha = CellBaseView.DISABLED_ALPHA; }
 
 		protected internal abstract bool UpdateText();
 		protected internal abstract bool UpdateColor();
@@ -34,37 +50,5 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected internal abstract bool Update( object sender, PropertyChangedEventArgs e );
 		protected internal abstract void Update();
 		protected internal abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
-
-
-		protected internal string? Text
-		{
-			get => Label.Text;
-			set => Label.Text = value;
-		}
-
-		protected virtual void Dispose( bool disposing )
-		{
-			if ( !_disposedValue )
-			{
-				if ( disposing ) { Label.Dispose(); }
-			}
-
-			// free unmanaged resources (unmanaged objects) and override finalizer   // set large fields to null
-			_disposedValue = true;
-		}
-
-		// override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-		// ~BaseView()
-		// {
-		//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-		//     Dispose(disposing: false);
-		// }
-
-		public void Dispose()
-		{
-			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
 	}
 }

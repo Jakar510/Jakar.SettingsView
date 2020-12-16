@@ -20,48 +20,46 @@ namespace Jakar.SettingsView.Droid.Cells
 
 
 	[Preserve(AllMembers = true)]
-	public class CommandCellView : CellBaseView
+	public class CommandCellView : BaseDescriptionCell
 	{
 		protected Action? Execute { get; set; }
 		protected ICommand? _Command { get; set; }
 		protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
 
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
-
-		protected IconView _Icon { get; set; }
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-		protected ImageView _IndicatorView { get; set; }
+		protected LinearLayout _AccessoryStack { get; }
+		protected ImageView _Accessory { get; set; }
 
 
 		public CommandCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CommandCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_IndicatorView = ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_IndicatorView));
+			_Accessory = new ImageView(AndroidContext);
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			AddAccessory(_AccessoryStack, _Accessory);
+			
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
 				 _CommandCell.HideArrowIndicator ) { return; }
 
-			_IndicatorView.RemoveFromParent();
+			_AccessoryStack.RemoveFromParent();
+			_Accessory.RemoveFromParent();
 		}
 		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CommandCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_IndicatorView = ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_IndicatorView));
+			_Accessory = new ImageView(AndroidContext);
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			AddAccessory(_AccessoryStack, _Accessory);
+
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
-				 _CommandCell.HideArrowIndicator ) { return; }
+				 _CommandCell.HideArrowIndicator )
+			{ return; }
 
-			_IndicatorView.RemoveFromParent();
+			_AccessoryStack.RemoveFromParent();
+			_Accessory.RemoveFromParent();
 		}
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -141,7 +139,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( !CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_Command.CanExecute(_CommandCell.CommandParameter));
+			SetEnabledAppearance(_Command?.CanExecute(_CommandCell.CommandParameter) ?? true);
 		}
 
 
@@ -158,10 +156,10 @@ namespace Jakar.SettingsView.Droid.Cells
 
 				_Description.Dispose();
 
-				_IndicatorView.RemoveFromParent();
-				_IndicatorView.SetImageDrawable(null);
-				_IndicatorView.SetImageBitmap(null);
-				_IndicatorView.Dispose();
+				_Accessory.RemoveFromParent();
+				_Accessory.SetImageDrawable(null);
+				_Accessory.SetImageBitmap(null);
+				_Accessory.Dispose();
 
 				_CellLayout.Dispose();
 			}

@@ -11,30 +11,10 @@ using Xamarin.Forms.Platform.Android;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Cell base renderer.
-	/// </summary>
+
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class CellBaseRenderer<TnativeCell> : CellRenderer where TnativeCell : CellBaseView
 	{
-		internal static class InstanceCreator<T1, T2, TInstance>
-		{
-			public static Func<T1, T2, TInstance> Create { get; } = CreateInstance();
-
-			private static Func<T1, T2, TInstance> CreateInstance()
-			{
-				Type[] argsTypes =
-				{
-					typeof(T1),
-					typeof(T2)
-				};
-				ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder, argsTypes, null) ?? throw new NullReferenceException(nameof(constructor));
-				ParameterExpression[] args = argsTypes.Select(Expression.Parameter).ToArray();
-				return Expression.Lambda<Func<T1, T2, TInstance>>(Expression.New(constructor, args), args).Compile();
-			}
-		}
-
-
 		protected override Android.Views.View GetCellCore( Xamarin.Forms.Cell item,
 														   Android.Views.View? convertView,
 														   Android.Views.ViewGroup parent,

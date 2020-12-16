@@ -2,7 +2,7 @@
 	  encoding = "utf-8" ?>
 
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/DisplayCellLayout"
+			android:id="@+id/CellLayout"
 			android:layout_width="match_parent"
 			android:layout_height="44dp"
 			android:minHeight="44dp"
@@ -11,7 +11,7 @@
 			android:paddingRight="10dp"
 			android:paddingBottom="4dp">
 
-	<ImageView android:id="@+id/DisplayCellIcon"
+	<ImageView android:id="@+id/CellIcon"
 			   android:layout_width="wrap_content"
 			   android:layout_height="wrap_content"
 			   android:layout_row="0"
@@ -21,7 +21,7 @@
 			   android:layout_columnWeight="0.1"
 			   android:scaleType="fitXY" />
 
-	<TextView android:id="@+id/DisplayCellTitle"
+	<TextView android:id="@+id/CellTitle"
 			  android:layout_row="0"
 			  android:layout_rowSpan="1"
 			  android:layout_column="1"
@@ -30,12 +30,12 @@
 			  android:breakStrategy="high_quality"
 			  android:maxLines="1"
 			  android:singleLine="false"
-			  android:text="Title Cell"
+			  android:text="Title"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  android:textAlignment="center" />
 
-	<TextView android:id="@+id/DisplayCellDescription"
+	<TextView android:id="@+id/CellDescription"
 			  android:layout_row="1"
 			  android:layout_rowSpan="1"
 			  android:layout_column="1"
@@ -52,7 +52,7 @@
 			  android:layout_height="wrap_content"
 			  android:textAlignment="center" />
 
-	<TextView android:id="@+id/DisplayCellHintText"
+	<TextView android:id="@+id/CellHintText"
 			  android:layout_row="0"
 			  android:layout_rowSpan="1"
 			  android:layout_column="2"
@@ -70,7 +70,7 @@
 			  android:textAlignment="viewEnd"
 			  android:textColor="#FF0000" />
 
-	<TextView android:id="@+id/DisplayCellValueText"
+	<TextView android:id="@+id/CellValueText"
 			  android:layout_row="1"
 			  android:layout_rowSpan="1"
 			  android:layout_column="2"
@@ -87,5 +87,18 @@
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  android:textAlignment="center" />
+	
+	<LinearLayout android:id="@+id/CellAccessoryView"
+				  android:layout_row="0"
+				  android:layout_rowSpan="2"
+				  android:layout_column="3"
+				  android:layout_columnSpan="1"
+				  android:layout_columnWeight="2"
+				  android:layout_alignParentRight="true"
+				  android:layout_centerVertical="true"
+				  android:layout_width="wrap_content"
+				  android:layout_height="match_parent"
+				  android:gravity="right|center"
+				  android:orientation="horizontal" />
 
 </GridLayout>

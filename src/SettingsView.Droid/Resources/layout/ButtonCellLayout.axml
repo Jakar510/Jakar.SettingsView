@@ -17,6 +17,6 @@
 			android:breakStrategy="high_quality"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:text="Button Text" />
+			android:text="ButtonCellButton" />
 
 </GridLayout>

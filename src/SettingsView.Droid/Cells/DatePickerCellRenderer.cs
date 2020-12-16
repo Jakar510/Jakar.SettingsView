@@ -4,7 +4,6 @@ using Android.Content;
 using Android.Runtime;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(DatePickerCell), typeof(DatePickerCellRenderer))]
@@ -12,15 +11,9 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	/// <summary>
-	/// Date picker cell renderer.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class DatePickerCellRenderer : CellBaseRenderer<DatePickerCellView> { }
 
-	/// <summary>
-	/// Date picker cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class DatePickerCellView : LabelCellView
 	{

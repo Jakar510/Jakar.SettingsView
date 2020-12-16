@@ -34,25 +34,50 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected GridLayout _CellLayout { get; set; }
 		protected AButton _Button { get; set; }
 
+		protected LinearLayout _AccessoryStack { get; }
 		protected ICommand? _Command { get; set; }
 
 		public ButtonCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+			ContentView = CreateContentView(Resource.Layout.CellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			ContentView.FindViewById<ImageView>(Resource.Id.CellIcon)?.RemoveFromParent();
+			ContentView.FindViewById<TitleView>(Resource.Id.CellTitle)?.RemoveFromParent();
+			ContentView.FindViewById<DescriptionView>(Resource.Id.CellDescription)?.RemoveFromParent();
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			_AccessoryStack.RemoveFromParent();
 
+			_Button = new AButton(AndroidContext);
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
+			using var layoutParams = new LayoutParams();
+			{
+				_CellLayout.AddView(_AccessoryStack, layoutParams);
+			}
+			AddAccessory(_AccessoryStack, _Button);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+			ContentView = CreateContentView(Resource.Layout.CellLayout);
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			ContentView.FindViewById<ImageView>(Resource.Id.CellIcon)?.RemoveFromParent();
+			ContentView.FindViewById<TitleView>(Resource.Id.CellTitle)?.RemoveFromParent();
+			ContentView.FindViewById<DescriptionView>(Resource.Id.CellDescription)?.RemoveFromParent();
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			_AccessoryStack.RemoveFromParent();
 
+			_Button = new AButton(AndroidContext);
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
+			using var layoutParams = new LayoutParams();
+			{
+				_CellLayout.AddView(_AccessoryStack, layoutParams);
+			}
+			AddAccessory(_AccessoryStack, _Button);
 		}
 
 

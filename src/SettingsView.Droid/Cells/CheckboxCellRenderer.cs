@@ -21,53 +21,26 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class CheckboxCellView : CellBaseView, CompoundButton.IOnCheckedChangeListener
+	public class CheckboxCellView : BaseAccessoryCell<AppCompatCheckBox>, CompoundButton.IOnCheckedChangeListener
 	{
-		protected AppCompatCheckBox _Checkbox { get; set; }
-		protected CheckboxCell _CheckboxCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_CheckboxCell));
-
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
-		protected LinearLayout _AccessoryStack { get; set; }
-
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-
+		// protected AppCompatCheckBox _Accessory { get; set; }
+		protected CheckboxCell _AccessoryCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
+		
 
 		public CheckboxCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellLayout));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_Checkbox = new AppCompatCheckBox(context)
-						{
-							Focusable = false,
-							Gravity = GravityFlags.Right
-						};
-			_Checkbox.SetOnCheckedChangeListener(this);
-			AddAccessory(_AccessoryStack, _Checkbox);
+			_Accessory.Focusable = false;
+			_Accessory.Gravity = GravityFlags.Right;
+			_Accessory.SetOnCheckedChangeListener(this);
 
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
 		public CheckboxCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellLayout));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_Checkbox = new AppCompatCheckBox(AndroidContext)
-						{
-							Focusable = false,
-							Gravity = GravityFlags.Right
-						};
-			_Checkbox.SetOnCheckedChangeListener(this);
-			AddAccessory(_AccessoryStack, _Checkbox);
+			_Accessory.Focusable = false;
+			_Accessory.Gravity = GravityFlags.Right;
+			_Accessory.SetOnCheckedChangeListener(this);
 
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
@@ -99,7 +72,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 
-		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Checkbox.Checked = !_Checkbox.Checked; }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Accessory.Checked = !_Accessory.Checked; }
 
 
 		protected override void EnableCell()
@@ -116,7 +89,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked )
 		{
-			_CheckboxCell.Checked = isChecked;
+			_AccessoryCell.Checked = isChecked;
 			buttonView?.JumpDrawablesToCurrentState();
 		}
 
@@ -127,10 +100,10 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.UpdateCell();
 		}
 
-		protected void UpdateChecked() { _Checkbox.Checked = _CheckboxCell.Checked; }
+		protected void UpdateChecked() { _Accessory.Checked = _AccessoryCell.Checked; }
 		protected void UpdateAccentColor()
 		{
-			if ( _CheckboxCell.AccentColor != Color.Default ) { ChangeCheckColor(_CheckboxCell.AccentColor.ToAndroid()); }
+			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid()); }
 			else if ( CellParent != null &&
 					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid()); }
 		}
@@ -154,7 +127,7 @@ namespace Jakar.SettingsView.Droid.Cells
 													  accent
 												  });
 
-			_Checkbox.SupportButtonTintList = colorList;
+			_Accessory.SupportButtonTintList = colorList;
 
 			var rippleColor = new ColorStateList(new int[][]
 												 {
@@ -171,9 +144,9 @@ namespace Jakar.SettingsView.Droid.Cells
 														Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
 														Android.Graphics.Color.Argb(76, 117, 117, 117)
 													});
-			var ripple = _Checkbox.Background as RippleDrawable;
-			ripple.SetColor(rippleColor);
-			_Checkbox.Background = ripple;
+			var ripple = _Accessory.Background as RippleDrawable;
+			ripple?.SetColor(rippleColor);
+			_Accessory.Background = ripple;
 		}
 
 
@@ -181,8 +154,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( disposing )
 			{
-				_Checkbox.SetOnCheckedChangeListener(null);
-				_Checkbox.Dispose();
+				_Accessory.SetOnCheckedChangeListener(null);
+				_Accessory.Dispose();
 
 				_Title.Dispose();
 				_Description.Dispose();

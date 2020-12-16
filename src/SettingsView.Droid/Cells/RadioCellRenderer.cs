@@ -18,19 +18,11 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class RadioCellView : CellBaseView
+	public class RadioCellView : BaseAccessoryCell<SimpleCheck>
 	{
 		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
-		protected LinearLayout _AccessoryStack { get; set; }
-
-		private SimpleCheck _SimpleCheck { get; set; }
-		protected IconView _Icon { get; set; }
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-
+		
 		private object _SelectedValue
 		{
 			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
@@ -44,33 +36,13 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public RadioCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_SimpleCheck = new SimpleCheck(AndroidContext)
-						   {
-							   Focusable = false
-						   };
-			AddAccessory(_AccessoryStack, _SimpleCheck);
+			_Accessory.Focusable = false;
+			AddAccessory(_AccessoryStack, _Accessory);
 		}
 		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_SimpleCheck = new SimpleCheck(AndroidContext)
-						   {
-							   Focusable = false
-						   };
-			AddAccessory(_AccessoryStack, _SimpleCheck);
+			_Accessory.Focusable = false;
+			AddAccessory(_AccessoryStack, _Accessory);
 		}
 
 
@@ -85,7 +57,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName )
 			{
 				UpdateAccentColor();
-				_SimpleCheck.Invalidate();
+				_Accessory.Invalidate();
 			}
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
@@ -100,7 +72,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName )
 			{
 				UpdateAccentColor();
-				_SimpleCheck.Invalidate();
+				_Accessory.Invalidate();
 			}
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
@@ -112,7 +84,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( !_SimpleCheck.Selected ) { _SelectedValue = _RadioCell.Value; }
+			if ( !_Accessory.Selected ) { _SelectedValue = _RadioCell.Value; }
 		}
 
 
@@ -121,16 +93,16 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.EnableCell();
 			_Title.Enable();
 			_Description.Enable();
-			_SimpleCheck.Enabled = true;
-			_SimpleCheck.Alpha = ENABLED_ALPHA;
+			_Accessory.Enabled = true;
+			_Accessory.Alpha = ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
 			base.DisableCell();
 			_Title.Disable();
 			_Description.Disable();
-			_SimpleCheck.Enabled = false;
-			_SimpleCheck.Alpha = DISABLED_ALPHA;
+			_Accessory.Enabled = false;
+			_Accessory.Alpha = DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()
@@ -139,12 +111,12 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateSelectedValue();
 			base.UpdateCell();
 		}
-		private void UpdateSelectedValue() { _SimpleCheck.Selected = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
+		private void UpdateSelectedValue() { _Accessory.Selected = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
 		private void UpdateAccentColor()
 		{
-			if ( !_RadioCell.AccentColor.IsDefault ) { _SimpleCheck.Color = _RadioCell.AccentColor.ToAndroid(); }
+			if ( !_RadioCell.AccentColor.IsDefault ) { _Accessory.Color = _RadioCell.AccentColor.ToAndroid(); }
 			else if ( CellParent != null &&
-					  !CellParent.CellAccentColor.IsDefault ) { _SimpleCheck.Color = CellParent.CellAccentColor.ToAndroid(); }
+					  !CellParent.CellAccentColor.IsDefault ) { _Accessory.Color = CellParent.CellAccentColor.ToAndroid(); }
 		}
 
 
@@ -152,8 +124,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( disposing )
 			{
-				_SimpleCheck.RemoveFromParent();
-				_SimpleCheck.Dispose();
+				_Accessory.RemoveFromParent();
+				_Accessory.Dispose();
 
 				_Title.Dispose();
 

@@ -13,6 +13,7 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cells\Base\AiEditText.cs" />
+    <Compile Include="Cells\Base\BaseAccessoryCell.cs" />
+    <Compile Include="Cells\Base\BaseDescriptionCell.cs" />
+    <Compile Include="Cells\Base\BaseEntryCell.cs" />
+    <Compile Include="Cells\Base\BaseTitledCell.cs" />
+    <Compile Include="Cells\Base\BaseValueCell.cs" />
     <Compile Include="Cells\Base\BaseView.cs" />
     <Compile Include="Cells\Base\DescriptionView.cs" />
     <Compile Include="Cells\Base\HintView.cs" />
@@ -92,9 +98,11 @@
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\layout\CellLayout.axml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\CellBaseView.axml" />
-    <AndroidResource Include="Resources\layout\ContentCell.axml" />
     <AndroidResource Include="Resources\layout\FooterCell.axml" />
     <AndroidResource Include="Resources\layout\HeaderCell.axml" />
     <AndroidResource Include="Resources\drawable\ic_navigate_next.xml">
@@ -123,9 +131,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\AccessoryCellLayout.axml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SettingsView\Jakar.SettingsView.csproj">
       <Project>{8FFB1EF3-FAF3-478C-B9F1-4D02E599C3C6}</Project>
       <Name>SettingsView</Name>
@@ -136,18 +141,6 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\ButtonCellLayout.axml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\CommandCellLayout.axml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\DisplayCellLayout.axml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\EntryCellLayout.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\DefaultFooterCell.axml">
@@ -161,6 +154,8 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\ContentCell.axml" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

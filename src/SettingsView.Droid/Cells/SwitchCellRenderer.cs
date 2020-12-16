@@ -20,37 +20,16 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class SwitchCellView : CellBaseView, CompoundButton.IOnCheckedChangeListener
+	public class SwitchCellView : BaseAccessoryCell<SwitchCompat>, CompoundButton.IOnCheckedChangeListener
 	{
-		protected SwitchCompat _Switch { get; set; }
-		protected SwitchCell _SwitchCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_SwitchCell));
-
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
-		protected LinearLayout _AccessoryStack { get; set; }
-
-		protected IconView _Icon { get; set; }
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-
-
+		// protected SwitchCompat _Accessory { get; set; }
+		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
+		
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_Switch = new SwitchCompat(AndroidContext)
-					  {
-						  Gravity = GravityFlags.Right,
-						  Focusable = false
-					  };
-			AddAccessory(_AccessoryStack, _Switch);
-
-			_Switch.SetOnCheckedChangeListener(this);
+			_Accessory.Gravity = GravityFlags.Right;
+			_Accessory.Focusable = false;
+			_Accessory.SetOnCheckedChangeListener(this);
 
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
@@ -58,21 +37,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
-
-			_Switch = new SwitchCompat(AndroidContext)
-					  {
-						  Gravity = GravityFlags.Right,
-						  Focusable = false
-					  };
-			AddAccessory(_AccessoryStack, _Switch);
-
-			_Switch.SetOnCheckedChangeListener(this);
+			_Accessory.Gravity = GravityFlags.Right;
+			_Accessory.Focusable = false;
+			_Accessory.SetOnCheckedChangeListener(this);
 
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
@@ -93,24 +60,24 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Switch.Checked = !_Switch.Checked; }
-		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _SwitchCell.On = isChecked; }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Accessory.Checked = !_Accessory.Checked; }
+		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _AccessoryCell.On = isChecked; }
 
 		protected override void EnableCell()
 		{
 			base.EnableCell();
 			_Title.Enable();
 			_Description.Enable();
-			_Switch.Enabled = true;
-			_Switch.Alpha = ENABLED_ALPHA;
+			_Accessory.Enabled = true;
+			_Accessory.Alpha = ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
 			base.DisableCell();
 			_Title.Disable();
 			_Description.Disable();
-			_Switch.Enabled = false;
-			_Switch.Alpha = DISABLED_ALPHA;
+			_Accessory.Enabled = false;
+			_Accessory.Alpha = DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()
@@ -119,11 +86,11 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateOn();
 			base.UpdateCell();
 		}
-		private void UpdateOn() { _Switch.Checked = _SwitchCell.On; }
+		private void UpdateOn() { _Accessory.Checked = _AccessoryCell.On; }
 
 		private void UpdateAccentColor()
 		{
-			if ( _SwitchCell.AccentColor != Color.Default ) { ChangeSwitchColor(_SwitchCell.AccentColor.ToAndroid()); }
+			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeSwitchColor(_AccessoryCell.AccentColor.ToAndroid()); }
 			else if ( CellParent != null &&
 					  CellParent.CellAccentColor != Color.Default ) { ChangeSwitchColor(CellParent.CellAccentColor.ToAndroid()); }
 		}
@@ -147,7 +114,7 @@ namespace Jakar.SettingsView.Droid.Cells
 													});
 
 
-			_Switch.TrackDrawable.SetTintList(trackColors);
+			_Accessory.TrackDrawable.SetTintList(trackColors);
 
 			var thumbColors = new ColorStateList(new[]
 												 {
@@ -165,9 +132,9 @@ namespace Jakar.SettingsView.Droid.Cells
 														Android.Graphics.Color.Argb(255, 244, 244, 244)
 													});
 
-			_Switch.ThumbDrawable.SetTintList(thumbColors);
+			_Accessory.ThumbDrawable.SetTintList(thumbColors);
 
-			var ripple = _Switch.Background as RippleDrawable;
+			var ripple = _Accessory.Background as RippleDrawable;
 			Ripple.SetColor(trackColors);
 		}
 
@@ -176,12 +143,12 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( disposing )
 			{
-				_Switch.SetOnCheckedChangeListener(null);
-				_Switch.Background?.Dispose();
-				_Switch.Background = null;
-				_Switch.ThumbDrawable?.Dispose();
-				_Switch.ThumbDrawable = null;
-				_Switch.Dispose();
+				_Accessory.SetOnCheckedChangeListener(null);
+				_Accessory.Background?.Dispose();
+				_Accessory.Background = null;
+				_Accessory.ThumbDrawable?.Dispose();
+				_Accessory.ThumbDrawable = null;
+				_Accessory.Dispose();
 
 				_CellLayout.Dispose();
 				_AccessoryStack.Dispose();

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Android.Content;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -9,32 +10,34 @@ using Xamarin.Forms.Platform.Android;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public class HintView : BaseView
+	public class HintView : BaseTextView
 	{
-		public HintView( CellBaseView baseView, TextView? view ) : base(baseView, view) { }
+		public HintView( Context context ) : base(context) { }
+		public HintView( CellBaseView baseView, Context context ) : base(baseView, context) { }
+		public HintView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
 
 
 		protected internal override bool UpdateText()
 		{
-			Label.Text = _Cell.CellBase.Description;
-			Label.Visibility = string.IsNullOrEmpty(Label.Text) ? ViewStates.Gone : ViewStates.Visible;
+			Text = _Cell.CellBase.Description;
+			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
 		}
 		protected internal override bool UpdateFontSize()
 		{
-			if ( _Cell.CellBase.HintFontSize > 0 ) { Label.SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellBase.HintFontSize); }
-			else if ( _Cell.CellParent != null ) { Label.SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellHintFontSize); }
-			else { Label.SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
+			if ( _Cell.CellBase.HintFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellBase.HintFontSize); }
+			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellHintFontSize); }
+			else { SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
 
 			return true;
 		}
 		protected internal override bool UpdateColor()
 		{
-			if ( _Cell.CellBase.HintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellBase.HintTextColor.ToAndroid()); }
+			if ( _Cell.CellBase.HintTextColor != Color.Default ) { SetTextColor(_Cell.CellBase.HintTextColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
-					  _Cell.CellParent.CellHintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
-			else { Label.SetTextColor(DefaultTextColor); }
+					  _Cell.CellParent.CellHintTextColor != Color.Default ) { SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
+			else { SetTextColor(DefaultTextColor); }
 
 			return true;
 		}
@@ -43,12 +46,12 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			string? family = _Cell.CellBase.HintFontFamily ?? _Cell.CellParent?.CellHintFontFamily;
 			FontAttributes attr = _Cell.CellBase.HintFontAttributes ?? _Cell.CellParent?.CellHintFontAttributes ?? FontAttributes.None;
 
-			Label.Typeface = FontUtility.CreateTypeface(family, attr);
+			Typeface = FontUtility.CreateTypeface(family, attr);
 
 			return true;
 		}
 
-		// protected internal  override bool UpdateAlignment() { _Label.TextAlignment = _CellBase.HintTextAlignment; }
+		// protected internal  override bool UpdateAlignment() { _TextAlignment = _CellBase.HintTextAlignment; }
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{

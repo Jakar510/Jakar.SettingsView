@@ -24,43 +24,16 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class EntryCellView : CellBaseView, ITextWatcher, Android.Views.View.IOnFocusChangeListener, TextView.IOnEditorActionListener
+	public class EntryCellView : BaseEntryCell
 	{
-		protected AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
-
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
-
-		protected IconView _Icon { get; set; }
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
-		protected HintView _Hint { get; set; }
-		protected AiEditText _Value { get; set; }
-
 		public EntryCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.EntryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.EntryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.EntryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellDescription));
-			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellHintText));
-			_Value = ContentView.FindViewById<AiEditText>(Resource.Id.EntryCellValue) ?? throw new NullReferenceException(nameof(_Value));
-			_Value.Init(_EntryCell, this);
-
 			Click += EntryCellView_Click;
 			Click += EditTextOnClick;
 			_EntryCell.Focused += EntryCell_Focused;
 		}
 		public EntryCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.EntryCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.EntryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.EntryCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellDescription));
-			_Hint = new HintView(this, ContentView.FindViewById<TextView>(Resource.Id.EntryCellHintText));
-			_Value = ContentView.FindViewById<AiEditText>(Resource.Id.EntryCellValue) ?? throw new NullReferenceException(nameof(_Value));
 			_Value.Init(_EntryCell, this);
 
 			Click += EntryCellView_Click;
@@ -125,7 +98,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( _Description.Update(sender, e) ) { return; }
 
 			if ( _Hint.Update(sender, e) ) { return; }
-			
+
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -146,38 +119,6 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Value.Update();
 		}
 
-		bool TextView.IOnEditorActionListener.OnEditorAction( TextView? v, ImeAction actionId, KeyEvent? e )
-		{
-			if ( v is null ) return true;
-
-			if ( actionId != ImeAction.Done &&
-				 ( actionId != ImeAction.ImeNull || e != null && e.KeyCode != Keycode.Enter ) ) return true;
-			HideKeyboard(v);
-			DoneEdit();
-
-			return true;
-		}
-
-		protected internal void DoneEdit()
-		{
-			_EntryCell.SendCompleted();
-			ClearFocus();
-		}
-
-		protected void HideKeyboard( Android.Views.View? inputView )
-		{
-			Object temp = AndroidContext.GetSystemService(Context.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
-			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
-			IBinder? windowToken = inputView?.WindowToken;
-			if ( windowToken != null ) { inputMethodManager.HideSoftInputFromWindow(windowToken, HideSoftInputFlags.None); }
-		}
-		protected void ShowKeyboard( Android.Views.View inputView )
-		{
-			Object temp = AndroidContext.GetSystemService(Context.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
-			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
-			inputMethodManager.ShowSoftInput(inputView, ShowFlags.Forced);
-			inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
-		}
 
 		protected void EditTextOnClick( object sender, EventArgs e ) { _Value.PerformSelectAction(); }
 		protected void EntryCellView_Click( object sender, EventArgs e )
@@ -190,37 +131,6 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			RequestFocus();
 			ShowKeyboard(_Value);
-		}
-
-		void ITextWatcher.AfterTextChanged( IEditable? s ) { }
-		void ITextWatcher.BeforeTextChanged( ICharSequence? s,
-											 int start,
-											 int count,
-											 int after ) { }
-		void ITextWatcher.OnTextChanged( ICharSequence? s,
-										 int start,
-										 int before,
-										 int count )
-		{
-			if ( string.IsNullOrEmpty(_EntryCell.ValueText) &&
-				 s.Length() == 0 ) { return; }
-
-			_EntryCell.ValueText = s?.ToString();
-		}
-		void IOnFocusChangeListener.OnFocusChange( Android.Views.View? v, bool hasFocus )
-		{
-			if ( hasFocus )
-			{
-				//show underline when on focus.
-				Background.Alpha = 100;
-			}
-			else
-			{
-				//hide underline
-				Background.Alpha = 0;
-				// consider as text inpute completed.
-				_EntryCell.SendCompleted();
-			}
 		}
 
 
