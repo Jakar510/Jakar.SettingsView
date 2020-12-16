@@ -45,6 +45,7 @@
     <Reference Include="Java.Interop" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cells\Base\AiEditText.cs" />
     <Compile Include="Cells\Base\BaseView.cs" />
     <Compile Include="Cells\Base\DescriptionView.cs" />
     <Compile Include="Cells\Base\HintView.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Cells\SimpleCheck.cs" />
     <Compile Include="SettingsViewInit.cs" />
     <Compile Include="ModelProxy.cs" />
+    <Compile Include="SettingsViewSimpleCallback.cs" />
     <Compile Include="SVItemdecoration.cs" />
     <Compile Include="ViewHolders.cs" />
     <Compile Include="FormsViewContainer.cs" />
@@ -91,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\layout\CellBaseView.axml" />
+    <AndroidResource Include="Resources\CellBaseView.axml" />
     <AndroidResource Include="Resources\layout\ContentCell.axml" />
     <AndroidResource Include="Resources\layout\FooterCell.axml" />
     <AndroidResource Include="Resources\layout\HeaderCell.axml" />

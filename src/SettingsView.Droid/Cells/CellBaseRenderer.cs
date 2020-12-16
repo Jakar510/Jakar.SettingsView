@@ -8,6 +8,7 @@ using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
 	/// <summary>
@@ -22,32 +23,24 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			private static Func<T1, T2, TInstance> CreateInstance()
 			{
-				Type[] argsTypes = new[]
-								   {
-									   typeof(T1),
-									   typeof(T2)
-								   };
-				ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder, argsTypes, null);
+				Type[] argsTypes =
+				{
+					typeof(T1),
+					typeof(T2)
+				};
+				ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder, argsTypes, null) ?? throw new NullReferenceException(nameof(constructor));
 				ParameterExpression[] args = argsTypes.Select(Expression.Parameter).ToArray();
 				return Expression.Lambda<Func<T1, T2, TInstance>>(Expression.New(constructor, args), args).Compile();
 			}
 		}
 
-		/// <summary>
-		/// Gets the cell core.
-		/// </summary>
-		/// <returns>The cell core.</returns>
-		/// <param name="item">Item.</param>
-		/// <param name="convertView">Convert view.</param>
-		/// <param name="parent">Parent.</param>
-		/// <param name="context">Context.</param>
+
 		protected override Android.Views.View GetCellCore( Xamarin.Forms.Cell item,
-														   Android.Views.View convertView,
+														   Android.Views.View? convertView,
 														   Android.Views.ViewGroup parent,
 														   Context context )
 		{
-			var nativeCell = convertView as TnativeCell;
-			if ( nativeCell == null ) { nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TnativeCell>.Create(context, item); }
+			if ( !( convertView is TnativeCell nativeCell ) ) { nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TnativeCell>.Create(context, item); }
 
 			ClearPropertyChanged(nativeCell);
 
@@ -60,40 +53,31 @@ namespace Jakar.SettingsView.Droid.Cells
 			return nativeCell;
 		}
 
-		/// <summary>
-		/// Sets up property changed.
-		/// </summary>
-		/// <param name="nativeCell">Native cell.</param>
+
 		protected void SetUpPropertyChanged( CellBaseView nativeCell )
 		{
-			var formsCell = nativeCell.Cell as CellBase;
-			var parentElement = formsCell.Parent as Shared.SettingsView;
+			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
+			Shared.SettingsView parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
-			if ( parentElement != null )
-			{
-				parentElement.PropertyChanged += nativeCell.ParentPropertyChanged;
-				Section section = parentElement.Model.GetSectionFromCell(formsCell);
-				if ( section != null )
-				{
-					formsCell.Section = section;
-					formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
-				}
-			}
+			if ( parentElement is null ) return;
+			parentElement.PropertyChanged += nativeCell.ParentPropertyChanged;
+			Section section = parentElement.Model.GetSectionFromCell(formsCell);
+			if ( section is null ) return;
+			formsCell.Section = section;
+			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
 		}
 
-		private void ClearPropertyChanged( CellBaseView nativeCell )
+		protected void ClearPropertyChanged( CellBaseView nativeCell )
 		{
-			var formsCell = nativeCell.Cell as CellBase;
-			var parentElement = formsCell.Parent as Shared.SettingsView;
+			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
+			Shared.SettingsView parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
-			if ( parentElement != null )
-			{
-				parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
-				if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }
-			}
+			if ( parentElement == null ) return;
+			parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
+			if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }
 		}
 	}
 }

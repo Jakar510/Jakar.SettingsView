@@ -27,14 +27,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		public TimePickerCellView( Context context, Cell cell ) : base(context, cell) { }
 		public TimePickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		protected override void UpdateCell()
-		{
-			base.UpdateCell();
-			UpdateTime();
-			UpdatePickerTitle();
-		}
 
-		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
@@ -42,9 +36,15 @@ namespace Jakar.SettingsView.Droid.Cells
 			else if ( e.PropertyName == TimePickerCell.PickerTitleProperty.PropertyName ) { UpdatePickerTitle(); }
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
 
 
+		protected internal override void UpdateCell()
+		{
+			base.UpdateCell();
+			UpdateTime();
+			UpdatePickerTitle();
+		}
 		private void CreateDialog()
 		{
 			if ( _Dialog != null ) return;
@@ -71,7 +71,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_Dialog.Show();
 		}
-		private void UpdateTime() { _Value.Label.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
+		private void UpdateTime() { _Value.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
 		private void UpdatePickerTitle() { _PopupTitle = _TimePickerCell.PickerTitle; }
 		private void TimeSelected( object sender, TimePickerDialog.TimeSetEventArgs e )
 		{

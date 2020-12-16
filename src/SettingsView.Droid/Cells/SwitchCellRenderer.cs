@@ -36,12 +36,12 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
 			_Switch = new SwitchCompat(AndroidContext)
 					  {
@@ -58,12 +58,12 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
 			_Switch = new SwitchCompat(AndroidContext)
 					  {
@@ -78,28 +78,22 @@ namespace Jakar.SettingsView.Droid.Cells
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
 
-		protected override void UpdateCell()
-		{
-			UpdateAccentColor();
-			UpdateOn();
-			base.UpdateCell();
-		}
 
-		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == SwitchCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
 			if ( e.PropertyName == SwitchCell.OnProperty.PropertyName ) { UpdateOn(); }
 		}
-		protected override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
+			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Switch.Checked = !_Switch.Checked; }
-
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Switch.Checked = !_Switch.Checked; }
 		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _SwitchCell.On = isChecked; }
 
 		protected override void EnableCell()
@@ -119,6 +113,12 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Switch.Alpha = DISABLED_ALPHA;
 		}
 
+		protected internal override void UpdateCell()
+		{
+			UpdateAccentColor();
+			UpdateOn();
+			base.UpdateCell();
+		}
 		private void UpdateOn() { _Switch.Checked = _SwitchCell.On; }
 
 		private void UpdateAccentColor()

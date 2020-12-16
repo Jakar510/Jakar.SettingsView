@@ -15,13 +15,13 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 	public class IconView : IDisposable
 	{
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
-		protected ImageView _Icon { get; set; }
+		protected internal ImageView Icon { get; protected set; }
 		protected CellBaseView _Cell { get; set; }
 		protected float _IconRadius { get; set; }
 
 		public IconView( CellBaseView baseView, ImageView? view )
 		{
-			_Icon = view ?? throw new NullReferenceException(nameof(view));
+			Icon = view ?? throw new NullReferenceException(nameof(view));
 			_Cell = baseView ?? throw new NullReferenceException(nameof(baseView));
 		}
 
@@ -34,11 +34,11 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal bool UpdateIconSize()
 		{
-			if ( _Icon.LayoutParameters is null ) throw new NullReferenceException(nameof(_Icon.LayoutParameters));
+			if ( Icon.LayoutParameters is null ) throw new NullReferenceException(nameof(Icon.LayoutParameters));
 
 			Xamarin.Forms.Size size = GetIconSize();
-			_Icon.LayoutParameters.Width = (int) _Cell.AndroidContext.ToPixels(size.Width);
-			_Icon.LayoutParameters.Height = (int) _Cell.AndroidContext.ToPixels(size.Height);
+			Icon.LayoutParameters.Width = (int) _Cell.AndroidContext.ToPixels(size.Width);
+			Icon.LayoutParameters.Height = (int) _Cell.AndroidContext.ToPixels(size.Height);
 			return true;
 		}
 
@@ -62,19 +62,19 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			UpdateIconSize();
 
-			if ( _Icon.Drawable != null )
+			if ( Icon.Drawable != null )
 			{
-				_Icon.SetImageDrawable(null);
-				_Icon.SetImageBitmap(null);
+				Icon.SetImageDrawable(null);
+				Icon.SetImageBitmap(null);
 			}
 
 			if ( _Cell.CellBase.IconSource != null )
 			{
-				_Icon.Visibility = ViewStates.Visible;
+				Icon.Visibility = ViewStates.Visible;
 				if ( ImageCacheController.Instance.Get(_Cell.CellBase.IconSource.GetHashCode()) is Bitmap cache &&
 					 !forceLoad )
 				{
-					_Icon.SetImageBitmap(cache);
+					Icon.SetImageBitmap(cache);
 					_Cell.Invalidate();
 					return true;
 				}
@@ -82,7 +82,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_Cell.CellBase.IconSource.GetType());
 				LoadIconImage(handler, _Cell.CellBase.IconSource);
 			}
-			else { _Icon.Visibility = ViewStates.Gone; }
+			else { Icon.Visibility = ViewStates.Gone; }
 
 			return true;
 		}
@@ -109,7 +109,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 								  Device.BeginInvokeOnMainThread(() =>
 																 {
 																	 Task.Delay(50, token); // in case repeating the same source, sometimes the icon not be shown. by inserting delay it be shown.
-																	 _Icon.SetImageBitmap(image);
+																	 Icon.SetImageBitmap(image);
 																	 _Cell.Invalidate();
 																 });
 							  }, token);
@@ -149,14 +149,15 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Cell.Invalidate();
 			return true;
 		}
+
+
 		public void Dispose()
 		{
 			_IconTokenSource?.Dispose();
 			_IconTokenSource = null;
-			_Cell.Dispose();
-			_Icon.SetImageDrawable(null);
-			_Icon.SetImageBitmap(null);
-			_Icon.Dispose();
+			Icon.SetImageDrawable(null);
+			Icon.SetImageBitmap(null);
+			Icon.Dispose();
 		}
 	}
 }

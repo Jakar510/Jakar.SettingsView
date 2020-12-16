@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -6,12 +7,13 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class ValueView : BaseView
 	{
-		private LabelCell _LabelCell => _Cell.Cell as LabelCell;
-		public ValueView( CellBaseView baseView, TextView view ) : base(baseView, view) { }
+		private LabelCell _LabelCell => _Cell.Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
+		public ValueView( CellBaseView baseView, TextView? view ) : base(baseView, view) { }
 
 
 		protected internal override bool UpdateText()
@@ -47,7 +49,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			return true;
 		}
-		// protected void UpdateValueTextAlignment() { _Label.TextAlignment = _CellBase.ValueTextTextAlignment; }
+		// protected internal override bool UpdateAlignment() { _Label.TextAlignment = _CellBase.ValueTextTextAlignment; }
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{
@@ -70,7 +72,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
 				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
-			
+
 			return false;
 		}
 		protected internal override void Update()

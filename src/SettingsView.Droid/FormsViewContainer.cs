@@ -23,10 +23,17 @@ namespace Jakar.SettingsView.Droid
 		public bool IsMeasureOnce => CustomCell?.IsMeasureOnce ?? false;
 		public CustomCell CustomCell { get; set; }
 
-		private IVisualElementRenderer _renderer;
+		private IVisualElementRenderer _Renderer { get; set; }
 
 
 		public FormsViewContainer( Context context ) : base(context) => Clickable = true;
+		public FormsViewContainer( Context context, Android.Util.IAttributeSet attributes ) : base(context, attributes) => Clickable = true;
+		public FormsViewContainer( Context context, Android.Util.IAttributeSet attributes, int defStyleAttr ) : base(context, attributes, defStyleAttr) => Clickable = true;
+		public FormsViewContainer( Context context,
+								   Android.Util.IAttributeSet attributes,
+								   int defStyleAttr,
+								   int defStyleRes ) : base(context, attributes, defStyleAttr, defStyleRes) =>
+			Clickable = true;
 
 		private Xamarin.Forms.View _formsCell;
 
@@ -43,27 +50,6 @@ namespace Jakar.SettingsView.Droid
 
 		public override bool OnTouchEvent( MotionEvent e ) => false; // pass to parent (ripple effect)
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				if ( _formsCell != null )
-				{
-					_formsCell.PropertyChanged -= CellPropertyChanged;
-					_formsCell = null;
-				}
-
-				CustomCell = null;
-
-				ViewHolder = null;
-
-				_renderer?.View?.RemoveFromParent();
-				_renderer?.Dispose();
-				_renderer = null;
-			}
-
-			base.Dispose(disposing);
-		}
 
 		protected override void OnLayout( bool changed,
 										  int l,
@@ -77,15 +63,22 @@ namespace Jakar.SettingsView.Droid
 			double height = Context.FromPixels(b - t);
 
 
-			Xamarin.Forms.Layout.LayoutChildIntoBoundingRegion(_renderer.Element, new Rectangle(0, 0, width, height));
+			Xamarin.Forms.Layout.LayoutChildIntoBoundingRegion(_Renderer.Element, new Rectangle(0, 0, width, height));
 
-			_renderer.UpdateLayout();
+			_Renderer.UpdateLayout();
 		}
 
 		private int _heightCache;
 
 		protected override void OnMeasure( int widthMeasureSpec, int heightMeasureSpec )
 		{
+			if ( _formsCell is null )
+			{
+				base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+				return;
+			}
+
+			_Renderer ??= Platform.CreateRendererWithContext(_formsCell, Context);
 			int width = MeasureSpec.GetSize(widthMeasureSpec);
 
 			if ( IsMeasureOnce && _heightCache > 0 )
@@ -94,7 +87,7 @@ namespace Jakar.SettingsView.Droid
 				return;
 			}
 
-			SizeRequest measure = _renderer.Element.Measure(Context.FromPixels(width), double.PositiveInfinity, MeasureFlags.IncludeMargins);
+			SizeRequest measure = _Renderer.Element.Measure(Context.FromPixels(width), double.PositiveInfinity, MeasureFlags.IncludeMargins);
 			var height = (int) Context.ToPixels(measure.Request.Height);
 
 			SetMeasuredDimension(width, height);
@@ -113,9 +106,9 @@ namespace Jakar.SettingsView.Droid
 		protected virtual void CreateNewRenderer( Xamarin.Forms.View cell )
 		{
 			_formsCell = cell;
-			_renderer = Platform.CreateRendererWithContext(_formsCell, Context);
-			AddView(_renderer.View);
-			Platform.SetRenderer(_formsCell, _renderer);
+			_Renderer = Platform.CreateRendererWithContext(_formsCell, Context);
+			AddView(_Renderer.View);
+			Platform.SetRenderer(_formsCell, _Renderer);
 
 			_formsCell.IsPlatformEnabled = true;
 			UpdateNativeCell();
@@ -132,7 +125,7 @@ namespace Jakar.SettingsView.Droid
 
 			cell.PropertyChanged += CellPropertyChanged;
 
-			if ( _renderer == null )
+			if ( _Renderer == null )
 			{
 				CreateNewRenderer(cell);
 				return;
@@ -140,20 +133,29 @@ namespace Jakar.SettingsView.Droid
 
 			var renderer = GetChildAt(0) as IVisualElementRenderer;
 			Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsCell) ?? DefaultRenderer;
+			// ReSharper disable once SuspiciousTypeConversion.Global
 			Type rendererType = renderer is IReflectableType reflectable ? reflectable.GetTypeInfo().AsType() : ( renderer != null ? renderer.GetType() : typeof(object) );
 			if ( renderer != null &&
 				 rendererType == viewHandlerType )
 			{
 				_formsCell = cell;
 				_formsCell.DisableLayout = true;
-				foreach ( VisualElement c in _formsCell.Descendants() ) { c.DisableLayout = true; }
+				foreach ( Element element in _formsCell.Descendants() )
+				{
+					var c = (VisualElement) element;
+					c.DisableLayout = true;
+				}
 
 				renderer.SetElement(_formsCell);
 
-				Platform.SetRenderer(_formsCell, _renderer);
+				Platform.SetRenderer(_formsCell, _Renderer);
 
 				_formsCell.DisableLayout = false;
-				foreach ( VisualElement c in _formsCell.Descendants() ) { c.DisableLayout = false; }
+				foreach ( Element element in _formsCell.Descendants() )
+				{
+					var c = (VisualElement) element;
+					c.DisableLayout = false;
+				}
 
 				if ( _formsCell is Layout viewAsLayout ) viewAsLayout.ForceLayout();
 
@@ -163,18 +165,41 @@ namespace Jakar.SettingsView.Droid
 				return;
 			}
 
-			RemoveView(_renderer.View);
+			RemoveView(_Renderer.View);
 			Platform.SetRenderer(_formsCell, null);
 			_formsCell.IsPlatformEnabled = false;
-			_renderer.View.Dispose();
+			_Renderer.View.Dispose();
 
 			_formsCell = cell;
-			_renderer = Platform.CreateRendererWithContext(_formsCell, Context);
+			_Renderer = Platform.CreateRendererWithContext(_formsCell, Context);
 
-			Platform.SetRenderer(_formsCell, _renderer);
-			AddView(_renderer.View);
+			Platform.SetRenderer(_formsCell, _Renderer);
+			AddView(_Renderer.View);
 
 			UpdateNativeCell();
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				if ( _formsCell != null )
+				{
+					_formsCell.PropertyChanged -= CellPropertyChanged;
+					_formsCell = null;
+				}
+
+				CustomCell = null;
+
+				ViewHolder = null;
+
+				_Renderer?.View?.RemoveFromParent();
+				_Renderer?.Dispose();
+				_Renderer = null;
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

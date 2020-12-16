@@ -1,5 +1,6 @@
 ﻿using Xamarin.Forms;
 using GravityFlags = Android.Views.GravityFlags;
+using ATextAlignment = Android.Views.TextAlignment;
 
 namespace Jakar.SettingsView.Droid.Extensions
 {
@@ -16,17 +17,23 @@ namespace Jakar.SettingsView.Droid.Extensions
 		/// <param name="forms">Forms.</param>
 		public static GravityFlags ToGravityFlags( this TextAlignment forms )
 		{
-			switch ( forms )
-			{
-				case TextAlignment.Start:
-					return GravityFlags.Left | GravityFlags.CenterVertical;
-				case TextAlignment.Center:
-					return GravityFlags.Center | GravityFlags.CenterVertical;
-				case TextAlignment.End:
-					return GravityFlags.Right | GravityFlags.CenterVertical;
-				default:
-					return GravityFlags.Right | GravityFlags.CenterVertical;
-			}
+			return forms switch
+				   {
+					   TextAlignment.Start => GravityFlags.Left | GravityFlags.CenterVertical,
+					   TextAlignment.Center => GravityFlags.Center | GravityFlags.CenterVertical,
+					   TextAlignment.End => GravityFlags.Right | GravityFlags.CenterVertical,
+					   _ => GravityFlags.Right | GravityFlags.CenterVertical
+				   };
+		}
+		public static ATextAlignment ToAndroidTextAlignment( this TextAlignment forms )
+		{
+			return forms switch
+				   {
+					   TextAlignment.Start => ATextAlignment.ViewStart,
+					   TextAlignment.Center => ATextAlignment.Center,
+					   TextAlignment.End => ATextAlignment.ViewEnd,
+					   _ => ATextAlignment.Center
+				   };
 		}
 	}
 }

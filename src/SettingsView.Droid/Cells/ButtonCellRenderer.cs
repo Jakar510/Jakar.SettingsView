@@ -25,15 +25,15 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class ButtonCellView : CellBaseView
 	{
-		protected internal AColor DefaultTextColor { get; set; }
-		protected internal float DefaultFontSize { get; set; }
+		// androidx.appcompat.widget.AppCompatButton
+		protected internal AColor DefaultTextColor { get; }
+		protected internal float DefaultFontSize { get; }
 		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
 
 		protected internal Android.Views.View ContentView { get; set; }
 		protected GridLayout _CellLayout { get; set; }
 		protected AButton _Button { get; set; }
 
-		internal Action? Execute { get; set; }
 		protected ICommand? _Command { get; set; }
 
 		public ButtonCellView( Context context, Cell cell ) : base(context, cell)
@@ -41,26 +41,33 @@ namespace Jakar.SettingsView.Droid.Cells
 			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+
+			DefaultFontSize = _Button.TextSize;
+			DefaultTextColor = new AColor(_Button.CurrentTextColor);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
 			ContentView = CreateContentView(Resource.Layout.ButtonCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.ButtonCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Button = ContentView.FindViewById<AButton>(Resource.Id.ButtonCellButton) ?? throw new NullReferenceException(nameof(_Button));
+
+			DefaultFontSize = _Button.TextSize;
+			DefaultTextColor = new AColor(_Button.CurrentTextColor);
 		}
 
 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
+			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == ButtonCell.CommandProperty.PropertyName ||
 				 e.PropertyName == ButtonCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
-			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
+			else if ( e.PropertyName == CellBase.TitleProperty.PropertyName ) { UpdateTitle(); }
 			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
 		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
-		protected override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
+		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
+		// protected internal override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Execute?.Invoke(); }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Run(); }
 
 		protected override void EnableCell()
 		{
@@ -73,7 +80,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Button.Alpha = DISABLED_ALPHA;
 		}
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			UpdateCommand();
 			UpdateTitle();
@@ -81,7 +88,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.UpdateCell();
 		}
 		protected void UpdateTitle() { _Button.Text = _ButtonCell.Title; }
-		protected void UpdateTitleAlignment() { _Button.Gravity = _ButtonCell.TitleAlignment.ToGravityFlags(); }
+		protected void UpdateTitleAlignment() { _Button.TextAlignment = _ButtonCell.TitleAlignment.ToAndroidTextAlignment(); }
 
 		private void UpdateCommand()
 		{
@@ -89,13 +96,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_Command = _ButtonCell.Command;
 
-			if ( _Command != null )
-			{
-				_Command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_Command, EventArgs.Empty);
-			}
-
-			Execute = Run;
+			if ( _Command is null ) return;
+			_Command.CanExecuteChanged += Command_CanExecuteChanged;
+			Command_CanExecuteChanged(_Command, EventArgs.Empty);
 		}
 		protected void Run()
 		{
@@ -125,11 +128,10 @@ namespace Jakar.SettingsView.Droid.Cells
 			{
 				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Execute = null;
 				_Command = null;
 
 				_Button.Dispose();
-				_CellLayout.Dispose(); 
+				_CellLayout.Dispose();
 			}
 
 			base.Dispose(disposing);

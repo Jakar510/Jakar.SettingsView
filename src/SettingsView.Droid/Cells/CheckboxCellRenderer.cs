@@ -73,7 +73,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 
@@ -88,8 +88,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
+			base.ParentPropertyChanged(sender, e);
 			if ( _Title.UpdateParent(sender, e) ) { return; }
 
 			if ( _Description.UpdateParent(sender, e) ) { return; }
@@ -98,7 +99,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Checkbox.Checked = !_Checkbox.Checked; }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Checkbox.Checked = !_Checkbox.Checked; }
 
 
 		protected override void EnableCell()
@@ -119,7 +120,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			buttonView?.JumpDrawablesToCurrentState();
 		}
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			UpdateAccentColor();
 			UpdateChecked();

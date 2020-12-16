@@ -44,12 +44,12 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public RadioCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
 			_SimpleCheck = new SimpleCheck(AndroidContext)
 						   {
@@ -59,12 +59,12 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
+			ContentView = CreateContentView(Resource.Layout.AccessoryCellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
-			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
-			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CommandCellIndicator) ?? throw new NullReferenceException(nameof(_AccessoryStack));
+			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.AccessoryCellIcon));
+			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellTitle));
+			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.AccessoryCellDescription));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.AccessoryCellStack) ?? throw new NullReferenceException(nameof(_AccessoryStack));
 
 			_SimpleCheck = new SimpleCheck(AndroidContext)
 						   {
@@ -74,7 +74,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 
@@ -90,8 +90,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
+			base.ParentPropertyChanged(sender, e);
 			if ( _Title.UpdateParent(sender, e) ) { return; }
 
 			if ( _Description.UpdateParent(sender, e) ) { return; }
@@ -103,13 +104,13 @@ namespace Jakar.SettingsView.Droid.Cells
 			}
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
-		protected override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.SectionPropertyChanged(sender, e);
 			if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
 			if ( !_SimpleCheck.Selected ) { _SelectedValue = _RadioCell.Value; }
 		}
@@ -132,7 +133,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_SimpleCheck.Alpha = DISABLED_ALPHA;
 		}
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			UpdateAccentColor();
 			UpdateSelectedValue();

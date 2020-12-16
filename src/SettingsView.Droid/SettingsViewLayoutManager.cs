@@ -1,27 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Android.Content;
+using Android.Runtime;
+using Android.Util;
 using AndroidX.RecyclerView.Widget;
+using Java.Interop;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public class SettingsViewLayoutManager : LinearLayoutManager
+	[Preserve(AllMembers = true)]
+	public class SettingsViewLayoutManager : GridLayoutManager
 	{
-		private Shared.SettingsView _settingsView;
-		private Android.Content.Context _context;
-		private Dictionary<Android.Views.View, int> ItemHeights = new Dictionary<Android.Views.View, int>();
+		protected Shared.SettingsView? _SettingsView { get; set; }
+		protected Context? _Context { get; set; }
+		protected Dictionary<Android.Views.View, int>? _ItemHeights { get; set; } = new Dictionary<Android.Views.View, int>();
 
-		public SettingsViewLayoutManager( Android.Content.Context context, Shared.SettingsView settingsView ) : base(context)
+
+		public SettingsViewLayoutManager( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+		public SettingsViewLayoutManager( Context context, int spanCount ) : base(context, spanCount) { _Context = context; }
+		public SettingsViewLayoutManager( Context context,
+										  IAttributeSet attrs,
+										  int defStyleAttr,
+										  int defStyleRes ) : base(context, attrs, defStyleAttr, defStyleRes)
 		{
-			_context = context;
-			_settingsView = settingsView;
+			_Context = context ?? throw new NullReferenceException(nameof(context));
 		}
+		public SettingsViewLayoutManager( Context context,
+										  int spanCount,
+										  int orientation,
+										  bool reverseLayout ) : base(context, spanCount, orientation, reverseLayout)
+		{
+			_Context = context ?? throw new NullReferenceException(nameof(context));
+		}
+		public SettingsViewLayoutManager( Context context, Shared.SettingsView settingsView ) : this(context, 3, Horizontal, false)
+		{
+			_Context = context ?? throw new NullReferenceException(nameof(context));
+			_SettingsView = settingsView ?? throw new NullReferenceException(nameof(settingsView));
+		}
+
 
 		public override int GetDecoratedMeasuredHeight( Android.Views.View child )
 		{
 			int height = base.GetDecoratedMeasuredHeight(child);
-			ItemHeights[child] = height;
+			if ( _ItemHeights != null ) _ItemHeights[child] = height;
 			return height;
 		}
 
@@ -29,10 +53,10 @@ namespace Jakar.SettingsView.Droid
 		{
 			if ( disposing )
 			{
-				ItemHeights.Clear();
-				ItemHeights = null;
-				_context = null;
-				_settingsView = null;
+				_ItemHeights?.Clear();
+				_ItemHeights = null;
+				_Context = null;
+				_SettingsView = null;
 			}
 
 			base.Dispose(disposing);
@@ -42,9 +66,9 @@ namespace Jakar.SettingsView.Droid
 		{
 			base.OnLayoutCompleted(state);
 
-			int total = ItemHeights.Sum(x => x.Value);
+			int total = _ItemHeights?.Sum(x => x.Value) ?? 0;
 
-			_settingsView.VisibleContentHeight = _context.FromPixels(total);
+			if ( _SettingsView != null ) _SettingsView.VisibleContentHeight = _Context.FromPixels(total);
 		}
 	}
 }

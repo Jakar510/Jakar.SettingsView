@@ -9,6 +9,7 @@ using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(DatePickerCell), typeof(DatePickerCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
 	/// <summary>
@@ -23,34 +24,19 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class DatePickerCellView : LabelCellView
 	{
-		private DatePickerCell _datePickerCell => Cell as DatePickerCell;
-		private DatePickerDialog _dialog;
-		private readonly Context _context;
+		protected DatePickerCell _DatePickerCell => Cell as DatePickerCell ?? throw new NullReferenceException(nameof(_DatePickerCell));
+		protected DatePickerDialog? _Dialog { get; set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Droid.Cells.DatePickerCellView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="cell">Cell.</param>
-		public DatePickerCellView( Context context, Cell cell ) : base(context, cell) => _context = context;
-
+		public DatePickerCellView( Context context, Cell cell ) : base(context, cell) { }
 		public DatePickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateDate();
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == DatePickerCell.DateProperty.PropertyName ||
@@ -59,79 +45,65 @@ namespace Jakar.SettingsView.Droid.Cells
 			else if ( e.PropertyName == DatePickerCell.MinimumDateProperty.PropertyName ) { UpdateMinimumDate(); }
 		}
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="adapter">Adapter.</param>
-		/// <param name="position">Position.</param>
-		public override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { ShowDialog(); }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { ShowDialog(); }
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
+		protected void ShowDialog()
 		{
-			if ( disposing )
-			{
-				if ( _dialog != null )
-				{
-					_dialog.CancelEvent -= OnCancelButtonClicked;
-					_dialog?.Dispose();
-					_dialog = null;
-				}
-			}
-
-			base.Dispose(disposing);
-		}
-
-		private void ShowDialog()
-		{
-			CreateDatePickerDialog(_datePickerCell.Date.Year, _datePickerCell.Date.Month - 1, _datePickerCell.Date.Day);
+			_Dialog = CreateDatePickerDialog(_DatePickerCell.Date.Year, _DatePickerCell.Date.Month - 1, _DatePickerCell.Date.Day);
 
 			UpdateMinimumDate();
 			UpdateMaximumDate();
 
-			if ( _datePickerCell.MinimumDate > _datePickerCell.MaximumDate ) { throw new ArgumentOutOfRangeException(nameof(DatePickerCell.MaximumDate), "MaximumDate must be greater than or equal to MinimumDate."); }
+			if ( _DatePickerCell.MinimumDate > _DatePickerCell.MaximumDate ) { throw new ArgumentOutOfRangeException(nameof(DatePickerCell.MaximumDate), "MaximumDate must be greater than or equal to MinimumDate."); }
 
-			_dialog.CancelEvent += OnCancelButtonClicked;
+			if ( _Dialog is null ) return;
+			_Dialog.CancelEvent += OnCancelButtonClicked;
 
-			_dialog.Show();
+			_Dialog.Show();
 		}
-
-		private void CreateDatePickerDialog( int year, int month, int day )
+		protected DatePickerDialog CreateDatePickerDialog( int year, int month, int day ) => new DatePickerDialog(AndroidContext, CallBack, year, month, day);
+		protected void CallBack( object o, DatePickerDialog.DateSetEventArgs e )
 		{
-			_dialog = new DatePickerDialog(_context, ( o, e ) =>
-													 {
-														 _datePickerCell.Date = e.Date;
-														 ClearFocus();
-														 _dialog.CancelEvent -= OnCancelButtonClicked;
+			_DatePickerCell.Date = e.Date;
+			ClearFocus();
+			if ( _Dialog != null ) _Dialog.CancelEvent -= OnCancelButtonClicked;
 
-														 _dialog = null;
-													 }, year, month, day);
+			_Dialog = null;
 		}
+		protected void OnCancelButtonClicked( object sender, EventArgs e ) { ClearFocus(); }
 
-		private void OnCancelButtonClicked( object sender, EventArgs e ) { ClearFocus(); }
-
-		private void UpdateDate()
+		protected void UpdateDate()
 		{
-			string format = _datePickerCell.Format;
-			VValueLabel.Text = _datePickerCell.Date.ToString(format);
+			string format = _DatePickerCell.Format;
+			_Value.Text = _DatePickerCell.Date.ToString(format);
 		}
-
-		private void UpdateMaximumDate()
+		protected void UpdateMaximumDate()
 		{
-			if ( _dialog != null )
+			if ( _Dialog != null )
 			{
 				//when not to specify 23:59:59,last day can't be selected. 
-				_dialog.DatePicker.MaxDate = (long) _datePickerCell.MaximumDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59).ToUniversalTime().Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds;
+				_Dialog.DatePicker.MaxDate = (long) _DatePickerCell.MaximumDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59).ToUniversalTime().Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds;
 			}
 		}
-
-		private void UpdateMinimumDate()
+		protected void UpdateMinimumDate()
 		{
-			if ( _dialog != null ) { _dialog.DatePicker.MinDate = (long) _datePickerCell.MinimumDate.ToUniversalTime().Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds; }
+			if ( _Dialog != null ) { _Dialog.DatePicker.MinDate = (long) _DatePickerCell.MinimumDate.ToUniversalTime().Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds; }
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				if ( _Dialog != null )
+				{
+					_Dialog.CancelEvent -= OnCancelButtonClicked;
+					_Dialog?.Dispose();
+					_Dialog = null;
+				}
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

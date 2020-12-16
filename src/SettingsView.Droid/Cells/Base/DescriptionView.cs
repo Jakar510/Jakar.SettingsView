@@ -6,11 +6,12 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class DescriptionView : BaseView
 	{
-		public DescriptionView( CellBaseView baseView, TextView view ) : base(baseView, view) { }
+		public DescriptionView( CellBaseView baseView, TextView? view ) : base(baseView, view) { }
 
 
 		protected internal override bool UpdateText()
@@ -47,7 +48,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			return true;
 		}
-		// protected void UpdateDescriptionAlignment() { _Label.TextAlignment = _CellBase.DescriptionTextAlignment; }
+
+		// protected internal override bool UpdateAlignment() { _Label.TextAlignment = _CellBase.DescriptionTextAlignment; }
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{

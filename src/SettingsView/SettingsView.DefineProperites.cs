@@ -21,7 +21,7 @@ namespace Jakar.SettingsView.Shared
 		/// <summary>
 		/// The background color property.
 		/// </summary>
-		public static new BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(SettingsView), default(Color), defaultBindingMode: BindingMode.OneWay);
+		public new static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(SettingsView), default(Color), defaultBindingMode: BindingMode.OneWay);
 
 		/// <summary>
 		/// A color of out of region and entire region. They contains header, footer and cell (in case android).
@@ -642,7 +642,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(ShowArrowIndicatorForAndroidProperty, value);
 		}
 
-		private int templatedItemsCount;
+		private int _TemplatedItemsCount { get; set; }
 
 		private static void ItemsChanged( BindableObject bindable, object oldValue, object newValue )
 		{
@@ -650,21 +650,13 @@ namespace Jakar.SettingsView.Shared
 
 			if ( settingsView.ItemTemplate == null ) { return; }
 
-			IList oldValueAsEnumerable;
-			IList newValueAsEnumerable;
-			try
-			{
-				oldValueAsEnumerable = oldValue as IList;
-				newValueAsEnumerable = newValue as IList;
-			}
-			catch ( Exception e ) { throw e; }
+			var oldValueAsEnumerable = oldValue as IList;
+			var newValueAsEnumerable = newValue as IList;
 
 
-			var oldObservableCollection = oldValue as INotifyCollectionChanged;
+			if ( oldValue is INotifyCollectionChanged oldObservableCollection ) { oldObservableCollection.CollectionChanged -= settingsView.OnItemsSourceCollectionChanged; }
 
-			if ( oldObservableCollection != null ) { oldObservableCollection.CollectionChanged -= settingsView.OnItemsSourceCollectionChanged; }
-
-			// keep the platform from notifying itemchanged event.
+			// keep the platform from notifying item changed event.
 			settingsView.Root.CollectionChanged -= settingsView.OnCollectionChanged;
 
 			if ( oldValueAsEnumerable != null )
@@ -680,14 +672,12 @@ namespace Jakar.SettingsView.Shared
 					settingsView.Root.Insert(settingsView.TemplateStartIndex + i, view);
 				}
 
-				settingsView.templatedItemsCount = newValueAsEnumerable.Count;
+				settingsView._TemplatedItemsCount = newValueAsEnumerable.Count;
 			}
 
 			settingsView.Root.CollectionChanged += settingsView.OnCollectionChanged;
 
-			var newObservableCollection = newValue as INotifyCollectionChanged;
-
-			if ( newObservableCollection != null ) { newObservableCollection.CollectionChanged += settingsView.OnItemsSourceCollectionChanged; }
+			if ( newValue is INotifyCollectionChanged newObservableCollection ) { newObservableCollection.CollectionChanged += settingsView.OnItemsSourceCollectionChanged; }
 
 
 			// Notify manually ModelChanged.
@@ -696,20 +686,21 @@ namespace Jakar.SettingsView.Shared
 
 		private void OnItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( e.Action == NotifyCollectionChangedAction.Replace )
+			switch ( e.Action )
 			{
-				//Root.RemoveAt(e.OldStartingIndex + TemplateStartIndex);
+				case NotifyCollectionChangedAction.Replace:
+				{
+					//Root.RemoveAt(e.OldStartingIndex + TemplateStartIndex);
 
-				object item = e.NewItems[0];
-				Section view = CreateChildViewFor(ItemTemplate, item, this);
+					object item = e.NewItems[0];
+					Section view = CreateChildViewFor(ItemTemplate, item, this);
 
-				//Root.Insert(e.NewStartingIndex + TemplateStartIndex, view);
-				Root[e.NewStartingIndex + TemplateStartIndex] = view;
-			}
-
-			else if ( e.Action == NotifyCollectionChangedAction.Add )
-			{
-				if ( e.NewItems != null )
+					//Root.Insert(e.NewStartingIndex + TemplateStartIndex, view);
+					Root[e.NewStartingIndex + TemplateStartIndex] = view;
+					break;
+				}
+				case NotifyCollectionChangedAction.Add when e.NewItems is null: return;
+				case NotifyCollectionChangedAction.Add:
 				{
 					for ( var i = 0; i < e.NewItems.Count; ++i )
 					{
@@ -717,32 +708,36 @@ namespace Jakar.SettingsView.Shared
 						Section view = CreateChildViewFor(ItemTemplate, item, this);
 
 						Root.Insert(i + e.NewStartingIndex + TemplateStartIndex, view);
-						templatedItemsCount++;
+						_TemplatedItemsCount++;
 					}
-				}
-			}
 
-			else if ( e.Action == NotifyCollectionChangedAction.Remove )
-			{
-				if ( e.OldItems != null )
+					break;
+				}
+				case NotifyCollectionChangedAction.Remove:
 				{
-					Root.RemoveAt(e.OldStartingIndex + TemplateStartIndex);
-					templatedItemsCount--;
+					if ( e.OldItems != null )
+					{
+						Root.RemoveAt(e.OldStartingIndex + TemplateStartIndex);
+						_TemplatedItemsCount--;
+					}
+
+					break;
 				}
+				case NotifyCollectionChangedAction.Reset:
+				{
+					Root.CollectionChanged -= OnCollectionChanged;
+					var source = ItemsSource as IList;
+					for ( int i = _TemplatedItemsCount - 1; i >= 0; i-- ) { Root.RemoveAt(TemplateStartIndex + i); }
+
+					Root.CollectionChanged += OnCollectionChanged;
+					_TemplatedItemsCount = 0;
+					OnModelChanged();
+					break;
+				}
+				case NotifyCollectionChangedAction.Move: break;
+				default:
+					return;
 			}
-
-			else if ( e.Action == NotifyCollectionChangedAction.Reset )
-			{
-				Root.CollectionChanged -= OnCollectionChanged;
-				var source = ItemsSource as IList;
-				for ( int i = templatedItemsCount - 1; i >= 0; i-- ) { Root.RemoveAt(TemplateStartIndex + i); }
-
-				Root.CollectionChanged += OnCollectionChanged;
-				templatedItemsCount = 0;
-				OnModelChanged();
-			}
-
-			else { return; }
 		}
 
 		internal void SendItemDropped( Section section, Cell cell )
@@ -754,9 +749,7 @@ namespace Jakar.SettingsView.Shared
 
 		private static Section CreateChildViewFor( DataTemplate template, object item, BindableObject container )
 		{
-			var selector = template as DataTemplateSelector;
-
-			if ( selector != null ) { template = selector.SelectTemplate(item, container); }
+			if ( template is DataTemplateSelector selector ) { template = selector.SelectTemplate(item, container); }
 
 			//Binding context
 			template.SetValue(BindingContextProperty, item);

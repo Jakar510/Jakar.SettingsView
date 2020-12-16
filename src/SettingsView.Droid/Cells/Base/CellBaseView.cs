@@ -30,8 +30,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 
 		protected internal Context AndroidContext { get; set; }
-
-
+		
 		protected internal ColorDrawable BackgroundColor { get; set; }
 		protected internal RippleDrawable Ripple { get; set; }
 
@@ -46,7 +45,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			BackgroundColor = new ColorDrawable();
 			SelectedColor = new ColorDrawable(AColor.Argb(125, 180, 180, 180));
 
-			var sel = new StateListDrawable();
+			using var sel = new StateListDrawable();
 
 			sel.AddState(new[]
 						 {
@@ -63,8 +62,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			if ( CellParent != null &&
 				 CellParent.SelectedColor != Color.Default ) { rippleColor = CellParent.SelectedColor.ToAndroid(); }
 
-			Ripple = DrawableUtility.CreateRipple(rippleColor, sel);
-			Background = Ripple;
+			Background = Ripple = DrawableUtility.CreateRipple(rippleColor, sel);
 		}
 #pragma warning disable 8618 // _Cell
 		protected CellBaseView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
@@ -75,7 +73,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			BackgroundColor = new ColorDrawable();
 			SelectedColor = new ColorDrawable(AColor.Argb(125, 180, 180, 180));
 
-			var sel = new StateListDrawable();
+			using var sel = new StateListDrawable();
 
 			sel.AddState(new[]
 						 {
@@ -95,7 +93,11 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			Background = Ripple = DrawableUtility.CreateRipple(rippleColor, sel);
 		}
 
-		protected static void AddAccessory( LinearLayout stack, AView view, int? width = null, int? height = null )
+
+		protected static void AddAccessory( LinearLayout stack,
+											AView view,
+											int? width = null,
+											int? height = null )
 		{
 			if ( stack is null ) throw new NullReferenceException(nameof(stack));
 			using var layoutParams = new LinearLayout.LayoutParams(width ?? ViewGroup.LayoutParams.WrapContent, height ?? ViewGroup.LayoutParams.WrapContent);
@@ -112,23 +114,26 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 
 
-		protected virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
+			else if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 		}
-		protected abstract void ParentPropertyChanged( object sender, PropertyChangedEventArgs e );
-		protected virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
+		protected internal virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		{
+			if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName ) { UpdateSelectedColor(); }
+		}
+		protected internal virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
-		protected virtual void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { }
-		protected virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
+		protected internal virtual void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { }
+		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
 
 
-		protected virtual void UpdateCell()
+		protected internal virtual void UpdateCell()
 		{
 			UpdateIsEnabled();
 			UpdateBackgroundColor();
 			UpdateSelectedColor();
-			// UpdateValue();
 			Invalidate();
 		}
 
@@ -136,6 +141,12 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			updateAction();
 			Invalidate();
+		}
+		protected internal bool UpdateWithForceLayout( Func<bool> updateAction )
+		{
+			bool result = updateAction();
+			Invalidate();
+			return result;
 		}
 
 
@@ -168,8 +179,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected void UpdateBackgroundColor()
 		{
-			if ( CellBase != null &&
-				 CellBase.BackgroundColor != Color.Default ) { BackgroundColor.Color = CellBase.BackgroundColor.ToAndroid(); }
+			if ( CellBase.BackgroundColor != Color.Default ) { BackgroundColor.Color = CellBase.BackgroundColor.ToAndroid(); }
 			else if ( CellParent != null &&
 					  CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
 			else { BackgroundColor.Color = AColor.Transparent; }
@@ -184,8 +194,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			}
 			else
 			{
-				SelectedColor.Color = Android.Graphics.Color.Argb(125, 180, 180, 180);
-				Ripple.SetColor(DrawableUtility.GetPressedColorSelector(Android.Graphics.Color.Rgb(180, 180, 180)));
+				SelectedColor.Color = AColor.Argb(125, 180, 180, 180);
+				Ripple.SetColor(DrawableUtility.GetPressedColorSelector(AColor.Rgb(180, 180, 180)));
 			}
 		}
 
@@ -206,7 +216,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 					CellBase.Section.PropertyChanged -= SectionPropertyChanged;
 					CellBase.Section = null;
 				}
-				
+
 				BackgroundColor.Dispose();
 				SelectedColor.Dispose();
 				Ripple.Dispose();

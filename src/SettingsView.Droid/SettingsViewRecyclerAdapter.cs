@@ -124,35 +124,36 @@ namespace Jakar.SettingsView.Droid
 		{
 			RowInfo rowInfo = _Proxy[position];
 
-			var vHolder = holder as CustomViewHolder;
-			vHolder.RowInfo = rowInfo;
+			if ( !( holder is CustomViewHolder viewHolder ) ) return;
+			viewHolder.RowInfo = rowInfo;
 
-			if ( !rowInfo.Section.IsVisible || ( rowInfo.ViewType == ViewType.CustomFooter && !rowInfo.Section.FooterVisible ) )
+			if ( !rowInfo.Section.IsVisible ||
+				 ( rowInfo.ViewType == ViewType.CustomFooter && !rowInfo.Section.FooterVisible ) )
 			{
-				vHolder.ItemView.Visibility = ViewStates.Gone;
-				vHolder.ItemView.SetMinimumHeight(0);
-				vHolder.ItemView.LayoutParameters.Height = 0;
+				viewHolder.ItemView.Visibility = ViewStates.Gone;
+				viewHolder.ItemView.SetMinimumHeight(0);
+				if ( viewHolder.ItemView.LayoutParameters != null ) viewHolder.ItemView.LayoutParameters.Height = 0;
 				return;
 			}
 
-			vHolder.ItemView.Visibility = ViewStates.Visible;
+			viewHolder.ItemView.Visibility = ViewStates.Visible;
 
 			switch ( rowInfo.ViewType )
 			{
 				case ViewType.TextHeader:
-					BindHeaderView((HeaderViewHolder) vHolder);
+					BindHeaderView((HeaderViewHolder) viewHolder);
 					break;
 				case ViewType.TextFooter:
-					BindFooterView((FooterViewHolder) vHolder);
+					BindFooterView((FooterViewHolder) viewHolder);
 					break;
 				case ViewType.CustomHeader:
-					BindCustomHeaderFooterView(vHolder, rowInfo.Section.HeaderView);
+					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.HeaderView);
 					break;
 				case ViewType.CustomFooter:
-					BindCustomHeaderFooterView(vHolder, rowInfo.Section.FooterView);
+					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.FooterView);
 					break;
 				default:
-					BindContentView((ContentBodyViewHolder) vHolder, position);
+					BindContentView((ContentBodyViewHolder) viewHolder, position);
 					break;
 			}
 		}
@@ -166,7 +167,7 @@ namespace Jakar.SettingsView.Droid
 			//      But do it at a later as iOS side doesn't have that process.
 			DeselectRow();
 
-			if ( !( view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody)?.GetChildAt(0) is CellBaseView cell ) ) return;
+			if ( !( view.FindViewById<FormsViewContainer>(Resource.Id.ContentCellBody)?.GetChildAt(0) is CellBaseView cell ) ) return;
 			if ( !_Proxy[position].Cell.IsEnabled )
 			{
 				//if FormsCell IsEnable is false, does nothing. 

@@ -6,34 +6,14 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class HintView : BaseView
 	{
-		public HintView( CellBaseView baseView, TextView view ) : base(baseView, view) { }
+		public HintView( CellBaseView baseView, TextView? view ) : base(baseView, view) { }
 
-		protected void UpdateHintText()
-		{
-			string msg = _Cell.CellBase.HintText;
-			if ( string.IsNullOrEmpty(msg) )
-			{
-				Label.Visibility = ViewStates.Invisible;
-				return;
-			}
 
-			Label.Text = msg;
-			Label.Visibility = ViewStates.Visible;
-		}
-		protected void UpdateHintTextColor()
-		{
-			if ( _Cell.CellBase.HintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellBase.HintTextColor.ToAndroid()); }
-			else if ( _Cell.CellParent != null &&
-					  _Cell.CellParent.CellHintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
-			else { Label.SetTextColor(DefaultTextColor); }
-		}
-		// protected void UpdateHintAlignment() { _Label.TextAlignment = _CellBase.HintTextAlignment; }
-
-		protected void UpdateHint( object sender, PropertyChangedEventArgs e ) { }
 		protected internal override bool UpdateText()
 		{
 			Label.Text = _Cell.CellBase.Description;
@@ -51,9 +31,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateColor()
 		{
-			if ( _Cell.CellBase.DescriptionColor != Color.Default ) { Label.SetTextColor(_Cell.CellBase.DescriptionColor.ToAndroid()); }
+			if ( _Cell.CellBase.HintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellBase.HintTextColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
-					  _Cell.CellParent.CellDescriptionColor != Color.Default ) { Label.SetTextColor(_Cell.CellParent.CellDescriptionColor.ToAndroid()); }
+					  _Cell.CellParent.CellHintTextColor != Color.Default ) { Label.SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
 			else { Label.SetTextColor(DefaultTextColor); }
 
 			return true;
@@ -67,7 +47,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			return true;
 		}
-		// protected void UpdateDescriptionAlignment() { _Label.TextAlignment = _CellBase.DescriptionTextAlignment; }
+
+		// protected internal  override bool UpdateAlignment() { _Label.TextAlignment = _CellBase.HintTextAlignment; }
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{

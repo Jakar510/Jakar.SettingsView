@@ -35,7 +35,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		public NumberPickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
-		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ) { UpdateMin(); }
@@ -46,10 +46,10 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
 
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateMin();
@@ -62,7 +62,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		private void UpdateMin() { _Min = _NumberPickerCell.Min; }
 		private void UpdateMax() { _Max = _NumberPickerCell.Max; }
-		private void UpdateNumber() { _Value.Label.Text = _NumberPickerCell.Number.ToString(); }
+		private void UpdateNumber() { _Value.Text = _NumberPickerCell.Number.ToString(); }
 
 		private void UpdatePickerTitle() { _Popup_Title = _NumberPickerCell.PickerTitle; }
 		private void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }

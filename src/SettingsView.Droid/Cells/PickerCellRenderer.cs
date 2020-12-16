@@ -45,7 +45,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		public PickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 
@@ -62,7 +62,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			}
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
 			if ( _PickerCell.ItemsSource == null ||
 				 _PickerCell.ItemsSource.Count == 0 ) { return; }
@@ -72,7 +72,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			ShowDialog();
 		}
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateSelectedItems();
@@ -93,7 +93,7 @@ namespace Jakar.SettingsView.Droid.Cells
 				_ValueTextCache = _PickerCell.GetSelectedItemsText();
 			}
 
-			_Value.Label.Text = _ValueTextCache;
+			_Value.Text = _ValueTextCache;
 		}
 		private void UpdateCollectionChanged()
 		{

@@ -7,16 +7,19 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class TitleView : BaseView
 	{
-		public TitleView( CellBaseView baseView, TextView view ) : base(baseView, view) { }
+		public TitleView( CellBaseView baseView, TextView? view ) : base(baseView, view) { }
+
+
 		protected internal override bool UpdateText()
 		{
 			Label.Text = _Cell.CellBase.Title;
 			//hide TextView right padding when TextView.Text empty.
-			Label.Visibility = string.IsNullOrEmpty(Label.Text) ? ViewStates.Gone : ViewStates.Visible;
+			// Label.Visibility = string.IsNullOrEmpty(Label.Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
 		}
@@ -46,7 +49,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 			return true;
 		}
-		// protected void UpdateTitleAlignment() { _Label.TextAlignment = _CellBase.TitleTextAlignment; }
+
+		// protected internal  override bool UpdateTitleAlignment() { _Label.TextAlignment = _CellBase.TitleTextAlignment; }
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{
@@ -63,15 +67,12 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellTitleColorProperty.PropertyName )
-			{ return UpdateColor(); }
+			if ( e.PropertyName == Shared.SettingsView.CellTitleColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellTitleFontSizeProperty.PropertyName )
-			{ return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.SettingsView.CellTitleFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
 			if ( e.PropertyName == Shared.SettingsView.CellTitleFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellTitleFontAttributesProperty.PropertyName )
-			{ return UpdateFont(); }
+				 e.PropertyName == Shared.SettingsView.CellTitleFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return false;
 		}

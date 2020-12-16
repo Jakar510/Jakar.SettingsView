@@ -30,7 +30,7 @@
 			  android:breakStrategy="high_quality"
 			  android:maxLines="1"
 			  android:singleLine="false"
-			  android:text="Title"
+			  android:text="Title Cell"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  android:textAlignment="center" />

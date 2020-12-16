@@ -1,15 +1,17 @@
-﻿using Android.Views;
+﻿using System;
+using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Xamarin.Forms;
 using AView = Android.Views.View;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class CustomViewHolder : RecyclerView.ViewHolder
 	{
-		public RowInfo RowInfo { get; set; }
+		public RowInfo? RowInfo { get; set; }
 
 		public CustomViewHolder( AView view ) : base(view) { }
 
@@ -30,6 +32,7 @@ namespace Jakar.SettingsView.Droid
 
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal interface IFooterViewHolder { }
+
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal interface ICustomViewHolder
 	{
@@ -44,8 +47,6 @@ namespace Jakar.SettingsView.Droid
 	}
 
 
-
-
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class HeaderViewHolder : CustomViewHolder, IHeaderViewHolder, IDefaultViewHolder
 	{
@@ -54,9 +55,9 @@ namespace Jakar.SettingsView.Droid
 
 		public HeaderViewHolder( AView view ) : base(view)
 		{
-			TextView = view.FindViewById<TextView>(Resource.Id.HeaderCellTextDefault);
-			IconView = view.FindViewById<ImageView>(Resource.Id.HeaderIconDefault);
-		} 
+			TextView = view.FindViewById<TextView>(Resource.Id.HeaderCellTextDefault) ?? throw new NullReferenceException(nameof(view));
+			IconView = view.FindViewById<ImageView>(Resource.Id.HeaderIconDefault) ?? throw new NullReferenceException(nameof(view));
+		}
 
 		protected override void Dispose( bool disposing )
 		{
@@ -69,6 +70,7 @@ namespace Jakar.SettingsView.Droid
 			base.Dispose(disposing);
 		}
 	}
+
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class FooterViewHolder : CustomViewHolder, IFooterViewHolder, IDefaultViewHolder
 	{
@@ -77,8 +79,8 @@ namespace Jakar.SettingsView.Droid
 
 		public FooterViewHolder( AView view ) : base(view)
 		{
-			TextView = view.FindViewById<TextView>(Resource.Id.FooterCellTextDefault);
-			IconView = view.FindViewById<ImageView>(Resource.Id.FooterIconDefault);
+			TextView = view.FindViewById<TextView>(Resource.Id.FooterCellTextDefault) ?? throw new NullReferenceException(nameof(view));
+			IconView = view.FindViewById<ImageView>(Resource.Id.FooterIconDefault) ?? throw new NullReferenceException(nameof(view));
 		}
 
 		protected override void Dispose( bool disposing )
@@ -94,13 +96,12 @@ namespace Jakar.SettingsView.Droid
 	}
 
 
-
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class CustomHeaderViewHolder : CustomViewHolder, IHeaderViewHolder, ICustomViewHolder
 	{
 		public LinearLayout Body { get; set; }
 
-		public CustomHeaderViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.HeaderStack);
+		public CustomHeaderViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.HeaderStack) ?? throw new NullReferenceException(nameof(view));
 	}
 
 	[Android.Runtime.Preserve(AllMembers = true)]
@@ -108,23 +109,22 @@ namespace Jakar.SettingsView.Droid
 	{
 		public LinearLayout Body { get; set; }
 
-		public CustomFooterViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.FooterStack);
+		public CustomFooterViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.FooterStack) ?? throw new NullReferenceException(nameof(view));
 	}
-
 
 
 	[Android.Runtime.Preserve(AllMembers = true)]
 	internal class ContentBodyViewHolder : CustomViewHolder
 	{
-		public LinearLayout Body { get; protected set; }
+		public FormsViewContainer Body { get; protected set; }
 
-		public ContentBodyViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody);
+		public ContentBodyViewHolder( AView view ) : base(view) => Body = view.FindViewById<FormsViewContainer>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(view));
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				AView nativeCell = Body.GetChildAt(0);
+				AView? nativeCell = Body.GetChildAt(0);
 				if ( nativeCell is INativeElementView nativeElementView )
 				{
 					// If a ViewCell is used, it stops the ViewCellContainer from executing the dispose method.

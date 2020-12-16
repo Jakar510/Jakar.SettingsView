@@ -33,7 +33,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		public TextPickerCellView( Context context, Cell cell ) : base(context, cell) {  }
 		public TextPickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		protected override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
@@ -41,10 +41,10 @@ namespace Jakar.SettingsView.Droid.Cells
 			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
 
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdatePickerTitle();
@@ -52,10 +52,8 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateCommand();
 		}
 
-		private void UpdateSelectedItem() { _Value.Label.Text = _TextPickerCell.SelectedItem?.ToString(); }
-
+		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem?.ToString(); }
 		private void UpdatePickerTitle() { _PickerTitle = _TextPickerCell.PickerTitle; }
-
 		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
 		private void CreateDialog()

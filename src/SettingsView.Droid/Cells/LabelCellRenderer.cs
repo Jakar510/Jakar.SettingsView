@@ -72,7 +72,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Value.Label.SetSingleLine(true);
 		}
 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( _Value.Update(sender, e) ) { return; }
@@ -85,8 +85,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
+			base.ParentPropertyChanged(sender, e);
 			if ( _Value.UpdateParent(sender, e) ) { return; }
 
 			if ( _Title.UpdateParent(sender, e) ) { return; }
@@ -113,7 +114,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Hint.Disable();
 			_Value.Disable();
 		}
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			_Title.Update();
@@ -143,11 +144,11 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( disposing )
 			{
+				_Icon.Dispose();
 				_Title.Dispose();
 				_Description.Dispose();
 				_Hint.Dispose();
 				_Value.Dispose();
-				_Icon.Dispose();
 
 				_CellLayout.Dispose();
 			}

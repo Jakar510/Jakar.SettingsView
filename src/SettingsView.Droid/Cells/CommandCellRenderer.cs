@@ -38,7 +38,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		public CommandCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CommandCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
 			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
 			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
@@ -52,7 +52,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
 			ContentView = CreateContentView(Resource.Layout.CommandCellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.AccessoryCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CommandCellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CommandCellIcon));
 			_Title = new TitleView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellTitle));
 			_Description = new DescriptionView(this, ContentView.FindViewById<TextView>(Resource.Id.CommandCellDescription));
@@ -64,7 +64,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_IndicatorView.RemoveFromParent();
 		}
 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
 
@@ -77,14 +77,15 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
+			base.ParentPropertyChanged(sender, e);
 			if ( _Title.UpdateParent(sender, e) ) { return; }
 
 			if ( _Description.UpdateParent(sender, e) ) { return; }
 		}
 
-		protected override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
 			Execute?.Invoke();
 			if ( _CommandCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
@@ -103,7 +104,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Description.Disable();
 		}
 
-		protected override void UpdateCell()
+		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateCommand();

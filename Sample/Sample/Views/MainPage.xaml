@@ -10,10 +10,10 @@
 			 x:Class="Sample.Views.MainPage"
 			 Title="MainPage">
 	<settingsView:SettingsView>
-		<settingsView:Section HeaderHeight="10">
-			<cells:ButtonCell Title="TestSelectActions"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="TestSelectActions" />
+		<settingsView:Section Title="TESTS" HeaderHeight="10">
+			<cells:CommandCell Title="TestSelectActions"
+							   Command="{Binding GoToTest}"
+							   CommandParameter="TestSelectActions" />
 			<cells:ButtonCell Title="SurveyPage"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="SurveyPage" />
