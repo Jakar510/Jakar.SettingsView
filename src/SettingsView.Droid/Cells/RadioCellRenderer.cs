@@ -22,7 +22,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	{
 		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
-		
+
 		private object _SelectedValue
 		{
 			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
@@ -34,16 +34,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-		public RadioCellView( Context context, Cell cell ) : base(context, cell)
-		{
-			_Accessory.Focusable = false;
-			AddAccessory(_AccessoryStack, _Accessory);
-		}
-		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Accessory.Focusable = false;
-			AddAccessory(_AccessoryStack, _Accessory);
-		}
+		public RadioCellView( Context context, Cell cell ) : base(context, cell) => _Accessory.Focusable = false;
+		public RadioCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) => _Accessory.Focusable = false;
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )

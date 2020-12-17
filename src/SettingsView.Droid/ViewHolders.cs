@@ -35,10 +35,7 @@ namespace Jakar.SettingsView.Droid
 	public interface IFooterViewHolder { }
 
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public interface ICustomViewHolder
-	{
-		public LinearLayout Body { get; set; }
-	}
+	public interface ICustomViewHolder { }
 
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public interface IDefaultViewHolder
@@ -102,19 +99,26 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class CustomHeaderViewHolder : CustomViewHolder, IHeaderViewHolder, ICustomViewHolder
 	{
-		public LinearLayout Body { get; set; }
-
-		public CustomHeaderViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.HeaderStack) ?? throw new NullReferenceException(nameof(view));
-		public CustomHeaderViewHolder( AView view, RowInfo info ) : base(view, info) => Body = view.FindViewById<LinearLayout>(Resource.Id.HeaderStack) ?? throw new NullReferenceException(nameof(view));
+		public new HeaderFooterContainer? ItemView
+		{
+			get => base.ItemView as HeaderFooterContainer;
+			set => base.ItemView = value;
+		}
+		public CustomHeaderViewHolder( AView view ) : base(view) { }
+		public CustomHeaderViewHolder( AView view, RowInfo info ) : base(view, info) { }
 	}
 
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class CustomFooterViewHolder : CustomViewHolder, IFooterViewHolder, ICustomViewHolder
 	{
-		public LinearLayout Body { get; set; }
+		public new HeaderFooterContainer? ItemView
+		{
+			get => base.ItemView as HeaderFooterContainer;
+			set => base.ItemView = value;
+		}
 
-		public CustomFooterViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.FooterStack) ?? throw new NullReferenceException(nameof(view));
-		public CustomFooterViewHolder( AView view, RowInfo info ) : base(view, info) => Body = view.FindViewById<LinearLayout>(Resource.Id.FooterStack) ?? throw new NullReferenceException(nameof(view));
+		public CustomFooterViewHolder( AView view ) : base(view) { }
+		public CustomFooterViewHolder( AView view, RowInfo info ) : base(view, info) { }
 	}
 
 

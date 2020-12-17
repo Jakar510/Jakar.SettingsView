@@ -19,7 +19,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Accessory = InstanceCreator<Context, TAccessory>.Create(AndroidContext);
 			AddAccessory(_AccessoryStack, _Accessory);
 
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 		}
 		protected BaseAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
@@ -28,7 +28,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Accessory = InstanceCreator<Context, TAccessory>.Create(AndroidContext);
 			AddAccessory(_AccessoryStack, _Accessory);
 
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 		}
 

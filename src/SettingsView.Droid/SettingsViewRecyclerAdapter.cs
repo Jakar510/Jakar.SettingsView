@@ -306,11 +306,28 @@ namespace Jakar.SettingsView.Droid
 
 		protected void BindCustomHeaderFooterView( CustomViewHolder holder, Xamarin.Forms.View formsView )
 		{
-			if ( holder is null ) throw new NullReferenceException(nameof(holder));
+			switch ( holder )
+			{
+				case CustomHeaderViewHolder header:
+					BindCustomHeaderFooterView(header, formsView);
+					return;
 
-			if ( !( holder.ItemView is HeaderFooterContainer nativeCell ) ) return;
-			nativeCell.ViewHolder = holder;
-			nativeCell.FormsCell = formsView;
+				case CustomFooterViewHolder footer:
+					BindCustomHeaderFooterView(footer, formsView);
+					return;
+			}
+		}
+		protected void BindCustomHeaderFooterView( CustomHeaderViewHolder holder, Xamarin.Forms.View formsView )
+		{
+			if ( holder.ItemView is null ) return;
+			holder.ItemView.ViewHolder = holder;
+			holder.ItemView.FormsCell = formsView;
+		}
+		protected void BindCustomHeaderFooterView( CustomFooterViewHolder holder, Xamarin.Forms.View formsView )
+		{
+			if ( holder.ItemView is null ) return;
+			holder.ItemView.ViewHolder = holder;
+			holder.ItemView.FormsCell = formsView;
 		}
 		protected void BindContentView( ContentBodyViewHolder holder, int position )
 		{
@@ -353,7 +370,6 @@ namespace Jakar.SettingsView.Droid
 			{
 				// if the cell itself was specified height, set it.
 				layout.SetMinimumHeight((int) _Context.ToPixels(formsCell.Height));
-				// ReSharper disable once PossibleNullReferenceException
 				layout.LayoutParameters.Height = (int) _Context.ToPixels(formsCell.Height);
 			}
 			else if ( formsCell is ViewCell viewCell )

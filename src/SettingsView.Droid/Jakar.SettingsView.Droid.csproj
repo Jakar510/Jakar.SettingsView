@@ -103,8 +103,7 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\layout\FooterCell.axml" />
-    <AndroidResource Include="Resources\layout\HeaderCell.axml" />
+    <AndroidResource Include="Resources\layout\HeaderFooterContainerCell.axml" />
     <AndroidResource Include="Resources\drawable\ic_navigate_next.xml">
       <SubType>
       </SubType>

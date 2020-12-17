@@ -14,6 +14,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AButton = Android.Widget.Button;
 using AColor = Android.Graphics.Color;
+using View = Android.Views.View;
 
 [assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
 
@@ -23,7 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] internal class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class ButtonCellView : CellBaseView
+	public class ButtonCellView : CellBaseView, View.IOnLongClickListener, View.IOnClickListener
 	{
 		// androidx.appcompat.widget.AppCompatButton
 		protected internal AColor DefaultTextColor { get; }
@@ -41,44 +42,39 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			ContentView = CreateContentView(Resource.Layout.CellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
+			// _CellLayout.UseDefaultMargins = true;
+
 			ContentView.FindViewById<ImageView>(Resource.Id.CellIcon)?.RemoveFromParent();
 			ContentView.FindViewById<TitleView>(Resource.Id.CellTitle)?.RemoveFromParent();
 			ContentView.FindViewById<DescriptionView>(Resource.Id.CellDescription)?.RemoveFromParent();
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			_AccessoryStack.RemoveFromParent();
 
 			_Button = new AButton(AndroidContext);
+			_Button.SetOnClickListener(this);
+			_Button.SetOnLongClickListener(this);
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
-			using var layoutParams = new LayoutParams();
-			{
-				_CellLayout.AddView(_AccessoryStack, layoutParams);
-			}
-			AddAccessory(_AccessoryStack, _Button);
-		}
-		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			ContentView = CreateContentView(Resource.Layout.CellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			ContentView.FindViewById<ImageView>(Resource.Id.CellIcon)?.RemoveFromParent();
-			ContentView.FindViewById<TitleView>(Resource.Id.CellTitle)?.RemoveFromParent();
-			ContentView.FindViewById<DescriptionView>(Resource.Id.CellDescription)?.RemoveFromParent();
-			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			_AccessoryStack.RemoveFromParent();
 
-			_Button = new AButton(AndroidContext);
-			DefaultFontSize = _Button.TextSize;
-			DefaultTextColor = new AColor(_Button.CurrentTextColor);
-			using var layoutParams = new LayoutParams();
-			{
-				_CellLayout.AddView(_AccessoryStack, layoutParams);
-			}
-			AddAccessory(_AccessoryStack, _Button);
+
+			_AccessoryStack.RemoveFromParent();
+			var parameters = new LayoutParams()
+							 {
+								 ColumnSpec = InvokeSpec(0, Center),
+								 RowSpec = InvokeSpec(0, Center),
+								 Width = ViewGroup.LayoutParams.MatchParent,
+								 Height = ViewGroup.LayoutParams.MatchParent,
+								 BottomMargin = 4,
+								 TopMargin = 4,
+								 LeftMargin = 10,
+								 RightMargin = 10,
+							 };
+			_CellLayout.AddView(_AccessoryStack, parameters);
+			// _AccessoryStack.LayoutParameters = parameters;
+			AddAccessory(_AccessoryStack, _Button, ViewGroup.LayoutParams.MatchParent);
 		}
+		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -91,6 +87,9 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
 		// protected internal override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
+
+		public bool OnLongClick( View? v ) => true;
+		public void OnClick( View? v ) { Run(); }
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Run(); }
 

@@ -51,7 +51,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 			AddAccessory(_AccessoryStack, _Accessory);
 
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellHint)?.RemoveFromParent();
+			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 using Android.Content;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Xamarin.Forms;
@@ -11,19 +12,21 @@ using Xamarin.Forms.Platform.Android;
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
-	internal class HeaderFooterContainer : FrameLayout, INativeElementView
+	public class HeaderFooterContainer : FrameLayout, INativeElementView
 	{
 		// Get internal members
-		private static readonly Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.Android.Platform+DefaultRenderer");
+		protected static readonly Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.Android.Platform+DefaultRenderer");
 
 		public CustomViewHolder ViewHolder { get; set; }
 		public Element Element => FormsCell;
-		public bool IsEmpty => _formsCell == null;
+		protected bool IsEmpty => _formsCell == null;
 
-		private IVisualElementRenderer _renderer;
+		protected IVisualElementRenderer _renderer;
 
 
 		public HeaderFooterContainer( Context context ) : base(context) => Clickable = true;
+		public HeaderFooterContainer( Context context, IAttributeSet? attrs ) : base(context, attrs) => Clickable = true;
+
 
 		private Xamarin.Forms.View _formsCell;
 
@@ -60,7 +63,11 @@ namespace Jakar.SettingsView.Droid
 			base.Dispose(disposing);
 		}
 
-		protected override void OnLayout( bool changed, int l, int t, int r, int b )
+		protected override void OnLayout( bool changed,
+										  int l,
+										  int t,
+										  int r,
+										  int b )
 		{
 			if ( IsEmpty ) { return; }
 
@@ -82,7 +89,8 @@ namespace Jakar.SettingsView.Droid
 				return;
 			}
 
-			if ( ViewHolder.RowInfo.ViewType == ViewType.CustomFooter && !ViewHolder.RowInfo.Section.FooterVisible )
+			if ( ViewHolder.RowInfo.ViewType == ViewType.CustomFooter &&
+				 !ViewHolder.RowInfo.Section.FooterVisible )
 			{
 				SetMeasuredDimension(width, 0);
 				return;
@@ -119,7 +127,8 @@ namespace Jakar.SettingsView.Droid
 			Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsCell) ?? DefaultRenderer;
 			var reflectableType = renderer as IReflectableType;
 			Type rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : ( renderer != null ? renderer.GetType() : typeof(Object) );
-			if ( renderer != null && rendererType == viewHandlerType )
+			if ( renderer != null &&
+				 rendererType == viewHandlerType )
 			{
 				_formsCell = cell;
 				_formsCell.DisableLayout = true;
