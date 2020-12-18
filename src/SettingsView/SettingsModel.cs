@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 

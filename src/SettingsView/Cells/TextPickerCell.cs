@@ -1,28 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Input;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
+
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Text picker cell.
-	/// </summary>
-	public class TextPickerCell : LabelCell
+	public class TextPickerCell : CellBaseValue
 	{
-		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList), typeof(TextPickerCell), new List<object>(), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>(), defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty PageTitleProperty = BindableProperty.Create(nameof(PageTitle), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), default(Color), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(TextPickerCell), default(object), defaultBindingMode: BindingMode.TwoWay);
+		public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(string), typeof(TextPickerCell), default, defaultBindingMode: BindingMode.TwoWay);
 		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(TextPickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty PopupCancelTextProperty = BindableProperty.Create(nameof(PopupCancelText), typeof(string), typeof(TextPickerCell), "Cancel", defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty PopupAcceptTextProperty = BindableProperty.Create(nameof(PopupAcceptText), typeof(string), typeof(TextPickerCell), "Ok", defaultBindingMode: BindingMode.OneWay);
 		public static BindableProperty IsCircularPickerProperty = BindableProperty.Create(nameof(IsCircularPicker), typeof(bool), typeof(TextPickerCell), true, defaultBindingMode: BindingMode.OneWay);
 
-		public IList Items
+		public IList<string> Items 
 		{
-			get => (IList) GetValue(ItemsProperty);
+			get => (IList<string>) GetValue(ItemsProperty);
 			set => SetValue(ItemsProperty, value);
 		}
 
@@ -41,9 +41,9 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public object SelectedItem
+		public string SelectedItem
 		{
-			get => (object) GetValue(SelectedItemProperty);
+			get => (string) GetValue(SelectedItemProperty);
 			set => SetValue(SelectedItemProperty, value);
 		}
 
@@ -81,13 +81,5 @@ namespace Jakar.SettingsView.Shared.Cells
 			get => (bool) GetValue(IsCircularPickerProperty);
 			set => SetValue(IsCircularPickerProperty, value);
 		}
-
-
-#pragma warning disable IDE1006 // Naming Styles
-		// ReSharper disable once UnusedMember.Local
-#pragma warning disable IDE0051 // Remove unused private members
-		private new string ValueText { get; set; }
-#pragma warning restore IDE0051 // Remove unused private members
-#pragma warning restore IDE1006 // Naming Styles
 	}
 }

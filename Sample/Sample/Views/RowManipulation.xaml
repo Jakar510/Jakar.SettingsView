@@ -83,17 +83,13 @@
 								 ValueText="Value" />
 				<cells:CommandCell IconSource="icon.png"
 								   Title="CommandCell"
-								   Description="HogeFuga"
-								   HintText="hint"
-								   ValueText="Value" />
+								   Description="HogeFuga"/>
 				<cells:SwitchCell IconSource="icon.png"
 								  Title="SwitchCell"
-								  Description="HogeFuga"
-								  HintText="hint" />
+								  Description="HogeFuga"/>
 				<cells:CheckboxCell IconSource="icon.png"
 									Title="CheckboxCell"
-									Description="HogeFuga"
-									HintText="hint" />
+									Description="HogeFuga"/>
 			</settingsView:Section>
 		</settingsView:SettingsView>
 	</Grid>

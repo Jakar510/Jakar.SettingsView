@@ -5,6 +5,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -13,6 +14,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class TitleView : BaseTextView
 	{
+		private CellBaseTitle _CurrentCell => _Cell.Cell as CellBaseTitle ?? throw new NullReferenceException(nameof(_CurrentCell));
+
 		public TitleView( Context context ) : base(context) { }
 		public TitleView( CellBaseView baseView, Context context ) : base(baseView, context) { }
 		public TitleView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
@@ -20,7 +23,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal override bool UpdateText()
 		{
-			Text = _Cell.CellBase.Title;
+			Text = _CurrentCell.Title;
 			//hide TextView right padding when TextView.Text empty.
 			// Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
@@ -28,7 +31,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateColor()
 		{
-			if ( _Cell.CellBase.TitleColor != Color.Default ) { SetTextColor(_Cell.CellBase.TitleColor.ToAndroid()); }
+			if ( _CurrentCell.TitleColor != Color.Default ) { SetTextColor(_CurrentCell.TitleColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
 					  _Cell.CellParent.CellTitleColor != Color.Default ) { SetTextColor(_Cell.CellParent.CellTitleColor.ToAndroid()); }
 			else { SetTextColor(DefaultTextColor); }
@@ -37,7 +40,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateFontSize()
 		{
-			if ( _Cell.CellBase.TitleFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellBase.TitleFontSize); }
+			if ( _CurrentCell.TitleFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.TitleFontSize); }
 			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellTitleFontSize); }
 			else { SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
 
@@ -45,8 +48,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateFont()
 		{
-			string? family = _Cell.CellBase.HintFontFamily ?? _Cell.CellParent?.CellTitleFontFamily;
-			FontAttributes attr = _Cell.CellBase.TitleFontAttributes ?? _Cell.CellParent?.CellTitleFontAttributes ?? FontAttributes.None;
+			string? family = _CurrentCell.TitleFontFamily ?? _Cell.CellParent?.CellTitleFontFamily;
+			FontAttributes attr = _CurrentCell.TitleFontAttributes ?? _Cell.CellParent?.CellTitleFontAttributes ?? FontAttributes.None;
 
 			Typeface = FontUtility.CreateTypeface(family, attr);
 
@@ -57,14 +60,14 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBase.TitleProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBase.TitleColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == CellBaseTitle.TitleColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == CellBase.TitleFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == CellBaseTitle.TitleFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBase.TitleFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBase.TitleFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == CellBaseTitle.TitleFontFamilyProperty.PropertyName ||
+				 e.PropertyName == CellBaseTitle.TitleFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return false;
 		}

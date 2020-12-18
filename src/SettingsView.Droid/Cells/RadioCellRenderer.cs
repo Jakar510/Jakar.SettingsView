@@ -7,6 +7,7 @@ using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 
@@ -18,7 +19,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class RadioCellView : BaseAccessoryCell<SimpleCheck>
+	public class RadioCellView : BaseAiAccessoryCell<SimpleCheck>
 	{
 		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
@@ -42,30 +43,13 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
-			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName )
-			{
-				UpdateAccentColor();
-				_Accessory.Invalidate();
-			}
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
+			if ( e.PropertyName == BaseCheckableCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
-			if ( _Title.UpdateParent(sender, e) ) { return; }
 
-			if ( _Description.UpdateParent(sender, e) ) { return; }
-
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName )
-			{
-				UpdateAccentColor();
-				_Accessory.Invalidate();
-			}
+			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
 		protected internal override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -109,6 +93,8 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( !_RadioCell.AccentColor.IsDefault ) { _Accessory.Color = _RadioCell.AccentColor.ToAndroid(); }
 			else if ( CellParent != null &&
 					  !CellParent.CellAccentColor.IsDefault ) { _Accessory.Color = CellParent.CellAccentColor.ToAndroid(); }
+
+			Invalidate();
 		}
 
 

@@ -1,12 +1,10 @@
 ﻿using System;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Date picker cell.
-	/// </summary>
-	public class DatePickerCell : LabelCell
+	public class DatePickerCell : CellBaseValue
 	{
 		/// <summary>
 		/// The date property.
@@ -83,6 +81,5 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(TodayTextProperty, value);
 		}
 
-		private new string ValueText { get; set; }
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Jakar.SettingsView;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Xamarin.Forms;
@@ -314,55 +315,55 @@ namespace Sample.ViewModels
 
 		protected virtual void CellChanged( object obj )
 		{
-			string text = ( obj as Label ).Text;
+			string text = ( obj as Label )?.Text;
 			switch ( text )
 			{
-				case nameof(CellBase.Title):
+				case nameof(CellBaseTitle.Title):
 					NextText(Title, TitleTexts);
 					break;
 				case nameof(LabelCell.ValueText):
 					NextText(ValueText, ValueTexts);
 					break;
-				case nameof(CellBase.Description):
+				case nameof(CellBaseDescription.Description):
 					NextText(Description, DescriptionTexts);
 					break;
-				case nameof(CellBase.HintText):
+				case nameof(CellBaseHintText.HintText):
 					NextText(HintText, HintTexts);
 					break;
-				case nameof(CellBase.TitleColor):
+				case nameof(CellBaseTitle.TitleColor):
 					NextColor(TitleColor, DeepTextColors);
 					break;
 				case nameof(LabelCell.ValueTextColor):
 					NextColor(ValueTextColor, PaleTextColors);
 					break;
-				case nameof(CellBase.DescriptionColor):
+				case nameof(CellBaseDescription.DescriptionColor):
 					NextColor(DescriptionColor, PaleTextColors);
 					break;
 				case nameof(CellBase.BackgroundColor):
 					NextColor(BgColor, CellBackColors);
 					break;
-				case nameof(CellBase.HintTextColor):
+				case nameof(CellBaseHintText.HintTextColor):
 					NextColor(HintTextColor, AccentColors);
 					break;
-				case nameof(CellBase.TitleFontSize):
+				case nameof(CellBaseTitle.TitleFontSize):
 					ChangeFontSize(TitleFontSize);
 					break;
 				case nameof(LabelCell.ValueTextFontSize):
 					ChangeFontSize(ValueTextFontSize);
 					break;
-				case nameof(CellBase.DescriptionFontSize):
+				case nameof(CellBaseDescription.DescriptionFontSize):
 					ChangeFontSize(DescriptionFontSize);
 					break;
-				case nameof(CellBase.IconSource):
+				case nameof(CellBaseDescription.IconSource):
 					ChangeIconSource(IconSource);
 					break;
-				case nameof(CellBase.IconRadius):
+				case nameof(CellBaseDescription.IconRadius):
 					ChangeHeight(IconRadius);
 					break;
-				case nameof(CellBase.IconSize):
+				case nameof(CellBaseDescription.IconSize):
 					ChangeSize(IconSize);
 					break;
-				case nameof(CellBase.HintFontSize):
+				case nameof(CellBaseHintText.HintFontSize):
 					ChangeFontSize(HintFontSize);
 					break;
 				case nameof(CellBase.IsEnabled):

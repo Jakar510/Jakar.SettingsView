@@ -1,4 +1,5 @@
 ﻿using System;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -6,7 +7,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Time picker cell.
 	/// </summary>
-	public class TimePickerCell : LabelCell
+	public class TimePickerCell : CellBaseValue
 	{
 		/// <summary>
 		/// The time property.
@@ -52,7 +53,5 @@ namespace Jakar.SettingsView.Shared.Cells
 			get => (string) GetValue(PickerTitleProperty);
 			set => SetValue(PickerTitleProperty, value);
 		}
-
-		private new string ValueText { get; set; }
 	}
 }

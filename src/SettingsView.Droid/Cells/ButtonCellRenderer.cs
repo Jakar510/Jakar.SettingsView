@@ -10,6 +10,7 @@ using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AButton = Android.Widget.Button;
@@ -82,11 +83,9 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == ButtonCell.CommandProperty.PropertyName ||
 				 e.PropertyName == ButtonCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
-			else if ( e.PropertyName == CellBase.TitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { UpdateTitle(); }
 			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
 		}
-		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
-		// protected internal override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
 		public bool OnLongClick( View? v ) => true;
 		public void OnClick( View? v ) { Run(); }

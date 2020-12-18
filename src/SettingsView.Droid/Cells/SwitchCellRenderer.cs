@@ -7,6 +7,8 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using SwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
@@ -20,11 +22,11 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class SwitchCellView : BaseAccessoryCell<SwitchCompat>, CompoundButton.IOnCheckedChangeListener
+	public class SwitchCellView : BaseAiAccessoryCell<SwitchCompat>, CompoundButton.IOnCheckedChangeListener
 	{
 		// protected SwitchCompat _Accessory { get; set; }
 		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
-		
+
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			_Accessory.Gravity = GravityFlags.Right;
@@ -34,7 +36,6 @@ namespace Jakar.SettingsView.Droid.Cells
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
-
 		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
 			_Accessory.Gravity = GravityFlags.Right;
@@ -49,9 +50,9 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == SwitchCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == BaseCheckableCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
-			if ( e.PropertyName == SwitchCell.OnProperty.PropertyName ) { UpdateOn(); }
+			if ( e.PropertyName == BaseCheckableCell.CheckedProperty.PropertyName ) { UpdateOn(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
@@ -61,7 +62,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { _Accessory.Checked = !_Accessory.Checked; }
-		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _AccessoryCell.On = isChecked; }
+		public void OnCheckedChanged( CompoundButton? buttonView, bool isChecked ) { _AccessoryCell.Checked = isChecked; }
 
 		protected override void EnableCell()
 		{
@@ -86,7 +87,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateOn();
 			base.UpdateCell();
 		}
-		private void UpdateOn() { _Accessory.Checked = _AccessoryCell.On; }
+		private void UpdateOn() { _Accessory.Checked = _AccessoryCell.Checked; }
 
 		private void UpdateAccentColor()
 		{

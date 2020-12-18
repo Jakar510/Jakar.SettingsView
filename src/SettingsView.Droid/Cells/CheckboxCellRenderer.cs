@@ -10,6 +10,7 @@ using AndroidX.AppCompat.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -21,11 +22,11 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class CheckboxCellView : BaseAccessoryCell<AppCompatCheckBox>, CompoundButton.IOnCheckedChangeListener
+	public class CheckboxCellView : BaseAiAccessoryCell<AppCompatCheckBox>, CompoundButton.IOnCheckedChangeListener
 	{
 		// protected AppCompatCheckBox _Accessory { get; set; }
 		protected CheckboxCell _AccessoryCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
-		
+
 
 		public CheckboxCellView( Context context, Cell cell ) : base(context, cell)
 		{
@@ -49,25 +50,15 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+			if ( e.PropertyName == BaseCheckableCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
-
-			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
-
-			if ( e.PropertyName == CheckboxCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
+			else if ( e.PropertyName == BaseCheckableCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
-
 
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
@@ -111,41 +102,38 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected void ChangeCheckColor( Android.Graphics.Color accent )
 		{
-			var colorList = new ColorStateList(new int[][]
+			_Accessory.SupportButtonTintList = new ColorStateList(new[]
+																  {
+																	  new[]
+																	  {
+																		  Android.Resource.Attribute.StateChecked
+																	  },
+																	  new[]
+																	  {
+																		  -Android.Resource.Attribute.StateChecked
+																	  },
+																  }, new int[]
+																	 {
+																		 accent,
+																		 Android.Graphics.Color.Argb(76, 117, 117, 117)
+																	 });
+
+			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
+			ripple.SetColor(new ColorStateList(new[]
 											   {
-												   new int[]
+												   new[]
 												   {
 													   Android.Resource.Attribute.StateChecked
 												   },
-												   new int[]
+												   new[]
 												   {
 													   -Android.Resource.Attribute.StateChecked
-												   },
+												   }
 											   }, new int[]
 												  {
-													  accent,
-													  accent
-												  });
-
-			_Accessory.SupportButtonTintList = colorList;
-
-			var rippleColor = new ColorStateList(new int[][]
-												 {
-													 new int[]
-													 {
-														 Android.Resource.Attribute.StateChecked
-													 },
-													 new int[]
-													 {
-														 -Android.Resource.Attribute.StateChecked
-													 }
-												 }, new int[]
-													{
-														Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
-														Android.Graphics.Color.Argb(76, 117, 117, 117)
-													});
-			var ripple = _Accessory.Background as RippleDrawable;
-			ripple?.SetColor(rippleColor);
+													  Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
+													  Android.Graphics.Color.Argb(76, 117, 117, 117)
+												  }));
 			_Accessory.Background = ripple;
 		}
 

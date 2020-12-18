@@ -20,7 +20,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 
 	[Preserve(AllMembers = true)]
-	public class CommandCellView : BaseDescriptionCell
+	public class CommandCellView : BaseAiDescriptionCell
 	{
 		protected Action? Execute { get; set; }
 		protected ICommand? _Command { get; set; }
@@ -66,21 +66,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-		}
-		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.ParentPropertyChanged(sender, e);
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
 		}
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )

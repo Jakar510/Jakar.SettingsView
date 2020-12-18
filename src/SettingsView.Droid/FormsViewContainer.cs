@@ -8,6 +8,7 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.Android;
+using View = Android.Views.View;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid
@@ -26,6 +27,7 @@ namespace Jakar.SettingsView.Droid
 
 		private IVisualElementRenderer? _Renderer { get; set; }
 
+	#region constuctors
 
 		public FormsViewContainer( Context context ) : base(context) => Clickable = true;
 		public FormsViewContainer( Context context, Android.Util.IAttributeSet attributes ) : base(context, attributes) => Clickable = true;
@@ -113,6 +115,7 @@ namespace Jakar.SettingsView.Droid
 			FormsView = view;
 		}
 
+	#endregion
 
 		private Xamarin.Forms.View? _formsView;
 
@@ -194,22 +197,103 @@ namespace Jakar.SettingsView.Droid
 			return renderer;
 		}
 
+
+		// public void UpdateCell( Xamarin.Forms.View? view )
+		// {
+		// 	if ( CustomCell is null ) throw new NullReferenceException(nameof(CustomCell));
+		//
+		// 	if ( _formsView == view &&
+		// 		 !CustomCell.IsForceLayout ) { return; }
+		//
+		// 	CustomCell.IsForceLayout = false;
+		//
+		// 	if ( _formsView != null ) { _formsView.PropertyChanged -= CellPropertyChanged; }
+		//
+		// 	if ( view is null )
+		// 	{
+		// 		if ( _Renderer != null ) RemoveView(_Renderer.View);
+		// 		return;
+		// 	}
+		//
+		// 	view.PropertyChanged += CellPropertyChanged;
+		//
+		// 	if ( _Renderer == null )
+		// 	{
+		// 		CreateNewRenderer(view);
+		// 		return;
+		// 	}
+		//
+		// 	if ( GetChildAt(0) is IVisualElementRenderer renderer )
+		// 	{
+		// 		Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsView) ?? DefaultRenderer;
+		// 		// ReSharper disable once SuspiciousTypeConversion.Global
+		// 		Type? rendererType = renderer is IReflectableType reflectableType ? reflectableType.GetTypeInfo().AsType() : renderer.GetType();
+		// 		if ( rendererType == viewHandlerType )
+		// 		{
+		// 			_formsView = view;
+		// 			_formsView.DisableLayout = true;
+		// 			foreach ( var element in _formsView.Descendants() )
+		// 			{
+		// 				var c = (VisualElement) element;
+		// 				c.DisableLayout = true;
+		// 			}
+		//
+		// 			renderer.SetElement(_formsView);
+		//
+		// 			Platform.SetRenderer(_formsView, renderer);
+		//
+		// 			_formsView.DisableLayout = false;
+		// 			foreach ( var element in _formsView.Descendants() )
+		// 			{
+		// 				var c = (VisualElement) element;
+		// 				c.DisableLayout = false;
+		// 			}
+		//
+		// 			if ( _formsView is Layout viewAsLayout )
+		// 				viewAsLayout.ForceLayout();
+		//
+		// 			UpdateNativeCell();
+		// 			Invalidate();
+		//
+		// 			return;
+		// 		}
+		// 	}
+		//
+		// 	RemoveView(_Renderer.View);
+		// 	Platform.SetRenderer(_formsView, null);
+		// 	if ( _formsView != null )
+		// 	{
+		// 		_formsView.IsPlatformEnabled = false;
+		// 		_Renderer.View.Dispose();
+		// 	}
+		//
+		// 	_formsView = view;
+		// 	_Renderer = Platform.CreateRendererWithContext(_formsView, Context);
+		//
+		// 	Platform.SetRenderer(_formsView, _Renderer);
+		// 	AddView(_Renderer.View);
+		//
+		// 	UpdateNativeCell();
+		// }
+		
+		
 		public void UpdateCell( Xamarin.Forms.View? view )
 		{
-			if ( view is null || CustomCell != null && _formsView == view && !CustomCell.IsForceLayout ) { return; }
-
+			if ( view is null ||
+				 CustomCell != null && _formsView == view && !CustomCell.IsForceLayout ) { return; }
+		
 			if ( CustomCell != null ) CustomCell.IsForceLayout = false;
-
+		
 			if ( _formsView != null ) { _formsView.PropertyChanged -= CellPropertyChanged; }
-
+		
 			view.PropertyChanged += CellPropertyChanged;
-
+		
 			if ( _Renderer == null )
 			{
 				_Renderer = CreateNewRenderer(view);
 				return;
 			}
-
+		
 			var renderer = GetChildAt(0) as IVisualElementRenderer;
 			Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsView) ?? DefaultRenderer;
 			// ReSharper disable once SuspiciousTypeConversion.Global
@@ -218,34 +302,34 @@ namespace Jakar.SettingsView.Droid
 				 rendererType == viewHandlerType )
 			{
 				_formsView = view;
-
+		
 				_formsView.DisableLayout = true;
 				foreach ( Element element in _formsView.Descendants() )
 				{
 					var c = (VisualElement) element;
 					c.DisableLayout = true;
 				}
-
+		
 				renderer.SetElement(_formsView);
-
+		
 				Platform.SetRenderer(_formsView, _Renderer);
-
+		
 				_formsView.DisableLayout = false;
 				foreach ( Element element in _formsView.Descendants() )
 				{
 					var c = (VisualElement) element;
 					c.DisableLayout = false;
 				}
-
+		
 				if ( _formsView is Layout viewAsLayout )
 					viewAsLayout.ForceLayout();
-
+		
 				UpdateNativeCell();
 				Invalidate();
-
+		
 				return;
 			}
-
+		
 			RemoveView(_Renderer.View);
 			Platform.SetRenderer(_formsView, null);
 			if ( _formsView != null )
@@ -253,13 +337,13 @@ namespace Jakar.SettingsView.Droid
 				_formsView.IsPlatformEnabled = false;
 				_Renderer.View.Dispose();
 			}
-
+		
 			_formsView = view;
 			_Renderer = Platform.CreateRendererWithContext(_formsView, Context);
-
+		
 			Platform.SetRenderer(_formsView, _Renderer);
 			AddView(_Renderer.View);
-
+		
 			UpdateNativeCell();
 		}
 

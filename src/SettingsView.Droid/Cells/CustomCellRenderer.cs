@@ -21,7 +21,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 
 	[Preserve(AllMembers = true)]
-	public class CustomCellView : BaseDescriptionCell
+	public class CustomCellView : BaseAiDescriptionCell
 	{
 		protected CustomCell _CustomCell => Cell as CustomCell ?? throw new NullReferenceException(nameof(_CustomCell));
 
@@ -29,25 +29,28 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected ICommand? _Command { get; set; }
 
 		// protected ImageView _IndicatorView { get; set; }
-		// protected LinearLayout _CoreView { get; set; }
-		protected FormsViewContainer _Container { get; }
+		protected internal FormsViewContainer Container { get; }
 		protected LinearLayout _AccessoryStack { get; }
 
 		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			// _Container = ContentView.FindViewById<FormsViewContainer>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Container = new FormsViewContainer(AndroidContext, _CustomCell);
+			Container = new FormsViewContainer(AndroidContext, _CustomCell);
 
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			_AccessoryStack.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack)?.RemoveFromParent();
+			_AccessoryStack = new LinearLayout(AndroidContext);
 
-			using var layoutParams = new LayoutParams();
-			{
-				_CellLayout.AddView(_AccessoryStack, layoutParams);
-			}
-			AddAccessory(_AccessoryStack, _Container);
+			var layoutParams = new LayoutParams()
+							   {
+								   RowSpec = InvokeSpec(2, End),
+								   ColumnSpec = InvokeSpec(0, Center),
+								   Width = ViewGroup.LayoutParams.WrapContent,
+								   Height = ViewGroup.LayoutParams.WrapContent,
+							   };
+			using ( layoutParams ) { _CellLayout.AddView(_AccessoryStack, layoutParams); }
+
+			AddAccessory(_AccessoryStack, Container);
 			if ( !_CustomCell.ShowArrowIndicator ) { return; }
 
 			// _Container = new FormsViewContainer(Context);
@@ -57,24 +60,29 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Description.RemoveFromParent();
 
 			float rMargin = _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
-			_Container.SetPadding(0, 0, (int) rMargin, 0);
+			Container.SetPadding(0, 0, (int) rMargin, 0);
 			_CellLayout.SetPadding(0, 0, 0, 0);
 		}
 		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
-			// _Container = ContentView.FindViewById<FormsViewContainer>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Container = new FormsViewContainer(AndroidContext, _CustomCell);
+			Container = new FormsViewContainer(AndroidContext, _CustomCell);
 
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			_AccessoryStack.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack)?.RemoveFromParent();
+			_AccessoryStack = new LinearLayout(AndroidContext);
 
-			using var layoutParams = new LayoutParams();
-			{
-				_CellLayout.AddView(_AccessoryStack, layoutParams);
-			}
-			AddAccessory(_AccessoryStack, _Container);
+			var layoutParams = new LayoutParams()
+							   {
+								   RowSpec = InvokeSpec(2, End),
+								   ColumnSpec = InvokeSpec(0, Center),
+								   Width = ViewGroup.LayoutParams.WrapContent,
+								   Height = ViewGroup.LayoutParams.WrapContent,
+							   };
+			using ( layoutParams )
+			{ _CellLayout.AddView(_AccessoryStack, layoutParams); }
+
+			AddAccessory(_AccessoryStack, Container);
 			if ( !_CustomCell.ShowArrowIndicator )
 			{ return; }
 
@@ -86,7 +94,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Description.RemoveFromParent();
 
 			float rMargin = _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
-			_Container.SetPadding(0, 0, (int) rMargin, 0);
+			Container.SetPadding(0, 0, (int) rMargin, 0);
 			_CellLayout.SetPadding(0, 0, 0, 0);
 		}
 
@@ -94,22 +102,17 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
+			// if ( _Title.Update(sender, e) ) { return; }
+			// if ( _Description.Update(sender, e) ) { return; }
 
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
+			// if ( _Title.UpdateParent(sender, e) ) { return; }
+			// if ( _Description.UpdateParent(sender, e) ) { return; }
 		}
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
@@ -128,16 +131,15 @@ namespace Jakar.SettingsView.Droid.Cells
 			return true;
 		}
 
-		public void UpdateContent() { _Container.FormsView = _CustomCell.Content; }
+		public void UpdateContent()
+		{
+			Container.FormsView = _CustomCell.Content;
+		}
 		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateContent();
 			UpdateCommand();
-
-			_Icon.Update();
-			_Title.Update();
-			_Description.Update();
 		}
 
 		private void UpdateCommand()
@@ -194,8 +196,8 @@ namespace Jakar.SettingsView.Droid.Cells
 				_Icon.Dispose();
 				_Title.Dispose();
 				_Description.Dispose();
-				_Container.RemoveFromParent();
-				_Container.Dispose();
+				Container.RemoveFromParent();
+				Container.Dispose();
 			}
 
 			base.Dispose(disposing);

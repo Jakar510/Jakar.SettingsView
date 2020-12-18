@@ -61,17 +61,15 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( _TextPickerCell.Items == null ||
 				 _TextPickerCell.Items.Count == 0 ) { return; }
 
-			string[] displayValues = _TextPickerCell.Items.Cast<object>().Select(x => x.ToString()).ToArray();
-
 			_Picker = new APicker(AndroidContext)
 					  {
 						  DescendantFocusability = DescendantFocusability.BlockDescendants,
 						  MinValue = 0,
 						  MaxValue = _TextPickerCell.Items.Count - 1,
 						  WrapSelectorWheel = _TextPickerCell.IsCircularPicker,
-						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem), 0)
+						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem), 0),
 					  };
-			_Picker.SetDisplayedValues(displayValues);
+			_Picker.SetDisplayedValues(_TextPickerCell.Items.ToArray());
 
 			if ( _Dialog != null ) return;
 			using ( var builder = new AlertDialog.Builder(AndroidContext) )

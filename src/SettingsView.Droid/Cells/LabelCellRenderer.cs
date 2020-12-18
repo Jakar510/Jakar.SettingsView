@@ -19,47 +19,18 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class LabelCellRenderer : CellBaseRenderer<LabelCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class LabelCellView : BaseValueCell
+	public class LabelCellView : BaseAiValueCell
 	{
 		protected LabelCell _LabelCell => Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
 
 
+		public LabelCellView( Context context, Cell cell ) : base(context, cell) { _Value.SetSingleLine(false); }
 
+		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { _Value.SetSingleLine(false); }
 
-		public LabelCellView( Context context, Cell cell ) : base(context, cell)
-		{
-			_Value.SetSingleLine(false);
-		}
-
-		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Value.SetSingleLine(false);
-		}
-
-		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
-			if ( _Value.Update(sender, e) ) { return; }
-
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
-			if ( _Hint.Update(sender, e) ) { return; }
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-		}
-		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.ParentPropertyChanged(sender, e);
-			if ( _Value.UpdateParent(sender, e) ) { return; }
-
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
-
-			if ( _Hint.UpdateParent(sender, e) ) { return; }
-		}
+		// protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.CellPropertyChanged(sender, e); }
+		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
+		// protected internal override void UpdateCell() { base.UpdateCell(); }
 
 
 		protected override void EnableCell()
@@ -77,15 +48,6 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Description.Disable();
 			_Hint.Disable();
 			_Value.Disable();
-		}
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			_Title.Update();
-			_Description.Update();
-			_Hint.Update();
-			_Value.Update();
-			_Icon.Update();
 		}
 		// private void UpdateUseDescriptionAsValue()
 		// {

@@ -23,11 +23,6 @@ namespace Jakar.SettingsView.Droid.Cells
 		public DatePickerCellView( Context context, Cell cell ) : base(context, cell) { }
 		public DatePickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			UpdateDate();
-		}
 
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
@@ -65,6 +60,11 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		protected void OnCancelButtonClicked( object sender, EventArgs e ) { ClearFocus(); }
 
+		protected internal override void UpdateCell()
+		{
+			base.UpdateCell();
+			UpdateDate();
+		}
 		protected void UpdateDate()
 		{
 			string format = _DatePickerCell.Format;

@@ -24,7 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class EntryCellView : BaseEntryCell
+	public class EntryCellView : BaseAiEntryCell
 	{
 		public EntryCellView( Context context, Cell cell ) : base(context, cell)
 		{
@@ -41,83 +41,9 @@ namespace Jakar.SettingsView.Droid.Cells
 			_EntryCell.Focused += EntryCell_Focused;
 		}
 
-
-		/*
-		 
-		protected override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
-			if ( Update(sender, e) ) { return; }
-
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
-			if ( _Hint.Update(sender, e) ) { return; }
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-		}
-		protected override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			if ( UpdateParent(sender, e) ) { return; }
-
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
-
-			if ( _Hint.UpdateParent(sender, e) ) { return; }
-		}
-
-
-		protected override void EnableCell()
-		{
-			base.EnableCell();
-			_Title.Enable();
-			_Description.Enable();
-			_Hint.Enable();
-			Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Title.Disable();
-			_Description.Disable();
-			_Hint.Disable();
-			Disable();
-		}
-
-		 */
-
-		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
-			if ( _Value.Update(sender, e) ) { return; }
-
-			if ( _Title.Update(sender, e) ) { return; }
-
-			if ( _Description.Update(sender, e) ) { return; }
-
-			if ( _Hint.Update(sender, e) ) { return; }
-
-			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
-		}
-		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			if ( _Value.UpdateParent(sender, e) ) { return; }
-
-			if ( _Title.UpdateParent(sender, e) ) { return; }
-
-			if ( _Description.UpdateParent(sender, e) ) { return; }
-
-			if ( _Hint.UpdateParent(sender, e) ) { return; }
-		}
-
-
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			_Value.Update();
-		}
+		// protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.CellPropertyChanged(sender, e); }
+		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
+		// protected internal override void UpdateCell() { base.UpdateCell(); }
 
 
 		protected void EditTextOnClick( object sender, EventArgs e ) { _Value.PerformSelectAction(); }

@@ -6,14 +6,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Picker cell.
-	/// </summary>
-	public class PickerCell : LabelCell
+	public class PickerCell : CellBaseValue
 	{
 		/// <summary>
 		/// The page title property.
@@ -93,7 +91,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected item property.
 		/// </summary>
-		public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(PickerCell), default(object), defaultBindingMode: BindingMode.TwoWay);
+		public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(PickerCell), default, defaultBindingMode: BindingMode.TwoWay);
 
 		/// <summary>
 		/// Gets or sets the selected item.
@@ -344,7 +342,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 		// Create all property getters
-		private Dictionary<string, Func<object, object>> CreateGetProperty( Type t )
+		private static Dictionary<string, Func<object, object>> CreateGetProperty( Type t )
 		{
 			IEnumerable<PropertyInfo> prop = t.GetRuntimeProperties().Where(x => x.DeclaringType == t && !x.Name.StartsWith("_", StringComparison.Ordinal));
 
@@ -364,7 +362,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			return dictGetter;
 		}
 
-		private void SetUpPropertyCache( IList itemsSource )
+		private void SetUpPropertyCache( IEnumerable itemsSource )
 		{
 			Type[] typeArg = itemsSource.GetType().GenericTypeArguments;
 
@@ -381,10 +379,9 @@ namespace Jakar.SettingsView.Shared.Cells
 			_getters = DisplayValueCache.GetOrAdd(typeArg[0], CreateGetProperty);
 		}
 
-		private bool IsBuiltInType( Type type )
+		private static bool IsBuiltInType( Type type )
 		{
-			string name = type.FullName;
-			switch ( name )
+			switch ( type.FullName )
 			{
 				case "System.Boolean":
 				case "System.Byte":

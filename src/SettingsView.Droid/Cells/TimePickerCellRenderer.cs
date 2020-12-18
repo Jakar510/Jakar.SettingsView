@@ -13,8 +13,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
+	[Preserve(AllMembers = true)] public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
 	[Preserve(AllMembers = true)]
 	public class TimePickerCellView : LabelCellView

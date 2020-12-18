@@ -61,17 +61,13 @@
 								 ValueText="Value" />
 				<cells:CommandCell IconSource="icon.png"
 								   Title="CommandCell"
-								   Description="HogeFuga"
-								   HintText="hint"
-								   ValueText="Value" />
+								   Description="HogeFuga"/>
 				<cells:SwitchCell IconSource="icon.png"
 								  Title="SwitchCell"
-								  Description="HogeFuga"
-								  HintText="hint" />
+								  Description="HogeFuga"/>
 				<cells:CheckboxCell IconSource="icon.png"
 									Title="CheckboxCell"
-									Description="HogeFuga"
-									HintText="hint" />
+									Description="HogeFuga"/>
 				<cells:NumberPickerCell IconSource="icon.png"
 										Title="NumberPickerCell"
 										Description="HogeFuga"
@@ -90,16 +86,14 @@
 				<cells:PickerCell IconSource="icon.png"
 								  Title="PickerCell"
 								  Description="HogeFuga"
-								  HintText="hint"
-								  ValueText="selected" />
+								  HintText="hint"/>
 				<cells:EntryCell IconSource="icon.png"
 								 Title="EntryCell"
 								 Description="HogeFuga"
 								 HintText="hint"
 								 ValueText="inputText" />
 				<cells:ButtonCell IconSource="icon.png"
-								  Title="ButtonCell"
-								  HintText="hint" />
+								  Title="ButtonCell"/>
 			</settingsView:Section>
 			<settingsView:Section Title="Section2"
 								  FooterText="Footer2">
@@ -107,12 +101,11 @@
 								 HintText="hint"
 								 ValueText="Value" />
 				<cells:CommandCell Title="CommandCell"
-								   HintText="hint"
-								   ValueText="Value" />
+								   Description="Value" />
 				<cells:SwitchCell Title="SwitchCell"
-								  HintText="hint" />
+								  Description="hint" />
 				<cells:CheckboxCell Title="CheckboxCell"
-									HintText="hint" />
+									Description="hint" />
 				<cells:NumberPickerCell Title="NumberPickerCell"
 										HintText="hint"
 										Number="20" />
@@ -124,12 +117,11 @@
 									  Date="2017/10/10" />
 				<cells:PickerCell Title="PickerCell"
 								  HintText="hint"
-								  ValueText="selected" />
+								  Description="selected" />
 				<cells:EntryCell Title="EntryCell"
 								 HintText="hint"
 								 ValueText="inputText" />
-				<cells:ButtonCell Title="ButtonCell"
-								  HintText="hint" />
+				<cells:ButtonCell Title="ButtonCell"/>
 			</settingsView:Section>
 
 		</settingsView:SettingsView>

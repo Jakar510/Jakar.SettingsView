@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -6,7 +7,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Command cell.
 	/// </summary>
-	public class CommandCell : LabelCell
+	public class CommandCell : CellBaseDescription
 	{
 		/// <summary>
 		/// The command property.
@@ -26,7 +27,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command parameter property.
 		/// </summary>
-		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell), default(object), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell), default, defaultBindingMode: BindingMode.OneWay);
 
 		/// <summary>
 		/// Gets or sets the command parameter.
@@ -34,7 +35,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <value>The command parameter.</value>
 		public object CommandParameter
 		{
-			get => (object) GetValue(CommandParameterProperty);
+			get => GetValue(CommandParameterProperty);
 			set => SetValue(CommandParameterProperty, value);
 		}
 

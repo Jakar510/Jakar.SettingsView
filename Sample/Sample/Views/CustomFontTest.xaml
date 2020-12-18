@@ -154,17 +154,10 @@
 								   Description="hoge@fuga.com"
 								   Command="{Binding ToProfileCommand}"
 								   KeepSelectedUntilBack="true"
-								   HintText="hint"
-								   IgnoreUseDescriptionAsValue="true"
-								   ValueText="10"
 								   TitleFontFamily="{Binding Title.Value}"
-								   ValueTextFontFamily="{Binding Value.Value}"
 								   DescriptionFontFamily="{Binding Desc.Value}"
-								   HintFontFamily="{Binding Hint.Value}"
 								   TitleFontAttributes="{Binding ChildAttr.Value}"
-								   ValueTextFontAttributes="{Binding ChildAttr.Value}"
-								   DescriptionFontAttributes="{Binding ChildAttr.Value}"
-								   HintFontAttributes="{Binding ChildAttr.Value}" />
+								   DescriptionFontAttributes="{Binding ChildAttr.Value}"  />
 			</settingsView:Section>
 
 			<settingsView:Section Title="LabelCell">
@@ -174,7 +167,7 @@
 
 			<settingsView:Section Title="CheckableCell">
 				<cells:SwitchCell Title="Switch"
-								  On="true"
+								  Checked="true"
 								  Description="This is description. you can write detail explanation of the item here. long text wrap automatically." />
 				<cells:CheckboxCell Title="Checkbox"
 									Checked="true" />
@@ -252,7 +245,7 @@
 						   Padding="10,6,10,0" />
 				</settingsView:Section.FooterView>
 				<cell:SliderCell Value="0.5"
-								 HintText="CustomCell" />
+								 Description="CustomCell" />
 			</settingsView:Section>
 
 			<settingsView:Section Title="ButtonCell"

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -6,12 +7,8 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Button cell.
 	/// </summary>
-	public class ButtonCell : CellBase
+	public class ButtonCell : CellBaseIcon
 	{
-		private new string Description { get; set; }
-		private new Color DescriptionColor { get; set; }
-		private new double DescriptionFontSize { get; set; }
-
 		/// <summary>
 		/// The title alignment property.
 		/// </summary>
@@ -45,7 +42,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command parameter property.
 		/// </summary>
-		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ButtonCell), default(object), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ButtonCell), default, defaultBindingMode: BindingMode.OneWay);
 
 		/// <summary>
 		/// Gets or sets the command parameter.
@@ -53,7 +50,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <value>The command parameter.</value>
 		public object CommandParameter
 		{
-			get => (object) GetValue(CommandParameterProperty);
+			get => GetValue(CommandParameterProperty);
 			set => SetValue(CommandParameterProperty, value);
 		}
 	}

@@ -128,8 +128,6 @@
 								  BackgroundColor="{Binding BgColor.Value}"
 								  TitleColor="{Binding TitleColor.Value}"
 								  TitleFontSize="{Binding TitleFontSize.Value}"
-								  ValueTextColor="{Binding ValueTextColor.Value}"
-								  ValueTextFontSize="{Binding ValueTextFontSize.Value}"
 								  DescriptionColor="{Binding DescriptionColor.Value}"
 								  DescriptionFontSize="{Binding DescriptionFontSize.Value}"
 								  HintTextColor="{Binding HintTextColor.Value}"
@@ -149,8 +147,7 @@
 								  SelectedCommand="{Binding SelectedCommand}"
 								  UseNaturalSort="{Binding UseNaturalSort.Value}"
 								  UseAutoValueText="{Binding UseAutoValueText.Value}"
-								  UsePickToClose="{Binding UsePickToClose.Value}"
-								  ValueText="abc" />
+								  UsePickToClose="{Binding UsePickToClose.Value}"/>
 				<cells:PickerCell IsEnabled="{Binding IsEnabled.Value}"
 								  IconSource="{Binding IconSource.Value}"
 								  Title="{Binding Title.Value}"
@@ -159,8 +156,6 @@
 								  BackgroundColor="{Binding BgColor.Value}"
 								  TitleColor="{Binding TitleColor.Value}"
 								  TitleFontSize="{Binding TitleFontSize.Value}"
-								  ValueTextColor="{Binding ValueTextColor.Value}"
-								  ValueTextFontSize="{Binding ValueTextFontSize.Value}"
 								  DescriptionColor="{Binding DescriptionColor.Value}"
 								  DescriptionFontSize="{Binding DescriptionFontSize.Value}"
 								  HintTextColor="{Binding HintTextColor.Value}"

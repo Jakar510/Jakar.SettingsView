@@ -10,6 +10,18 @@
 
 	<settingsView:SettingsView Style="{StaticResource settingsView}"
 							   HasUnevenRows="True">
+
+		<settingsView:Section Title="CustomCell">
+			<cell:SliderCell IconSource="icon.png"
+							 Min="0"
+							 Max="1.0"
+							 Value="0.3"
+							 ChangedCommand="{Binding ChangedCommand}" />
+			<cell:MyCellA Text="LastText" />
+			<cell:MyCellB />
+			<cell:MyCellC />
+		</settingsView:Section>
+
 		<settingsView:Section Title="CustomCell">
 			<cell:SliderCell IconSource="icon.png"
 							 Min="0"
@@ -31,15 +43,5 @@
 			</settingsView:Section.ItemTemplate>
 		</settingsView:Section>
 
-		<settingsView:Section Title="CustomCell">
-			<cell:SliderCell IconSource="icon.png"
-							 Min="0"
-							 Max="1.0"
-							 Value="0.3"
-							 ChangedCommand="{Binding ChangedCommand}" />
-			<cell:MyCellA Text="LastText" />
-			<cell:MyCellB />
-			<cell:MyCellC />
-		</settingsView:Section>
 	</settingsView:SettingsView>
 </ContentPage>

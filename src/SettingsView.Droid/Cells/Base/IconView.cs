@@ -6,6 +6,7 @@ using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -14,6 +15,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class IconView : IDisposable
 	{
+		private CellBaseDescription _CurrentCell => _Cell.Cell as CellBaseDescription ?? throw new NullReferenceException(nameof(_CurrentCell));
+
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
 		protected internal ImageView Icon { get; protected set; }
 		protected CellBaseView _Cell { get; set; }
@@ -28,7 +31,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal bool UpdateIconRadius()
 		{
-			if ( _Cell.CellBase.IconRadius >= 0 ) { _IconRadius = _Cell.AndroidContext.ToPixels(_Cell.CellBase.IconRadius); }
+			if ( _CurrentCell.IconRadius >= 0 ) { _IconRadius = _Cell.AndroidContext.ToPixels(_CurrentCell.IconRadius); }
 			else if ( _Cell.CellParent != null ) { _IconRadius = _Cell.AndroidContext.ToPixels(_Cell.CellParent.CellIconRadius); }
 
 			return true;
@@ -37,7 +40,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			if ( Icon.LayoutParameters is null ) throw new NullReferenceException(nameof(Icon.LayoutParameters));
 
-			Xamarin.Forms.Size size = GetIconSize();
+			Size size = GetIconSize();
 			Icon.LayoutParameters.Width = (int) _Cell.AndroidContext.ToPixels(size.Width);
 			Icon.LayoutParameters.Height = (int) _Cell.AndroidContext.ToPixels(size.Height);
 			return true;
@@ -45,7 +48,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		private Size GetIconSize()
 		{
-			if ( _Cell.CellBase.IconSize != default ) { return _Cell.CellBase.IconSize; }
+			if ( _CurrentCell.IconSize != default ) { return _CurrentCell.IconSize; }
 
 			if ( _Cell.CellParent != null &&
 				 _Cell.CellParent.CellIconSize != default ) { return _Cell.CellParent.CellIconSize; }
@@ -69,10 +72,10 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 				Icon.SetImageBitmap(null);
 			}
 
-			if ( _Cell.CellBase.IconSource != null )
+			if ( _CurrentCell.IconSource != null )
 			{
 				Icon.Visibility = ViewStates.Visible;
-				if ( ImageCacheController.Instance.Get(_Cell.CellBase.IconSource.GetHashCode()) is Bitmap cache &&
+				if ( ImageCacheController.Instance.Get(_CurrentCell.IconSource.GetHashCode()) is Bitmap cache &&
 					 !forceLoad )
 				{
 					Icon.SetImageBitmap(cache);
@@ -80,8 +83,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 					return true;
 				}
 
-				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_Cell.CellBase.IconSource.GetType());
-				LoadIconImage(handler, _Cell.CellBase.IconSource);
+				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_CurrentCell.IconSource.GetType());
+				LoadIconImage(handler, _CurrentCell.IconSource);
 			}
 			else { Icon.Visibility = ViewStates.Gone; }
 
@@ -102,10 +105,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 					 }, token)
 				.ContinueWith(t =>
 							  {
-								  if ( !t.IsCompleted )
-									  return;
+								  if ( !t.IsCompleted ) return;
 								  //entrust disposal of returned old image to Android OS.
-								  ImageCacheController.Instance.Put(_Cell.CellBase.IconSource.GetHashCode(), image);
+								  ImageCacheController.Instance.Put(_CurrentCell.IconSource.GetHashCode(), image);
 
 								  Device.BeginInvokeOnMainThread(() =>
 																 {
@@ -138,8 +140,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBase.IconSizeProperty.PropertyName ||
-				 e.PropertyName == CellBase.IconRadiusProperty.PropertyName ) { return Update(); }
+			if ( e.PropertyName == CellBaseIcon.IconSizeProperty.PropertyName ||
+				 e.PropertyName == CellBaseIcon.IconRadiusProperty.PropertyName ||
+				 e.PropertyName == CellBaseIcon.IconSourceProperty.PropertyName ) { return Update(); }
 
 			return false;
 		}
@@ -150,15 +153,23 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Cell.Invalidate();
 			return true;
 		}
+		protected internal bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		{
+			if ( e.PropertyName == Shared.SettingsView.CellIconRadiusProperty.PropertyName ) { return Update(); }
 
+			if ( e.PropertyName == Shared.SettingsView.CellIconSizeProperty.PropertyName ) { return Update(); }
+
+			return false;
+		}
 
 		public void Dispose()
 		{
 			_IconTokenSource?.Dispose();
 			_IconTokenSource = null;
-			Icon.SetImageDrawable(null);
-			Icon.SetImageBitmap(null);
-			Icon.Dispose();
+			Icon?.SetImageDrawable(null);
+			Icon?.SetImageBitmap(null);
+			Icon?.Dispose();
+			Icon = null!;
 		}
 	}
 }

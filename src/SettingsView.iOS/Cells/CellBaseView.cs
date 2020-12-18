@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreFoundation;
 using Foundation;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;

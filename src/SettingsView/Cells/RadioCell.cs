@@ -1,16 +1,17 @@
-﻿using Xamarin.Forms;
+﻿using Jakar.SettingsView.Shared.Cells.Base;
+using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
 	/// <summary>
 	/// Radio cell.
 	/// </summary>
-	public class RadioCell : CellBase
+	public class RadioCell : CellBaseDescription
 	{
 		/// <summary>
 		/// The selected value property.
 		/// </summary>
-		public static readonly BindableProperty SelectedValueProperty = BindableProperty.CreateAttached("SelectedValue", typeof(object), typeof(RadioCell), default(object), BindingMode.TwoWay);
+		public static readonly BindableProperty SelectedValueProperty = BindableProperty.CreateAttached("SelectedValue", typeof(object), typeof(RadioCell), default, BindingMode.TwoWay);
 
 		/// <summary>
 		/// Sets the selected value.
@@ -24,12 +25,12 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// </summary>
 		/// <returns>The selected value.</returns>
 		/// <param name="view">View.</param>
-		public static object GetSelectedValue( BindableObject view ) => (object) view.GetValue(SelectedValueProperty);
+		public static object GetSelectedValue( BindableObject view ) => view.GetValue(SelectedValueProperty);
 
 		/// <summary>
 		/// The value property.
 		/// </summary>
-		public static BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell), default(object), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell), default, defaultBindingMode: BindingMode.OneWay);
 
 		/// <summary>
 		/// Gets or sets the value.
@@ -37,7 +38,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <value>The value.</value>
 		public object Value
 		{
-			get => (object) GetValue(ValueProperty);
+			get => GetValue(ValueProperty);
 			set => SetValue(ValueProperty, value);
 		}
 

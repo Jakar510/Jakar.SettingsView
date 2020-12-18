@@ -1,12 +1,10 @@
 ﻿using System.Windows.Input;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Number picker cell.
-	/// </summary>
-	public class NumberPickerCell : LabelCell
+	public class NumberPickerCell : CellBaseValue
 	{
 		/// <summary>
 		/// The number property.

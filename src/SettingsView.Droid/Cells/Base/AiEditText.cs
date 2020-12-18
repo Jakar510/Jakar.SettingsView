@@ -10,11 +10,13 @@ using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Extensions;
+using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Color = Android.Graphics.Color;
-using EntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
+using AColor = Android.Graphics.Color;
+using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
@@ -22,11 +24,11 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 	[Preserve(AllMembers = true)]
 	public class AiEditText : EditText
 	{
-		protected internal Color DefaultTextColor { get; }
+		protected internal AColor DefaultTextColor { get; }
 		protected internal float DefaultFontSize { get; }
 		public Action? ClearFocusAction { get; set; }
-		protected BaseEntryCell _ViewCell { get; private set; }
-		protected EntryCell _EntryCell { get; private set; }
+		protected BaseAiEntryCell _ViewCell { get; private set; }
+		protected AiEntryCell _EntryCell { get; private set; }
 		protected internal Shared.SettingsView CellParent => _EntryCell.Parent;
 
 
@@ -34,16 +36,16 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		public AiEditText( Context context ) : base(context)
 		{
 			DefaultFontSize = TextSize;
-			DefaultTextColor = new Color(CurrentTextColor);
+			DefaultTextColor = new AColor(CurrentTextColor);
 		}
-		public AiEditText( Context context, EntryCell cell ) : this(context) => _EntryCell = cell;
+		public AiEditText( Context context, AiEntryCell cell ) : this(context) => _EntryCell = cell;
 		public AiEditText( Context context, IAttributeSet attributes ) : base(context, attributes)
 		{
 			DefaultFontSize = TextSize;
-			DefaultTextColor = new Color(CurrentTextColor);
+			DefaultTextColor = new AColor(CurrentTextColor);
 		}
 #pragma warning restore 8618
-		internal void Init( EntryCell cell, BaseEntryCell renderer )
+		internal void Init( AiEntryCell cell, BaseAiEntryCell renderer )
 		{
 			_EntryCell = cell;
 			Focusable = true;
@@ -60,6 +62,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 				Background.Alpha = 0; //hide underline
 		}
 
+		protected internal void Enable() { Alpha = CellBaseView.ENABLED_ALPHA; }
+		protected internal void Disable() { Alpha = CellBaseView.DISABLED_ALPHA; }
 
 		protected override void OnFocusChanged( bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Android.Graphics.Rect? previouslyFocusedRect )
 		{
@@ -83,23 +87,23 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			switch ( _EntryCell.OnSelectAction )
 			{
-				case EntryCell.SelectAction.None:
+				case AiEntryCell.SelectAction.None:
 					break;
 
 
-				case EntryCell.SelectAction.Start:
+				case AiEntryCell.SelectAction.Start:
 					//Selection.SetSelection(_EditText, 0);
 					SetSelection(0, 0);
 
 					break;
 
-				case EntryCell.SelectAction.End:
+				case AiEntryCell.SelectAction.End:
 					//Selection.SetSelection(_EditText, length - 1);
 					SetSelection(Length(), Length());
 
 					break;
 
-				case EntryCell.SelectAction.All:
+				case AiEntryCell.SelectAction.All:
 					//Selection.SetSelection(_EditText, 0, length);
 					SelectAll();
 
@@ -115,12 +119,12 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			// https://stackoverflow.com/questions/20838227/set-cursor-position-in-android-edit-text/20838295
 			switch ( _EntryCell.OnSelectAction )
 			{
-				case EntryCell.SelectAction.None:
-				case EntryCell.SelectAction.Start:
-				case EntryCell.SelectAction.End:
+				case AiEntryCell.SelectAction.None:
+				case AiEntryCell.SelectAction.Start:
+				case AiEntryCell.SelectAction.End:
 					break;
 
-				case EntryCell.SelectAction.All:
+				case AiEntryCell.SelectAction.All:
 					SetTextIsSelectable(true);
 					SetSelectAllOnFocus(true);
 
@@ -164,7 +168,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			Hint = _EntryCell.Placeholder;
 
-			Color placeholderColor = _EntryCell.PlaceholderColor.IsDefault ? Color.Rgb(210, 210, 210) : _EntryCell.PlaceholderColor.ToAndroid();
+			AColor placeholderColor = _EntryCell.PlaceholderColor.IsDefault ? AColor.Rgb(210, 210, 210) : _EntryCell.PlaceholderColor.ToAndroid();
 			SetHintTextColor(placeholderColor);
 			return true;
 		}
@@ -182,7 +186,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			return true;
 		}
 
-		protected internal bool ChangeTextViewBack( Color accent )
+		protected internal bool ChangeTextViewBack( AColor accent )
 		{
 			var colorList = new ColorStateList(new[]
 											   {
@@ -196,8 +200,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 												   },
 											   }, new int[]
 												  {
-													  Color.Argb(255, accent.R, accent.G, accent.B),
-													  Color.Argb(255, 200, 200, 200)
+													  AColor.Argb(255, accent.R, accent.G, accent.B),
+													  AColor.Argb(255, 200, 200, 200)
 												  });
 			Background?.SetTintList(colorList);
 			return true;
@@ -222,34 +226,34 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == EntryCell.ValueTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == EntryCell.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == EntryCell.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == EntryCell.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == EntryCell.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == EntryCell.ValueTextFontSizeProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.PropertyName == EntryCell.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == EntryCell.ValueTextFontAttributesProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFont); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == EntryCell.ValueTextColorProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateTextColor); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateTextColor); }
 
-			if ( e.PropertyName == EntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
+			if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
 
-			if ( e.PropertyName == EntryCell.PlaceholderProperty.PropertyName ||
-				 e.PropertyName == EntryCell.PlaceholderColorProperty.PropertyName ) { return UpdatePlaceholder(); }
+			if ( e.PropertyName == AiEntryCell.PlaceholderProperty.PropertyName ||
+				 e.PropertyName == AiEntryCell.PlaceholderColorProperty.PropertyName ) { return UpdatePlaceholder(); }
 
-			if ( e.PropertyName == EntryCell.AccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
+			if ( e.PropertyName == AiEntryCell.AccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
 
-			if ( e.PropertyName == EntryCell.TextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == AiEntryCell.TextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == EntryCell.IsPasswordProperty.PropertyName ) { return UpdateIsPassword(); }
+			if ( e.PropertyName == AiEntryCell.IsPasswordProperty.PropertyName ) { return UpdateIsPassword(); }
 
-			if ( e.PropertyName == EntryCell.OnSelectActionProperty.PropertyName ) { return UpdateSelectAction(); }
+			if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { return UpdateSelectAction(); }
 
 			return false;
 		}

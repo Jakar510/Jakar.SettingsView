@@ -126,7 +126,7 @@
 						   Label="DefaultEntry" />
 				<cells:NumberPickerCell Min="1"
 										Max="10"
-										ValueText="5" />
+										Number="5" />
 				<cells:ButtonCell Title="SetFocus"
 								  Tapped="Button_Tapped" />
 			</settingsView:Section>

@@ -18,13 +18,13 @@
 			</Style>
 			<DataTemplate x:Key="templateA">
 				<cells:CommandCell Title="{Binding Name}"
-								   ValueText="{Binding Days}"
+								   Description="{Binding Days}"
 								   Command="{Binding BindingContext.DoCommand,Source={x:Reference self}}"
 								   TitleColor="Red" />
 			</DataTemplate>
 			<DataTemplate x:Key="templateB">
 				<cells:CommandCell Title="{Binding Name}"
-								   ValueText="{Binding Days}"
+								   Description="{Binding Days}"
 								   Command="{Binding BindingContext.DoCommand,Source={x:Reference self}}"
 								   TitleColor="Blue" />
 			</DataTemplate>
@@ -96,7 +96,7 @@
 				<settingsView:Section.ItemTemplate>
 					<DataTemplate>
 						<cells:CommandCell Title="{Binding Name}"
-										   ValueText="{Binding Days}"
+										   Description="{Binding Days}"
 										   Command="{Binding BindingContext.DoCommand,Source={x:Reference self}}" />
 					</DataTemplate>
 				</settingsView:Section.ItemTemplate>

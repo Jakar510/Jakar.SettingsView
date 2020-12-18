@@ -8,6 +8,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AGridLayout = Android.Widget.GridLayout;
@@ -34,9 +35,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected internal Context AndroidContext { get; set; }
 
 		protected internal ColorDrawable BackgroundColor { get; set; }
+		protected internal ColorDrawable SelectedColor { get; set; }
 		protected internal RippleDrawable Ripple { get; set; }
 
-		protected internal ColorDrawable SelectedColor { get; set; }
 
 
 		protected CellBaseView( Context context, Cell cell ) : base(context)
@@ -47,24 +48,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			BackgroundColor = new ColorDrawable();
 			SelectedColor = new ColorDrawable(AColor.Argb(125, 180, 180, 180));
 
-			using var sel = new StateListDrawable();
-
-			sel.AddState(new[]
-						 {
-							 Android.Resource.Attribute.StateSelected
-						 }, SelectedColor);
-			sel.AddState(new[]
-						 {
-							 -Android.Resource.Attribute.StateSelected
-						 }, BackgroundColor);
-			sel.SetExitFadeDuration(250);
-			sel.SetEnterFadeDuration(250);
-
-			AColor rippleColor = AColor.Rgb(180, 180, 180);
-			if ( CellParent != null &&
-				 CellParent.SelectedColor != Color.Default ) { rippleColor = CellParent.SelectedColor.ToAndroid(); }
-
-			Background = Ripple = DrawableUtility.CreateRipple(rippleColor, sel);
+			Background = Ripple = CreateRippleDrawable();
 		}
 #pragma warning disable 8618 // _Cell
 		protected CellBaseView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
@@ -72,27 +56,11 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			AndroidContext = SettingsViewInit.Current;
 
-			BackgroundColor = new ColorDrawable();
-			SelectedColor = new ColorDrawable(AColor.Argb(125, 180, 180, 180));
+			BackgroundColor ??= new ColorDrawable();
+			SelectedColor ??= new ColorDrawable(AColor.Argb(125, 180, 180, 180));
 
-			using var sel = new StateListDrawable();
-
-			sel.AddState(new[]
-						 {
-							 Android.Resource.Attribute.StateSelected
-						 }, SelectedColor);
-			sel.AddState(new[]
-						 {
-							 -Android.Resource.Attribute.StateSelected
-						 }, BackgroundColor);
-			sel.SetExitFadeDuration(250);
-			sel.SetEnterFadeDuration(250);
-
-			AColor rippleColor = AColor.Rgb(180, 180, 180);
-			if ( CellParent != null &&
-				 CellParent.SelectedColor != Color.Default ) { rippleColor = CellParent.SelectedColor.ToAndroid(); }
-
-			Background = Ripple = DrawableUtility.CreateRipple(rippleColor, sel);
+			Ripple ??= CreateRippleDrawable();
+			Background ??= Ripple;
 		}
 
 
@@ -128,6 +96,28 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			var inflater = (LayoutInflater) ( temp ?? throw new NullReferenceException(nameof(Context.LayoutInflaterService)) );
 
 			return inflater.Inflate(id, root, attach) ?? throw new InflateException($"ID: {id} not found. Called from {caller}");
+		}
+		protected RippleDrawable CreateRippleDrawable( AColor? color = null )
+		{
+			using var sel = new StateListDrawable();
+
+			sel.AddState(new[]
+						 {
+							 Android.Resource.Attribute.StateSelected
+						 }, SelectedColor);
+			sel.AddState(new[]
+						 {
+							 -Android.Resource.Attribute.StateSelected
+						 }, BackgroundColor);
+			sel.SetExitFadeDuration(250);
+			sel.SetEnterFadeDuration(250);
+
+			AColor rippleColor = color ?? AColor.Rgb(180, 180, 180);
+			if ( CellParent != null &&
+				 CellParent.SelectedColor != Color.Default )
+			{ rippleColor = CellParent.SelectedColor.ToAndroid(); }
+
+			return DrawableUtility.CreateRipple(rippleColor, sel);
 		}
 
 

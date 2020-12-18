@@ -6,6 +6,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
+using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -14,7 +16,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	public class ValueView : BaseTextView
 	{
-		private LabelCell _LabelCell => _Cell.Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
+		private CellBaseValue _CurrentCell => _Cell.Cell as CellBaseValue ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private CellBaseValueText? _CurrentTextCell => _CurrentCell as CellBaseValueText;
 
 
 		public ValueView( Context context ) : base(context)
@@ -32,14 +35,15 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal override bool UpdateText()
 		{
-			Text = _LabelCell.ValueText;
+			if ( _CurrentTextCell is null ) return false;
+			Text = _CurrentTextCell.ValueText;
 			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
 		}
 		protected internal override bool UpdateFontSize()
 		{
-			if ( _LabelCell.ValueTextFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _LabelCell.ValueTextFontSize); }
+			if ( _CurrentCell.ValueTextFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.ValueTextFontSize); }
 			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellValueTextFontSize); }
 			else { SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
 
@@ -47,7 +51,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateColor()
 		{
-			if ( _LabelCell.ValueTextColor != Color.Default ) { SetTextColor(_LabelCell.ValueTextColor.ToAndroid()); }
+			if ( _CurrentCell.ValueTextColor != Color.Default ) { SetTextColor(_CurrentCell.ValueTextColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
 					  _Cell.CellParent.CellValueTextColor != Color.Default ) { SetTextColor(_Cell.CellParent.CellValueTextColor.ToAndroid()); }
 			else { SetTextColor(DefaultTextColor); }
@@ -56,8 +60,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 		protected internal override bool UpdateFont()
 		{
-			string? family = _LabelCell.ValueTextFontFamily ?? _Cell.CellParent?.CellValueTextFontFamily;
-			FontAttributes attr = _LabelCell.ValueTextFontAttributes ?? _Cell.CellParent?.CellValueTextFontAttributes ?? FontAttributes.None;
+			string? family = _CurrentCell.ValueTextFontFamily ?? _Cell.CellParent?.CellValueTextFontFamily;
+			FontAttributes attr = _CurrentCell.ValueTextFontAttributes ?? _Cell.CellParent?.CellValueTextFontAttributes ?? FontAttributes.None;
 
 			Typeface = FontUtility.CreateTypeface(family, attr);
 
@@ -67,14 +71,14 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == LabelCell.ValueTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == LabelCell.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == LabelCell.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == LabelCell.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
 
 			return false;
 		}

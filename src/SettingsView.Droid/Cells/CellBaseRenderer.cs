@@ -6,6 +6,7 @@ using Android.Content;
 using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms.Platform.Android;
 
 #nullable enable

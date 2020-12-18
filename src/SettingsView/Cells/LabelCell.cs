@@ -1,74 +1,10 @@
-﻿using Xamarin.Forms;
+﻿using Jakar.SettingsView.Shared.Cells.Base;
+using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Label cell.
-	/// </summary>
-	public class LabelCell : CellBase
+	public class LabelCell : CellBaseValueText
 	{
-		/// <summary>
-		/// The value text property.
-		/// </summary>
-		public static BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(LabelCell), default(string), defaultBindingMode: BindingMode.OneWay);
-
-		/// <summary>
-		/// Gets or sets the value text.
-		/// </summary>
-		/// <value>The value text.</value>
-		public string ValueText
-		{
-			get => (string) GetValue(ValueTextProperty);
-			set => SetValue(ValueTextProperty, value);
-		}
-
-		/// <summary>
-		/// The value text color property.
-		/// </summary>
-		public static BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color), typeof(LabelCell), default(Color), defaultBindingMode: BindingMode.OneWay);
-
-		/// <summary>
-		/// Gets or sets the color of the value text.
-		/// </summary>
-		/// <value>The color of the value text.</value>
-		public Color ValueTextColor
-		{
-			get => (Color) GetValue(ValueTextColorProperty);
-			set => SetValue(ValueTextColorProperty, value);
-		}
-
-		/// <summary>
-		/// The value text font size property.
-		/// </summary>
-		public static BindableProperty ValueTextFontSizeProperty = BindableProperty.Create(nameof(ValueTextFontSize), typeof(double), typeof(LabelCell), -1.0d, defaultBindingMode: BindingMode.OneWay);
-
-		/// <summary>
-		/// Gets or sets the size of the value text font.
-		/// </summary>
-		/// <value>The size of the value text font.</value>
-		[TypeConverter(typeof(FontSizeConverter))]
-		public double ValueTextFontSize
-		{
-			get => (double) GetValue(ValueTextFontSizeProperty);
-			set => SetValue(ValueTextFontSizeProperty, value);
-		}
-
-		public static BindableProperty ValueTextFontFamilyProperty = BindableProperty.Create(nameof(ValueTextFontFamily), typeof(string), typeof(LabelCell), default(string), defaultBindingMode: BindingMode.OneWay);
-
-		public string ValueTextFontFamily
-		{
-			get => (string) GetValue(ValueTextFontFamilyProperty);
-			set => SetValue(ValueTextFontFamilyProperty, value);
-		}
-
-		public static BindableProperty ValueTextFontAttributesProperty = BindableProperty.Create(nameof(ValueTextFontAttributes), typeof(FontAttributes?), typeof(LabelCell), null, defaultBindingMode: BindingMode.OneWay);
-
-		public FontAttributes? ValueTextFontAttributes
-		{
-			get => (FontAttributes?) GetValue(ValueTextFontAttributesProperty);
-			set => SetValue(ValueTextFontAttributesProperty, value);
-		}
-
 		/// <summary>
 		/// The ignore use description as value property.
 		/// </summary>

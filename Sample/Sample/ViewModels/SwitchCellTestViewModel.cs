@@ -8,11 +8,11 @@ namespace Sample.ViewModels
 	public class SwitchCellTestViewModel : ViewModelBase
 	{
 		public ReactiveProperty<Color> OwnAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<bool> On { get; } = new ReactiveProperty<bool>();
 		public ReactiveProperty<bool> Checked { get; } = new ReactiveProperty<bool>();
 		public ReactiveProperty<bool> IsVisible { get; } = new ReactiveProperty<bool>(true);
 
-		private static bool[] bools =
+		// ReSharper disable once IdentifierTypo
+		private static readonly bool[] Bools =
 		{
 			false,
 			true
@@ -22,7 +22,7 @@ namespace Sample.ViewModels
 		{
 			BackgroundColor.Value = Color.White;
 			OwnAccentColor.Value = AccentColor;
-			On.Value = false;
+			Checked.Value = false;
 			Checked.Value = false;
 		}
 
@@ -30,21 +30,19 @@ namespace Sample.ViewModels
 		{
 			base.CellChanged(obj);
 
-			string text = ( obj as Label ).Text;
+			string text = ( obj as Label )?.Text;
 
 			switch ( text )
 			{
 				case nameof(OwnAccentColor):
 					NextVal(OwnAccentColor, AccentColors);
 					break;
-				case nameof(On):
-					NextVal(On, bools);
-					break;
 				case nameof(Checked):
-					NextVal(Checked, bools);
+					NextVal(Checked, Bools);
 					break;
+				
 				case nameof(IsVisible):
-					NextVal(IsVisible, bools);
+					NextVal(IsVisible, Bools);
 					break;
 			}
 		}

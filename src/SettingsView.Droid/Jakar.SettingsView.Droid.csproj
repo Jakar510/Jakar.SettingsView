@@ -47,11 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cells\Base\AiEditText.cs" />
-    <Compile Include="Cells\Base\BaseAccessoryCell.cs" />
-    <Compile Include="Cells\Base\BaseDescriptionCell.cs" />
-    <Compile Include="Cells\Base\BaseEntryCell.cs" />
-    <Compile Include="Cells\Base\BaseTitledCell.cs" />
-    <Compile Include="Cells\Base\BaseValueCell.cs" />
+    <Compile Include="Cells\Base\BaseAiAccessoryCell.cs" />
+    <Compile Include="Cells\Base\BaseAiDescriptionCell.cs" />
+    <Compile Include="Cells\Base\BaseAiEntryCell.cs" />
+    <Compile Include="Cells\Base\BaseAiTitledCell.cs" />
+    <Compile Include="Cells\Base\BaseAiValueCell.cs" />
     <Compile Include="Cells\Base\BaseView.cs" />
     <Compile Include="Cells\Base\DescriptionView.cs" />
     <Compile Include="Cells\Base\HintView.cs" />

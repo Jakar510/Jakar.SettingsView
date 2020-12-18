@@ -11,7 +11,7 @@
 			 x:Class="Sample.Views.TestSelectActions">
 	<ContentPage.Content>
 		<shared:SettingsView>
-			<shared:Section Title="Test EntryCell On Select Actions">
+			<shared:Section Title="Test EntryCell Checked Select Actions">
 				<cells:EntryCell Title="None"
 								 Description="Description"
 								 ValueText="Value"

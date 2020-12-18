@@ -9,11 +9,13 @@ using Xamarin.Forms.Platform.Android;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseAccessoryCell<TAccessory> : BaseDescriptionCell where TAccessory : Android.Views.View
+	public abstract class BaseAiAccessoryCell<TAccessory> : BaseAiDescriptionCell where TAccessory : Android.Views.View
 	{
 		protected LinearLayout _AccessoryStack { get; }
 		protected TAccessory _Accessory { get; }
-		protected BaseAccessoryCell( Context context, Cell cell ) : base(context, cell)
+		
+		
+		protected BaseAiAccessoryCell( Context context, Cell cell ) : base(context, cell)
 		{
 			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 			_Accessory = InstanceCreator<Context, TAccessory>.Create(AndroidContext);
@@ -22,7 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
 			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 		}
-		protected BaseAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		protected BaseAiAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{
 			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 			_Accessory = InstanceCreator<Context, TAccessory>.Create(AndroidContext);

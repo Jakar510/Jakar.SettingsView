@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Cells.Base;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
