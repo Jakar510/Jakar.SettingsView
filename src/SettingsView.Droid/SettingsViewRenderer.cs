@@ -25,27 +25,28 @@ namespace Jakar.SettingsView.Droid
 		protected SettingsViewSimpleCallback? _SimpleCallback { get; set; }
 		protected SVItemDecoration? _ItemDecoration { get; set; }
 		protected Drawable? _Divider { get; set; }
+		protected List<IVisualElementRenderer> _ShouldDisposeRenderers { get; } = new List<IVisualElementRenderer>();
 
-		protected List<IVisualElementRenderer> _shouldDisposeRenderers = new List<IVisualElementRenderer>();
 
 		public SettingsViewRenderer( Context context ) : base(context) => AutoPackage = false;
 
 		protected override void OnElementChanged( ElementChangedEventArgs<Shared.SettingsView> e )
 		{
 			base.OnElementChanged(e);
+			Shared.SettingsView? settingsView = e.NewElement;
+			if ( settingsView is null ) { return; }
 
-			if ( e.NewElement is null ) return;
 			// Fix scrollbar visibility and flash. https://github.com/xamarin/Xamarin.Forms/pull/10893
 			var recyclerView = new RecyclerView(new ContextThemeWrapper(Context, Resource.Style.settingsViewTheme), null, Resource.Attribute.settingsViewStyle);
 
 			// When replaced, No animation.
 			//(recyclerView.GetItemAnimator() as DefaultItemAnimator).SupportsChangeAnimations = false;
 
-			_LayoutManager = new SettingsViewLayoutManager(Context ?? throw new NullReferenceException(nameof(Context)), e.NewElement);
+			_LayoutManager = new SettingsViewLayoutManager(Context ?? throw new NullReferenceException(nameof(Context)), settingsView);
 			recyclerView.SetLayoutManager(_LayoutManager);
 
 			_Divider = Context?.GetDrawable(Resource.Drawable.divider) ?? throw new NullReferenceException(nameof(Resource.Drawable.divider));
-			_ItemDecoration = new SVItemDecoration(_Divider, e.NewElement);
+			_ItemDecoration = new SVItemDecoration(_Divider, settingsView);
 			recyclerView.AddItemDecoration(_ItemDecoration);
 
 			SetNativeControl(recyclerView);
@@ -57,10 +58,10 @@ namespace Jakar.SettingsView.Droid
 			UpdateBackgroundColor();
 			UpdateRowHeight();
 
-			_Adapter = new SettingsViewRecyclerAdapter(Context, e.NewElement, recyclerView);
+			_Adapter = new SettingsViewRecyclerAdapter(Context, settingsView, recyclerView);
 			Control.SetAdapter(_Adapter);
 
-			_SimpleCallback = new SettingsViewSimpleCallback(e.NewElement, ItemTouchHelper.Up | ItemTouchHelper.Down, 0);
+			_SimpleCallback = new SettingsViewSimpleCallback(settingsView, ItemTouchHelper.Up | ItemTouchHelper.Down, 0);
 			_ItemTouchHelper = new ItemTouchHelper(_SimpleCallback);
 			_ItemTouchHelper.AttachToRecyclerView(Control);
 
@@ -70,12 +71,11 @@ namespace Jakar.SettingsView.Droid
 				elm = elm.Parent;
 				if ( !( elm is Page page ) ) continue;
 				_ParentPage = page;
+				_ParentPage.Appearing += ParentPageAppearing;
 				break;
 			}
 
-			if ( _ParentPage != null ) _ParentPage.Appearing += ParentPageAppearing;
-
-			e.NewElement.Root.CollectionChanged += RootCollectionChanged;
+			settingsView.Root.CollectionChanged += RootCollectionChanged;
 		}
 		protected void RootCollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
 		{
@@ -86,12 +86,12 @@ namespace Jakar.SettingsView.Droid
 				if ( section.HeaderView != null )
 				{
 					IVisualElementRenderer header = Platform.GetRenderer(section.HeaderView);
-					if ( header != null ) { _shouldDisposeRenderers.Add(header); }
+					if ( header != null ) { _ShouldDisposeRenderers.Add(header); }
 				}
 
 				if ( section.FooterView is null ) continue;
 				IVisualElementRenderer footer = Platform.GetRenderer(section.FooterView);
-				if ( footer != null ) { _shouldDisposeRenderers.Add(footer); }
+				if ( footer != null ) { _ShouldDisposeRenderers.Add(footer); }
 			}
 		}
 		protected void ParentPageAppearing( object sender, EventArgs e ) { Device.BeginInvokeOnMainThread(() => _Adapter?.DeselectRow()); }
@@ -106,10 +106,7 @@ namespace Jakar.SettingsView.Droid
 			else if ( e.PropertyName == Shared.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 			else if ( e.PropertyName == TableView.RowHeightProperty.PropertyName ) { UpdateRowHeight(); }
 			else if ( e.PropertyName == Shared.SettingsView.UseDescriptionAsValueProperty.PropertyName ) { _Adapter?.NotifyDataSetChanged(); }
-			else if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName )
-			{
-				//_adapter.NotifyDataSetChanged();
-			}
+			else if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName ) { }
 			else if ( e.PropertyName == Shared.SettingsView.ShowSectionTopBottomBorderProperty.PropertyName )
 			{
 				//_adapter.NotifyDataSetChanged();
@@ -123,7 +120,7 @@ namespace Jakar.SettingsView.Droid
 		protected void UpdateSeparatorColor() { _Divider?.SetTint(Element.SeparatorColor.ToAndroid()); }
 		protected void UpdateRowHeight()
 		{
-			if ( Element.RowHeight == -1 ) { Element.RowHeight = 60; }
+			if ( Element.RowHeight < 0 ) { Element.RowHeight = Shared.SettingsView.MIN_ROW_HEIGHT; }
 			else { _Adapter?.NotifyDataSetChanged(); }
 		}
 		protected void UpdateScrollToTop()
@@ -134,12 +131,10 @@ namespace Jakar.SettingsView.Droid
 		}
 		protected void UpdateScrollToBottom()
 		{
-			if ( Element.ScrollToBottom )
-			{
-				if ( _Adapter != null ) { _LayoutManager?.ScrollToPosition(_Adapter.ItemCount - 1); }
+			if ( !Element.ScrollToBottom ) return;
+			if ( _Adapter != null ) { _LayoutManager?.ScrollToPosition(_Adapter.ItemCount - 1); }
 
-				Element.ScrollToBottom = false;
-			}
+			Element.ScrollToBottom = false;
 		}
 		protected new void UpdateBackgroundColor()
 		{
@@ -165,14 +160,12 @@ namespace Jakar.SettingsView.Droid
 			{
 				foreach ( Section section in Element.Root )
 				{
-					if ( section.HeaderView != null )
-					{ DisposeChildRenderer(section.HeaderView); }
+					if ( section.HeaderView != null ) { DisposeChildRenderer(section.HeaderView); }
 
-					if ( section.FooterView != null )
-					{ DisposeChildRenderer(section.FooterView); }
+					if ( section.FooterView != null ) { DisposeChildRenderer(section.FooterView); }
 				}
 
-				foreach ( IVisualElementRenderer renderer in _shouldDisposeRenderers )
+				foreach ( IVisualElementRenderer renderer in _ShouldDisposeRenderers )
 				{
 					if ( renderer.View.Handle != IntPtr.Zero )
 					{
@@ -183,7 +176,7 @@ namespace Jakar.SettingsView.Droid
 					renderer.Dispose();
 				}
 
-				_shouldDisposeRenderers.Clear();
+				_ShouldDisposeRenderers.Clear();
 
 				Control.RemoveItemDecoration(_ItemDecoration);
 				if ( _ParentPage != null )

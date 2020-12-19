@@ -9,17 +9,19 @@ using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AColor = Android.Graphics.Color;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
+using AContext = Android.Content.Context;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells.Base
+namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	[Preserve(AllMembers = true)]
 	public class AiEditText : EditText
@@ -33,13 +35,14 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 
 #pragma warning disable 8618
-		public AiEditText( Context context ) : base(context)
+		public AiEditText( AContext context ) : base(context)
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
 		}
-		public AiEditText( Context context, AiEntryCell cell ) : this(context) => _EntryCell = cell;
-		public AiEditText( Context context, IAttributeSet attributes ) : base(context, attributes)
+		public AiEditText( AiEntryCell cell, AContext context ) : this(context) => _EntryCell = cell;
+		public AiEditText( BaseCellView cell, AContext context ) : this(context) => _EntryCell =  cell.Cell as AiEntryCell ?? throw new NullReferenceException(nameof(cell.Cell)) ;
+		public AiEditText( AContext context, IAttributeSet attributes ) : base(context, attributes)
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
@@ -48,22 +51,30 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		internal void Init( AiEntryCell cell, BaseAiEntryCell renderer )
 		{
 			_EntryCell = cell;
+			_ViewCell = renderer;
+
+			SetSingleLine(false);
+			SetMinLines(1);
+			SetMaxLines(10);
+
+			// BreakKind.Word
+			BreakStrategy = BreakStrategy.Simple;
+
+			CanScrollHorizontally(0);
+
 			Focusable = true;
 			ImeOptions = ImeAction.Done;
-			_ViewCell = renderer;
 			OnFocusChangeListener = _ViewCell;
 			SetOnEditorActionListener(_ViewCell);
 			ClearFocusAction = _ViewCell.DoneEdit;
 
 			Ellipsize = TextUtils.TruncateAt.End;
-			SetSingleLine(true);                     // TODO: enable multi-line entries
-			InputType = cell.Keyboard.ToInputType(); //disabled spell check
-			if ( Background != null )
-				Background.Alpha = 0; //hide underline
+			InputType = _EntryCell.Keyboard.ToInputType();
+			if ( Background != null ) Background.Alpha = 0; //hide underline
 		}
 
-		protected internal void Enable() { Alpha = CellBaseView.ENABLED_ALPHA; }
-		protected internal void Disable() { Alpha = CellBaseView.DISABLED_ALPHA; }
+		protected internal void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
+		protected internal void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
 
 		protected override void OnFocusChanged( bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Android.Graphics.Rect? previouslyFocusedRect )
 		{
@@ -198,11 +209,13 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 												   {
 													   -Android.Resource.Attribute.StateFocused
 												   },
-											   }, new int[]
-												  {
-													  AColor.Argb(255, accent.R, accent.G, accent.B),
-													  AColor.Argb(255, 200, 200, 200)
-												  });
+											   },
+											   new int[]
+											   {
+												   AColor.Argb(255, accent.R, accent.G, accent.B),
+												   AColor.Argb(255, 200, 200, 200)
+											   }
+											  );
 			Background?.SetTintList(colorList);
 			return true;
 		}

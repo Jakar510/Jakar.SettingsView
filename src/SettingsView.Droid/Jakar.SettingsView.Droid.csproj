@@ -46,18 +46,20 @@
     <Reference Include="Java.Interop" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cells\Base\AiEditText.cs" />
+    <Compile Include="Cells\Base\BaseValueCell.cs" />
+    <Compile Include="Cells\Controls\AiEditText.cs" />
     <Compile Include="Cells\Base\BaseAiAccessoryCell.cs" />
     <Compile Include="Cells\Base\BaseAiDescriptionCell.cs" />
     <Compile Include="Cells\Base\BaseAiEntryCell.cs" />
     <Compile Include="Cells\Base\BaseAiTitledCell.cs" />
     <Compile Include="Cells\Base\BaseAiValueCell.cs" />
-    <Compile Include="Cells\Base\BaseView.cs" />
-    <Compile Include="Cells\Base\DescriptionView.cs" />
-    <Compile Include="Cells\Base\HintView.cs" />
-    <Compile Include="Cells\Base\IconView.cs" />
-    <Compile Include="Cells\Base\TitleView.cs" />
-    <Compile Include="Cells\Base\ValueView.cs" />
+    <Compile Include="Cells\Controls\BaseTextView.cs" />
+    <Compile Include="Cells\Controls\DescriptionView.cs" />
+    <Compile Include="Cells\Controls\HintView.cs" />
+    <Compile Include="Cells\Controls\IconView.cs" />
+    <Compile Include="Cells\Controls\TitleView.cs" />
+    <Compile Include="Cells\Controls\ValueView.cs" />
+    <Compile Include="Extensions\LayoutExtensions.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DrawableUtility.cs" />
@@ -156,5 +158,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\ContentCell.axml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

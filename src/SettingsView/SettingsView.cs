@@ -14,6 +14,7 @@ namespace Jakar.SettingsView.Shared
 	[ContentProperty("Root")]
 	public partial class SettingsView : TableView
 	{
+		public const int MIN_ROW_HEIGHT = 60;
 		internal static Action _clearCache;
 		/// <summary>
 		/// Clears the cache.

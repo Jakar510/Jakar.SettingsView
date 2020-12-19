@@ -3,21 +3,20 @@ using System.ComponentModel;
 using Android.Content;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells.Base
+namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	public class HintView : BaseTextView
 	{
 		private CellBaseHintText _CurrentCell => _Cell.Cell as CellBaseHintText ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		public HintView( Context context ) : base(context) { }
-		public HintView( CellBaseView baseView, Context context ) : base(baseView, context) { }
+		public HintView( BaseCellView baseView, Context context ) : base(baseView, context) { }
 		public HintView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
 
 

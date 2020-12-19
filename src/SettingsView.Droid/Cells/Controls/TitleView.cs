@@ -2,22 +2,20 @@
 using System.ComponentModel;
 using Android.Content;
 using Android.Util;
-using Android.Views;
-using Android.Widget;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells.Base
+namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	public class TitleView : BaseTextView
 	{
 		private CellBaseTitle _CurrentCell => _Cell.Cell as CellBaseTitle ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		public TitleView( Context context ) : base(context) { }
-		public TitleView( CellBaseView baseView, Context context ) : base(baseView, context) { }
+		public TitleView( BaseCellView baseView, Context context ) : base(baseView, context) { }
 		public TitleView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
 
 

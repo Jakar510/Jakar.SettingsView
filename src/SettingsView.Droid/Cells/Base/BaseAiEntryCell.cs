@@ -7,47 +7,23 @@ using Android.Text;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Controls;
+using Jakar.SettingsView.Droid.Extensions;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using AObject = Java.Lang.Object;
+using AContext = Android.Content.Context;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseAiEntryCell : BaseAiDescriptionCell, ITextWatcher, Android.Views.View.IOnFocusChangeListener, TextView.IOnEditorActionListener
+	public abstract class BaseAiEntryCell : BaseValueCell<AiEditText>, ITextWatcher, Android.Views.View.IOnFocusChangeListener, TextView.IOnEditorActionListener
 	{
 		protected AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
-		protected HintView _Hint { get; }
-		protected AiEditText _Value { get; }
-		protected LinearLayout _CellValueStack { get; }
-		protected BaseAiEntryCell( Context context, Cell cell ) : base(context, cell)
-		{
-			_Hint = BaseTextView.Create<HintView>(ContentView, this, Resource.Id.CellHint);
-			_CellValueStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-
-			LinearLayout accessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			accessoryStack.RemoveFromParent();
-
-			var textView = new TextView(AndroidContext);
-			AddAccessory(_CellValueStack, textView);
-			_Value = new AiEditText(AndroidContext);
-			_Value.Init(_EntryCell, this);
-		}
-		protected BaseAiEntryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Hint ??= BaseTextView.Create<HintView>(ContentView, this, Resource.Id.CellHint);
-			_CellValueStack ??= ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-
-			LinearLayout accessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			accessoryStack.RemoveFromParent();
-
-			var textView = new TextView(AndroidContext);
-			AddAccessory(_CellValueStack, textView);
-			_Value ??= new AiEditText(AndroidContext);
-			_Value.Init(_EntryCell, this);
-		}
+		protected BaseAiEntryCell( AContext context, Cell cell ) : base(context, cell) { }
+		protected BaseAiEntryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		void ITextWatcher.AfterTextChanged( IEditable? s ) { }

@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.Android;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
@@ -18,19 +19,19 @@ namespace Jakar.SettingsView.Droid
 		protected static readonly Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.Android.Platform+DefaultRenderer");
 
 		public CustomViewHolder ViewHolder { get; set; }
-		public Element Element => FormsCell;
-		protected bool IsEmpty => _formsCell == null;
+		public Element? Element => FormsCell;
+		protected bool _IsEmpty => _formsCell is null;
 
-		protected IVisualElementRenderer _renderer;
+		protected IVisualElementRenderer? _Renderer { get; set; }
 
 
 		public HeaderFooterContainer( Context context ) : base(context) => Clickable = true;
 		public HeaderFooterContainer( Context context, IAttributeSet? attrs ) : base(context, attrs) => Clickable = true;
 
 
-		private Xamarin.Forms.View _formsCell;
+		private Xamarin.Forms.View? _formsCell;
 
-		public Xamarin.Forms.View FormsCell
+		public Xamarin.Forms.View? FormsCell
 		{
 			get => _formsCell;
 			set
@@ -41,7 +42,7 @@ namespace Jakar.SettingsView.Droid
 			}
 		}
 
-		public override bool OnTouchEvent( MotionEvent e ) => false; // pass to parent (ripple effect)
+		public override bool OnTouchEvent( MotionEvent? e ) => false; // pass to parent (ripple effect)
 
 		protected override void Dispose( bool disposing )
 		{
@@ -57,7 +58,7 @@ namespace Jakar.SettingsView.Droid
 
 				//_renderer?.View?.RemoveFromParent();
 				//_renderer?.Dispose();
-				_renderer = null;
+				_Renderer = null;
 			}
 
 			base.Dispose(disposing);
@@ -69,21 +70,21 @@ namespace Jakar.SettingsView.Droid
 										  int r,
 										  int b )
 		{
-			if ( IsEmpty ) { return; }
+			if ( _IsEmpty ) { return; }
 
 			double width = Context.FromPixels(r - l);
 			double height = Context.FromPixels(b - t);
 
 
-			Xamarin.Forms.Layout.LayoutChildIntoBoundingRegion(_renderer.Element, new Rectangle(0, 0, width, height));
+			Xamarin.Forms.Layout.LayoutChildIntoBoundingRegion(_Renderer.Element, new Rectangle(0, 0, width, height));
 
-			_renderer.UpdateLayout();
+			_Renderer.UpdateLayout();
 		}
 
 		protected override void OnMeasure( int widthMeasureSpec, int heightMeasureSpec )
 		{
 			int width = MeasureSpec.GetSize(widthMeasureSpec);
-			if ( _renderer == null )
+			if ( _Renderer == null )
 			{
 				SetMeasuredDimension(width, 0);
 				return;
@@ -96,7 +97,7 @@ namespace Jakar.SettingsView.Droid
 				return;
 			}
 
-			SizeRequest measure = _renderer.Element.Measure(Context.FromPixels(width), double.PositiveInfinity, MeasureFlags.IncludeMargins);
+			SizeRequest measure = _Renderer.Element.Measure(Context.FromPixels(width), double.PositiveInfinity, MeasureFlags.IncludeMargins);
 			var height = (int) Context.ToPixels(measure.Request.Height);
 
 			SetMeasuredDimension(width, height);
@@ -109,67 +110,116 @@ namespace Jakar.SettingsView.Droid
 
 		public virtual void UpdateNativeCell() { UpdateIsEnabled(); }
 
-		public void UpdateIsEnabled() { Enabled = _formsCell.IsEnabled; }
+		public void UpdateIsEnabled() { Enabled = _formsCell?.IsEnabled ?? true; }
 
-		public void UpdateCell( Xamarin.Forms.View cell )
+		public void UpdateCell( Xamarin.Forms.View? cell )
 		{
 			if ( _formsCell != null ) { _formsCell.PropertyChanged -= CellPropertyChanged; }
 
+			if ( cell is null ) return;
 			cell.PropertyChanged += CellPropertyChanged;
 
-			if ( _renderer == null )
+			if ( _Renderer == null )
 			{
 				CreateNewRenderer(cell);
 				return;
 			}
 
-			var renderer = GetChildAt(0) as IVisualElementRenderer;
-			Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsCell) ?? DefaultRenderer;
-			var reflectableType = renderer as IReflectableType;
-			Type rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : ( renderer != null ? renderer.GetType() : typeof(Object) );
-			if ( renderer != null &&
-				 rendererType == viewHandlerType )
+			if ( GetChildAt(0) is IVisualElementRenderer renderer )
 			{
-				_formsCell = cell;
-				_formsCell.DisableLayout = true;
-				foreach ( VisualElement c in _formsCell.Descendants() ) { c.DisableLayout = true; }
+				Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsCell) ?? DefaultRenderer;
+				// ReSharper disable once SuspiciousTypeConversion.Global
+				Type rendererType = renderer is IReflectableType reflectableType ? reflectableType.GetTypeInfo().AsType() : renderer.GetType();
+				if ( rendererType == viewHandlerType )
+				{
+					_formsCell = cell;
+					_formsCell.DisableLayout = true;
+					foreach ( var element in _formsCell.Descendants() )
+					{
+						var c = (VisualElement) element;
+						c.DisableLayout = true;
+					}
 
-				renderer.SetElement(_formsCell);
+					renderer.SetElement(_formsCell);
 
-				Platform.SetRenderer(_formsCell, _renderer);
+					Platform.SetRenderer(_formsCell, _Renderer);
 
-				_formsCell.DisableLayout = false;
-				foreach ( VisualElement c in _formsCell.Descendants() ) { c.DisableLayout = false; }
+					_formsCell.DisableLayout = false;
+					foreach ( var element in _formsCell.Descendants() )
+					{
+						var c = (VisualElement) element;
+						c.DisableLayout = false;
+					}
 
-				var viewAsLayout = _formsCell as Layout;
-				viewAsLayout?.ForceLayout();
+					var viewAsLayout = _formsCell as Layout;
+					viewAsLayout?.ForceLayout();
 
-				UpdateNativeCell();
-				Invalidate();
-
-				return;
+					UpdateNativeCell();
+					Invalidate();
+					return;
+				}
 			}
 
-			RemoveView(_renderer.View);
-			Platform.SetRenderer(_formsCell, null);
-			_formsCell.IsPlatformEnabled = false;
-			_renderer.View.Dispose();
+			_Renderer = Platform.CreateRendererWithContext(_formsCell, Context);
 
-			_formsCell = cell;
-			_renderer = Platform.CreateRendererWithContext(_formsCell, Context);
-
-			Platform.SetRenderer(_formsCell, _renderer);
-			AddView(_renderer.View);
+			Platform.SetRenderer(_formsCell, _Renderer);
+			AddView(_Renderer.View);
 
 			UpdateNativeCell();
-		}
+			Invalidate();
 
+			// 	var renderer = GetChildAt(0) as IVisualElementRenderer;
+			// 	Type viewHandlerType = Registrar.Registered.GetHandlerTypeForObject(_formsCell) ?? DefaultRenderer;
+			// 	var reflectableType = renderer as IReflectableType;
+			// 	Type rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : ( renderer != null ? renderer.GetType() : typeof(Object) );
+			// 	if ( renderer != null &&
+			// 		 rendererType == viewHandlerType )
+			// 	{
+			// 		_formsCell = cell;
+			// 		_formsCell.DisableLayout = true;
+			// 		foreach ( var element in _formsCell.Descendants() )
+			// 		{
+			// 			var c = (VisualElement) element;
+			// 			c.DisableLayout = true;
+			// 		}
+			//
+			// 		renderer.SetElement(_formsCell);
+			//
+			// 		Platform.SetRenderer(_formsCell, _Renderer);
+			//
+			// 		_formsCell.DisableLayout = false;
+			// 		foreach ( var element in _formsCell.Descendants() )
+			// 		{
+			// 			var c = (VisualElement) element;
+			// 			c.DisableLayout = false;
+			// 		}
+			//
+			// 		var viewAsLayout = _formsCell as Layout;
+			// 		viewAsLayout?.ForceLayout();
+			//
+			// 		UpdateNativeCell();
+			// 		Invalidate();
+			//
+			// 		return;
+			// 	}
+			//
+			// 	RemoveView(_Renderer.View);
+			// 	Platform.SetRenderer(_formsCell, null);
+			// 	if ( _formsCell != null )
+			// 	{
+			// 		_formsCell.IsPlatformEnabled = false;
+			// 		_Renderer.View.Dispose();
+			// 	}
+			//
+			// 	_formsCell = cell;
+			// }
+		}
 		protected virtual void CreateNewRenderer( Xamarin.Forms.View cell )
 		{
 			_formsCell = cell;
-			_renderer = Platform.CreateRendererWithContext(_formsCell, Context);
-			AddView(_renderer.View);
-			Platform.SetRenderer(_formsCell, _renderer);
+			_Renderer = Platform.CreateRendererWithContext(_formsCell, Context);
+			AddView(_Renderer.View);
+			Platform.SetRenderer(_formsCell, _Renderer);
 
 			_formsCell.IsPlatformEnabled = true;
 			UpdateNativeCell();

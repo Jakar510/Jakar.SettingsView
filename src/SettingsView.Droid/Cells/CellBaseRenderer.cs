@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,13 +9,13 @@ using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public class CellBaseRenderer<TnativeCell> : CellRenderer where TnativeCell : CellBaseView
+	public class CellBaseRenderer<TnativeCell> : CellRenderer where TnativeCell : BaseCellView
 	{
 		protected override Android.Views.View GetCellCore( Xamarin.Forms.Cell item,
 														   Android.Views.View? convertView,
@@ -33,9 +34,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			return nativeCell;
 		}
+		// protected override void OnCellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnCellPropertyChanged(sender, e); }
 
-
-		protected void SetUpPropertyChanged( CellBaseView nativeCell )
+		protected void SetUpPropertyChanged( BaseCellView nativeCell )
 		{
 			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
 			Shared.SettingsView parentElement = formsCell.Parent;
@@ -50,7 +51,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
 		}
 
-		protected void ClearPropertyChanged( CellBaseView nativeCell )
+		protected void ClearPropertyChanged( BaseCellView nativeCell )
 		{
 			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
 			Shared.SettingsView parentElement = formsCell.Parent;

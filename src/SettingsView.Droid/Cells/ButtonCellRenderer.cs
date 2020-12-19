@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
@@ -15,65 +16,41 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AButton = Android.Widget.Button;
 using AColor = Android.Graphics.Color;
-using View = Android.Views.View;
+using AView = Android.Views.View;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
-[assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
 
 #nullable enable
+[assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
+
 namespace Jakar.SettingsView.Droid.Cells
 {
 	[Preserve(AllMembers = true)] internal class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class ButtonCellView : CellBaseView, View.IOnLongClickListener, View.IOnClickListener
+	public class ButtonCellView : BaseCellView, AView.IOnLongClickListener, AView.IOnClickListener
 	{
-		// androidx.appcompat.widget.AppCompatButton
 		protected internal AColor DefaultTextColor { get; }
 		protected internal float DefaultFontSize { get; }
 		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
 
-		protected internal Android.Views.View ContentView { get; set; }
-		protected GridLayout _CellLayout { get; set; }
+		// protected internal AView ContentView { get; set; }
+		// protected GridLayout _CellLayout { get; set; }
 		protected AButton _Button { get; set; }
-
-		protected LinearLayout _AccessoryStack { get; }
 		protected ICommand? _Command { get; set; }
 
 		public ButtonCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView = CreateContentView(Resource.Layout.CellLayout);
-			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			// _CellLayout.UseDefaultMargins = true;
-
-			ContentView.FindViewById<ImageView>(Resource.Id.CellIcon)?.RemoveFromParent();
-			ContentView.FindViewById<TitleView>(Resource.Id.CellTitle)?.RemoveFromParent();
-			ContentView.FindViewById<DescriptionView>(Resource.Id.CellDescription)?.RemoveFromParent();
-			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-
 			_Button = new AButton(AndroidContext);
 			_Button.SetOnClickListener(this);
 			_Button.SetOnLongClickListener(this);
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
 
-
-			_AccessoryStack.RemoveFromParent();
-			var parameters = new LayoutParams()
-							 {
-								 ColumnSpec = InvokeSpec(0, Center),
-								 RowSpec = InvokeSpec(0, Center),
-								 Width = ViewGroup.LayoutParams.MatchParent,
-								 Height = ViewGroup.LayoutParams.MatchParent,
-								 BottomMargin = 4,
-								 TopMargin = 4,
-								 LeftMargin = 10,
-								 RightMargin = 10,
-							 };
-			_CellLayout.AddView(_AccessoryStack, parameters);
-			// _AccessoryStack.LayoutParameters = parameters;
-			AddAccessory(_AccessoryStack, _Button, ViewGroup.LayoutParams.MatchParent);
+			this.Add(_Button,
+					 ViewGroup.LayoutParams.MatchParent,
+					 ViewGroup.LayoutParams.MatchParent
+					);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
@@ -83,12 +60,21 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == ButtonCell.CommandProperty.PropertyName ||
 				 e.PropertyName == ButtonCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
+
 			else if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { UpdateTitle(); }
+
+			else if ( e.PropertyName == CellBaseTitle.TitleFontAttributesProperty.PropertyName ||
+					  e.PropertyName == CellBaseTitle.TitleFontFamilyProperty.PropertyName ) { UpdateFont(); }
+
+			else if ( e.PropertyName == CellBaseTitle.TitleFontSizeProperty.PropertyName ) { UpdateFontSize(); }
+
+			else if ( e.PropertyName == CellBaseTitle.TitleColorProperty.PropertyName ) { UpdateColor(); }
+
 			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
 		}
 
-		public bool OnLongClick( View? v ) => true;
-		public void OnClick( View? v ) { Run(); }
+		public bool OnLongClick( AView? v ) => true;
+		public void OnClick( AView? v ) { Run(); }
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { Run(); }
 
@@ -107,10 +93,35 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			UpdateCommand();
 			UpdateTitle();
+			UpdateFont();
+			UpdateFontSize();
+			UpdateColor();
 			UpdateTitleAlignment();
 			base.UpdateCell();
 		}
 		protected void UpdateTitle() { _Button.Text = _ButtonCell.Title; }
+		protected void UpdateFontSize()
+		{
+			if ( _ButtonCell.TitleFontSize > 0 ) { _Button.SetTextSize(ComplexUnitType.Sp, (float) _ButtonCell.TitleFontSize); }
+			else if ( _ButtonCell.Parent != null ) { _Button.SetTextSize(ComplexUnitType.Sp, (float) _ButtonCell.Parent.CellValueTextFontSize); }
+			else { _Button.SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
+		}
+		protected void UpdateFont()
+		{
+			string? family = _ButtonCell.TitleFontFamily ?? _ButtonCell.Parent?.CellValueTextFontFamily;
+			FontAttributes attr = _ButtonCell.TitleFontAttributes ?? _ButtonCell.Parent?.CellValueTextFontAttributes ?? FontAttributes.None;
+
+			_Button.Typeface = FontUtility.CreateTypeface(family, attr);
+		}
+		protected internal bool UpdateColor()
+		{
+			if ( _ButtonCell.TitleColor != Color.Default ) { _Button.SetTextColor(_ButtonCell.TitleColor.ToAndroid()); }
+			else if ( _ButtonCell.Parent != null &&
+					  _ButtonCell.Parent.CellValueTextColor != Color.Default ) { _Button.SetTextColor(_ButtonCell.Parent.CellValueTextColor.ToAndroid()); }
+			else { _Button.SetTextColor(DefaultTextColor); }
+
+			return true;
+		}
 		protected void UpdateTitleAlignment() { _Button.TextAlignment = _ButtonCell.TitleAlignment.ToAndroidTextAlignment(); }
 
 		private void UpdateCommand()
@@ -154,7 +165,7 @@ namespace Jakar.SettingsView.Droid.Cells
 				_Command = null;
 
 				_Button.Dispose();
-				_CellLayout.Dispose();
+				// _CellLayout.Dispose();
 			}
 
 			base.Dispose(disposing);

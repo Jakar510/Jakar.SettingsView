@@ -24,7 +24,6 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class CheckboxCellView : BaseAiAccessoryCell<AppCompatCheckBox>, CompoundButton.IOnCheckedChangeListener
 	{
-		// protected AppCompatCheckBox _Accessory { get; set; }
 		protected CheckboxCell _AccessoryCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
 
 
@@ -112,11 +111,13 @@ namespace Jakar.SettingsView.Droid.Cells
 																	  {
 																		  -Android.Resource.Attribute.StateChecked
 																	  },
-																  }, new int[]
-																	 {
-																		 accent,
-																		 Android.Graphics.Color.Argb(76, 117, 117, 117)
-																	 });
+																  },
+																  new int[]
+																  {
+																	  accent,
+																	  Android.Graphics.Color.Argb(76, 117, 117, 117)
+																  }
+																 );
 
 			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
 			ripple.SetColor(new ColorStateList(new[]
@@ -129,12 +130,15 @@ namespace Jakar.SettingsView.Droid.Cells
 												   {
 													   -Android.Resource.Attribute.StateChecked
 												   }
-											   }, new int[]
-												  {
-													  Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
-													  Android.Graphics.Color.Argb(76, 117, 117, 117)
-												  }));
-			_Accessory.Background = ripple;
+											   },
+											   new int[]
+											   {
+												   accent,
+												   Android.Graphics.Color.Argb(76, 117, 117, 117)
+											   }
+											  )
+						   );
+			_Accessory.Background ??= ripple;
 		}
 
 

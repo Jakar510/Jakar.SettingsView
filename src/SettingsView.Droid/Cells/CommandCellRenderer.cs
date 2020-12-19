@@ -8,8 +8,11 @@ using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Droid.Cells.Controls;
+using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using ARelativeLayout = Android.Widget.RelativeLayout;
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
@@ -22,22 +25,21 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class CommandCellView : BaseAiDescriptionCell
 	{
-		protected Action? Execute { get; set; }
 		protected ICommand? _Command { get; set; }
 		protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
 
-		protected LinearLayout _AccessoryStack { get; }
+		protected ARelativeLayout _AccessoryStack { get; }
 		protected ImageView _Accessory { get; set; }
 
 
 		public CommandCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			_Accessory = new ImageView(AndroidContext);
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			AddAccessory(_AccessoryStack, _Accessory);
-			
+			_AccessoryStack = ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			_AccessoryStack.Add(_Accessory);
+
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
 				 _CommandCell.HideArrowIndicator ) { return; }
@@ -45,22 +47,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_AccessoryStack.RemoveFromParent();
 			_Accessory.RemoveFromParent();
 		}
-		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Accessory = new ImageView(AndroidContext);
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			AddAccessory(_AccessoryStack, _Accessory);
-
-			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-
-			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
-				 _CommandCell.HideArrowIndicator )
-			{ return; }
-
-			_AccessoryStack.RemoveFromParent();
-			_Accessory.RemoveFromParent();
-		}
+		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
@@ -72,7 +59,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			Execute?.Invoke();
+			Run();
 			if ( _CommandCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
 		}
 
@@ -100,18 +87,15 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_Command = _CommandCell.Command;
 
-			if ( _Command != null )
-			{
-				_Command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_Command, EventArgs.Empty);
-			}
+			if ( _Command is null ) return;
+			_Command.CanExecuteChanged += Command_CanExecuteChanged;
+			Command_CanExecuteChanged(_Command, EventArgs.Empty);
+		}
+		protected virtual void Run()
+		{
+			if ( _Command == null ) { return; }
 
-			Execute = () =>
-					  {
-						  if ( _Command == null ) { return; }
-
-						  if ( _Command.CanExecute(_CommandCell.CommandParameter) ) { _Command.Execute(_CommandCell.CommandParameter); }
-					  };
+			if ( _Command.CanExecute(_CommandCell.CommandParameter) ) { _Command.Execute(_CommandCell.CommandParameter); }
 		}
 		protected override void UpdateIsEnabled()
 		{
@@ -136,7 +120,6 @@ namespace Jakar.SettingsView.Droid.Cells
 			{
 				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Execute = null;
 				_Command = null;
 
 				_Title.Dispose();

@@ -7,96 +7,66 @@ using Android.Graphics.Drawables;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using ARelativeLayout = Android.Widget.RelativeLayout;
 using AGridLayout = Android.Widget.GridLayout;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
 using Color = Xamarin.Forms.Color;
-using Object = Java.Lang.Object;
+using AObject = Java.Lang.Object;
+using AContext = Android.Content.Context;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	[Preserve(AllMembers = true)]
-	public abstract class CellBaseView : AGridLayout, INativeElementView
+	public abstract class BaseCellView : ARelativeLayout, INativeElementView
 	{
 		protected internal const float DISABLED_ALPHA = 0.3f;
 		protected internal const float ENABLED_ALPHA = 1.0f;
-
+		public static readonly AColor GRAY = AColor.Argb(125, 180, 180, 180);
+		public static readonly AColor YELLOW = AColor.Argb(255, 200, 200, 100);
 		protected internal Cell Cell { get; set; }
 		public Element Element => Cell;
 		protected internal CellBase CellBase => Cell as CellBase ?? throw new NullReferenceException(nameof(CellBase));
 		protected internal Shared.SettingsView? CellParent => Cell.Parent as Shared.SettingsView; // ?? throw new NullReferenceException(nameof(_CellParent));
 
 
-		protected internal Context AndroidContext { get; set; }
+		protected internal AContext AndroidContext { get; set; }
 
 		protected internal ColorDrawable BackgroundColor { get; set; }
 		protected internal ColorDrawable SelectedColor { get; set; }
 		protected internal RippleDrawable Ripple { get; set; }
 
 
-
-		protected CellBaseView( Context context, Cell cell ) : base(context)
+		protected BaseCellView( AContext context, Cell cell ) : base(context)
 		{
 			AndroidContext = context;
 			Cell = cell;
 
 			BackgroundColor = new ColorDrawable();
-			SelectedColor = new ColorDrawable(AColor.Argb(125, 180, 180, 180));
+			SelectedColor = new ColorDrawable(GRAY);
 
 			Background = Ripple = CreateRippleDrawable();
 		}
 #pragma warning disable 8618 // _Cell
-		protected CellBaseView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+		protected BaseCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 #pragma warning restore 8618
 		{
 			AndroidContext = SettingsViewInit.Current;
 
 			BackgroundColor ??= new ColorDrawable();
-			SelectedColor ??= new ColorDrawable(AColor.Argb(125, 180, 180, 180));
+			SelectedColor ??= new ColorDrawable(GRAY);
 
 			Ripple ??= CreateRippleDrawable();
 			Background ??= Ripple;
 		}
 
-
-		protected static void AddAccessory( LinearLayout stack,
-											AView view,
-											int? width = null,
-											int? height = null,
-											[CallerMemberName] string caller = "" )
-		{
-			if ( stack is null ) throw new NullReferenceException(nameof(stack));
-			try
-			{
-				using var layoutParams = new LinearLayout.LayoutParams(width ?? ViewGroup.LayoutParams.WrapContent, height ?? ViewGroup.LayoutParams.WrapContent);
-				{
-					stack.AddView(view, layoutParams);
-				}
-			}
-			catch ( Exception e )
-			{
-				var temp = new StackTrace();
-				System.Diagnostics.Debug.WriteLine(temp.ToString());
-				throw;
-			}
-		}
-		protected AView CreateContentView( int id, bool attach = true ) => CreateContentView(AndroidContext, this, id, attach);
-		public static AView CreateContentView( Context context,
-											   ViewGroup? root,
-											   int id,
-											   bool attach = true,
-											   [CallerMemberName] string caller = "" )
-		{
-			Object? temp = context.GetSystemService(Context.LayoutInflaterService);
-			var inflater = (LayoutInflater) ( temp ?? throw new NullReferenceException(nameof(Context.LayoutInflaterService)) );
-
-			return inflater.Inflate(id, root, attach) ?? throw new InflateException($"ID: {id} not found. Called from {caller}");
-		}
+		
+		protected AView CreateContentView( int id, bool attach = true ) => AndroidContext.CreateContentView(this, id, attach);
 		protected RippleDrawable CreateRippleDrawable( AColor? color = null )
 		{
 			using var sel = new StateListDrawable();
@@ -112,10 +82,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			sel.SetExitFadeDuration(250);
 			sel.SetEnterFadeDuration(250);
 
-			AColor rippleColor = color ?? AColor.Rgb(180, 180, 180);
+			AColor rippleColor = color ?? YELLOW;
 			if ( CellParent != null &&
-				 CellParent.SelectedColor != Color.Default )
-			{ rippleColor = CellParent.SelectedColor.ToAndroid(); }
+				 CellParent.SelectedColor != Color.Default ) { rippleColor = CellParent.SelectedColor.ToAndroid(); }
 
 			return DrawableUtility.CreateRipple(rippleColor, sel);
 		}
@@ -136,13 +105,6 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
 
 
-		protected internal virtual void UpdateCell()
-		{
-			UpdateIsEnabled();
-			UpdateBackgroundColor();
-			UpdateSelectedColor();
-			Invalidate();
-		}
 
 		protected internal void UpdateWithForceLayout( Action updateAction )
 		{
@@ -157,8 +119,13 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		}
 
 
-	#region Enable/Disable
-
+		protected internal virtual void UpdateCell()
+		{
+			UpdateIsEnabled();
+			UpdateBackgroundColor();
+			UpdateSelectedColor();
+			Invalidate();
+		}
 		protected void SetEnabledAppearance( bool isEnabled )
 		{
 			if ( isEnabled ) { EnableCell(); }
@@ -176,13 +143,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			Focusable = true;
 			DescendantFocusability = DescendantFocusability.BlockDescendants;
 		}
-
-
 		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(CellBase.IsEnabled); }
-
-	#endregion Enable/Disable
-
-	#region Selectable
+		
 
 		protected void UpdateBackgroundColor()
 		{
@@ -205,10 +167,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 				Ripple.SetColor(DrawableUtility.GetPressedColorSelector(AColor.Rgb(180, 180, 180)));
 			}
 		}
-
-		protected virtual void UpdateSelected( object sender, PropertyChangedEventArgs e ) { }
-
-	#endregion Selectable
+		
 
 
 		protected override void Dispose( bool disposing )

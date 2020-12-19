@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells.Base
+namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	public class IconView : IDisposable
 	{
@@ -19,10 +19,10 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
 		protected internal ImageView Icon { get; protected set; }
-		protected CellBaseView _Cell { get; set; }
+		protected BaseCellView _Cell { get; set; }
 		protected float _IconRadius { get; set; }
 
-		public IconView( CellBaseView baseView, ImageView? view )
+		public IconView( BaseCellView baseView, ImageView? view )
 		{
 			Icon = view ?? throw new NullReferenceException(nameof(view));
 			_Cell = baseView ?? throw new NullReferenceException(nameof(baseView));

@@ -3,7 +3,9 @@ using System.ComponentModel;
 using Android.Content;
 using Android.Runtime;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Controls;
 using Xamarin.Forms;
+using AContext = Android.Content.Context;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
@@ -13,16 +15,12 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected IconView _Icon { get; }
 		protected DescriptionView _Description { get; }
 
-		protected BaseAiDescriptionCell( Context context, Cell cell ) : base(context, cell)
+		protected BaseAiDescriptionCell( AContext context, Cell cell ) : base(context, cell)
 		{
 			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CellIcon));
 			_Description = BaseTextView.Create<DescriptionView>(ContentView, this, Resource.Id.CellDescription);
 		}
-		protected BaseAiDescriptionCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Icon ??= new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CellIcon));
-			_Description ??= BaseTextView.Create<DescriptionView>(ContentView, this, Resource.Id.CellDescription);
-		}
+		protected BaseAiDescriptionCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -58,7 +56,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_Icon.Update();
 			_Description.Update();
 		}
-		
+
 		protected override void Dispose( bool disposing )
 		{
 			base.Dispose(disposing);

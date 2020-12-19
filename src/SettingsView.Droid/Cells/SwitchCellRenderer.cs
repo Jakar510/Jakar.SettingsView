@@ -24,7 +24,6 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)]
 	public class SwitchCellView : BaseAiAccessoryCell<SwitchCompat>, CompoundButton.IOnCheckedChangeListener
 	{
-		// protected SwitchCompat _Accessory { get; set; }
 		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
 
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
@@ -36,15 +35,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			Focusable = false;
 			DescendantFocusability = DescendantFocusability.AfterDescendants;
 		}
-		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Accessory.Gravity = GravityFlags.Right;
-			_Accessory.Focusable = false;
-			_Accessory.SetOnCheckedChangeListener(this);
-
-			Focusable = false;
-			DescendantFocusability = DescendantFocusability.AfterDescendants;
-		}
+		public SwitchCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -91,54 +82,53 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		private void UpdateAccentColor()
 		{
-			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeSwitchColor(_AccessoryCell.AccentColor.ToAndroid()); }
+			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid()); }
 			else if ( CellParent != null &&
-					  CellParent.CellAccentColor != Color.Default ) { ChangeSwitchColor(CellParent.CellAccentColor.ToAndroid()); }
+					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid()); }
 		}
-
-		private void ChangeSwitchColor( Android.Graphics.Color accent )
+		
+		protected void ChangeCheckColor( Android.Graphics.Color accent )
 		{
 			var trackColors = new ColorStateList(new[]
-												 {
-													 new[]
-													 {
-														 Android.Resource.Attribute.StateChecked
-													 },
-													 new[]
-													 {
-														 -Android.Resource.Attribute.StateChecked
-													 },
-												 }, new int[]
-													{
-														Android.Graphics.Color.Argb(76, accent.R, accent.G, accent.B),
-														Android.Graphics.Color.Argb(76, 117, 117, 117)
-													});
-
-
+														{
+															new[]
+															{
+																Android.Resource.Attribute.StateChecked
+															},
+															new[]
+															{
+																-Android.Resource.Attribute.StateChecked
+															},
+														},
+														new int[]
+														{
+															accent,
+															Android.Graphics.Color.Argb(76, 117, 117, 117)
+														}
+													   );
 			_Accessory.TrackDrawable.SetTintList(trackColors);
 
-			var thumbColors = new ColorStateList(new[]
-												 {
-													 new[]
-													 {
-														 Android.Resource.Attribute.StateChecked
-													 },
-													 new[]
-													 {
-														 -Android.Resource.Attribute.StateChecked
-													 },
-												 }, new int[]
-													{
-														accent,
-														Android.Graphics.Color.Argb(255, 244, 244, 244)
-													});
-
-			_Accessory.ThumbDrawable.SetTintList(thumbColors);
-
-			var ripple = _Accessory.Background as RippleDrawable;
-			Ripple.SetColor(trackColors);
+			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
+			ripple.SetColor(new ColorStateList(new[]
+											   {
+												   new[]
+												   {
+													   Android.Resource.Attribute.StateChecked
+												   },
+												   new[]
+												   {
+													   -Android.Resource.Attribute.StateChecked
+												   }
+											   },
+											   new int[]
+											   {
+												   accent,
+												   Android.Graphics.Color.Argb(76, 117, 117, 117)
+											   }
+											  )
+						   );
+			_Accessory.Background ??= ripple;
 		}
-
 
 		protected override void Dispose( bool disposing )
 		{

@@ -8,6 +8,8 @@ using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Droid.Cells.Controls;
+using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ARelativeLayout = Android.Widget.RelativeLayout;
@@ -30,90 +32,42 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		// protected ImageView _IndicatorView { get; set; }
 		protected internal FormsViewContainer Container { get; }
-		protected LinearLayout _AccessoryStack { get; }
+		protected ARelativeLayout _AccessoryStack { get; }
 
 		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			Container = new FormsViewContainer(AndroidContext, _CustomCell);
-
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack)?.RemoveFromParent();
-			_AccessoryStack = new LinearLayout(AndroidContext);
+			ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			_AccessoryStack = ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellAccessoryStack));
+			
+			Container = new FormsViewContainer(AndroidContext, _CustomCell);
+			this.Add(Container);
+			if ( !_CustomCell.ShowArrowIndicator )
+			{
+				// TODO: implement ShowArrowIndicator (_IndicatorView) _AccessoryStack
+			}
 
-			var layoutParams = new LayoutParams()
-							   {
-								   RowSpec = InvokeSpec(2, End),
-								   ColumnSpec = InvokeSpec(0, Center),
-								   Width = ViewGroup.LayoutParams.WrapContent,
-								   Height = ViewGroup.LayoutParams.WrapContent,
-							   };
-			using ( layoutParams ) { _CellLayout.AddView(_AccessoryStack, layoutParams); }
-
-			AddAccessory(_AccessoryStack, Container);
-			if ( !_CustomCell.ShowArrowIndicator ) { return; }
-
-			// _Container = new FormsViewContainer(Context);
 			if ( !_CustomCell.UseFullSize ) return;
 			_Icon.Icon.RemoveFromParent();
 			_Title.RemoveFromParent();
 			_Description.RemoveFromParent();
 
-			float rMargin = _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
-			Container.SetPadding(0, 0, (int) rMargin, 0);
+			var rMargin = (int) ( _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0 );
+			Container.SetPadding(0, 0, rMargin, 0);
 			_CellLayout.SetPadding(0, 0, 0, 0);
 		}
-		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			Container = new FormsViewContainer(AndroidContext, _CustomCell);
-
-			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack)?.RemoveFromParent();
-			_AccessoryStack = new LinearLayout(AndroidContext);
-
-			var layoutParams = new LayoutParams()
-							   {
-								   RowSpec = InvokeSpec(2, End),
-								   ColumnSpec = InvokeSpec(0, Center),
-								   Width = ViewGroup.LayoutParams.WrapContent,
-								   Height = ViewGroup.LayoutParams.WrapContent,
-							   };
-			using ( layoutParams )
-			{ _CellLayout.AddView(_AccessoryStack, layoutParams); }
-
-			AddAccessory(_AccessoryStack, Container);
-			if ( !_CustomCell.ShowArrowIndicator )
-			{ return; }
-
-			// _Container = new FormsViewContainer(Context);
-			if ( !_CustomCell.UseFullSize )
-				return;
-			_Icon.Icon.RemoveFromParent();
-			_Title.RemoveFromParent();
-			_Description.RemoveFromParent();
-
-			float rMargin = _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0;
-			Container.SetPadding(0, 0, (int) rMargin, 0);
-			_CellLayout.SetPadding(0, 0, 0, 0);
-		}
+		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-			// if ( _Title.Update(sender, e) ) { return; }
-			// if ( _Description.Update(sender, e) ) { return; }
 
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 		}
-		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.ParentPropertyChanged(sender, e);
-			// if ( _Title.UpdateParent(sender, e) ) { return; }
-			// if ( _Description.UpdateParent(sender, e) ) { return; }
-		}
+		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
+
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
@@ -131,17 +85,20 @@ namespace Jakar.SettingsView.Droid.Cells
 			return true;
 		}
 
-		public void UpdateContent()
-		{
-			Container.FormsView = _CustomCell.Content;
-		}
 		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
 			UpdateContent();
 			UpdateCommand();
 		}
-
+		public void UpdateContent()
+		{
+			Container.CustomCell = _CustomCell;
+			Container.FormsView = _CustomCell.Content;
+			double height = Container.FormsView.Height;
+			double cellHeight = Height;
+			System.Diagnostics.Debug.WriteLine($"_______CustomHeight_______  content.height {height}      cell.height{cellHeight}");
+		}
 		private void UpdateCommand()
 		{
 			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }

@@ -4,15 +4,13 @@ using Android.Content;
 using Android.Text;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
-using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells.Base
+namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	public class ValueView : BaseTextView
 	{
@@ -20,18 +18,15 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		private CellBaseValueText? _CurrentTextCell => _CurrentCell as CellBaseValueText;
 
 
-		public ValueView( Context context ) : base(context)
+		public ValueView( Context context ) : base(context) => Init();
+		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Init();
+		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Init();
+		protected internal override void Init()
 		{
+			base.Init();
 			Ellipsize = TextUtils.TruncateAt.End;
 			Gravity = GravityFlags.Right;
 		}
-		public ValueView( CellBaseView baseView, Context context ) : base(baseView, context)
-		{
-			Ellipsize = TextUtils.TruncateAt.End;
-			Gravity = GravityFlags.Right;
-		}
-		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
-
 
 		protected internal override bool UpdateText()
 		{

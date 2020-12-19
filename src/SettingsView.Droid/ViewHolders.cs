@@ -128,8 +128,8 @@ namespace Jakar.SettingsView.Droid
 		public LinearLayout Body { get; protected set; }
 
 		public ContentBodyViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(Resource.Id.ContentCellBody));
-		public ContentBodyViewHolder( AView view, RowInfo info ) : base(view, info) => Body = view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(Resource.Id.ContentCellBody));
-
+		public ContentBodyViewHolder( AView view, RowInfo info ) : this(view) => RowInfo = info;
+		
 		// public ContentBodyViewHolder( AView view, Context context ) : base(view) => Body = new FormsViewContainer(context);
 		// public ContentBodyViewHolder( AView view, RowInfo info, Context context ) : base(view, info) => Body = new FormsViewContainer(context);
 

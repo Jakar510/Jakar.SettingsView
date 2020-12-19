@@ -12,6 +12,7 @@ using Jakar.SettingsView.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
+using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid
@@ -19,13 +20,13 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewRecyclerAdapter : RecyclerView.Adapter, AView.IOnClickListener, AView.IOnLongClickListener
 	{
-		protected float _MinRowHeight => _Context.ToPixels(44);
+		protected float _MinRowHeight => AndroidContext.ToPixels(Shared.SettingsView.MIN_ROW_HEIGHT);
 
 		//Item click. correspond to AdapterView.IOnItemClickListener
 		protected int _SelectedIndex { get; set; } = -1;
 		protected AView? _PreSelectedCell { get; set; }
 
-		protected Context _Context { get; }
+		protected internal Context AndroidContext { get; }
 		protected Shared.SettingsView _SettingsView { get; set; }
 		protected RecyclerView _RecyclerView { get; }
 		protected ModelProxy _Proxy { get; set; }
@@ -35,7 +36,7 @@ namespace Jakar.SettingsView.Droid
 
 		public SettingsViewRecyclerAdapter( Context context, Shared.SettingsView settingsView, RecyclerView recyclerView )
 		{
-			_Context = context;
+			AndroidContext = context;
 			_SettingsView = settingsView;
 			_RecyclerView = recyclerView;
 			_Proxy = new ModelProxy(settingsView, this, recyclerView);
@@ -70,7 +71,8 @@ namespace Jakar.SettingsView.Droid
 															{
 																idx,
 																x.Section
-															})
+															}
+											 )
 									  .Where(x => x.Section == section)
 									  .Select(x => x.idx)
 									  .ToList();
@@ -97,28 +99,26 @@ namespace Jakar.SettingsView.Droid
 
 		public override RecyclerView.ViewHolder OnCreateViewHolder( ViewGroup parent, int viewType )
 		{
-			using LayoutInflater inflater = LayoutInflater.FromContext(_Context) ?? throw new NullReferenceException(nameof(LayoutInflater.FromContext));
-
 			CustomViewHolder viewHolder = ( (ViewType) viewType ) switch
 										  {
-											  ViewType.TextHeader => new HeaderViewHolder(inflater.Inflate(Resource.Layout.DefaultHeaderCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultHeaderCell))),
+											  ViewType.TextHeader => new HeaderViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultHeaderCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultHeaderCell))),
 
-											  ViewType.TextFooter => new FooterViewHolder(inflater.Inflate(Resource.Layout.DefaultFooterCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultFooterCell))),
+											  ViewType.TextFooter => new FooterViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultFooterCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultFooterCell))),
 
-											  ViewType.CustomHeader => new CustomHeaderViewHolder(new HeaderFooterContainer(_Context)),
+											  ViewType.CustomHeader => new CustomHeaderViewHolder(new HeaderFooterContainer(AndroidContext)),
 
-											  ViewType.CustomFooter => new CustomFooterViewHolder(new HeaderFooterContainer(_Context)),
+											  ViewType.CustomFooter => new CustomFooterViewHolder(new HeaderFooterContainer(AndroidContext)),
 
-											  _ => CreateHolder(inflater, parent)
+											  _ => CreateHolder(parent)
 										  };
 
 			_viewHolders.Add(viewHolder);
 
 			return viewHolder;
 		}
-		protected ContentBodyViewHolder CreateHolder( LayoutInflater inflater, ViewGroup parent )
+		protected ContentBodyViewHolder CreateHolder( ViewGroup parent )
 		{
-			AView view = inflater.Inflate(Resource.Layout.ContentCell, parent, false) ?? throw new NullReferenceException(nameof(Resource.Layout.CellLayout));
+			AView view = AndroidContext.CreateContentView(parent, Resource.Layout.ContentCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.CellLayout));
 			var viewHolder = new ContentBodyViewHolder(view);
 			viewHolder.ItemView.SetOnClickListener(this);
 			viewHolder.ItemView.SetOnLongClickListener(this);
@@ -177,7 +177,7 @@ namespace Jakar.SettingsView.Droid
 			DeselectRow();
 
 			AView? child = GetChild(view);
-			if ( !( child is CellBaseView cell ) ||
+			if ( !( child is BaseCellView cell ) ||
 				 !( _Proxy[position].Cell?.IsEnabled ?? false ) ) //if Xamarin.Forms.Cell.IsEnable is false, does nothing. 
 			{
 				return;
@@ -196,7 +196,7 @@ namespace Jakar.SettingsView.Droid
 			if ( _Proxy[position].Section.UseDragSort ) { return false; }
 
 			bool? result = null;
-			if ( GetChild(view) is CellBaseView cell ) { result = cell.RowLongPressed(this, position); }
+			if ( GetChild(view) is BaseCellView cell ) { result = cell.RowLongPressed(this, position); }
 
 			if ( !( _Proxy[position].Cell?.IsEnabled ?? false ) )
 			{
@@ -239,11 +239,11 @@ namespace Jakar.SettingsView.Droid
 			AView view = holder.ItemView;
 
 			//judging cell height
-			int cellHeight = (int) _MinRowHeight;
+			int cellHeight;
 			double individualHeight = section.HeaderHeight;
 
-			if ( individualHeight > 0d ) { cellHeight = (int) _Context.ToPixels(individualHeight); }
-			else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) _Context.ToPixels(_SettingsView.HeaderHeight); }
+			if ( individualHeight > 0d ) { cellHeight = (int) AndroidContext.ToPixels(individualHeight); }
+			else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) AndroidContext.ToPixels(_SettingsView.HeaderHeight); }
 			else
 			{
 				cellHeight = -1; // Height Auto
@@ -251,11 +251,11 @@ namespace Jakar.SettingsView.Droid
 
 			if ( cellHeight >= 0 )
 			{
-				view.SetMinimumHeight(cellHeight);
+				view.SetMinimumHeight(Shared.SettingsView.MIN_ROW_HEIGHT / 2);
 				if ( view.LayoutParameters != null ) view.LayoutParameters.Height = cellHeight;
 			}
 
-			//textview setting
+			//text view setting
 			holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.HeaderPadding.Left), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Top), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Right), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Bottom));
 
 			holder.TextView.Gravity = _SettingsView.HeaderTextVerticalAlign.ToNativeVertical() | GravityFlags.Left;
@@ -292,7 +292,29 @@ namespace Jakar.SettingsView.Droid
 				view.Visibility = ViewStates.Visible;
 			}
 
-			//textview setting
+			// //judging cell height
+			// if ( section != null )
+			// {
+			// 	double individualHeight = section.FooterHeight;
+			//
+			// 	int cellHeight;
+			// 	if ( individualHeight > 0d ) { cellHeight = (int) _Context.ToPixels(individualHeight); }
+			// 	else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) _Context.ToPixels(_SettingsView.HeaderHeight); }
+			// 	else
+			// 	{
+			// 		cellHeight = -1; // Height Auto
+			// 	}
+			//
+			// 	if ( cellHeight >= 0 )
+			// 	{
+			// 		view.SetMinimumHeight(Shared.SettingsView.MIN_ROW_HEIGHT / 2);
+			// 		if ( view.LayoutParameters != null )
+			// 			view.LayoutParameters.Height = cellHeight;
+			// 	}
+			// }
+
+
+			//text view setting
 			holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.FooterPadding.Left), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Top), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Right), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Bottom));
 
 			holder.TextView.Typeface = FontUtility.CreateTypeface(_SettingsView.FooterFontFamily, _SettingsView.FooterFontAttributes);
@@ -343,7 +365,12 @@ namespace Jakar.SettingsView.Droid
 			AView? nativeCell = holder.Body.GetChildAt(0);
 			if ( nativeCell != null ) { holder.Body.RemoveViewAt(0); }
 
-			nativeCell = CellFactory.GetCell(formsCell, nativeCell, _RecyclerView, _Context, _SettingsView);
+			nativeCell = CellFactory.GetCell(formsCell,
+											 nativeCell,
+											 _RecyclerView,
+											 AndroidContext,
+											 _SettingsView
+											);
 
 			if ( position == _SelectedIndex )
 			{
@@ -353,35 +380,42 @@ namespace Jakar.SettingsView.Droid
 				_PreSelectedCell = nativeCell;
 			}
 
-			var minHeight = (int) Math.Max(_Context.ToPixels(_SettingsView.RowHeight), _MinRowHeight);
+			var minHeight = (int) Math.Max(AndroidContext.ToPixels(_SettingsView.RowHeight), _MinRowHeight);
 
 			//it is necessary to set both
 			layout.SetMinimumHeight(minHeight);
 			nativeCell.SetMinimumHeight(minHeight);
 
-			if ( layout.LayoutParameters is null ) return;
-			if ( !_SettingsView.HasUnevenRows )
+			if ( layout.LayoutParameters != null )
 			{
-				// if not Uneven, set the larger one of RowHeight and MinRowHeight.
-				layout.LayoutParameters.Height = minHeight;
+				if ( !_SettingsView.HasUnevenRows )
+				{
+					// if not Uneven, set the larger one of RowHeight and MinRowHeight.
+					layout.LayoutParameters.Height = minHeight;
+				}
+				else if ( formsCell != null &&
+						  formsCell.Height > -1 )
+				{
+					// if the cell itself was specified height, set it.
+					layout.SetMinimumHeight((int) AndroidContext.ToPixels(formsCell.Height));
+					layout.LayoutParameters.Height = (int) AndroidContext.ToPixels(formsCell.Height);
+				}
+				else if ( formsCell is ViewCell viewCell )
+				{
+					// if used a view cell, calculate the size and layout it.
+					SizeRequest size = viewCell.View.Measure(_SettingsView.Width, double.PositiveInfinity);
+					viewCell.View.Layout(new Rectangle(0, 0, size.Request.Width, size.Request.Height));
+					layout.LayoutParameters.Height = (int) AndroidContext.ToPixels(size.Request.Height);
+				}
+				else { layout.LayoutParameters.Height = ViewGroup.LayoutParams.WrapContent; }
 			}
-			else if ( formsCell != null &&
-					  formsCell.Height > -1 )
-			{
-				// if the cell itself was specified height, set it.
-				layout.SetMinimumHeight((int) _Context.ToPixels(formsCell.Height));
-				layout.LayoutParameters.Height = (int) _Context.ToPixels(formsCell.Height);
-			}
-			else if ( formsCell is ViewCell viewCell )
-			{
-				// if used a view cell, calculate the size and layout it.
-				SizeRequest size = viewCell.View.Measure(_SettingsView.Width, double.PositiveInfinity);
-				viewCell.View.Layout(new Rectangle(0, 0, size.Request.Width, size.Request.Height));
-				layout.LayoutParameters.Height = (int) _Context.ToPixels(size.Request.Height);
-			}
-			else { layout.LayoutParameters.Height = ViewGroup.LayoutParams.WrapContent; }
 
 			holder.Body.AddView(nativeCell, 0);
+
+			
+			double height = layout.Height;
+			double cellHeight = holder.Body.Height;
+			System.Diagnostics.Debug.WriteLine($"_______CellHeight_______    minHeight {minHeight}      content.height {height}      cell.height{cellHeight}");
 		}
 
 

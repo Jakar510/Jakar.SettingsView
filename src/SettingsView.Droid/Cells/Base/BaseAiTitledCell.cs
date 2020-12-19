@@ -4,29 +4,26 @@ using Android.App;
 using Android.Content;
 using Android.Runtime;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Controls;
 using Xamarin.Forms;
+using AContext = Android.Content.Context;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseAiTitledCell : CellBaseView
+	public abstract class BaseAiTitledCell : BaseCellView
 	{
 		protected internal Android.Views.View ContentView { get; set; }
 		protected GridLayout _CellLayout { get; }
 		protected TitleView _Title { get; }
 
-		protected BaseAiTitledCell( Context context, Cell cell ) : base(context, cell)
+		protected BaseAiTitledCell( AContext context, Cell cell ) : base(context, cell)
 		{
 			ContentView = CreateContentView(Resource.Layout.CellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Title = BaseTextView.Create<TitleView>(ContentView, this, Resource.Id.CellTitle);
 		}
-		protected BaseAiTitledCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			ContentView ??= CreateContentView(Resource.Layout.CellLayout);
-			_CellLayout ??= ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
-			_Title ??= BaseTextView.Create<TitleView>(ContentView, this, Resource.Id.CellTitle);
-		}
+		protected BaseAiTitledCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
