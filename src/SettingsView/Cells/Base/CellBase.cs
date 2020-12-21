@@ -10,7 +10,7 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		internal new void OnTapped() { Tapped?.Invoke(this, EventArgs.Empty); }
 
 		
-		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), default(Color), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), Color.Default);
 		public Color BackgroundColor
 		{
 			get => (Color) GetValue(BackgroundColorProperty);

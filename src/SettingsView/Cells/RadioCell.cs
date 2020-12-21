@@ -30,7 +30,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The value property.
 		/// </summary>
-		public static BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell), default, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell));
 
 		/// <summary>
 		/// Gets or sets the value.
@@ -45,7 +45,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The accent color property.
 		/// </summary>
-		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(RadioCell), default(Color), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(RadioCell), Color.Default);
 
 		/// <summary>
 		/// Gets or sets the color of the accent.

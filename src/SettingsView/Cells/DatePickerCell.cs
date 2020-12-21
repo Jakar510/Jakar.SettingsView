@@ -9,7 +9,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The date property.
 		/// </summary>
-		public static BindableProperty DateProperty = BindableProperty.Create(nameof(Date), typeof(DateTime), typeof(DatePickerCell), default(DateTime), defaultBindingMode: BindingMode.TwoWay);
+		public static BindableProperty DateProperty = BindableProperty.Create(nameof(Date), typeof(DateTime), typeof(DatePickerCell), default(DateTime), BindingMode.TwoWay);
 
 		/// <summary>
 		/// Gets or sets the date.
@@ -24,7 +24,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The maximum date property.
 		/// </summary>
-		public static BindableProperty MaximumDateProperty = BindableProperty.Create(nameof(MaximumDate), typeof(DateTime), typeof(DatePickerCell), new DateTime(2100, 12, 31), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty MaximumDateProperty = BindableProperty.Create(nameof(MaximumDate), typeof(DateTime), typeof(DatePickerCell), new DateTime(2100, 12, 31));
 
 		/// <summary>
 		/// Gets or sets the maximum date.
@@ -39,7 +39,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The minimum date property.
 		/// </summary>
-		public static BindableProperty MinimumDateProperty = BindableProperty.Create(nameof(MinimumDate), typeof(DateTime), typeof(DatePickerCell), new DateTime(1900, 1, 1), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty MinimumDateProperty = BindableProperty.Create(nameof(MinimumDate), typeof(DateTime), typeof(DatePickerCell), new DateTime(1900, 1, 1));
 
 		/// <summary>
 		/// Gets or sets the minimum date.
@@ -54,7 +54,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The format property.
 		/// </summary>
-		public static BindableProperty FormatProperty = BindableProperty.Create(nameof(Format), typeof(string), typeof(DatePickerCell), "d", defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty FormatProperty = BindableProperty.Create(nameof(Format), typeof(string), typeof(DatePickerCell), "d");
 
 		/// <summary>
 		/// Gets or sets the format.
@@ -69,7 +69,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The today text property.
 		/// </summary>
-		public static BindableProperty TodayTextProperty = BindableProperty.Create(nameof(TodayText), typeof(string), typeof(DatePickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty TodayTextProperty = BindableProperty.Create(nameof(TodayText), typeof(string), typeof(DatePickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the today text.

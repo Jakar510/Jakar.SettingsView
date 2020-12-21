@@ -6,8 +6,8 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseValueText : CellBaseValue
 	{
-		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(CellBaseValueText), -1, defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(CellBaseValueText), default(string), defaultBindingMode: BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
+		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(CellBaseValueText), -1);
+		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(CellBaseValueText), default(string), BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
 		
 		public string ValueText
 		{

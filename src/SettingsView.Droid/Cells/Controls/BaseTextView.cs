@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Android.Util;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Shared.Interfaces;
 using BreakStrategy = Android.Text.BreakStrategy;
 using AColor = Android.Graphics.Color;
 using AContext = Android.Content.Context;
@@ -10,13 +12,16 @@ using AContext = Android.Content.Context;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Controls
 {
-	public abstract class BaseTextView : TextView
+	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+	public abstract class BaseTextView : TextView, IUpdateCell<AColor, BaseCellView>
 	{
-		protected internal AColor DefaultTextColor { get; }
-		protected internal float DefaultFontSize { get; }
+		public AColor DefaultTextColor { get; }
+		public float DefaultFontSize { get; }
 
 		protected BaseCellView _Cell { get; set; }
-		// protected internal TextView Label { get; protected set; }
+
+		// public TextView Label { get; protected set; }
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		protected BaseTextView( AContext context ) : base(context)
@@ -33,14 +38,16 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			Init();
 		}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-		protected internal void SetCell( BaseCellView cell ) { _Cell = cell ?? throw new NullReferenceException(nameof(cell)); }
+
+
+		public void SetCell( BaseCellView cell ) { _Cell = cell ?? throw new NullReferenceException(nameof(cell)); }
 		public static TCell Create<TCell>( Android.Views.View view, BaseCellView cell, int id ) where TCell : BaseTextView
 		{
-			TCell hint = view.FindViewById<TCell>(id) ?? throw new NullReferenceException(nameof(id));
-			hint.SetCell(cell);
-			return hint;
+			TCell result = view.FindViewById<TCell>(id) ?? throw new NullReferenceException(nameof(id));
+			result.SetCell(cell);
+			return result;
 		}
-		protected internal virtual void Init()
+		public virtual void Init()
 		{
 			SetSingleLine(false);
 			SetMinLines(1);
@@ -53,17 +60,18 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		}
 
 
-		protected internal void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
-		protected internal void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
+		public void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
+		public void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
 
-		protected internal abstract bool UpdateText();
-		protected internal abstract bool UpdateColor();
-		protected internal abstract bool UpdateFontSize();
-		protected internal abstract bool UpdateFont();
-		// protected internal abstract bool UpdateAlignment();
 
-		protected internal abstract bool Update( object sender, PropertyChangedEventArgs e );
-		protected internal abstract void Update();
-		protected internal abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
+		public abstract bool UpdateText();
+		public abstract bool UpdateColor();
+		public abstract bool UpdateFontSize();
+		public abstract bool UpdateFont();
+		// public abstract bool UpdateAlignment();
+
+		public abstract bool Update( object sender, PropertyChangedEventArgs e );
+		public abstract void Update();
+		public abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
 	}
 }

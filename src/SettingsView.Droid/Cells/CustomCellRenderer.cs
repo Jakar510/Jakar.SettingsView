@@ -48,7 +48,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			}
 
 			if ( !_CustomCell.UseFullSize ) return;
-			_Icon.Icon.RemoveFromParent();
+			_Icon.RemoveFromParent();
 			_Title.RemoveFromParent();
 			_Description.RemoveFromParent();
 

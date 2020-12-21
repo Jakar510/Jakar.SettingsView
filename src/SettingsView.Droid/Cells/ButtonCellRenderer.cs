@@ -2,14 +2,10 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using Android.Content;
-using Android.Graphics.Drawables;
 using Android.Runtime;
 using Android.Util;
-using Android.Views;
-using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
@@ -34,8 +30,6 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal float DefaultFontSize { get; }
 		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
 
-		// protected internal AView ContentView { get; set; }
-		// protected GridLayout _CellLayout { get; set; }
 		protected AButton _Button { get; set; }
 		protected ICommand? _Command { get; set; }
 
@@ -47,10 +41,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
 
-			this.Add(_Button,
-					 ViewGroup.LayoutParams.MatchParent,
-					 ViewGroup.LayoutParams.MatchParent
-					);
+			this.Add(_Button, Extensions.Layout.Match, Extensions.Layout.Match);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

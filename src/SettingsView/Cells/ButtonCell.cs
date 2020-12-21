@@ -12,7 +12,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The title alignment property.
 		/// </summary>
-		public static BindableProperty TitleAlignmentProperty = BindableProperty.Create(nameof(TitleAlignment), typeof(TextAlignment), typeof(ButtonCell), TextAlignment.Center, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty TitleAlignmentProperty = BindableProperty.Create(nameof(TitleAlignment), typeof(TextAlignment), typeof(ButtonCell), TextAlignment.Center);
 
 		/// <summary>
 		/// Gets or sets the title alignment.
@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command property.
 		/// </summary>
-		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ButtonCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ButtonCell), default(ICommand));
 
 		/// <summary>
 		/// Gets or sets the command.
@@ -42,7 +42,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command parameter property.
 		/// </summary>
-		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ButtonCell), default, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ButtonCell));
 
 		/// <summary>
 		/// Gets or sets the command parameter.

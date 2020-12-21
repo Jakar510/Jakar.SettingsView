@@ -12,7 +12,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The time property.
 		/// </summary>
-		public static BindableProperty TimeProperty = BindableProperty.Create(nameof(Time), typeof(TimeSpan), typeof(TimePickerCell), default(TimeSpan), defaultBindingMode: BindingMode.TwoWay);
+		public static BindableProperty TimeProperty = BindableProperty.Create(nameof(Time), typeof(TimeSpan), typeof(TimePickerCell), default(TimeSpan), BindingMode.TwoWay);
 
 		/// <summary>
 		/// Gets or sets the time.
@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The format property.
 		/// </summary>
-		public static BindableProperty FormatProperty = BindableProperty.Create(nameof(Format), typeof(string), typeof(TimePickerCell), "t", defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty FormatProperty = BindableProperty.Create(nameof(Format), typeof(string), typeof(TimePickerCell), "t");
 
 		/// <summary>
 		/// Gets or sets the format.
@@ -42,7 +42,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The picker title property.
 		/// </summary>
-		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitleProperty), typeof(string), typeof(TimePickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitleProperty), typeof(string), typeof(TimePickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the picker title.

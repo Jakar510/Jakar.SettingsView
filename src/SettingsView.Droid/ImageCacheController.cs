@@ -1,4 +1,7 @@
-﻿namespace Jakar.SettingsView.Droid
+﻿using System;
+
+#nullable enable
+namespace Jakar.SettingsView.Droid
 {
 	/// <summary>
 	/// Image cache controller.
@@ -6,6 +9,10 @@
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public static class ImageCacheController
 	{
+		private static readonly int CacheSize = (int) ( ( Java.Lang.Runtime.GetRuntime()?.MaxMemory() ?? throw new NullReferenceException(nameof(Java.Lang.Runtime.GetRuntime)) ) / 1024 / 8 );
+
+		private static MemoryLimitedLruCache? _CacheInstance { get; set; }
+
 		/// <summary>
 		/// Gets the instance.
 		/// </summary>
@@ -14,11 +21,9 @@
 		{
 			get
 			{
-				if ( _CacheInstance == null )
-				{
-					_CacheInstance = new MemoryLimitedLruCache(CacheSize);
-					Shared.SettingsView._clearCache = Clear;
-				}
+				if ( _CacheInstance != null ) return _CacheInstance;
+				_CacheInstance = new MemoryLimitedLruCache(CacheSize);
+				Shared.SettingsView._clearCache = Clear;
 
 				return _CacheInstance;
 			}
@@ -34,8 +39,5 @@
 			_CacheInstance = null;
 			Shared.SettingsView._clearCache = null;
 		}
-
-		private static readonly int CacheSize = (int) ( Java.Lang.Runtime.GetRuntime().MaxMemory() / 1024 / 8 );
-		private static MemoryLimitedLruCache _CacheInstance;
 	}
 }

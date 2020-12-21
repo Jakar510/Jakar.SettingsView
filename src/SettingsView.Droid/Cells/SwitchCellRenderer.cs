@@ -11,6 +11,7 @@ using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using ASwitch = Android.Widget.Switch;
 using SwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
 using SwitchCellRenderer = Jakar.SettingsView.Droid.Cells.SwitchCellRenderer;
 
@@ -26,6 +27,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	{
 		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
 
+		
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			_Accessory.Gravity = GravityFlags.Right;
@@ -106,7 +108,7 @@ namespace Jakar.SettingsView.Droid.Cells
 															Android.Graphics.Color.Argb(76, 117, 117, 117)
 														}
 													   );
-			_Accessory.TrackDrawable.SetTintList(trackColors);
+			_Accessory.TrackDrawable?.SetTintList(trackColors);
 
 			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
 			ripple.SetColor(new ColorStateList(new[]

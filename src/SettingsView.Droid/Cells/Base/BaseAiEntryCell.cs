@@ -22,8 +22,10 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 	public abstract class BaseAiEntryCell : BaseValueCell<AiEditText>, ITextWatcher, Android.Views.View.IOnFocusChangeListener, TextView.IOnEditorActionListener
 	{
 		protected AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
-		protected BaseAiEntryCell( AContext context, Cell cell ) : base(context, cell) { }
-		protected BaseAiEntryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+
+
+		protected BaseAiEntryCell( AContext context, Cell cell ) : base(context, cell) => _Value.Init(_EntryCell, this);
+		protected BaseAiEntryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) => _Value.Init(_EntryCell, this);
 
 
 		void ITextWatcher.AfterTextChanged( IEditable? s ) { }

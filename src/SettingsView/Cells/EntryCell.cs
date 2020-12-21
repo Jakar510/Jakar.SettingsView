@@ -3,18 +3,19 @@ using System.Windows.Input;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.Cells
 {
 	public class EntryCell : CellBaseValueText, IEntryCellController
 	{
-		public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(EntryCell), Keyboard.Default, defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty CompletedCommandProperty = BindableProperty.Create(nameof(CompletedCommand), typeof(ICommand), typeof(EntryCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(EntryCell), default(string), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(EntryCell), default(Color), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty TextAlignmentProperty = BindableProperty.Create(nameof(TextAlignment), typeof(TextAlignment), typeof(EntryCell), TextAlignment.End, defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(EntryCell), default(Color), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(nameof(IsPassword), typeof(bool), typeof(EntryCell), default(bool), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty OnSelectActionProperty = BindableProperty.Create(nameof(IsPassword), typeof(SelectAction), typeof(EntryCell), default(SelectAction), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(EntryCell), Keyboard.Default);
+		public static readonly BindableProperty CompletedCommandProperty = BindableProperty.Create(nameof(CompletedCommand), typeof(ICommand), typeof(EntryCell), default(ICommand));
+		public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(EntryCell), default(string));
+		public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(EntryCell), Color.Default);
+		public static readonly BindableProperty TextAlignmentProperty = BindableProperty.Create(nameof(TextAlignment), typeof(TextAlignment), typeof(EntryCell), TextAlignment.End);
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(EntryCell), Color.Default);
+		public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(nameof(IsPassword), typeof(bool), typeof(EntryCell), default(bool));
+		public static readonly BindableProperty OnSelectActionProperty = BindableProperty.Create(nameof(IsPassword), typeof(SelectAction), typeof(EntryCell), default(SelectAction));
 
 
 		public Keyboard Keyboard
@@ -28,10 +29,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		public void SendCompleted()
 		{
 			Completed?.Invoke(this, EventArgs.Empty);
-			if ( CompletedCommand != null )
-			{
-				if ( CompletedCommand.CanExecute(null) ) { CompletedCommand.Execute(null); }
-			}
+			if ( CompletedCommand?.CanExecute(null) ?? false ) { CompletedCommand.Execute(null); }
 		}
 
 

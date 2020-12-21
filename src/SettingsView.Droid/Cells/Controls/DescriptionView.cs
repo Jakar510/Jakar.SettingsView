@@ -22,14 +22,14 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 
 
-		protected internal override bool UpdateText()
+		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Description;
 			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
 		}
-		protected internal override bool UpdateFontSize()
+		public override bool UpdateFontSize()
 		{
 			if ( _CurrentCell.DescriptionFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.DescriptionFontSize); }
 			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellDescriptionFontSize); }
@@ -37,7 +37,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateColor()
+		public override bool UpdateColor()
 		{
 			if ( _CurrentCell.DescriptionColor != Color.Default ) { SetTextColor(_CurrentCell.DescriptionColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
@@ -46,7 +46,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateFont()
+		public override bool UpdateFont()
 		{
 			string? family = _CurrentCell.DescriptionFontFamily ?? _Cell.CellParent?.CellDescriptionFontFamily;
 			FontAttributes attr = _CurrentCell.DescriptionFontAttributes ?? _Cell.CellParent?.CellDescriptionFontAttributes ?? FontAttributes.None;
@@ -56,9 +56,9 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			return true;
 		}
 
-		// protected internal override bool UpdateAlignment() { _TextAlignment = _CellBase.DescriptionTextAlignment; }
+		// public override bool UpdateAlignment() { _TextAlignment = _CellBase.DescriptionTextAlignment; }
 
-		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
+		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseDescription.DescriptionProperty.PropertyName ) { return UpdateText(); }
 
@@ -71,7 +71,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.SettingsView.CellDescriptionColorProperty.PropertyName ) { return UpdateColor(); }
 
@@ -82,7 +82,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override void Update()
+		public override void Update()
 		{
 			UpdateText();
 			UpdateColor();

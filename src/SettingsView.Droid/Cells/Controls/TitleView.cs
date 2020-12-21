@@ -19,7 +19,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public TitleView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
 
 
-		protected internal override bool UpdateText()
+		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Title;
 			//hide TextView right padding when TextView.Text empty.
@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateColor()
+		public override bool UpdateColor()
 		{
 			if ( _CurrentCell.TitleColor != Color.Default ) { SetTextColor(_CurrentCell.TitleColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
@@ -36,7 +36,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateFontSize()
+		public override bool UpdateFontSize()
 		{
 			if ( _CurrentCell.TitleFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.TitleFontSize); }
 			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellTitleFontSize); }
@@ -44,7 +44,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateFont()
+		public override bool UpdateFont()
 		{
 			string? family = _CurrentCell.TitleFontFamily ?? _Cell.CellParent?.CellTitleFontFamily;
 			FontAttributes attr = _CurrentCell.TitleFontAttributes ?? _Cell.CellParent?.CellTitleFontAttributes ?? FontAttributes.None;
@@ -54,9 +54,9 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			return true;
 		}
 
-		// protected internal  override bool UpdateTitleAlignment() { _TextAlignment = _CellBase.TitleTextAlignment; }
+		// public  override bool UpdateTitleAlignment() { _TextAlignment = _CellBase.TitleTextAlignment; }
 
-		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
+		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { return UpdateText(); }
 
@@ -69,7 +69,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.SettingsView.CellTitleColorProperty.PropertyName ) { return UpdateColor(); }
 
@@ -80,7 +80,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override void Update()
+		public override void Update()
 		{
 			UpdateText();
 			UpdateColor();

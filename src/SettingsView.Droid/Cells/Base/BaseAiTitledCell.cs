@@ -17,6 +17,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected GridLayout _CellLayout { get; }
 		protected TitleView _Title { get; }
 
+		
 		protected BaseAiTitledCell( AContext context, Cell cell ) : base(context, cell)
 		{
 			ContentView = CreateContentView(Resource.Layout.CellLayout);

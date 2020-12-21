@@ -10,15 +10,15 @@ namespace Jakar.SettingsView.Shared.Cells
 {
 	public class TextPickerCell : CellBaseValue
 	{
-		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>(), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty PageTitleProperty = BindableProperty.Create(nameof(PageTitle), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), default(Color), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(string), typeof(TextPickerCell), default, defaultBindingMode: BindingMode.TwoWay);
-		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(TextPickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty PopupCancelTextProperty = BindableProperty.Create(nameof(PopupCancelText), typeof(string), typeof(TextPickerCell), "Cancel", defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty PopupAcceptTextProperty = BindableProperty.Create(nameof(PopupAcceptText), typeof(string), typeof(TextPickerCell), "Ok", defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty IsCircularPickerProperty = BindableProperty.Create(nameof(IsCircularPicker), typeof(bool), typeof(TextPickerCell), true, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>());
+		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand));
+		public static BindableProperty PageTitleProperty = BindableProperty.Create(nameof(PageTitle), typeof(string), typeof(PickerCell), default(string));
+		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), Color.Default);
+		public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(string), typeof(TextPickerCell), default, BindingMode.TwoWay);
+		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(TextPickerCell), default(string));
+		public static BindableProperty PopupCancelTextProperty = BindableProperty.Create(nameof(PopupCancelText), typeof(string), typeof(TextPickerCell), "Cancel");
+		public static BindableProperty PopupAcceptTextProperty = BindableProperty.Create(nameof(PopupAcceptText), typeof(string), typeof(TextPickerCell), "Ok");
+		public static BindableProperty IsCircularPickerProperty = BindableProperty.Create(nameof(IsCircularPicker), typeof(bool), typeof(TextPickerCell), true);
 
 		public IList<string> Items 
 		{

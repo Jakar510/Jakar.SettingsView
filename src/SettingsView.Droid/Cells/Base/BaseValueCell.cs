@@ -3,6 +3,7 @@
 using System;
 using Android.Content;
 using Android.Runtime;
+using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Droid.Extensions;
@@ -19,6 +20,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected HintView _Hint { get; }
 		protected TCell _Value { get; }
 		protected RelativeLayout _CellValueStack { get; }
+		
+		
 		protected BaseValueCell( AContext context, Cell cell ) : base(context, cell)
 		{
 			ContentView.FindViewById<RelativeLayout>(Resource.Id.CellAccessoryStack)?.RemoveFromParent();
@@ -26,6 +29,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_CellValueStack = ContentView.FindViewById<RelativeLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 
 			_Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
+			_Value.Gravity = GravityFlags.Fill;
 			_CellValueStack.Add(_Value);
 		}
 		protected BaseValueCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }

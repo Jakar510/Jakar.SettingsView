@@ -71,5 +71,7 @@ namespace Jakar.SettingsView.Droid
 
 			base.Dispose(disposing);
 		}
+		
+		
 	}
 }

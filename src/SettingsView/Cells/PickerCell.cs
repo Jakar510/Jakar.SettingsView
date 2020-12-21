@@ -16,7 +16,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The page title property.
 		/// </summary>
-		public static readonly BindableProperty PageTitleProperty = BindableProperty.Create(nameof(PageTitle), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty PageTitleProperty = BindableProperty.Create(nameof(PageTitle), typeof(string), typeof(PickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the page title.
@@ -31,7 +31,13 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The items source property.
 		/// </summary>
-		public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(PickerCell), default(IList), defaultBindingMode: BindingMode.OneWay, propertyChanging: ItemsSourceChanging);
+		public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
+																							  typeof(IList),
+																							  typeof(PickerCell),
+																							  default(IList),
+																							  BindingMode.OneWay,
+																							  propertyChanging: ItemsSourceChanging
+																							 );
 
 		/// <summary>
 		/// Gets or sets the items source.
@@ -46,7 +52,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The display member property.
 		/// </summary>
-		public static readonly BindableProperty DisplayMemberProperty = BindableProperty.Create(nameof(DisplayMember), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty DisplayMemberProperty = BindableProperty.Create(nameof(DisplayMember), typeof(string), typeof(PickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the display member.
@@ -61,7 +67,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The sub display member property.
 		/// </summary>
-		public static readonly BindableProperty SubDisplayMemberProperty = BindableProperty.Create(nameof(SubDisplayMember), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty SubDisplayMemberProperty = BindableProperty.Create(nameof(SubDisplayMember), typeof(string), typeof(PickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the sub display member.
@@ -76,7 +82,12 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected items property.
 		/// </summary>
-		public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(PickerCell), default(IList), defaultBindingMode: BindingMode.TwoWay);
+		public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems),
+																								typeof(IList),
+																								typeof(PickerCell),
+																								default(IList),
+																								BindingMode.TwoWay
+																							   );
 
 		/// <summary>
 		/// Gets or sets the selected items.
@@ -91,7 +102,12 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected item property.
 		/// </summary>
-		public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(PickerCell), default, defaultBindingMode: BindingMode.TwoWay);
+		public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem),
+																							   typeof(object),
+																							   typeof(PickerCell),
+																							   default,
+																							   BindingMode.TwoWay
+																							  );
 
 		/// <summary>
 		/// Gets or sets the selected item.
@@ -106,10 +122,16 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selection mode property.
 		/// </summary>
-		public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(PickerCell), SelectionMode.Multiple, defaultBindingMode: BindingMode.OneWay, propertyChanged: ( bindable, oldValue, newValue ) =>
-																																																												   {
-																																																													   if ( (SelectionMode) newValue == SelectionMode.Single ) { bindable.SetValue(MaxSelectedNumberProperty, 1); }
-																																																												   });
+		public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode),
+																								typeof(SelectionMode),
+																								typeof(PickerCell),
+																								SelectionMode.Multiple,
+																								BindingMode.OneWay,
+																								propertyChanged: ( bindable, old_value, new_value ) =>
+																												 {
+																													 if ( (SelectionMode) new_value == SelectionMode.Single ) { bindable.SetValue(MaxSelectedNumberProperty, 1); }
+																												 }
+																							   );
 
 		/// <summary>
 		/// Gets or sets the selection mode.
@@ -124,7 +146,13 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The max selected number property.
 		/// </summary>
-		public static readonly BindableProperty MaxSelectedNumberProperty = BindableProperty.Create(nameof(MaxSelectedNumber), typeof(int), typeof(PickerCell), 0, defaultBindingMode: BindingMode.OneWay, coerceValue: ( bindable, value ) => { return (SelectionMode) bindable.GetValue(SelectionModeProperty) == SelectionMode.Single ? 1 : value; });
+		public static readonly BindableProperty MaxSelectedNumberProperty = BindableProperty.Create(nameof(MaxSelectedNumber),
+																									typeof(int),
+																									typeof(PickerCell),
+																									0,
+																									BindingMode.OneWay,
+																									coerceValue: ( bindable, value ) => (SelectionMode) bindable.GetValue(SelectionModeProperty) == SelectionMode.Single ? 1 : value
+																								   );
 
 		/// <summary>
 		/// Gets or sets the max selected number.
@@ -139,7 +167,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The keep selected until back property.
 		/// </summary>
-		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(PickerCell), true, defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(PickerCell), true);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.PickerCell"/> keep selected
@@ -155,7 +183,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The accent color property.
 		/// </summary>
-		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), default(Color), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), Color.Default);
 
 		/// <summary>
 		/// Gets or sets the color of the accent.
@@ -170,7 +198,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected items order key property.
 		/// </summary>
-		public static readonly BindableProperty SelectedItemsOrderKeyProperty = BindableProperty.Create(nameof(SelectedItemsOrderKey), typeof(string), typeof(PickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty SelectedItemsOrderKeyProperty = BindableProperty.Create(nameof(SelectedItemsOrderKey), typeof(string), typeof(PickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the selected items order key.
@@ -185,7 +213,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected command property.
 		/// </summary>
-		public static readonly BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(PickerCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(PickerCell), default(ICommand));
 
 		/// <summary>
 		/// Gets or sets the selected command.
@@ -200,7 +228,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The use natural sort property.
 		/// </summary>
-		public static readonly BindableProperty UseNaturalSortProperty = BindableProperty.Create(nameof(UseNaturalSort), typeof(bool), typeof(PickerCell), false, defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty UseNaturalSortProperty = BindableProperty.Create(nameof(UseNaturalSort), typeof(bool), typeof(PickerCell), false);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.PickerCell"/> use natural sort.
@@ -215,7 +243,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The use auto value text property.
 		/// </summary>
-		public static readonly BindableProperty UseAutoValueTextProperty = BindableProperty.Create(nameof(UseAutoValueText), typeof(bool), typeof(PickerCell), true, defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty UseAutoValueTextProperty = BindableProperty.Create(nameof(UseAutoValueText), typeof(bool), typeof(PickerCell), true);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.PickerCell"/> use auto value text.
@@ -230,7 +258,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The use pick to close property.
 		/// </summary>
-		public static readonly BindableProperty UsePickToCloseProperty = BindableProperty.Create(nameof(UsePickToClose), typeof(bool), typeof(PickerCell), default(bool), defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty UsePickToCloseProperty = BindableProperty.Create(nameof(UsePickToClose), typeof(bool), typeof(PickerCell), default(bool));
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.PickerCell"/> use pick to close.

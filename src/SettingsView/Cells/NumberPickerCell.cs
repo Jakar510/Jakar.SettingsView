@@ -9,7 +9,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The number property.
 		/// </summary>
-		public static BindableProperty NumberProperty = BindableProperty.Create(nameof(Number), typeof(int), typeof(NumberPickerCell), default(int), defaultBindingMode: BindingMode.TwoWay);
+		public static BindableProperty NumberProperty = BindableProperty.Create(nameof(Number), typeof(int), typeof(NumberPickerCell), default(int), BindingMode.TwoWay);
 
 		/// <summary>
 		/// Gets or sets the number.
@@ -24,7 +24,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The minimum property.
 		/// </summary>
-		public static BindableProperty MinProperty = BindableProperty.Create(nameof(Min), typeof(int), typeof(NumberPickerCell), 0, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty MinProperty = BindableProperty.Create(nameof(Min), typeof(int), typeof(NumberPickerCell), 0);
 
 		/// <summary>
 		/// Gets or sets the minimum.
@@ -39,7 +39,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The max property.
 		/// </summary>
-		public static BindableProperty MaxProperty = BindableProperty.Create(nameof(Max), typeof(int), typeof(NumberPickerCell), 9999, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty MaxProperty = BindableProperty.Create(nameof(Max), typeof(int), typeof(NumberPickerCell), 9999);
 
 		/// <summary>
 		/// Gets or sets the max.
@@ -54,7 +54,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The picker title property.
 		/// </summary>
-		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(NumberPickerCell), default(string), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(NumberPickerCell), default(string));
 
 		/// <summary>
 		/// Gets or sets the picker title.
@@ -69,7 +69,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The selected command property.
 		/// </summary>
-		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(NumberPickerCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(NumberPickerCell), default(ICommand));
 
 		/// <summary>
 		/// Gets or sets the selected command.

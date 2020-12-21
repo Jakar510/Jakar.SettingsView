@@ -12,7 +12,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command property.
 		/// </summary>
-		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CommandCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CommandCell), default(ICommand));
 
 		/// <summary>
 		/// Gets or sets the command.
@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The command parameter property.
 		/// </summary>
-		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell), default, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell));
 
 		/// <summary>
 		/// Gets or sets the command parameter.
@@ -42,7 +42,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The keep selected until back property.
 		/// </summary>
-		public static BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(CommandCell), default(bool), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(CommandCell), default(bool));
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.CommandCell"/> keep selected
@@ -55,7 +55,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(KeepSelectedUntilBackProperty, value);
 		}
 
-		public static BindableProperty HideArrowIndicatorProperty = BindableProperty.Create(nameof(HideArrowIndicator), typeof(bool), typeof(CommandCell), default(bool), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty HideArrowIndicatorProperty = BindableProperty.Create(nameof(HideArrowIndicator), typeof(bool), typeof(CommandCell), default(bool));
 
 		public bool HideArrowIndicator
 		{

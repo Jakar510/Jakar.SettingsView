@@ -12,6 +12,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.Interfaces;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -24,35 +25,38 @@ using AContext = Android.Content.Context;
 namespace Jakar.SettingsView.Droid.Cells.Controls
 {
 	[Preserve(AllMembers = true)]
-	public class AiEditText : EditText
+	public class AiEditText : EditText, IUpdateEntryCell<BaseAiEntryCell, AColor, AiEntryCell>
 	{
-		protected internal AColor DefaultTextColor { get; }
-		protected internal float DefaultFontSize { get; }
+		public AColor DefaultTextColor { get; }
+		public float DefaultFontSize { get; }
 		public Action? ClearFocusAction { get; set; }
-		protected BaseAiEntryCell _ViewCell { get; private set; }
+		protected BaseAiEntryCell _CellRenderer { get; private set; }
 		protected AiEntryCell _EntryCell { get; private set; }
-		protected internal Shared.SettingsView CellParent => _EntryCell.Parent;
+		public Shared.SettingsView CellParent => _EntryCell.Parent;
 
 
-#pragma warning disable 8618
 		public AiEditText( AContext context ) : base(context)
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
 		}
 		public AiEditText( AiEntryCell cell, AContext context ) : this(context) => _EntryCell = cell;
-		public AiEditText( BaseCellView cell, AContext context ) : this(context) => _EntryCell =  cell.Cell as AiEntryCell ?? throw new NullReferenceException(nameof(cell.Cell)) ;
+		public AiEditText( BaseCellView cell, AContext context ) : this(context) => _EntryCell = cell.Cell as AiEntryCell ?? throw new NullReferenceException(nameof(cell.Cell));
 		public AiEditText( AContext context, IAttributeSet attributes ) : base(context, attributes)
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
 		}
-#pragma warning restore 8618
-		internal void Init( AiEntryCell cell, BaseAiEntryCell renderer )
-		{
-			_EntryCell = cell;
-			_ViewCell = renderer;
 
+
+		public void Init( AiEntryCell cell, BaseAiEntryCell renderer )
+		{
+			SetCell(cell);
+			_CellRenderer = renderer;
+			Init();
+		}
+		public void Init()
+		{
 			SetSingleLine(false);
 			SetMinLines(1);
 			SetMaxLines(10);
@@ -64,24 +68,32 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			Focusable = true;
 			ImeOptions = ImeAction.Done;
-			OnFocusChangeListener = _ViewCell;
-			SetOnEditorActionListener(_ViewCell);
-			ClearFocusAction = _ViewCell.DoneEdit;
+			OnFocusChangeListener = _CellRenderer;
+			SetOnEditorActionListener(_CellRenderer);
+			ClearFocusAction = _CellRenderer.DoneEdit;
 
 			Ellipsize = TextUtils.TruncateAt.End;
 			InputType = _EntryCell.Keyboard.ToInputType();
-			if ( Background != null ) Background.Alpha = 0; //hide underline
+			if ( Background != null )
+				Background.Alpha = 0; //hide underline
+		}
+		public void SetCell( AiEntryCell cell ) { _EntryCell = cell; }
+
+		public static AiEditText Create( Android.Views.View view, AiEntryCell cell, int id )
+		{
+			AiEditText result = view.FindViewById<AiEditText>(id) ?? throw new NullReferenceException(nameof(id));
+			result.SetCell(cell);
+			return result;
 		}
 
-		protected internal void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
-		protected internal void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
+		public void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
+		public void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
 
 		protected override void OnFocusChanged( bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Android.Graphics.Rect? previouslyFocusedRect )
 		{
 			base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
 			if ( gainFocus ) { Post(new Runnable(() => { SetSelection(Text?.Length ?? 0); })); }
 		}
-
 		public override bool OnKeyPreIme( Keycode keyCode, KeyEvent? e )
 		{
 			if ( keyCode != Keycode.Back ||
@@ -94,7 +106,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		}
 
 
-		protected internal void PerformSelectAction()
+		public void PerformSelectAction()
 		{
 			switch ( _EntryCell.OnSelectAction )
 			{
@@ -124,7 +136,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 					throw new ArgumentOutOfRangeException();
 			}
 		}
-		protected internal bool UpdateSelectAction()
+		public bool UpdateSelectAction()
 		{
 			// https://stackoverflow.com/questions/63305827/how-do-i-implement-android-text-ispannable-on-a-android-widget-edittext-inside-o
 			// https://stackoverflow.com/questions/20838227/set-cursor-position-in-android-edit-text/20838295
@@ -148,16 +160,17 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			//MoveCursorToVisibleOffset();
 			return true;
 		}
-		protected internal bool UpdateText()
+		public bool UpdateText()
 		{
-			RemoveTextChangedListener(_ViewCell);
+			RemoveTextChangedListener(_CellRenderer);
 			if ( Text != _EntryCell.ValueText ) { Text = _EntryCell.ValueText; }
 
 			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
-			AddTextChangedListener(_ViewCell);
+			AddTextChangedListener(_CellRenderer);
 			return true;
 		}
-		protected internal bool UpdateTextColor()
+		public bool UpdateColor() => throw new NotImplementedException();
+		public bool UpdateTextColor()
 		{
 			if ( _EntryCell.ValueTextColor != Xamarin.Forms.Color.Default ) { SetTextColor(_EntryCell.ValueTextColor.ToAndroid()); }
 			else if ( CellParent.CellValueTextColor != Xamarin.Forms.Color.Default ) { SetTextColor(CellParent.CellValueTextColor.ToAndroid()); }
@@ -165,17 +178,17 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal bool UpdateKeyboard()
+		public bool UpdateKeyboard()
 		{
 			InputType = _EntryCell.Keyboard.ToInputType();
 			return true;
 		}
-		protected internal bool UpdateIsPassword()
+		public bool UpdateIsPassword()
 		{
 			TransformationMethod = _EntryCell.IsPassword ? new PasswordTransformationMethod() : null;
 			return true;
 		}
-		protected internal bool UpdatePlaceholder()
+		public bool UpdatePlaceholder()
 		{
 			Hint = _EntryCell.Placeholder;
 
@@ -183,12 +196,12 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			SetHintTextColor(placeholderColor);
 			return true;
 		}
-		protected internal bool UpdateTextAlignment()
+		public bool UpdateTextAlignment()
 		{
 			Gravity = _EntryCell.TextAlignment.ToGravityFlags();
 			return true;
 		}
-		protected internal bool UpdateAccentColor()
+		public bool UpdateAccentColor()
 		{
 			if ( _EntryCell.AccentColor != Xamarin.Forms.Color.Default ) { return ChangeTextViewBack(_EntryCell.AccentColor.ToAndroid()); }
 
@@ -197,7 +210,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			return true;
 		}
 
-		protected internal bool ChangeTextViewBack( AColor accent )
+		public bool ChangeTextViewBack( AColor accent )
 		{
 			var colorList = new ColorStateList(new[]
 											   {
@@ -219,14 +232,14 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			Background?.SetTintList(colorList);
 			return true;
 		}
-		protected internal bool UpdateFontSize()
+		public bool UpdateFontSize()
 		{
 			if ( _EntryCell.ValueTextFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _EntryCell.ValueTextFontSize); }
 			else { SetTextSize(ComplexUnitType.Sp, (float) CellParent.CellValueTextFontSize); }
 
 			return true;
 		}
-		protected internal bool UpdateFont()
+		public bool UpdateFont()
 		{
 			string? family = _EntryCell.ValueTextFontFamily ?? CellParent.CellValueTextFontFamily;
 			FontAttributes attr = _EntryCell.ValueTextFontAttributes ?? CellParent?.CellValueTextFontAttributes ?? FontAttributes.None;
@@ -235,9 +248,10 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
+
 		// protected void UpdateValueTextAlignment() { TextAlignment = CellBase.ValueTextTextAlignment; }
 
-		protected internal bool Update( object sender, PropertyChangedEventArgs e )
+		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
@@ -248,12 +262,12 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
 			if ( e.PropertyName == CellBaseValueText.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFont); }
+				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateTextColor); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
 
 			if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
 
@@ -270,7 +284,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
@@ -281,16 +295,16 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return _ViewCell.UpdateWithForceLayout(UpdateFont); }
+				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
 			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
 
 			return false;
 		}
-		protected internal void Update()
+		public void Update()
 		{
 			UpdateText();
 			UpdateText();

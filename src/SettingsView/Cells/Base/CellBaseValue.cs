@@ -6,10 +6,10 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseValue : CellBaseHintText
 	{
-		public static readonly BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color), typeof(CellBaseValueText), default(Color), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty ValueTextFontSizeProperty = BindableProperty.Create(nameof(ValueTextFontSize), typeof(double), typeof(CellBaseValueText), -1.0d, defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty ValueTextFontFamilyProperty = BindableProperty.Create(nameof(ValueTextFontFamily), typeof(string), typeof(CellBaseValueText), default(string), defaultBindingMode: BindingMode.OneWay);
-		public static readonly BindableProperty ValueTextFontAttributesProperty = BindableProperty.Create(nameof(ValueTextFontAttributes), typeof(FontAttributes?), typeof(CellBaseValueText), null, defaultBindingMode: BindingMode.OneWay);
+		public static readonly BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color), typeof(CellBaseValueText), Color.Default);
+		public static readonly BindableProperty ValueTextFontSizeProperty = BindableProperty.Create(nameof(ValueTextFontSize), typeof(double), typeof(CellBaseValueText), -1.0d);
+		public static readonly BindableProperty ValueTextFontFamilyProperty = BindableProperty.Create(nameof(ValueTextFontFamily), typeof(string), typeof(CellBaseValueText), default(string));
+		public static readonly BindableProperty ValueTextFontAttributesProperty = BindableProperty.Create(nameof(ValueTextFontAttributes), typeof(FontAttributes?), typeof(CellBaseValueText));
 
 
 		public Color ValueTextColor

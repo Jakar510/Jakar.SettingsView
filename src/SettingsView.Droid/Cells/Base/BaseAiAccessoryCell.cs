@@ -10,11 +10,12 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ARelativeLayout = Android.Widget.RelativeLayout;
 using AContext = Android.Content.Context;
+using AView = Android.Views.View;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseAiAccessoryCell<TAccessory> : BaseAiDescriptionCell where TAccessory : Android.Views.View
+	public abstract class BaseAiAccessoryCell<TAccessory> : BaseAiDescriptionCell where TAccessory : AView
 	{
 		protected ARelativeLayout _AccessoryStack { get; }
 		protected TAccessory _Accessory { get; }
@@ -26,7 +27,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			_AccessoryStack = ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
-			_Accessory = InstanceCreator<Context, TAccessory>.Create(AndroidContext);
+			_Accessory = InstanceCreator<AContext, TAccessory>.Create(AndroidContext);
+			if ( _Accessory is TextView text ) { text.Gravity = GravityFlags.Fill; }
+
 			_AccessoryStack.Add(_Accessory);
 		}
 		protected BaseAiAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }

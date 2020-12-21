@@ -21,14 +21,14 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public ValueView( Context context ) : base(context) => Init();
 		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Init();
 		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Init();
-		protected internal override void Init()
+		public override void Init()
 		{
 			base.Init();
 			Ellipsize = TextUtils.TruncateAt.End;
 			Gravity = GravityFlags.Right;
 		}
 
-		protected internal override bool UpdateText()
+		public override bool UpdateText()
 		{
 			if ( _CurrentTextCell is null ) return false;
 			Text = _CurrentTextCell.ValueText;
@@ -36,7 +36,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateFontSize()
+		public override bool UpdateFontSize()
 		{
 			if ( _CurrentCell.ValueTextFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.ValueTextFontSize); }
 			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellValueTextFontSize); }
@@ -44,7 +44,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateColor()
+		public override bool UpdateColor()
 		{
 			if ( _CurrentCell.ValueTextColor != Color.Default ) { SetTextColor(_CurrentCell.ValueTextColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
@@ -53,7 +53,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		protected internal override bool UpdateFont()
+		public override bool UpdateFont()
 		{
 			string? family = _CurrentCell.ValueTextFontFamily ?? _Cell.CellParent?.CellValueTextFontFamily;
 			FontAttributes attr = _CurrentCell.ValueTextFontAttributes ?? _Cell.CellParent?.CellValueTextFontAttributes ?? FontAttributes.None;
@@ -62,9 +62,9 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		// protected internal override bool UpdateAlignment() { _TextAlignment = _CellBase.ValueTextTextAlignment; }
+		// public override bool UpdateAlignment() { _TextAlignment = _CellBase.ValueTextTextAlignment; }
 
-		protected internal override bool Update( object sender, PropertyChangedEventArgs e )
+		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
@@ -77,7 +77,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateColor(); }
 
@@ -88,7 +88,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return false;
 		}
-		protected internal override void Update()
+		public override void Update()
 		{
 			UpdateText();
 			UpdateColor();

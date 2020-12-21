@@ -8,7 +8,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		/// <summary>
 		/// The ignore use description as value property.
 		/// </summary>
-		public static BindableProperty IgnoreUseDescriptionAsValueProperty = BindableProperty.Create(nameof(IgnoreUseDescriptionAsValue), typeof(bool), typeof(LabelCell), false, defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty IgnoreUseDescriptionAsValueProperty = BindableProperty.Create(nameof(IgnoreUseDescriptionAsValue), typeof(bool), typeof(LabelCell), false);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="T:Jakar.SettingsView.Shared.Cells.LabelCell"/> ignore use

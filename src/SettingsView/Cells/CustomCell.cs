@@ -6,13 +6,13 @@ namespace Jakar.SettingsView.Shared.Cells
 	[ContentProperty(nameof(Content))]
 	public class CustomCell : CommandCell
 	{
-		public static BindableProperty ShowArrowIndicatorProperty = BindableProperty.Create(nameof(ShowArrowIndicator), typeof(bool), typeof(CustomCell), default(bool), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty LongCommandProperty = BindableProperty.Create(nameof(LongCommand), typeof(ICommand), typeof(CustomCell), default(ICommand), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty ContentProperty = BindableProperty.Create(nameof(Content), typeof(View), typeof(CustomCell), default(View), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty IsSelectableProperty = BindableProperty.Create(nameof(IsSelectable), typeof(bool), typeof(CustomCell), true, defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty IsMeasureOnceProperty = BindableProperty.Create(nameof(IsMeasureOnce), typeof(bool), typeof(CustomCell), default(bool), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty UseFullSizeProperty = BindableProperty.Create(nameof(UseFullSize), typeof(bool), typeof(CustomCell), default(bool), defaultBindingMode: BindingMode.OneWay);
-		public static BindableProperty IsForceLayoutProperty = BindableProperty.Create(nameof(IsForceLayout), typeof(bool), typeof(CustomCell), default(bool), defaultBindingMode: BindingMode.OneWay);
+		public static BindableProperty ShowArrowIndicatorProperty = BindableProperty.Create(nameof(ShowArrowIndicator), typeof(bool), typeof(CustomCell), default(bool));
+		public static BindableProperty LongCommandProperty = BindableProperty.Create(nameof(LongCommand), typeof(ICommand), typeof(CustomCell), default(ICommand));
+		public static BindableProperty ContentProperty = BindableProperty.Create(nameof(Content), typeof(View), typeof(CustomCell), default(View));
+		public static BindableProperty IsSelectableProperty = BindableProperty.Create(nameof(IsSelectable), typeof(bool), typeof(CustomCell), true);
+		public static BindableProperty IsMeasureOnceProperty = BindableProperty.Create(nameof(IsMeasureOnce), typeof(bool), typeof(CustomCell), default(bool));
+		public static BindableProperty UseFullSizeProperty = BindableProperty.Create(nameof(UseFullSize), typeof(bool), typeof(CustomCell), default(bool));
+		public static BindableProperty IsForceLayoutProperty = BindableProperty.Create(nameof(IsForceLayout), typeof(bool), typeof(CustomCell), default(bool));
 
 
 		public bool ShowArrowIndicator

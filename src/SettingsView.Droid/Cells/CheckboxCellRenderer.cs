@@ -13,6 +13,8 @@ using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using ACheckBox = Android.Widget.CheckBox;
+using AColor = Android.Graphics.Color;
 
 [assembly: ExportRenderer(typeof(CheckboxCell), typeof(CheckboxCellRenderer))]
 
@@ -22,7 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class CheckboxCellView : BaseAiAccessoryCell<AppCompatCheckBox>, CompoundButton.IOnCheckedChangeListener
+	public class CheckboxCellView : BaseAiAccessoryCell<ACheckBox>, CompoundButton.IOnCheckedChangeListener
 	{
 		protected CheckboxCell _AccessoryCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
 
@@ -93,31 +95,49 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected void UpdateChecked() { _Accessory.Checked = _AccessoryCell.Checked; }
 		protected void UpdateAccentColor()
 		{
-			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid()); }
+			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid(), _AccessoryCell.OffColor.ToAndroid()); }
 			else if ( CellParent != null &&
-					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid()); }
+					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid(), CellParent.CellOffColor.ToAndroid()); }
 		}
 
 
-		protected void ChangeCheckColor( Android.Graphics.Color accent )
+		protected void ChangeCheckColor( AColor accent, AColor off )
 		{
-			_Accessory.SupportButtonTintList = new ColorStateList(new[]
-																  {
-																	  new[]
-																	  {
-																		  Android.Resource.Attribute.StateChecked
-																	  },
-																	  new[]
-																	  {
-																		  -Android.Resource.Attribute.StateChecked
-																	  },
-																  },
-																  new int[]
-																  {
-																	  accent,
-																	  Android.Graphics.Color.Argb(76, 117, 117, 117)
-																  }
-																 );
+			// _Accessory.SupportButtonTintList = new ColorStateList(new[]
+			// 													  {
+			// 														  new[]
+			// 														  {
+			// 															  Android.Resource.Attribute.StateChecked
+			// 														  },
+			// 														  new[]
+			// 														  {
+			// 															  -Android.Resource.Attribute.StateChecked
+			// 														  },
+			// 													  },
+			// 													  new int[]
+			// 													  {
+			// 														  accent,
+			// 														  Android.Graphics.Color.Argb(76, 117, 117, 117)
+			// 													  }
+			// 													 );
+			// var trackColors = new ColorStateList(new[]
+			// 									 {
+			// 										 new[]
+			// 										 {
+			// 											 Android.Resource.Attribute.StateChecked
+			// 										 },
+			// 										 new[]
+			// 										 {
+			// 											 -Android.Resource.Attribute.StateChecked
+			// 										 },
+			// 									 },
+			// 									 new int[]
+			// 									 {
+			// 										 accent,
+			// 										 Android.Graphics.Color.Argb(76, 117, 117, 117)
+			// 									 }
+			// 									);
+			// _Accessory.ButtonDrawable?.SetTintList(trackColors);
 
 			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
 			ripple.SetColor(new ColorStateList(new[]
@@ -134,7 +154,7 @@ namespace Jakar.SettingsView.Droid.Cells
 											   new int[]
 											   {
 												   accent,
-												   Android.Graphics.Color.Argb(76, 117, 117, 117)
+												   off
 											   }
 											  )
 						   );

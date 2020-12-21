@@ -15,9 +15,10 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected IconView _Icon { get; }
 		protected DescriptionView _Description { get; }
 
+		
 		protected BaseAiDescriptionCell( AContext context, Cell cell ) : base(context, cell)
 		{
-			_Icon = new IconView(this, ContentView.FindViewById<ImageView>(Resource.Id.CellIcon));
+			_Icon = IconView.Create(ContentView, this, Resource.Id.CellIcon);
 			_Description = BaseTextView.Create<DescriptionView>(ContentView, this, Resource.Id.CellDescription);
 		}
 		protected BaseAiDescriptionCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
