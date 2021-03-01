@@ -50,7 +50,6 @@
     <Compile Include="Cells\Controls\AiEditText.cs" />
     <Compile Include="Cells\Base\BaseAiAccessoryCell.cs" />
     <Compile Include="Cells\Base\BaseAiDescriptionCell.cs" />
-    <Compile Include="Cells\Base\BaseAiEntryCell.cs" />
     <Compile Include="Cells\Base\BaseAiTitledCell.cs" />
     <Compile Include="Cells\Base\BaseAiValueCell.cs" />
     <Compile Include="Cells\Controls\BaseTextView.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="Cells\Controls\TitleView.cs" />
     <Compile Include="Cells\Controls\ValueView.cs" />
     <Compile Include="Extensions\LayoutExtensions.cs" />
+    <Compile Include="Interfaces\ICellRender.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DrawableUtility.cs" />

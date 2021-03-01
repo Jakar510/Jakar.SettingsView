@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Android.Content;
 using Android.Util;
 using Android.Views;
+using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -57,6 +58,11 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 		// public override bool UpdateAlignment() { _TextAlignment = _CellBase.DescriptionTextAlignment; }
 
+		public bool UpdateTextAlignment()
+		{
+			TextAlignment = _CurrentCell.DescriptionAlignment.ToAndroidTextAlignment();
+			return true;
+		}
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseDescription.DescriptionProperty.PropertyName ) { return UpdateText(); }
@@ -67,6 +73,8 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 				 e.PropertyName == CellBaseDescription.DescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			if ( e.PropertyName == CellBaseDescription.DescriptionColorProperty.PropertyName ) { return UpdateColor(); }
+
+			if ( e.PropertyName == CellBaseDescription.DescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			return false;
 		}

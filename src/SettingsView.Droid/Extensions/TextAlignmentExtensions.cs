@@ -10,21 +10,17 @@ namespace Jakar.SettingsView.Droid.Extensions
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public static class TextAlignmentExtensions
 	{
-		/// <summary>
-		/// Tos the gravity flags.
-		/// </summary>
-		/// <returns>The gravity flags.</returns>
-		/// <param name="forms">Forms.</param>
-		public static GravityFlags ToGravityFlags( this TextAlignment forms )
-		{
-			return forms switch
-				   {
-					   TextAlignment.Start => GravityFlags.Left | GravityFlags.CenterVertical,
-					   TextAlignment.Center => GravityFlags.Center | GravityFlags.CenterVertical,
-					   TextAlignment.End => GravityFlags.Right | GravityFlags.CenterVertical,
-					   _ => GravityFlags.Right | GravityFlags.CenterVertical
-				   };
-		}
+
+		// public static GravityFlags ToGravityFlags( this LayoutAlignment forms )
+		// {
+		// 	return forms switch
+		// 		   {
+		// 			   LayoutAlignment.Start => GravityFlags.Left | GravityFlags.CenterVertical,
+		// 			   LayoutAlignment.Center => GravityFlags.Center | GravityFlags.CenterVertical,
+		// 			   LayoutAlignment.End => GravityFlags.Right | GravityFlags.CenterVertical,
+		// 			   _ => GravityFlags.Right | GravityFlags.CenterVertical
+		// 		   };
+		// }
 		public static ATextAlignment ToAndroidTextAlignment( this TextAlignment forms )
 		{
 			return forms switch

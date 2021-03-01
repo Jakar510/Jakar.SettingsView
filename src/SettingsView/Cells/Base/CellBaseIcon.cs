@@ -7,9 +7,9 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseIcon : CellBaseTitle
 	{
-		public static readonly BindableProperty IconSourceProperty = BindableProperty.Create(nameof(IconSource), typeof(ImageSource), typeof(CellBase), default(ImageSource?));
-		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size), typeof(CellBase), default(Size?));
-		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double), typeof(CellBase), -1.0d);
+		public static readonly BindableProperty IconSourceProperty = BindableProperty.Create(nameof(IconSource), typeof(ImageSource), typeof(CellBaseIcon), default(ImageSource?));
+		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size), typeof(CellBaseIcon), default(Size?));
+		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double), typeof(CellBaseIcon), -1.0d);
 
 		[TypeConverter(typeof(ImageSourceConverter))]
 		public ImageSource? IconSource

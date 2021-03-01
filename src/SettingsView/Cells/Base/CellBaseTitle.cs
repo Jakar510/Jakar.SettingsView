@@ -6,11 +6,12 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseTitle : CellBase
 	{
-		public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(CellBase), default(string));
-		public static readonly BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellBase), Color.Default);
-		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double), typeof(CellBase), -1.0);
-		public static readonly BindableProperty TitleFontFamilyProperty = BindableProperty.Create(nameof(TitleFontFamily), typeof(string), typeof(CellBase), default(string));
-		public static readonly BindableProperty TitleFontAttributesProperty = BindableProperty.Create(nameof(TitleFontAttributes), typeof(FontAttributes?), typeof(CellBase));
+		public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(CellBaseTitle), default(string));
+		public static readonly BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellBaseTitle), Color.Default);
+		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double), typeof(CellBaseTitle), -1.0);
+		public static readonly BindableProperty TitleFontFamilyProperty = BindableProperty.Create(nameof(TitleFontFamily), typeof(string), typeof(CellBaseTitle), default(string));
+		public static readonly BindableProperty TitleFontAttributesProperty = BindableProperty.Create(nameof(TitleFontAttributes), typeof(FontAttributes?), typeof(CellBaseTitle));
+		public static readonly BindableProperty TitleAlignmentProperty = BindableProperty.Create(nameof(TitleAlignment), typeof(TextAlignment), typeof(CellBaseTitle), TextAlignment.Start);
 
 		public string Title
 		{
@@ -41,6 +42,11 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		{
 			get => (FontAttributes?) GetValue(TitleFontAttributesProperty);
 			set => SetValue(TitleFontAttributesProperty, value);
+		}
+		public TextAlignment TitleAlignment
+		{
+			get => (TextAlignment) GetValue(TitleAlignmentProperty);
+			set => SetValue(TitleAlignmentProperty, value);
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected internal Cell Cell { get; set; }
 		public Element Element => Cell;
 		protected internal CellBase CellBase => Cell as CellBase ?? throw new NullReferenceException(nameof(CellBase));
-		protected internal Shared.SettingsView? CellParent => Cell.Parent as Shared.SettingsView; // ?? throw new NullReferenceException(nameof(_CellParent));
+		protected internal Shared.SettingsView? CellParent => Cell.Parent as Shared.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
 
 
 		protected internal AContext AndroidContext { get; set; }
@@ -113,12 +113,13 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
 
 
-		protected internal void UpdateWithForceLayout( Action updateAction )
+
+		public void UpdateWithForceLayout( Action updateAction )
 		{
 			updateAction();
 			Invalidate();
 		}
-		protected internal bool UpdateWithForceLayout( Func<bool> updateAction )
+		public bool UpdateWithForceLayout( Func<bool> updateAction )
 		{
 			bool result = updateAction();
 			Invalidate();

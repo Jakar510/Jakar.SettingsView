@@ -12,7 +12,6 @@ namespace Jakar.SettingsView.Shared.Cells
 		public static readonly BindableProperty CompletedCommandProperty = BindableProperty.Create(nameof(CompletedCommand), typeof(ICommand), typeof(EntryCell), default(ICommand));
 		public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(EntryCell), default(string));
 		public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(EntryCell), Color.Default);
-		public static readonly BindableProperty TextAlignmentProperty = BindableProperty.Create(nameof(TextAlignment), typeof(TextAlignment), typeof(EntryCell), TextAlignment.End);
 		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(EntryCell), Color.Default);
 		public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(nameof(IsPassword), typeof(bool), typeof(EntryCell), default(bool));
 		public static readonly BindableProperty OnSelectActionProperty = BindableProperty.Create(nameof(IsPassword), typeof(SelectAction), typeof(EntryCell), default(SelectAction));
@@ -25,7 +24,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public event EventHandler Completed;
+		public event EventHandler? Completed;
 		public void SendCompleted()
 		{
 			Completed?.Invoke(this, EventArgs.Empty);
@@ -33,9 +32,9 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public ICommand CompletedCommand
+		public ICommand? CompletedCommand
 		{
-			get => (ICommand) GetValue(CompletedCommandProperty);
+			get => (ICommand?) GetValue(CompletedCommandProperty);
 			set => SetValue(CompletedCommandProperty, value);
 		}
 
@@ -53,13 +52,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(PlaceholderColorProperty, value);
 		}
 
-
-		public TextAlignment TextAlignment
-		{
-			get => (TextAlignment) GetValue(TextAlignmentProperty);
-			set => SetValue(TextAlignmentProperty, value);
-		}
-
+		
 
 		public Color AccentColor
 		{
@@ -82,7 +75,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		internal event EventHandler Focused;
+		internal event EventHandler? Focused;
 		internal void SendFocus() { Focused?.Invoke(this, EventArgs.Empty); }
 		public void SetFocus() => SendFocus();
 

@@ -14,6 +14,9 @@
 			<cells:CommandCell Title="TestSelectActions"
 							   Command="{Binding GoToTest}"
 							   CommandParameter="TestSelectActions" />
+			<cells:ButtonCell Title="SettingsView"
+							  Command="{Binding GoToPage}"
+							  CommandParameter="SettingsView" />
 			<cells:ButtonCell Title="SurveyPage"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="SurveyPage" />
@@ -32,9 +35,6 @@
 			<cells:ButtonCell Title="DataTemplateTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="DataTemplateTest" />
-			<cells:ButtonCell Title="SettingsView"
-							  Command="{Binding GoToPage}"
-							  CommandParameter="SettingsView" />
 			<cells:ButtonCell Title="DefaultPropTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="DefaultPropTest" />

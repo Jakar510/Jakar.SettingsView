@@ -101,12 +101,33 @@
 							   Height="80"
 							   Description="hoge@fuga.com"
 							   Command="{Binding ToProfileCommand}"
-							   KeepSelectedUntilBack="true"/>
+							   KeepSelectedUntilBack="true" />
 		</settingsView:Section>
 
-		<settingsView:Section Title="LabelCell">
-			<cells:LabelCell Title="Storage"
+		<settingsView:Section Title="LabelCells">
+			<cells:LabelCell Title="Full"
+							 Hint="Hint"
+							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."
 							 ValueText="3,065MB">
+				<cells:LabelCell.IconSource>
+					<FontImageSource Glyph="&#xe901;"
+									 Color="Blue"
+									 FontFamily="Moon"
+									 Size="30" />
+				</cells:LabelCell.IconSource>
+			</cells:LabelCell>
+			<cells:LabelCell Title="No Hint"
+							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."
+							 ValueText="3,065MB">
+				<cells:LabelCell.IconSource>
+					<FontImageSource Glyph="&#xe901;"
+									 Color="Blue"
+									 FontFamily="Moon"
+									 Size="30" />
+				</cells:LabelCell.IconSource>
+			</cells:LabelCell>
+			<cells:LabelCell Title="Descriptive Title"
+							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically.">
 				<cells:LabelCell.IconSource>
 					<FontImageSource Glyph="&#xe901;"
 									 Color="Blue"
@@ -141,9 +162,20 @@
 									Max="99"
 									Number="15"
 									PickerTitle="Select number" />
+			<cells:NumberPickerCell Title="NumberPicker with hint"
+									Min="0"
+									Max="99"
+									Number="15"
+									Hint="Hint"
+									PickerTitle="Select number" />
 			<cells:TimePickerCell Title="TimePicker"
 								  Format="HH:mm"
 								  Time="15:30"
+								  PickerTitle="Select time" />
+			<cells:TimePickerCell Title="TimePicker with hint"
+								  Format="HH:mm"
+								  Time="15:30"
+								  Hint="Hint"
 								  PickerTitle="Select time" />
 			<cells:DatePickerCell Title="DatePicker"
 								  Format="yyyy/MM/dd (ddd)"
@@ -151,7 +183,19 @@
 								  MinimumDate="2015/11/10"
 								  MaximumDate="2025/12/31"
 								  TodayText="Today's date" />
+			<cells:DatePickerCell Title="DatePicker with hint"
+								  Hint="Hint"
+								  Format="yyyy/MM/dd (ddd)"
+								  Date="2017/11/11"
+								  MinimumDate="2015/11/10"
+								  MaximumDate="2025/12/31"
+								  TodayText="Today's date" />
 			<cells:TextPickerCell Title="TextPicker"
+								  Items="{Binding TextItems}"
+								  SelectedItem="{Binding SelectedText.Value}"
+								  IsCircularPicker="False" />
+			<cells:TextPickerCell Title="TextPicker with hint"
+								  Hint="Hint"
 								  Items="{Binding TextItems}"
 								  SelectedItem="{Binding SelectedText.Value}"
 								  IsCircularPicker="False" />
@@ -164,6 +208,12 @@
 							 Value="1" />
 			<cells:RadioCell Title="TypeB"
 							 Value="2" />
+			<cells:RadioCell Title="TypeAD"
+							 Description="Description"
+							 Value="1" />
+			<cells:RadioCell Title="TypeBD"
+							 Description="Description"
+							 Value="2" />
 		</settingsView:Section>
 
 		<settingsView:Section Title="Input"
@@ -175,9 +225,24 @@
 							 Keyboard="Email"
 							 TextAlignment="End"
 							 Hint="{Binding InputError.Value}" />
+			<cells:EntryCell Title="EntryCell Title"
+							 Description="Description"
+							 ValueText="Value"
+							 Placeholder="Placeholder"
+							 Keyboard="Email"
+							 TextAlignment="End"
+							 Hint="Hint" />
 		</settingsView:Section>
 
-		<settingsView:Section>
+		<settingsView:Section Title="ButtonCell"
+							  FooterText="Change input section visibility.">
+			<cells:ButtonCell Title="Toggle Section"
+							  TitleColor="{StaticResource TitleTextColor}"
+							  TitleAlignment="Center"
+							  Command="{Binding SectionToggleCommand}" />
+		</settingsView:Section>
+
+		<settingsView:Section  Title="Custom Cell with custom header">
 			<settingsView:Section.HeaderView>
 				<FlexLayout Direction="Row"
 							JustifyContent="SpaceBetween"
@@ -223,13 +288,6 @@
 			</ViewCell>
 		</settingsView:Section>
 
-		<settingsView:Section Title="ButtonCell"
-							  FooterText="Change input section visibility.">
-			<cells:ButtonCell Title="Toggle Section"
-							  TitleColor="{StaticResource TitleTextColor}"
-							  TitleAlignment="Center"
-							  Command="{Binding SectionToggleCommand}" />
-		</settingsView:Section>
 	</settingsView:SettingsView>
 
 </ContentPage>

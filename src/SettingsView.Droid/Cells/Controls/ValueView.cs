@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Text;
 using Android.Util;
 using Android.Views;
+using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
@@ -67,17 +68,24 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		}
 		// public override bool UpdateAlignment() { _TextAlignment = _CellBase.ValueTextTextAlignment; }
 
+		public bool UpdateTextAlignment()
+		{
+			if ( _CurrentTextCell != null ) TextAlignment = _CurrentTextCell.ValueTextAlignment.ToAndroidTextAlignment();
+			return true;
+		}
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBaseValueText.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == CellBaseValueText.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == CellBaseValueText.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseValueText.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == CellBaseValue.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBaseValueText.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == CellBaseValue.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == CellBaseValue.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
+			if ( e.PropertyName == CellBaseValue.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
