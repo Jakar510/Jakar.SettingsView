@@ -119,7 +119,7 @@
 								 Keyboard="{Binding KeyboardType.Value}"
 								 Completed="Handle_Completed"
 								 Placeholder="{Binding Placeholder.Value}"
-								 TextAlignment="{Binding TextAlignment.Value}"
+								 ValueTextAlignment="{Binding TextAlignment.Value}"
 								 IsPassword="{Binding IsPassword.Value}"
 								 CompletedCommand="{Binding CompletedCommand}" />
 				<EntryCell Text="{Binding InputText.Value}"

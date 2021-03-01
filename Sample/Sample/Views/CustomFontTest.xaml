@@ -221,7 +221,7 @@
 								 ValueText="{Binding InputText.Value}"
 								 Placeholder="Input text"
 								 Keyboard="Email"
-								 TextAlignment="End"
+								 ValueTextAlignment="End"
 								 Hint="{Binding InputError.Value}" />
 			</settingsView:Section>
 

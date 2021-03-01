@@ -54,14 +54,12 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-
-		// public  override bool UpdateTitleAlignment() { _TextAlignment = _CellBase.TitleTextAlignment; }
-
 		public bool UpdateTextAlignment()
 		{
-			TextAlignment = _CurrentCell.TitleAlignment.ToAndroidTextAlignment();
+			TextAlignment = (_CurrentCell.TitleAlignment ?? _CurrentCell.Parent.CellTitleAlignment).ToAndroidTextAlignment();
 			return true;
 		}
+		
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { return UpdateText(); }
@@ -83,6 +81,8 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			if ( e.PropertyName == Shared.SettingsView.CellTitleFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
+			if ( e.PropertyName == Shared.SettingsView.CellTitleAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+
 			if ( e.PropertyName == Shared.SettingsView.CellTitleFontFamilyProperty.PropertyName ||
 				 e.PropertyName == Shared.SettingsView.CellTitleFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
@@ -94,6 +94,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			UpdateColor();
 			UpdateFontSize();
 			UpdateFont();
+			UpdateTextAlignment();
 		}
 	}
 }

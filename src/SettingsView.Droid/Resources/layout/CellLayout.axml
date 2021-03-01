@@ -38,7 +38,6 @@
 													   android:maxLines="10"
 													   android:ellipsize="none"
 													   android:singleLine="false"
-													   android:textAlignment="center"
 													   android:breakStrategy="balanced"
 													   android:scrollHorizontally="false"
 													   android:text="Title" />
@@ -55,7 +54,6 @@
 															 android:maxLines="10"
 															 android:ellipsize="none"
 															 android:singleLine="false"
-															 android:textAlignment="center"
 															 android:breakStrategy="balanced"
 															 android:scrollHorizontally="false"
 															 android:text="Description" />
@@ -68,11 +66,11 @@
 													  android:layout_columnWeight="10"
 													  android:layout_width="0dp"
 													  android:layout_height="wrap_content"
+													  android:gravity="right"
 													  android:minLines="1"
 													  android:maxLines="10"
 													  android:ellipsize="none"
 													  android:singleLine="false"
-													  android:textAlignment="viewEnd"
 													  android:breakStrategy="balanced"
 													  android:scrollHorizontally="false"
 													  android:text="Hint"
@@ -84,12 +82,10 @@
 				  android:layout_column="2"
 				  android:layout_columnSpan="1"
 				  android:layout_columnWeight="10"
-				  android:layout_alignParentRight="true"
 				  android:layout_centerVertical="true"
-				  android:layout_width="wrap_content"
+				  android:layout_width="0dp"
 				  android:layout_height="wrap_content"
-				  android:layout_gravity="fill"
-				  android:gravity="center"
+				  android:gravity="right"
 				  android:orientation="horizontal" />
 
 	<LinearLayout android:id="@+id/CellAccessoryStack"
@@ -98,12 +94,10 @@
 				  android:layout_column="3"
 				  android:layout_columnSpan="1"
 				  android:layout_columnWeight="1"
-				  android:layout_alignParentRight="true"
 				  android:layout_centerVertical="true"
 				  android:layout_width="wrap_content"
-				  android:layout_height="match_parent"
-				  android:layout_gravity="fill"
-				  android:gravity="right|center"
+				  android:layout_height="wrap_content"
+				  android:layout_gravity="end"
 				  android:orientation="horizontal" />
 
 </GridLayout>

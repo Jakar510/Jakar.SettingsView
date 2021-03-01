@@ -198,7 +198,7 @@
 								 Keyboard="{Binding KeyboardType.Value}"
 								 Completed="Handle_Completed"
 								 Placeholder="{Binding Placeholder.Value}"
-								 TextAlignment="{Binding TextAlignment.Value}" />
+								 ValueTextAlignment="{Binding TextAlignment.Value}" />
 				<cells:ButtonCell IconSource="{Binding IconSource.Value}"
 								  Title="{Binding Title.Value}"
 								  BackgroundColor="{Binding BgColor.Value}"

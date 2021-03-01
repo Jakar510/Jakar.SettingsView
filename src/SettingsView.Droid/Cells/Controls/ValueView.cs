@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Text;
 using Android.Util;
 using Android.Views;
+using Android.Views.InputMethods;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Jakar.SettingsView.Shared.Interfaces;
@@ -23,15 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public ValueView( Context context ) : base(context) => Init();
 		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Init();
 		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Init();
-
-
-		public override void Init()
-		{
-			base.Init();
-			Ellipsize = TextUtils.TruncateAt.End;
-			Gravity = GravityFlags.Right;
-		}
-
+		
 		public override bool UpdateText()
 		{
 			if ( _CurrentTextCell is null ) return false;
@@ -66,13 +59,12 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 			return true;
 		}
-		// public override bool UpdateAlignment() { _TextAlignment = _CellBase.ValueTextTextAlignment; }
-
 		public bool UpdateTextAlignment()
 		{
-			if ( _CurrentTextCell != null ) TextAlignment = _CurrentTextCell.ValueTextAlignment.ToAndroidTextAlignment();
+			if ( _CurrentTextCell != null ) TextAlignment = ( _CurrentTextCell.ValueTextAlignment ?? _CurrentCell.Parent.CellValueTextAlignment ).ToAndroidTextAlignment();
 			return true;
 		}
+
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
@@ -85,12 +77,14 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 				 e.PropertyName == CellBaseValue.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			if ( e.PropertyName == CellBaseValue.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
-			
+
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+
+			if ( e.PropertyName == Shared.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
@@ -105,6 +99,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			UpdateColor();
 			UpdateFontSize();
 			UpdateFont();
+			UpdateTextAlignment();
 		}
 	}
 }

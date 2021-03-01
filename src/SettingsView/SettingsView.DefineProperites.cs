@@ -181,6 +181,7 @@ namespace Jakar.SettingsView.Shared
 
 	#endregion
 
+
 	#region Cell Title
 
 		public static BindableProperty CellTitleColorProperty = BindableProperty.Create(nameof(CellTitleColor), typeof(Color), typeof(SettingsView), Color.Default);
@@ -196,6 +197,7 @@ namespace Jakar.SettingsView.Shared
 		public static BindableProperty CellTitleFontFamilyProperty = BindableProperty.Create(nameof(CellTitleFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
 		public static BindableProperty CellTitleFontAttributesProperty = BindableProperty.Create(nameof(CellTitleFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellTitleAlignmentProperty = BindableProperty.Create(nameof(CellTitleAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.Start);
 
 		public Color CellTitleColor
 		{
@@ -222,6 +224,12 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellTitleFontAttributesProperty, value);
 		}
 
+		public TextAlignment CellTitleAlignment
+		{
+			get => (TextAlignment) GetValue(CellTitleAlignmentProperty);
+			set => SetValue(CellTitleAlignmentProperty, value);
+		}
+
 	#endregion
 
 	#region Cell Value
@@ -233,6 +241,7 @@ namespace Jakar.SettingsView.Shared
 		public static BindableProperty CellValueTextFontFamilyProperty = BindableProperty.Create(nameof(CellValueTextFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
 		public static BindableProperty CellValueTextFontAttributesProperty = BindableProperty.Create(nameof(CellValueTextFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellValueTextAlignmentProperty = BindableProperty.Create(nameof(CellValueTextAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.End);
 
 		public Color CellValueTextColor
 		{
@@ -259,6 +268,12 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellValueTextFontAttributesProperty, value);
 		}
 
+		public TextAlignment CellValueTextAlignment
+		{
+			get => (TextAlignment) GetValue(CellValueTextAlignmentProperty);
+			set => SetValue(CellValueTextAlignmentProperty, value);
+		}
+
 	#endregion
 
 	#region Cell Description
@@ -270,6 +285,7 @@ namespace Jakar.SettingsView.Shared
 		public static BindableProperty CellDescriptionFontFamilyProperty = BindableProperty.Create(nameof(CellDescriptionFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
 		public static BindableProperty CellDescriptionFontAttributesProperty = BindableProperty.Create(nameof(CellDescriptionFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellDescriptionAlignmentProperty = BindableProperty.Create(nameof(CellDescriptionAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.Start);
 
 		public Color CellDescriptionColor
 		{
@@ -296,17 +312,21 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellDescriptionFontAttributesProperty, value);
 		}
 
+		public TextAlignment CellDescriptionAlignment
+		{
+			get => (TextAlignment) GetValue(CellDescriptionAlignmentProperty);
+			set => SetValue(CellDescriptionAlignmentProperty, value);
+		}
+
 	#endregion
 
 	#region Cell Hint
 
 		public static BindableProperty CellHintTextColorProperty = BindableProperty.Create(nameof(CellHintTextColor), typeof(Color), typeof(SettingsView), Color.Red);
-
 		public static BindableProperty CellHintFontSizeProperty = BindableProperty.Create(nameof(CellHintFontSize), typeof(double), typeof(SettingsView), 10.0d);
-
 		public static BindableProperty CellHintFontFamilyProperty = BindableProperty.Create(nameof(CellHintFontFamily), typeof(string), typeof(SettingsView), default(string));
-
 		public static BindableProperty CellHintFontAttributesProperty = BindableProperty.Create(nameof(CellHintFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellHintAlignmentProperty = BindableProperty.Create(nameof(CellHintAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.End);
 
 		public Color CellHintTextColor
 		{
@@ -333,7 +353,14 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellHintFontAttributesProperty, value);
 		}
 
+		public TextAlignment CellHintAlignment
+		{
+			get => (TextAlignment) GetValue(CellHintAlignmentProperty);
+			set => SetValue(CellHintAlignmentProperty, value);
+		}
+
 	#endregion
+
 
 	#region Cell Icon
 
@@ -363,7 +390,7 @@ namespace Jakar.SettingsView.Shared
 		public static readonly Color DEFAULT_ACCENT_COLOR = Color.Accent;
 		public static readonly Color DEFAULT_OFF_COLOR = Color.FromRgba(117, 117, 117, 76);
 
-		
+
 		public static BindableProperty CellBackgroundColorProperty = BindableProperty.Create(nameof(CellBackgroundColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 		public Color CellBackgroundColor

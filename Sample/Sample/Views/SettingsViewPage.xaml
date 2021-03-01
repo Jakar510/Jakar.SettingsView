@@ -223,14 +223,14 @@
 							 ValueText="{Binding InputText.Value}"
 							 Placeholder="Input text"
 							 Keyboard="Email"
-							 TextAlignment="End"
+							 ValueTextAlignment="End"
 							 Hint="{Binding InputError.Value}" />
 			<cells:EntryCell Title="EntryCell Title"
 							 Description="Description"
 							 ValueText="Value"
 							 Placeholder="Placeholder"
 							 Keyboard="Email"
-							 TextAlignment="End"
+							 ValueTextAlignment="End"
 							 Hint="Hint" />
 		</settingsView:Section>
 

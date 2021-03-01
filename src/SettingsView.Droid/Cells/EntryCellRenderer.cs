@@ -33,7 +33,6 @@ namespace Jakar.SettingsView.Droid.Cells
 		public EntryCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			Click += EntryCellView_Click;
-			Click += EditTextOnClick;
 			_EntryCell.Focused += EntryCell_Focused;
 			_Value.Init(_EntryCell, this);
 		}
@@ -42,16 +41,9 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Value.Init(_EntryCell, this);
 
 			Click += EntryCellView_Click;
-			Click += EditTextOnClick;
 			_EntryCell.Focused += EntryCell_Focused;
 		}
-
-		// protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.CellPropertyChanged(sender, e); }
-		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
-		// protected internal override void UpdateCell() { base.UpdateCell(); }
-
-
-		protected void EditTextOnClick( object sender, EventArgs e ) { _Value.PerformSelectAction(); }
+		
 		protected void EntryCellView_Click( object sender, EventArgs e )
 		{
 			RequestFocus();
@@ -165,12 +157,10 @@ namespace Jakar.SettingsView.Droid.Cells
 				Click -= EntryCellView_Click;
 				_EntryCell.Focused -= EntryCell_Focused;
 				_Value.RemoveFromParent();
-				_Value.SetOnEditorActionListener(null);
-				_Value.RemoveTextChangedListener(this);
-				OnFocusChangeListener = null;
 				_Value.Dispose();
 				_Hint.Dispose();
 				_CellValueStack.Dispose();
+				OnFocusChangeListener = null;
 			}
 
 			base.Dispose(disposing);

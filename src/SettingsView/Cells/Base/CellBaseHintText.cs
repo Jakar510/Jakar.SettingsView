@@ -12,7 +12,7 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		public static readonly BindableProperty HintFontSizeProperty = BindableProperty.Create(nameof(HintFontSize), typeof(double), typeof(CellBaseHintText), -1.0d);
 		public static readonly BindableProperty HintFontFamilyProperty = BindableProperty.Create(nameof(HintFontFamily), typeof(string), typeof(CellBaseHintText), default(string));
 		public static readonly BindableProperty HintFontAttributesProperty = BindableProperty.Create(nameof(HintFontAttributes), typeof(FontAttributes?), typeof(CellBaseHintText));
-		public static readonly BindableProperty HintAlignmentProperty = BindableProperty.Create(nameof(HintAlignment), typeof(TextAlignment), typeof(CellBaseHintText), TextAlignment.End);
+		public static readonly BindableProperty HintAlignmentProperty = BindableProperty.Create(nameof(HintAlignment), typeof(TextAlignment?), typeof(CellBaseHintText));
 
 		public string? Hint
 		{
@@ -45,9 +45,9 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 			set => SetValue(HintFontAttributesProperty, value);
 		}
 
-		public TextAlignment HintAlignment
+		public TextAlignment? HintAlignment
 		{
-			get => (TextAlignment) GetValue(HintAlignmentProperty);
+			get => (TextAlignment?) GetValue(HintAlignmentProperty);
 			set => SetValue(HintAlignmentProperty, value);
 		}
 	}

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Android.Text;
+using Android.Text.Method;
 using Android.Util;
+using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Shared.Interfaces;
 using BreakStrategy = Android.Text.BreakStrategy;
 using AColor = Android.Graphics.Color;
 using AContext = Android.Content.Context;
+using AView = Android.Views.View;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Controls
@@ -41,7 +45,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 
 		public void SetCell( BaseCellView cell ) { _Cell = cell ?? throw new NullReferenceException(nameof(cell)); }
-		public static TCell Create<TCell>( Android.Views.View view, BaseCellView cell, int id ) where TCell : BaseTextView
+		public static TCell Create<TCell>( AView view, BaseCellView cell, int id ) where TCell : BaseTextView
 		{
 			TCell result = view.FindViewById<TCell>(id) ?? throw new NullReferenceException(nameof(id));
 			result.SetCell(cell);
@@ -51,15 +55,17 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
 		public virtual void Init()
 		{
-			Ellipsize = null;
-			SetSingleLine(false);
-			SetMinLines(1);
-			SetMaxLines(10);
+			// Ellipsize = null;
+			// SetSingleLine(false);
+			// SetMinLines(1);
+			// SetMaxLines(10);
+			// BreakStrategy = BreakStrategy.Balanced; // BreakKind.Word
 
-			// BreakKind.Word
-			BreakStrategy = BreakStrategy.Simple;
+			// CanScrollHorizontally(0); // Negative to check scrolling up, positive to check scrolling down.
+			// CanScrollVertically(0);
+			// SetScroller(new Scroller(_Cell.AndroidContext));
 
-			CanScrollHorizontally(0);
+			if ( Background != null ) { Background.Alpha = 0; } // hide underline
 		}
 
 
@@ -76,5 +82,6 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public abstract bool Update( object sender, PropertyChangedEventArgs e );
 		public abstract void Update();
 		public abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
+
 	}
 }

@@ -75,6 +75,11 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
+		public event EventHandler<TextChangedEventArgs>? TextChanged;
+		internal void SendTextChanged( string oldTextValue, string newTextValue ) => SendTextChanged(new TextChangedEventArgs(oldTextValue, newTextValue));
+		internal void SendTextChanged( TextChangedEventArgs args) { TextChanged?.Invoke(this, args); }
+
+
 		internal event EventHandler? Focused;
 		internal void SendFocus() { Focused?.Invoke(this, EventArgs.Empty); }
 		public void SetFocus() => SendFocus();

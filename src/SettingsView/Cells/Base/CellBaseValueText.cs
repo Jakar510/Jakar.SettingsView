@@ -2,13 +2,14 @@
 
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseValueText : CellBaseValue
 	{
 		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(CellBaseValueText), -1);
 		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(CellBaseValueText), default(string), BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
-		public static readonly BindableProperty ValueTextAlignmentProperty = BindableProperty.Create(nameof(ValueTextAlignment), typeof(TextAlignment), typeof(CellBaseValueText), TextAlignment.End);
+		public static readonly BindableProperty ValueTextAlignmentProperty = BindableProperty.Create(nameof(ValueTextAlignment), typeof(TextAlignment?), typeof(CellBaseValueText));
 		
 		public string ValueText
 		{
@@ -20,9 +21,9 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 			get => (int) GetValue(MaxLengthProperty);
 			set => SetValue(MaxLengthProperty, value);
 		}
-		public TextAlignment ValueTextAlignment
+		public TextAlignment? ValueTextAlignment
 		{
-			get => (TextAlignment) GetValue(ValueTextAlignmentProperty);
+			get => (TextAlignment?) GetValue(ValueTextAlignmentProperty);
 			set => SetValue(ValueTextAlignmentProperty, value);
 		}
 

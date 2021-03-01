@@ -21,6 +21,7 @@ using AColor = Android.Graphics.Color;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 using AContext = Android.Content.Context;
+using TextChangedEventArgs = Android.Text.TextChangedEventArgs;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Controls
@@ -41,6 +42,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
 			Init();
+			TextChanged += OnTextChanged;
 		}
 		public AiEditText( AiEntryCell cell, AContext context ) : this(context) => _EntryCell = cell;
 		public AiEditText( BaseCellView cell, AContext context ) : this(context) => _EntryCell = cell.Cell as AiEntryCell ?? throw new NullReferenceException(nameof(cell.Cell));
@@ -57,8 +59,19 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			result.SetCell(cell);
 			return result;
 		}
+		protected override void Dispose( bool disposing )
+		{
+			base.Dispose(disposing);
+			TextChanged -= OnTextChanged;
+			SetOnEditorActionListener(null);
+			RemoveTextChangedListener(_CellRenderer);
+		}
 
-
+		private void OnTextChanged( object sender, TextChangedEventArgs e )
+		{
+			string s = e.Text is null ? string.Empty : string.Concat(e.Text);
+			_EntryCell.SendTextChanged(Text ?? string.Empty, s);
+		}
 		public void Init()
 		{
 			Gravity = GravityFlags.Fill;
@@ -199,7 +212,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		}
 		public bool UpdateTextAlignment()
 		{
-			TextAlignment = _EntryCell.ValueTextAlignment.ToAndroidTextAlignment();
+			TextAlignment = ( _EntryCell.ValueTextAlignment ?? _EntryCell.Parent.CellValueTextAlignment ).ToAndroidTextAlignment();
 			return true;
 		}
 		public bool UpdateAccentColor()

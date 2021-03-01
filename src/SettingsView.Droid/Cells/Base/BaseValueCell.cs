@@ -26,7 +26,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_CellValueStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 
 			_Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
-			_CellValueStack.Add(_Value, Extensions.Layout.Match);
+			_CellValueStack.Add(_Value);
 		}
 		protected BaseValueCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 	}

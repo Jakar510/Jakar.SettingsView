@@ -2,6 +2,7 @@
 
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseDescription : CellBaseIcon
@@ -11,7 +12,7 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		public static readonly BindableProperty DescriptionFontSizeProperty = BindableProperty.Create(nameof(DescriptionFontSize), typeof(double), typeof(CellBaseDescription), -1.0d);
 		public static readonly BindableProperty DescriptionFontFamilyProperty = BindableProperty.Create(nameof(DescriptionFontFamily), typeof(string), typeof(CellBaseDescription), default(string));
 		public static readonly BindableProperty DescriptionFontAttributesProperty = BindableProperty.Create(nameof(DescriptionFontAttributes), typeof(FontAttributes?), typeof(CellBaseDescription));
-		public static readonly BindableProperty DescriptionAlignmentProperty = BindableProperty.Create(nameof(DescriptionAlignment), typeof(TextAlignment), typeof(CellBaseDescription), TextAlignment.Start);
+		public static readonly BindableProperty DescriptionAlignmentProperty = BindableProperty.Create(nameof(DescriptionAlignment), typeof(TextAlignment?), typeof(CellBaseDescription));
 
 		public string Description
 		{
@@ -44,9 +45,9 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 			set => SetValue(DescriptionFontAttributesProperty, value);
 		}
 
-		public TextAlignment DescriptionAlignment
+		public TextAlignment? DescriptionAlignment
 		{
-			get => (TextAlignment) GetValue(DescriptionAlignmentProperty);
+			get => (TextAlignment?) GetValue(DescriptionAlignmentProperty);
 			set => SetValue(DescriptionAlignmentProperty, value);
 		}
 	}
