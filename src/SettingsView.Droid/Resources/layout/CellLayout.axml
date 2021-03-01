@@ -4,7 +4,12 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:id="@+id/CellLayout"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:columnCount="4"
+			android:rowCount="3"
+			android:weightSum="18"
+			android:columnOrderPreserved="true"
+			android:rowOrderPreserved="true"
 			android:minHeight="44dp"
 			android:paddingLeft="10dp"
 			android:paddingTop="4dp"
@@ -12,7 +17,7 @@
 			android:paddingBottom="4dp">
 
 	<Jakar.SettingsView.Droid.Cells.Controls.IconView android:id="@+id/CellIcon"
-													  android:layout_width="wrap_content"
+													  android:layout_width="0dp"
 													  android:layout_height="match_parent"
 													  android:layout_row="0"
 													  android:layout_rowSpan="2"
@@ -27,6 +32,8 @@
 													   android:layout_column="1"
 													   android:layout_columnSpan="1"
 													   android:layout_columnWeight="6"
+													   android:layout_width="0dp"
+													   android:layout_height="wrap_content"
 													   android:minLines="1"
 													   android:maxLines="10"
 													   android:ellipsize="none"
@@ -34,9 +41,7 @@
 													   android:textAlignment="center"
 													   android:breakStrategy="balanced"
 													   android:scrollHorizontally="false"
-													   android:text="Title Cell"
-													   android:layout_width="wrap_content"
-													   android:layout_height="wrap_content" />
+													   android:text="Title" />
 
 	<Jakar.SettingsView.Droid.Cells.Controls.DescriptionView android:id="@+id/CellDescription"
 															 android:layout_row="1"
@@ -44,16 +49,16 @@
 															 android:layout_column="1"
 															 android:layout_columnSpan="1"
 															 android:layout_columnWeight="6"
+															 android:layout_width="0dp"
+															 android:layout_height="wrap_content"
 															 android:minLines="1"
 															 android:maxLines="10"
-															 android:ellipsize="end"
+															 android:ellipsize="none"
 															 android:singleLine="false"
 															 android:textAlignment="center"
 															 android:breakStrategy="balanced"
 															 android:scrollHorizontally="false"
-															 android:text="Description"
-															 android:layout_width="wrap_content"
-															 android:layout_height="wrap_content" />
+															 android:text="Description" />
 
 	<Jakar.SettingsView.Droid.Cells.Controls.HintView android:id="@+id/CellHint"
 													  android:layout_row="0"
@@ -61,6 +66,8 @@
 													  android:layout_column="2"
 													  android:layout_columnSpan="1"
 													  android:layout_columnWeight="10"
+													  android:layout_width="0dp"
+													  android:layout_height="wrap_content"
 													  android:minLines="1"
 													  android:maxLines="10"
 													  android:ellipsize="none"
@@ -69,9 +76,7 @@
 													  android:breakStrategy="balanced"
 													  android:scrollHorizontally="false"
 													  android:text="Hint"
-													  android:textColor="#FF0000"
-													  android:layout_width="wrap_content"
-													  android:layout_height="wrap_content" />
+													  android:textColor="#FF0000" />
 
 	<LinearLayout android:id="@+id/CellValueStack"
 				  android:layout_row="1"
@@ -83,8 +88,8 @@
 				  android:layout_centerVertical="true"
 				  android:layout_width="wrap_content"
 				  android:layout_height="wrap_content"
-				  android:gravity="center"
 				  android:layout_gravity="fill"
+				  android:gravity="center"
 				  android:orientation="horizontal" />
 
 	<LinearLayout android:id="@+id/CellAccessoryStack"
@@ -97,8 +102,8 @@
 				  android:layout_centerVertical="true"
 				  android:layout_width="wrap_content"
 				  android:layout_height="match_parent"
-				  android:gravity="right|center"
 				  android:layout_gravity="fill"
+				  android:gravity="right|center"
 				  android:orientation="horizontal" />
 
 </GridLayout>

@@ -9,13 +9,7 @@ using EntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
-	public interface ISetMaxWidth
-	{
-		public void SetMaxWidth( int width, double factor );
-	}
-
-
-	public interface IUpdateCell<out TColor, in TCell>: ISetMaxWidth
+	public interface IUpdateCell<out TColor, in TCell>
 	{
 		public TColor DefaultTextColor { get; }
 		public float DefaultFontSize { get; }

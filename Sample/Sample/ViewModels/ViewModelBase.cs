@@ -327,7 +327,7 @@ namespace Sample.ViewModels
 				case nameof(CellBaseDescription.Description):
 					NextText(Description, DescriptionTexts);
 					break;
-				case nameof(CellBaseHintText.HintText):
+				case nameof(CellBaseHintText.Hint):
 					NextText(HintText, HintTexts);
 					break;
 				case nameof(CellBaseTitle.TitleColor):
@@ -342,7 +342,7 @@ namespace Sample.ViewModels
 				case nameof(CellBase.BackgroundColor):
 					NextColor(BgColor, CellBackColors);
 					break;
-				case nameof(CellBaseHintText.HintTextColor):
+				case nameof(CellBaseHintText.HintColor):
 					NextColor(HintTextColor, AccentColors);
 					break;
 				case nameof(CellBaseTitle.TitleFontSize):

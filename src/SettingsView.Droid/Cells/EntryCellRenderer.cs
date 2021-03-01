@@ -31,6 +31,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			Click += EntryCellView_Click;
 			Click += EditTextOnClick;
 			_EntryCell.Focused += EntryCell_Focused;
+			_Value.Init(_EntryCell, this);
 		}
 		public EntryCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 		{

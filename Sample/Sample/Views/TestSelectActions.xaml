@@ -15,22 +15,22 @@
 				<cells:EntryCell Title="None"
 								 Description="Description"
 								 ValueText="Value"
-								 HintText="Hint"
+								 Hint="Hint"
 								 OnSelectAction="None" />
 				<cells:EntryCell Title="Start"
 								 Description="Description"
 								 ValueText="Value"
-								 HintText="Hint"
+								 Hint="Hint"
 								 OnSelectAction="Start" />
 				<cells:EntryCell Title="End"
 								 Description="Description"
 								 ValueText="Value"
-								 HintText="Hint"
+								 Hint="Hint"
 								 OnSelectAction="End" />
 				<cells:EntryCell Title="All"
 								 Description="Description"
 								 ValueText="Value"
-								 HintText="Hint"
+								 Hint="Hint"
 								 OnSelectAction="All" />
 			</shared:Section>
 		</shared:SettingsView>

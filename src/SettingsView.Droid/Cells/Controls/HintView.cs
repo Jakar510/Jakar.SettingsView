@@ -22,7 +22,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 		public override bool UpdateText()
 		{
-			Text = _CurrentCell.Description;
+			Text = _CurrentCell.Hint;
 			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
@@ -37,7 +37,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		}
 		public override bool UpdateColor()
 		{
-			if ( _CurrentCell.HintTextColor != Color.Default ) { SetTextColor(_CurrentCell.HintTextColor.ToAndroid()); }
+			if ( _CurrentCell.HintColor != Color.Default ) { SetTextColor(_CurrentCell.HintColor.ToAndroid()); }
 			else if ( _Cell.CellParent != null &&
 					  _Cell.CellParent.CellHintTextColor != Color.Default ) { SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
 			else { SetTextColor(DefaultTextColor); }
@@ -58,7 +58,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseHintText.HintTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == CellBaseHintText.HintProperty.PropertyName ) { return UpdateText(); }
 
 			if ( e.PropertyName == CellBaseHintText.HintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 

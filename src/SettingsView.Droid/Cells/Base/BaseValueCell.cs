@@ -16,7 +16,7 @@ using AContext = Android.Content.Context;
 
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
-	public abstract class BaseValueCell<TCell> : BaseAiDescriptionCell where TCell : TextView, ISetMaxWidth
+	public abstract class BaseValueCell<TCell> : BaseAiDescriptionCell where TCell : TextView
 	{
 		protected HintView _Hint { get; }
 		protected TCell _Value { get; }
@@ -30,11 +30,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			_CellValueStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 
 			_Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
-			_Value.Gravity = GravityFlags.Fill;
-			_CellValueStack.Add(_Value);
-
-			// _Hint.SetMaxWidth(ContentView.Width, VALUE_FACTOR);
-			// _Value.SetMaxWidth(ContentView.Width, VALUE_FACTOR);
+			_CellValueStack.Add(_Value, Extensions.Layout.Match);
 		}
 		protected BaseValueCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 	}

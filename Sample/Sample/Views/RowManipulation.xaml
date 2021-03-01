@@ -79,7 +79,7 @@
 				<cells:LabelCell IconSource="icon.png"
 								 Title="LabelCell"
 								 Description="HogeFuga"
-								 HintText="hint"
+								 Hint="hint"
 								 ValueText="Value" />
 				<cells:CommandCell IconSource="icon.png"
 								   Title="CommandCell"

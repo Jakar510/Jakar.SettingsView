@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Runtime;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(DatePickerCell), typeof(DatePickerCellRenderer))]

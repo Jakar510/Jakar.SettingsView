@@ -48,26 +48,23 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			if ( hasFocus )
 			{
-				//show underline when on focus.
-				if ( Background != null ) Background.Alpha = 100;
+				if ( Background != null ) Background.Alpha = 100; // show underline when on focus.
 			}
 			else
 			{
-				//hide underline
-				if ( Background != null ) Background.Alpha = 0;
-				// consider as text input completed.
-				_EntryCell.SendCompleted();
+				if ( Background != null ) Background.Alpha = 0; // hide underline
+
+				_EntryCell.SendCompleted(); // consider as text input completed.
 			}
 		}
 
 		bool TextView.IOnEditorActionListener.OnEditorAction( TextView? v, ImeAction actionId, KeyEvent? e )
 		{
-			if ( v is null )
-				return true;
+			if ( v is null ) return true;
 
 			if ( actionId != ImeAction.Done &&
-				 ( actionId != ImeAction.ImeNull || e != null && e.KeyCode != Keycode.Enter ) )
-				return true;
+				 ( actionId != ImeAction.ImeNull || ( e != null && e.KeyCode != Keycode.Enter ) ) ) return true;
+
 			HideKeyboard(v);
 			DoneEdit();
 
@@ -77,20 +74,6 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			_EntryCell.SendCompleted();
 			ClearFocus();
-		}
-		protected void HideKeyboard( Android.Views.View? inputView )
-		{
-			AObject temp = AndroidContext.GetSystemService(Context.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
-			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
-			IBinder? windowToken = inputView?.WindowToken;
-			if ( windowToken != null ) { inputMethodManager.HideSoftInputFromWindow(windowToken, HideSoftInputFlags.None); }
-		}
-		protected void ShowKeyboard( Android.Views.View inputView )
-		{
-			AObject temp = AndroidContext.GetSystemService(Context.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
-			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
-			inputMethodManager.ShowSoftInput(inputView, ShowFlags.Forced);
-			inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
 		}
 
 

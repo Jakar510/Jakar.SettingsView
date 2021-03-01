@@ -169,11 +169,12 @@
 		<settingsView:Section Title="Input"
 							  IsVisible="{Binding InputSectionVisible.Value}">
 			<cells:EntryCell Title="EntryCell"
+							 Description="Description"
 							 ValueText="{Binding InputText.Value}"
 							 Placeholder="Input text"
 							 Keyboard="Email"
 							 TextAlignment="End"
-							 HintText="{Binding InputError.Value}" />
+							 Hint="{Binding InputError.Value}" />
 		</settingsView:Section>
 
 		<settingsView:Section>

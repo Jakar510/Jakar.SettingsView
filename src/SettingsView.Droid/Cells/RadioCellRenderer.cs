@@ -7,6 +7,7 @@ using Android.Widget;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Cells.Base;
+using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
@@ -19,7 +20,7 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class RadioCellView : BaseAiAccessoryCell<SimpleCheck>
+	public class RadioCellView : BaseAiAccessoryCell<RadioCheck>
 	{
 		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
@@ -60,7 +61,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( !_Accessory.Selected ) { _SelectedValue = _RadioCell.Value; }
+			if ( !_Accessory.Checked ) { _SelectedValue = _RadioCell.Value; }
 		}
 
 
@@ -87,7 +88,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateSelectedValue();
 			base.UpdateCell();
 		}
-		private void UpdateSelectedValue() { _Accessory.Selected = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
+		private void UpdateSelectedValue() { _Accessory.Checked = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
 		private void UpdateAccentColor()
 		{
 			if ( !_RadioCell.AccentColor.IsDefault ) { _Accessory.Color = _RadioCell.AccentColor.ToAndroid(); }

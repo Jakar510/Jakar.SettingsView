@@ -4,14 +4,15 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Android.Content;
 using Android.Graphics.Drawables;
+using Android.OS;
 using Android.Runtime;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-
 using AGridLayout = Android.Widget.GridLayout;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
@@ -25,9 +26,6 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : AGridLayout, INativeElementView
 	{
-		protected internal const double TITLE_FACTOR = 0.3;
-		protected internal const double VALUE_FACTOR = 0.5;
-
 		protected internal const float DISABLED_ALPHA = 0.3f;
 		protected internal const float ENABLED_ALPHA = 1.0f;
 		public static readonly AColor GRAY = AColor.Argb(125, 180, 180, 180);
@@ -71,7 +69,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			Background ??= Ripple;
 		}
 
-		
+
 		protected AView CreateContentView( int id, bool attach = true ) => AndroidContext.CreateContentView(this, id, attach);
 		protected RippleDrawable CreateRippleDrawable( AColor? color = null )
 		{
@@ -80,11 +78,15 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			sel.AddState(new[]
 						 {
 							 Android.Resource.Attribute.StateSelected
-						 }, SelectedColor);
+						 },
+						 SelectedColor
+						);
 			sel.AddState(new[]
 						 {
 							 -Android.Resource.Attribute.StateSelected
-						 }, BackgroundColor);
+						 },
+						 BackgroundColor
+						);
 			sel.SetExitFadeDuration(250);
 			sel.SetEnterFadeDuration(250);
 
@@ -109,7 +111,6 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 
 		protected internal virtual void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { }
 		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
-
 
 
 		protected internal void UpdateWithForceLayout( Action updateAction )
@@ -150,7 +151,7 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			DescendantFocusability = DescendantFocusability.BlockDescendants;
 		}
 		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(CellBase.IsEnabled); }
-		
+
 
 		protected void UpdateBackgroundColor()
 		{
@@ -173,8 +174,22 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 				Ripple.SetColor(DrawableUtility.GetPressedColorSelector(AColor.Rgb(180, 180, 180)));
 			}
 		}
-		
 
+
+		protected internal void HideKeyboard( Android.Views.View? inputView )
+		{
+			AObject temp = AndroidContext.GetSystemService(AContext.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
+			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
+			IBinder? windowToken = inputView?.WindowToken;
+			if ( windowToken != null ) { inputMethodManager.HideSoftInputFromWindow(windowToken, HideSoftInputFlags.None); }
+		}
+		protected internal void ShowKeyboard( Android.Views.View inputView )
+		{
+			AObject temp = AndroidContext.GetSystemService(AContext.InputMethodService) ?? throw new NullReferenceException(nameof(Context.InputMethodService));
+			using InputMethodManager inputMethodManager = (InputMethodManager) temp;
+			inputMethodManager.ShowSoftInput(inputView, ShowFlags.Forced);
+			inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
+		}
 
 		protected override void Dispose( bool disposing )
 		{

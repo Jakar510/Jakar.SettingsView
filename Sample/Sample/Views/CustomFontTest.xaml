@@ -222,7 +222,7 @@
 								 Placeholder="Input text"
 								 Keyboard="Email"
 								 TextAlignment="End"
-								 HintText="{Binding InputError.Value}" />
+								 Hint="{Binding InputError.Value}" />
 			</settingsView:Section>
 
 			<settingsView:Section>

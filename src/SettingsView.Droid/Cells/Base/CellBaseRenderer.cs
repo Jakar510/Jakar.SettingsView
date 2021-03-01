@@ -1,18 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using Android.Content;
-using Jakar.SettingsView.Droid.Cells.Base;
+﻿using Android.Content;
 using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms.Platform.Android;
-using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells
+namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class CellBaseRenderer<TnativeCell> : CellRenderer where TnativeCell : BaseCellView

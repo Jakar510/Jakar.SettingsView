@@ -52,7 +52,7 @@ namespace Sample.Views
 						   Title = "AddCell",
 						   ValueText = "addcell",
 						   Description = "add cell",
-						   HintText = "hint"
+						   Hint = "hint"
 					   };
 
 			switch ( AddCellCount )
@@ -121,7 +121,7 @@ namespace Sample.Views
 								  Title = "AddCell",
 								  ValueText = "add cell",
 								  Description = "add cell in new section",
-								  HintText = "hint"
+								  Hint = "hint"
 							  }
 						  };
 			settings.Root.Add(section);

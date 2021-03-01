@@ -20,8 +20,6 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 		{
 			_Icon = IconView.Create(ContentView, this, Resource.Id.CellIcon);
 			_Description = BaseTextView.Create<DescriptionView>(ContentView, this, Resource.Id.CellDescription);
-
-			// _Description.SetMaxWidth(ContentView.Width, TITLE_FACTOR);
 		}
 		protected BaseAiDescriptionCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

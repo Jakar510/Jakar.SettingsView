@@ -52,32 +52,33 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 
 
 		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
-		public void Init( AiEntryCell cell, BaseAiEntryCell renderer )
-		{
-			SetCell(cell);
-			_CellRenderer = renderer;
-			InputType = _EntryCell.Keyboard.ToInputType();
-			// SetMaxWidth(renderer.Width, BaseCellView.VALUE_FACTOR);
-		}
 		public void Init()
 		{
+			Gravity = GravityFlags.Fill;
+			
 			Ellipsize = null; // TextUtils.TruncateAt.End;
 			SetSingleLine(false);
 			SetMinLines(1);
 			SetMaxLines(10);
-			// BreakKind.Word
-			BreakStrategy = BreakStrategy.Simple;
-
-			CanScrollHorizontally(0);
+			BreakStrategy = BreakStrategy.Balanced;
 
 			Focusable = true;
 			ImeOptions = ImeAction.Done;
+			if ( Background != null ) { Background.Alpha = 0; } // hide underline
+		}
+		public void Init( AiEntryCell cell, BaseAiEntryCell renderer )
+		{
+			SetCell(cell);
+			_CellRenderer = renderer;
 			OnFocusChangeListener = _CellRenderer;
 			SetOnEditorActionListener(_CellRenderer);
-
-			if ( Background != null ) { Background.Alpha = 0; } //hide underline
+			
 		}
-		public void SetCell( AiEntryCell cell ) { _EntryCell = cell; }
+		public void SetCell( AiEntryCell cell )
+		{
+			_EntryCell = cell;
+			InputType = _EntryCell.Keyboard.ToInputType();
+		}
 
 		public static AiEditText Create( Android.Views.View view, AiEntryCell cell, int id )
 		{

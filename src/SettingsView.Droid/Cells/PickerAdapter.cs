@@ -6,6 +6,7 @@ using Android.Graphics.Drawables;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
@@ -213,10 +214,9 @@ namespace Jakar.SettingsView.Droid.Cells
 				_TextContainer.AddView(_DetailLabel, param);
 			}
 
-			_CheckBox = new SimpleCheck(context)
+			_CheckBox = new SimpleCheck(context, adapter.AccentColor)
 						{
 							Focusable = false,
-							Color = adapter.AccentColor
 						};
 
 			_TextLabel.SetTextColor(adapter.TitleColor);
@@ -247,8 +247,8 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public bool Checked
 		{
-			get => _CheckBox.Selected;
-			set => _CheckBox.Selected = value;
+			get => _CheckBox.Checked;
+			set => _CheckBox.Checked = value;
 		}
 
 		public void Toggle() { Checked = !Checked; }

@@ -6,23 +6,22 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 {
 	public class CellBaseHintText : CellBaseDescription
 	{
-		public static readonly BindableProperty HintTextProperty = BindableProperty.Create(nameof(HintText), typeof(string), typeof(CellBase), default(string));
-		public static readonly BindableProperty HintTextColorProperty = BindableProperty.Create(nameof(HintTextColor), typeof(Color), typeof(CellBase), Color.Default);
+		public static readonly BindableProperty HintProperty = BindableProperty.Create(nameof(Hint), typeof(string), typeof(CellBase), default(string));
+		public static readonly BindableProperty HintColorProperty = BindableProperty.Create(nameof(HintColor), typeof(Color), typeof(CellBase), Color.Default);
 		public static readonly BindableProperty HintFontSizeProperty = BindableProperty.Create(nameof(HintFontSize), typeof(double), typeof(CellBase), -1.0d);
 		public static readonly BindableProperty HintFontFamilyProperty = BindableProperty.Create(nameof(HintFontFamily), typeof(string), typeof(CellBase), default(string));
 		public static readonly BindableProperty HintFontAttributesProperty = BindableProperty.Create(nameof(HintFontAttributes), typeof(FontAttributes?), typeof(CellBase));
-		public static readonly BindableProperty HintColorProperty = BindableProperty.Create(nameof(HintColor), typeof(Color), typeof(CellBase), Color.Default);
 
-		public string HintText
+		public string Hint
 		{
-			get => (string) GetValue(HintTextProperty);
-			set => SetValue(HintTextProperty, value);
+			get => (string) GetValue(HintProperty);
+			set => SetValue(HintProperty, value);
 		}
 
-		public Color HintTextColor
+		public Color HintColor
 		{
-			get => (Color) GetValue(HintTextColorProperty);
-			set => SetValue(HintTextColorProperty, value);
+			get => (Color) GetValue(HintColorProperty);
+			set => SetValue(HintColorProperty, value);
 		}
 
 		[TypeConverter(typeof(FontSizeConverter))]
@@ -42,12 +41,6 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		{
 			get => (FontAttributes?) GetValue(HintFontAttributesProperty);
 			set => SetValue(HintFontAttributesProperty, value);
-		}
-
-		public Color HintColor
-		{
-			get => (Color) GetValue(HintColorProperty);
-			set => SetValue(HintColorProperty, value);
 		}
 	}
 }

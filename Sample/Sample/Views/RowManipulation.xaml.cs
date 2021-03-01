@@ -49,7 +49,7 @@ namespace Sample.Views
 				Title = "AddCell",
 				ValueText = "addcell",
 				Description = "add cell",
-				HintText = "hint"
+				Hint = "hint"
 			};
 
 		private Section CreateSection()
@@ -64,7 +64,7 @@ namespace Sample.Views
 						Title = "AddCell",
 						ValueText = "addcell",
 						Description = "add cell in new section",
-						HintText = "hint"
+						Hint = "hint"
 					});
 			return sec;
 		}
