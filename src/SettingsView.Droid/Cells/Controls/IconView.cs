@@ -19,7 +19,7 @@ using Size = Xamarin.Forms.Size;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Controls
 {
-	public class IconView : ImageView, IUpdateICon<BaseCellView, Bitmap, IImageSourceHandler>
+	public class IconView : ImageView, IUpdateIcon<BaseCellView, Bitmap, IImageSourceHandler>
 	{
 		private CellBaseIcon _CurrentCell => _Cell.Cell as CellBaseIcon ?? throw new NullReferenceException(nameof(_CurrentCell));
 

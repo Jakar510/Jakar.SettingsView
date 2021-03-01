@@ -49,7 +49,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 	}
 
 
-	public interface IUpdateICon<in TCell, TImage, in Thandler> : IDisposable
+	public interface IUpdateIcon<in TCell, TImage, in Thandler> : IDisposable
 	{
 		public bool UpdateIconRadius();
 		public bool UpdateIconSize();
