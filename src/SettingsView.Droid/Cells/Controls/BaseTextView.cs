@@ -47,8 +47,11 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			result.SetCell(cell);
 			return result;
 		}
+
+		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
 		public virtual void Init()
 		{
+			Ellipsize = null;
 			SetSingleLine(false);
 			SetMinLines(1);
 			SetMaxLines(10);

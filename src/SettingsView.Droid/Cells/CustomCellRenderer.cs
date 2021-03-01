@@ -12,7 +12,7 @@ using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using ARelativeLayout = Android.Widget.RelativeLayout;
+
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
 
@@ -32,16 +32,16 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		// protected ImageView _IndicatorView { get; set; }
 		protected internal FormsViewContainer Container { get; }
-		protected ARelativeLayout _AccessoryStack { get; }
+		protected LinearLayout _AccessoryStack { get; }
 
 		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellAccessoryStack));
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellAccessoryStack));
 			
 			Container = new FormsViewContainer(AndroidContext, _CustomCell);
-			this.Add(Container);
+			this.Add(Container, 2, 0, GridSpec.Fill, GridSpec.Fill, Extensions.Layout.Match);
 			if ( !_CustomCell.ShowArrowIndicator )
 			{
 				// TODO: implement ShowArrowIndicator (_IndicatorView) _AccessoryStack

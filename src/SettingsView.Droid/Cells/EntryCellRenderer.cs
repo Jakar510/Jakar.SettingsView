@@ -70,7 +70,6 @@ namespace Jakar.SettingsView.Droid.Cells
 				_Value.SetOnEditorActionListener(null);
 				_Value.RemoveTextChangedListener(this);
 				OnFocusChangeListener = null;
-				_Value.ClearFocusAction = null;
 				_Value.Dispose();
 			}
 

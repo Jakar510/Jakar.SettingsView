@@ -9,7 +9,13 @@ using EntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
-	public interface IUpdateCell<out TColor, in TCell>
+	public interface ISetMaxWidth
+	{
+		public void SetMaxWidth( int width, double factor );
+	}
+
+
+	public interface IUpdateCell<out TColor, in TCell>: ISetMaxWidth
 	{
 		public TColor DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
@@ -26,6 +32,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public bool UpdateFont();
 		// public abstract bool UpdateAlignment();
 
+
 		public bool Update( object sender, PropertyChangedEventArgs e );
 		public void Update();
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e );
@@ -34,7 +41,6 @@ namespace Jakar.SettingsView.Shared.Interfaces
 
 	public interface IUpdateEntryCell<in TRenderer, TColor, in TCell> : IUpdateCell<TColor, TCell>
 	{
-		public Action? ClearFocusAction { get; set; }
 		public void Init( EntryCell cell, TRenderer renderer );
 
 		public void PerformSelectAction();

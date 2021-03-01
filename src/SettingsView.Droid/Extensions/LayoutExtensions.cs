@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Android.Views;
 using Android.Widget;
-using ARelativeLayout = Android.Widget.RelativeLayout;
+
 using AGridLayout = Android.Widget.GridLayout;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
@@ -70,6 +70,7 @@ namespace Jakar.SettingsView.Droid.Extensions
 
 
 		// -----------------------------------------------------------------------------------------------------------------------------------------------------
+		
 		public static void Add( this LinearLayout stack,
 								AView view,
 								Layout width = Layout.Wrap,
@@ -90,7 +91,7 @@ namespace Jakar.SettingsView.Droid.Extensions
 		}
 
 
-		public static void Add( this ARelativeLayout stack,
+		public static void Add( this RelativeLayout stack,
 								AView view,
 								Layout width = Layout.Wrap,
 								Layout height = Layout.Wrap,
@@ -100,7 +101,7 @@ namespace Jakar.SettingsView.Droid.Extensions
 
 			Run(() =>
 				{
-					using var layoutParams = new ARelativeLayout.LayoutParams(LayoutMapper[width], LayoutMapper[height]);
+					using var layoutParams = new RelativeLayout.LayoutParams(LayoutMapper[width], LayoutMapper[height]);
 					{
 						stack.AddView(view, layoutParams);
 					}
@@ -109,7 +110,7 @@ namespace Jakar.SettingsView.Droid.Extensions
 			   );
 		}
 
-
+		
 		public static void Add( this AGridLayout stack,
 								AView view,
 								int row,

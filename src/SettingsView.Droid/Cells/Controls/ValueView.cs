@@ -5,6 +5,7 @@ using Android.Text;
 using Android.Util;
 using Android.Views;
 using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
@@ -21,6 +22,8 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public ValueView( Context context ) : base(context) => Init();
 		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Init();
 		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Init();
+
+
 		public override void Init()
 		{
 			base.Init();

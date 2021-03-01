@@ -67,7 +67,7 @@
     <Compile Include="MemoryLimitedLruCache.cs" />
     <Compile Include="SettingsViewRenderer.cs" />
     <Compile Include="Cells\CellBaseRenderer.cs" />
-    <Compile Include="Cells\Base\CellBaseView.cs" />
+    <Compile Include="Cells\Base\BaseCellView.cs" />
     <Compile Include="Cells\CommandCellRenderer.cs" />
     <Compile Include="Cells\LabelCellRenderer.cs" />
     <Compile Include="Cells\NumberPickerCell.cs" />

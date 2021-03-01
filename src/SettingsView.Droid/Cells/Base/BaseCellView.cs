@@ -11,7 +11,7 @@ using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using ARelativeLayout = Android.Widget.RelativeLayout;
+
 using AGridLayout = Android.Widget.GridLayout;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
@@ -23,8 +23,11 @@ using AContext = Android.Content.Context;
 namespace Jakar.SettingsView.Droid.Cells.Base
 {
 	[Preserve(AllMembers = true)]
-	public abstract class BaseCellView : ARelativeLayout, INativeElementView
+	public abstract class BaseCellView : AGridLayout, INativeElementView
 	{
+		protected internal const double TITLE_FACTOR = 0.3;
+		protected internal const double VALUE_FACTOR = 0.5;
+
 		protected internal const float DISABLED_ALPHA = 0.3f;
 		protected internal const float ENABLED_ALPHA = 1.0f;
 		public static readonly AColor GRAY = AColor.Argb(125, 180, 180, 180);
@@ -51,6 +54,9 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			SelectedColor = new ColorDrawable(GRAY);
 
 			Background = Ripple = CreateRippleDrawable();
+
+			// GridLengthTypeConverter
+			// GridLength.Star
 		}
 #pragma warning disable 8618 // _Cell
 		protected BaseCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)

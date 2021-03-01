@@ -12,7 +12,7 @@ using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using ARelativeLayout = Android.Widget.RelativeLayout;
+
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
@@ -28,24 +28,24 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected ICommand? _Command { get; set; }
 		protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
 
-		protected ARelativeLayout _AccessoryStack { get; }
+		protected LinearLayout _AccessoryStack { get; }
 		protected ImageView _Accessory { get; set; }
 
 
 		public CommandCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			_Accessory = new ImageView(AndroidContext);
-			_AccessoryStack = ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
+			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellValueStack));
 			_AccessoryStack.Add(_Accessory);
 
 			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<ARelativeLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
+			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
 
 			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
 				 _CommandCell.HideArrowIndicator ) { return; }
 
-			_AccessoryStack.RemoveFromParent();
 			_Accessory.RemoveFromParent();
+			_AccessoryStack.RemoveFromParent();
 		}
 		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

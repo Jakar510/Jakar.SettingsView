@@ -11,7 +11,6 @@ using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using ASwitch = Android.Widget.Switch;
 using SwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
 using SwitchCellRenderer = Jakar.SettingsView.Droid.Cells.SwitchCellRenderer;
 
@@ -23,11 +22,10 @@ namespace Jakar.SettingsView.Droid.Cells
 	[Preserve(AllMembers = true)] public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class SwitchCellView : BaseAiAccessoryCell<SwitchCompat>, CompoundButton.IOnCheckedChangeListener
+	public class SwitchCellView : BaseAiAccessoryCell<Android.Widget.Switch>, CompoundButton.IOnCheckedChangeListener
 	{
 		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
-
-
+		
 		public SwitchCellView( Context context, Cell cell ) : base(context, cell)
 		{
 			_Accessory.Gravity = GravityFlags.Right;

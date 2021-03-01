@@ -41,7 +41,14 @@ namespace Jakar.SettingsView.Droid.Cells
 			DefaultFontSize = _Button.TextSize;
 			DefaultTextColor = new AColor(_Button.CurrentTextColor);
 
-			this.Add(_Button, Extensions.Layout.Match, Extensions.Layout.Match);
+			this.Add(_Button,
+					 0,
+					 0,
+					 GridSpec.Fill,
+					 GridSpec.Fill,
+					 Extensions.Layout.Match,
+					 Extensions.Layout.Match
+					);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

@@ -23,6 +23,8 @@ namespace Jakar.SettingsView.Droid.Cells.Base
 			ContentView = CreateContentView(Resource.Layout.CellLayout);
 			_CellLayout = ContentView.FindViewById<GridLayout>(Resource.Id.CellLayout) ?? throw new NullReferenceException(nameof(_CellLayout));
 			_Title = BaseTextView.Create<TitleView>(ContentView, this, Resource.Id.CellTitle);
+
+			// _Title.SetMaxWidth(ContentView.Width, TITLE_FACTOR);
 		}
 		protected BaseAiTitledCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

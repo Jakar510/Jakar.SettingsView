@@ -23,7 +23,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 	{
 		private CellBaseIcon _CurrentCell => _Cell.Cell as CellBaseIcon ?? throw new NullReferenceException(nameof(_CurrentCell));
 
-
+		protected Bitmap? _Image { get; set; }
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
 		protected BaseCellView _Cell { get; set; }
 		protected float _IconRadius { get; set; }
@@ -60,14 +60,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			return true;
 		}
 
-		public Size GetIconSize()
-		{
-			// if ( _CurrentCell.IconSize != default ) { return _CurrentCell.IconSize ?? _DefaultSize; }
-			//
-			// if ( _Cell.CellParent != null &&
-			// 	 _Cell.CellParent.CellIconSize != default ) { return _Cell.CellParent.CellIconSize; }
-			return _CurrentCell.IconSize ?? _Cell.CellParent?.CellIconSize ?? Shared.SettingsView.DefaultIconSize;
-		}
+		public Size GetIconSize() => _CurrentCell.IconSize ?? _Cell.CellParent?.CellIconSize ?? Shared.SettingsView.DefaultIconSize;
 		public bool Refresh( bool forceLoad = false )
 		{
 			if ( _IconTokenSource != null &&
@@ -106,26 +99,26 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			return true;
 		}
 		public void LoadIconImage( IImageSourceHandler handler, ImageSource source, CancellationToken token ) { Task.Run(async () => { await LoadImage(handler, source, token).ConfigureAwait(true); }, token); }
-		public async Task LoadImage( IImageSourceHandler handler, ImageSource source, CancellationToken token )
+		protected async Task LoadImage( IImageSourceHandler handler, ImageSource source, CancellationToken token )
 		{
-			Bitmap image = await handler.LoadImageAsync(source, _Cell.AndroidContext, token);
+			_Image?.Dispose();
+			_Image = await handler.LoadImageAsync(source, _Cell.AndroidContext, token);
 			token.ThrowIfCancellationRequested();
-			image = CreateRoundImage(image);
-			try
-			{
-				//entrust disposal of returned old image to Android OS.
-				ImageCacheController.Instance.Put(source.GetHashCode(), image);
-			}
-			catch ( Exception ) { }
+			_Image = CreateRoundImage(_Image);
+			// try
+			// {
+			// 	//entrust disposal of returned old image to Android OS.
+			// 	ImageCacheController.Instance.Put(source.GetHashCode(), image);
+			// }
+			// catch ( Exception ) { }
 
 			await Device.InvokeOnMainThreadAsync(async () =>
 												 {
 													 await Task.Delay(50, token); // in case repeating the same source, sometimes the icon not be shown. by inserting delay it be shown.
-													 SetImageBitmap(image);
+													 SetImageBitmap(_Image);
 													 _Cell.Invalidate();
 												 }
 												);
-
 			// image.Dispose();
 		}
 		// public void LoadIconImage( IImageSourceHandler handler, ImageSource source, CancellationToken token )
@@ -176,7 +169,6 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 				canvas.DrawARGB(0, 0, 0, 0);
 				canvas.DrawRoundRect(new RectF(0, 0, image.Width, image.Height), _IconRadius, _IconRadius, paint);
 
-
 				paint.SetXfermode(new PorterDuffXfermode(PorterDuff.Mode.SrcIn));
 
 				using var rect = new Android.Graphics.Rect(0, 0, image.Width, image.Height);
@@ -212,6 +204,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		protected override void Dispose( bool disposing )
 		{
 			base.Dispose(disposing);
+			_Image?.Dispose();
 			_IconTokenSource?.Dispose();
 			_IconTokenSource = null;
 			SetImageDrawable(null);

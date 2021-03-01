@@ -20,6 +20,7 @@ using AColor = Android.Graphics.Color;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
 using AContext = Android.Content.Context;
+using Switch = Android.Widget.Switch;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells.Controls
@@ -29,7 +30,6 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 	{
 		public AColor DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
-		public Action? ClearFocusAction { get; set; }
 		protected BaseAiEntryCell _CellRenderer { get; private set; }
 		protected AiEntryCell _EntryCell { get; private set; }
 		public Shared.SettingsView CellParent => _EntryCell.Parent;
@@ -39,6 +39,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
+			Init();
 		}
 		public AiEditText( AiEntryCell cell, AContext context ) : this(context) => _EntryCell = cell;
 		public AiEditText( BaseCellView cell, AContext context ) : this(context) => _EntryCell = cell.Cell as AiEntryCell ?? throw new NullReferenceException(nameof(cell.Cell));
@@ -46,21 +47,24 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
+			Init();
 		}
 
 
+		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
 		public void Init( AiEntryCell cell, BaseAiEntryCell renderer )
 		{
 			SetCell(cell);
 			_CellRenderer = renderer;
-			Init();
+			InputType = _EntryCell.Keyboard.ToInputType();
+			// SetMaxWidth(renderer.Width, BaseCellView.VALUE_FACTOR);
 		}
 		public void Init()
 		{
+			Ellipsize = null; // TextUtils.TruncateAt.End;
 			SetSingleLine(false);
 			SetMinLines(1);
 			SetMaxLines(10);
-
 			// BreakKind.Word
 			BreakStrategy = BreakStrategy.Simple;
 
@@ -70,12 +74,8 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 			ImeOptions = ImeAction.Done;
 			OnFocusChangeListener = _CellRenderer;
 			SetOnEditorActionListener(_CellRenderer);
-			ClearFocusAction = _CellRenderer.DoneEdit;
 
-			Ellipsize = TextUtils.TruncateAt.End;
-			InputType = _EntryCell.Keyboard.ToInputType();
-			if ( Background != null )
-				Background.Alpha = 0; //hide underline
+			if ( Background != null ) { Background.Alpha = 0; } //hide underline
 		}
 		public void SetCell( AiEntryCell cell ) { _EntryCell = cell; }
 
@@ -100,7 +100,7 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 				 e != null && e.Action != KeyEventActions.Up ) return base.OnKeyPreIme(keyCode, e);
 
 			ClearFocus();
-			ClearFocusAction?.Invoke();
+			_CellRenderer.DoneEdit();
 
 			return base.OnKeyPreIme(keyCode, e);
 		}

@@ -21,7 +21,6 @@ namespace Jakar.SettingsView.Droid.Cells.Controls
 		public DescriptionView( AContext context, IAttributeSet attributes ) : base(context, attributes) { }
 
 
-
 		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Description;
