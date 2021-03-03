@@ -230,7 +230,7 @@ namespace Sample.ViewModels
 					NextVal(MinNum, MinNumbers);
 
 					break;
-				case nameof(NumberPickerCell.PickerTitle):
+				case nameof(NumberPickerCell.PopupTitle):
 					NextVal(PickerTitle, PickerTitles);
 					break;
 				case nameof(Time):

@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,7 +36,7 @@
     <DocumentationFile>bin\Release\SettingsView.Droid.xml</DocumentationFile>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,19 +46,19 @@
     <Reference Include="Java.Interop" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cells\Base\BaseValueCell.cs" />
-    <Compile Include="Cells\Controls\AiEditText.cs" />
-    <Compile Include="Cells\Base\BaseAiAccessoryCell.cs" />
-    <Compile Include="Cells\Base\BaseAiDescriptionCell.cs" />
-    <Compile Include="Cells\Base\BaseAiTitledCell.cs" />
-    <Compile Include="Cells\Base\BaseAiValueCell.cs" />
-    <Compile Include="Cells\Controls\BaseTextView.cs" />
-    <Compile Include="Cells\Controls\DescriptionView.cs" />
-    <Compile Include="Cells\Controls\HintView.cs" />
-    <Compile Include="Cells\Controls\IconView.cs" />
-    <Compile Include="Cells\Controls\RadioCheck.cs" />
-    <Compile Include="Cells\Controls\TitleView.cs" />
-    <Compile Include="Cells\Controls\ValueView.cs" />
+    <Compile Include="BaseCell\BaseValueCell.cs" />
+    <Compile Include="Controls\AiEditText.cs" />
+    <Compile Include="BaseCell\BaseAiAccessoryCell.cs" />
+    <Compile Include="BaseCell\BaseAiDescriptionCell.cs" />
+    <Compile Include="BaseCell\BaseAiTitledCell.cs" />
+    <Compile Include="BaseCell\BaseAiValueCell.cs" />
+    <Compile Include="Controls\BaseTextView.cs" />
+    <Compile Include="Controls\DescriptionView.cs" />
+    <Compile Include="Controls\HintView.cs" />
+    <Compile Include="Controls\IconView.cs" />
+    <Compile Include="Controls\RadioCheck.cs" />
+    <Compile Include="Controls\TitleView.cs" />
+    <Compile Include="Controls\ValueView.cs" />
     <Compile Include="Extensions\LayoutExtensions.cs" />
     <Compile Include="Interfaces\ICellRender.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -67,25 +67,25 @@
     <Compile Include="ImageCacheController.cs" />
     <Compile Include="MemoryLimitedLruCache.cs" />
     <Compile Include="SettingsViewRenderer.cs" />
-    <Compile Include="Cells\Base\CellBaseRenderer.cs" />
-    <Compile Include="Cells\Base\BaseCellView.cs" />
-    <Compile Include="Cells\CommandCellRenderer.cs" />
+    <Compile Include="BaseCell\CellBaseRenderer.cs" />
+    <Compile Include="BaseCell\BaseCellView.cs" />
+    <Compile Include="Cells\CommandCells\CommandCellRenderer.cs" />
     <Compile Include="Cells\LabelCellRenderer.cs" />
-    <Compile Include="Cells\NumberPickerCell.cs" />
-    <Compile Include="Cells\PickerAdapter.cs" />
-    <Compile Include="Cells\PickerCellRenderer.cs" />
+    <Compile Include="Cells\Pickers\NumberPickerCell.cs" />
+    <Compile Include="Cells\Pickers\PickerAdapter.cs" />
+    <Compile Include="Cells\Pickers\PickerCellRenderer.cs" />
     <Compile Include="Extensions\LayoutAlignmentExtensions.cs" />
-    <Compile Include="Cells\SwitchCellRenderer.cs" />
-    <Compile Include="Cells\CheckboxCellRenderer.cs" />
-    <Compile Include="Cells\TimePickerCellRenderer.cs" />
-    <Compile Include="Cells\DatePickerCellRenderer.cs" />
+    <Compile Include="Cells\AccessoryCells\SwitchCellRenderer.cs" />
+    <Compile Include="Cells\AccessoryCells\CheckboxCellRenderer.cs" />
+    <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
+    <Compile Include="Cells\Pickers\DatePickerCellRenderer.cs" />
     <Compile Include="Cells\EntryCellRenderer.cs" />
     <Compile Include="Extensions\TextAlignmentExtensions.cs" />
-    <Compile Include="Cells\ButtonCellRenderer.cs" />
+    <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />
     <Compile Include="SettingsViewRecyclerAdapter.cs" />
-    <Compile Include="Cells\TextPickerCellRenderer.cs" />
-    <Compile Include="Cells\RadioCellRenderer.cs" />
-    <Compile Include="Cells\Controls\SimpleCheck.cs" />
+    <Compile Include="Cells\Pickers\TextPickerCellRenderer.cs" />
+    <Compile Include="Cells\AccessoryCells\RadioCellRenderer.cs" />
+    <Compile Include="Controls\SimpleCheck.cs" />
     <Compile Include="SettingsViewInit.cs" />
     <Compile Include="ModelProxy.cs" />
     <Compile Include="SettingsViewSimpleCallback.cs" />

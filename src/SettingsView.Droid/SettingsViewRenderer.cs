@@ -4,7 +4,6 @@ using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
-using Jakar.SettingsView;
 using Jakar.SettingsView.Droid;
 using Jakar.SettingsView.Shared;
 using Xamarin.Forms;

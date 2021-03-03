@@ -181,7 +181,7 @@
 								  MaxSelectedNumber="3"
 								  SelectedItems="{Binding SelectedItems}"
 								  KeepSelectedUntilBack="true"
-								  PageTitle="select 3 items" />
+								  PopupPageTitle="select 3 items" />
 			</settingsView:Section>
 
 			<settingsView:Section Title="Picker 4 Brothers">
@@ -189,7 +189,7 @@
 										Min="0"
 										Max="99"
 										Number="15"
-										PickerTitle="Select number" />
+										PopupPageTitle="Select number" />
 				<cells:TimePickerCell Title="TimePicker"
 									  Format="HH:mm"
 									  Time="15:30"

@@ -1,5 +1,4 @@
 ﻿using System;
-using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Xamarin.Forms;

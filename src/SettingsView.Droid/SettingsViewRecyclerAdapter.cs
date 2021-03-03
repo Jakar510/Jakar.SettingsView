@@ -5,14 +5,12 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Cells.Base;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
-using BaseCellView = Jakar.SettingsView.Droid.Cells.Base.BaseCellView;
+using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid
@@ -415,7 +413,6 @@ namespace Jakar.SettingsView.Droid
 			
 			double height = layout.Height;
 			double cellHeight = holder.Body.Height;
-			System.Diagnostics.Debug.WriteLine($"_______CellHeight_______    minHeight {minHeight}      content.height {height}      cell.height{cellHeight}");
 		}
 
 

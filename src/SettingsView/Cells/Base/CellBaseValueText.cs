@@ -9,7 +9,6 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 	{
 		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(CellBaseValueText), -1);
 		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(CellBaseValueText), default(string), BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
-		public static readonly BindableProperty ValueTextAlignmentProperty = BindableProperty.Create(nameof(ValueTextAlignment), typeof(TextAlignment?), typeof(CellBaseValueText));
 		
 		public string ValueText
 		{
@@ -20,11 +19,6 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		{
 			get => (int) GetValue(MaxLengthProperty);
 			set => SetValue(MaxLengthProperty, value);
-		}
-		public TextAlignment? ValueTextAlignment
-		{
-			get => (TextAlignment?) GetValue(ValueTextAlignmentProperty);
-			set => SetValue(ValueTextAlignmentProperty, value);
 		}
 
 		private static void ValueTextPropertyChanging( BindableObject bindable, object oldValue, object newValue )

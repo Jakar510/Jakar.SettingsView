@@ -44,7 +44,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void SetUpProperties()
 		{
-			if ( _pickerCell.AccentColor != Color.Default ) { _accentColor = _pickerCell.AccentColor.ToUIColor(); }
+			if ( _pickerCell.PopupAccentColor != Color.Default ) { _accentColor = _pickerCell.PopupAccentColor.ToUIColor(); }
 			else if ( _parent.CellAccentColor != Color.Default ) { _accentColor = _parent.CellAccentColor.ToUIColor(); }
 
 			if ( _pickerCell.TitleColor != Color.Default ) { _titleColor = _pickerCell.TitleColor.ToUIColor(); }
@@ -186,9 +186,9 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public void InitializeView()
 		{
-			Title = _pickerCell.PageTitle;
+			Title = _pickerCell.PopupPageTitle;
 
-			var parent = _pickerCell.Parent as Shared.SettingsView;
+			var parent = _pickerCell.Parent;
 			if ( parent != null )
 			{
 				TableView.SeparatorColor = parent.SeparatorColor.ToUIColor();

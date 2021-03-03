@@ -1,22 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
 using Android.Text;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
-using Jakar.SettingsView.Droid.Cells.Base;
-using Jakar.SettingsView.Droid.Cells.Controls;
+using Jakar.SettingsView.Droid.BaseCell;
+using Jakar.SettingsView.Droid.Controls;
 using Jakar.SettingsView.Droid.Interfaces;
-using Jakar.SettingsView.Shared.Cells;
 using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using EntryCellRenderer = Jakar.SettingsView.Droid.Cells.EntryCellRenderer;
-using Object = Java.Lang.Object;
 
 [assembly: ExportRenderer(typeof(AiEntryCell), typeof(EntryCellRenderer))]
 
@@ -43,7 +40,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			Click += EntryCellView_Click;
 			_EntryCell.Focused += EntryCell_Focused;
 		}
-		
+
 		protected void EntryCellView_Click( object sender, EventArgs e )
 		{
 			RequestFocus();
@@ -57,13 +54,11 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 
-
 		void ITextWatcher.AfterTextChanged( IEditable? s ) { }
 		void ITextWatcher.BeforeTextChanged( ICharSequence? s,
 											 int start,
 											 int count,
-											 int after )
-		{ }
+											 int after ) { }
 		void ITextWatcher.OnTextChanged( ICharSequence? s,
 										 int start,
 										 int before,
@@ -71,8 +66,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( string.IsNullOrEmpty(_EntryCell.ValueText) &&
 				 s != null &&
-				 s.Length() == 0 )
-			{ return; }
+				 s.Length() == 0 ) { return; }
 
 			_EntryCell.ValueText = s?.ToString();
 		}
@@ -149,7 +143,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Value.Update();
 		}
 
-		
+
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )

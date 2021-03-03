@@ -3,12 +3,10 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Android.Content;
 using Android.Runtime;
-using Android.Views;
 using Android.Widget;
+using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Cells.Base;
-using Jakar.SettingsView.Droid.Cells.Controls;
 using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -36,12 +34,18 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			ContentView.FindViewById<HintView>(Resource.Id.CellHint)?.RemoveFromParent();
-			ContentView.FindViewById<LinearLayout>(Resource.Id.CellValueStack)?.RemoveFromParent();
-			_AccessoryStack = ContentView.FindViewById<LinearLayout>(Resource.Id.CellAccessoryStack) ?? throw new NullReferenceException(nameof(Resource.Id.CellAccessoryStack));
-			
+			RemoveHint();
+			RemoveCellValueStack();
+			_AccessoryStack = AccessoryStack();
+
 			Container = new FormsViewContainer(AndroidContext, _CustomCell);
-			this.Add(Container, 2, 0, GridSpec.Fill, GridSpec.Fill, Extensions.Layout.Match);
+			this.Add(Container,
+					 2,
+					 0,
+					 GridSpec.Fill,
+					 GridSpec.Fill,
+					 Extensions.Layout.Match
+					);
 			if ( !_CustomCell.ShowArrowIndicator )
 			{
 				// TODO: implement ShowArrowIndicator (_IndicatorView) _AccessoryStack

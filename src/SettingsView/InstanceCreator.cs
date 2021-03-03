@@ -8,7 +8,7 @@ namespace Jakar.SettingsView.Shared
 {
 	public static class InstanceCreator
 	{
-		internal static NullReferenceException CreateException( params Type[] args ) => new NullReferenceException($"constructor not found. requested arg types: {args}");
+		internal static NullReferenceException CreateException( params Type[] args ) => new NullReferenceException($"constructor not found. Requested arg types: {args}");
 	}
 
 
@@ -35,7 +35,6 @@ namespace Jakar.SettingsView.Shared
 	}
 
 	public static class InstanceCreator<T1, T2, TInstance>
-
 	{
 		public static Func<T1, T2, TInstance> Create { get; } = CreateInstance();
 

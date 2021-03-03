@@ -20,7 +20,7 @@
 							  SubDisplayMember="Age"
 							  UsePickToClose="True"
 							  SelectionMode="Single"
-							  AccentColor="Red"
+							  PopupAccentColor="Red"
 							  TitleColor="Chocolate"
 							  DescriptionColor="BlueViolet" />
 		</settingsView:Section>

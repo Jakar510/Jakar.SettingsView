@@ -8,6 +8,7 @@ namespace Jakar.SettingsView.Droid.Interfaces
 	{
 		public void UpdateWithForceLayout( Action updateAction );
 		public bool UpdateWithForceLayout( Func<bool> updateAction );
+		// public bool UpdateProportions();
 		public void DoneEdit();
 	}
 }

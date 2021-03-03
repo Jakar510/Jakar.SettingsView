@@ -1,15 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using Android.Content;
 using Android.Runtime;
-using Android.Text;
-using Android.Views;
-using Android.Widget;
+using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Cells.Base;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(LabelCell), typeof(LabelCellRenderer))]
 
@@ -24,62 +19,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected LabelCell _LabelCell => Cell as LabelCell ?? throw new NullReferenceException(nameof(_LabelCell));
 
 
-		public LabelCellView( Context context, Cell cell ) : base(context, cell) { _Value.SetSingleLine(false); }
+		public LabelCellView( Context context, Cell cell ) : base(context, cell) { }
 
-		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { _Value.SetSingleLine(false); }
-
-		// protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.CellPropertyChanged(sender, e); }
-		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
-		// protected internal override void UpdateCell() { base.UpdateCell(); }
-
-
-		protected override void EnableCell()
-		{
-			base.EnableCell();
-			_Title.Enable();
-			_Description.Enable();
-			_Hint.Enable();
-			_Value.Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Title.Disable();
-			_Description.Disable();
-			_Hint.Disable();
-			_Value.Disable();
-		}
-		// private void UpdateUseDescriptionAsValue()
-		// {
-		// 	if ( !_LabelCell.IgnoreUseDescriptionAsValue &&
-		// 		 CellParent != null &&
-		// 		 CellParent.UseDescriptionAsValue )
-		// 	{
-		// 		// _Value = DescriptionLabel;
-		// 		_Description.Label.Visibility = ViewStates.Visible;
-		// 		_Value.Label.Visibility = ViewStates.Gone;
-		// 	}
-		// 	else
-		// 	{
-		// 		// _Value = _Value.Label;
-		// 		_Value.Label.Visibility = ViewStates.Visible;
-		// 	}
-		// }
-
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_Icon.Dispose();
-				_Title.Dispose();
-				_Description.Dispose();
-				_Hint.Dispose();
-				_Value.Dispose();
-
-				_CellLayout.Dispose();
-			}
-
-			base.Dispose(disposing);
-		}
+		public LabelCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 	}
 }

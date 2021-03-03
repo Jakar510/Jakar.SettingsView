@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Android.Content;
 using Android.Runtime;
-using Android.Util;
 using AndroidX.RecyclerView.Widget;
-using Java.Interop;
 using Xamarin.Forms.Platform.Android;
 
 #nullable enable

@@ -7,7 +7,6 @@
 			android:layout_height="wrap_content"
 			android:columnCount="4"
 			android:rowCount="3"
-			android:weightSum="18"
 			android:columnOrderPreserved="true"
 			android:rowOrderPreserved="true"
 			android:minHeight="44dp"
@@ -16,7 +15,7 @@
 			android:paddingRight="10dp"
 			android:paddingBottom="4dp">
 
-	<Jakar.SettingsView.Droid.Cells.Controls.IconView android:id="@+id/CellIcon"
+	<Jakar.SettingsView.Droid.Controls.IconView android:id="@+id/CellIcon"
 													  android:layout_width="0dp"
 													  android:layout_height="match_parent"
 													  android:layout_row="0"
@@ -24,16 +23,18 @@
 													  android:layout_column="0"
 													  android:layout_columnSpan="1"
 													  android:layout_columnWeight="1"
+													  android:paddingLeft="5dp"
 													  android:scaleType="fitXY" />
 
-	<Jakar.SettingsView.Droid.Cells.Controls.TitleView android:id="@+id/CellTitle"
+	<Jakar.SettingsView.Droid.Controls.TitleView android:id="@+id/CellTitle"
 													   android:layout_row="0"
 													   android:layout_rowSpan="1"
 													   android:layout_column="1"
 													   android:layout_columnSpan="1"
-													   android:layout_columnWeight="6"
+													   android:layout_columnWeight="8"
 													   android:layout_width="0dp"
 													   android:layout_height="wrap_content"
+													   android:layout_gravity="fill_horizontal"
 													   android:minLines="1"
 													   android:maxLines="10"
 													   android:ellipsize="none"
@@ -42,14 +43,15 @@
 													   android:scrollHorizontally="false"
 													   android:text="Title" />
 
-	<Jakar.SettingsView.Droid.Cells.Controls.DescriptionView android:id="@+id/CellDescription"
+	<Jakar.SettingsView.Droid.Controls.DescriptionView android:id="@+id/CellDescription"
 															 android:layout_row="1"
 															 android:layout_rowSpan="1"
 															 android:layout_column="1"
 															 android:layout_columnSpan="1"
-															 android:layout_columnWeight="6"
+															 android:layout_columnWeight="8"
 															 android:layout_width="0dp"
 															 android:layout_height="wrap_content"
+															 android:layout_gravity="fill_horizontal"
 															 android:minLines="1"
 															 android:maxLines="10"
 															 android:ellipsize="none"
@@ -58,7 +60,7 @@
 															 android:scrollHorizontally="false"
 															 android:text="Description" />
 
-	<Jakar.SettingsView.Droid.Cells.Controls.HintView android:id="@+id/CellHint"
+	<Jakar.SettingsView.Droid.Controls.HintView android:id="@+id/CellHint"
 													  android:layout_row="0"
 													  android:layout_rowSpan="1"
 													  android:layout_column="2"
@@ -96,8 +98,8 @@
 				  android:layout_columnWeight="1"
 				  android:layout_centerVertical="true"
 				  android:layout_width="wrap_content"
-				  android:layout_height="wrap_content"
-				  android:layout_gravity="end"
+				  android:layout_height="match_parent"
+				  android:layout_gravity="end|center_vertical"
 				  android:orientation="horizontal" />
 
 </GridLayout>

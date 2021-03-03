@@ -8,7 +8,6 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.Android;
-using View = Android.Views.View;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid

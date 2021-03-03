@@ -177,7 +177,7 @@
 										Number="{Binding Number.Value}"
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
-										PickerTitle="{Binding PickerTitle.Value}"
+										PopupPageTitle="{Binding PickerTitle.Value}"
 										SelectedCommand="{Binding NumberSelectedCommand}" />
 				<cells:TimePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"

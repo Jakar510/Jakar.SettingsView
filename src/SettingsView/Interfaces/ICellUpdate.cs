@@ -20,6 +20,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public void Enable();
 		public void Disable();
 
+		// public bool UpdateProportions();
 		public bool UpdateText();
 		public bool UpdateColor();
 		public bool UpdateFontSize();
