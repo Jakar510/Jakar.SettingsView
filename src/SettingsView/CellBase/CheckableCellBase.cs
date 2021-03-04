@@ -1,10 +1,11 @@
 ﻿// unset
 
+using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 
-namespace Jakar.SettingsView.Shared.Cells.Base
+namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class BaseCheckableCell : CellBaseDescription
+	public class CheckableCellBase : DescriptionCellBase
 	{
 		public static BindableProperty CheckedProperty = BindableProperty.Create(nameof(Checked), typeof(bool), typeof(CheckboxCell), default(bool), BindingMode.TwoWay);
 
@@ -19,7 +20,7 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		}
 
 		
-		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(CheckboxCell), SettingsView.DEFAULT_ACCENT_COLOR);
+		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(CheckboxCell), sv.SettingsView.DEFAULT_ACCENT_COLOR);
 
 		/// <summary>
 		/// Gets or sets the color of the accent true value of the check.
@@ -32,7 +33,7 @@ namespace Jakar.SettingsView.Shared.Cells.Base
 		}
 		
 		
-		public static BindableProperty OffColorProperty = BindableProperty.Create(nameof(OffColor), typeof(Color), typeof(CheckboxCell), SettingsView.DEFAULT_OFF_COLOR);
+		public static BindableProperty OffColorProperty = BindableProperty.Create(nameof(OffColor), typeof(Color), typeof(CheckboxCell), sv.SettingsView.DEFAULT_OFF_COLOR);
 
 		/// <summary>
 		/// Gets or sets the color of the false value of the check

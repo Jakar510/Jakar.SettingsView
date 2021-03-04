@@ -10,14 +10,14 @@ namespace Sample.ViewModels
 	public class RowManipulationTemplateViewModel
 	{
 		public ObservableCollection<SettingsGroup> Settings { get; set; }
-		public ReactiveCommand<string> ManipulateCommand { get; } = new ReactiveCommand<string>();
+		public ReactiveCommand<string> ManipulateCommand { get; } = new();
 
 		public RowManipulationTemplateViewModel()
 		{
 			Settings = new ObservableCollection<SettingsGroup>();
 			Settings.Add(new SettingsGroup(new List<SettingsSectionItem>
 										   {
-											   new SettingsSectionItem
+											   new()
 											   {
 												   Text = "abc"
 											   }
@@ -81,19 +81,19 @@ namespace Sample.ViewModels
 		}
 
 		private SettingsSectionItem CreateItem() =>
-			new SettingsSectionItem
+			new()
 			{
 				Text = "AddText",
 			};
 
 		private SettingsGroup CreateSection() =>
-			new SettingsGroup(new List<SettingsSectionItem>
-							  {
-								  new SettingsSectionItem
-								  {
-									  Text = "AddSectionText"
-								  }
-							  })
+			new(new List<SettingsSectionItem>
+				{
+					new()
+					{
+						Text = "AddSectionText"
+					}
+				})
 			{
 				HeaderText = "AddSectionHeader",
 				FooterText = "AddFooterText"
@@ -104,7 +104,7 @@ namespace Sample.ViewModels
 	{
 		public string HeaderText { get; set; }
 		public string FooterText { get; set; }
-		public ReactivePropertySlim<bool> IsVisible { get; set; } = new ReactivePropertySlim<bool>(true);
+		public ReactivePropertySlim<bool> IsVisible { get; set; } = new(true);
 
 		public SettingsGroup( IList<SettingsSectionItem> list ) : base(list) { }
 	}

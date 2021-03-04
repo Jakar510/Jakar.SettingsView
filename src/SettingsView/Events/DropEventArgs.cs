@@ -1,7 +1,8 @@
 ﻿using System;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.Events
 {
 	public class DropEventArgs : EventArgs
 	{

@@ -7,11 +7,11 @@ namespace Sample.ViewModels
 {
 	public class RadioCellTemplateTestViewModel
 	{
-		public List<int> ValueTypes { get; set; } = new List<int>();
-		public List<Hoge> RefTypes { get; set; } = new List<Hoge>();
+		public List<int> ValueTypes { get; set; } = new();
+		public List<Hoge> RefTypes { get; set; } = new();
 
-		public ReactivePropertySlim<int> SelectedValue { get; } = new ReactivePropertySlim<int>();
-		public ReactivePropertySlim<Hoge> SelectedRef { get; } = new ReactivePropertySlim<Hoge>();
+		public ReactivePropertySlim<int> SelectedValue { get; } = new();
+		public ReactivePropertySlim<Hoge> SelectedRef { get; } = new();
 
 		public RadioCellTemplateTestViewModel()
 		{

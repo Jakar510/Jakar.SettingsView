@@ -75,7 +75,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 		}
 

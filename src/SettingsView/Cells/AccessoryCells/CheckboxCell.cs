@@ -1,6 +1,6 @@
-﻿using Jakar.SettingsView.Shared.Cells.Base;
+﻿using Jakar.SettingsView.Shared.CellBase;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class CheckboxCell : BaseCheckableCell { }
+	public class CheckboxCell : CheckableCellBase { }
 }

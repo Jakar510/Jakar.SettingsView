@@ -10,8 +10,8 @@ namespace Sample.ViewModels
 {
 	public class MainPageViewModel : BindableBase, INavigationAware
 	{
-		public ReactiveCommand<string> GoToPage { get; set; } = new ReactiveCommand<string>();
-		public ReactiveCommand<string> GoToTest { get; set; } = new ReactiveCommand<string>();
+		public ReactiveCommand<string> GoToPage { get; set; } = new();
+		public ReactiveCommand<string> GoToTest { get; set; } = new();
 
 		public MainPageViewModel( INavigationService navigationService )
 		{

@@ -3,7 +3,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.sv;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -66,7 +67,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		protected void SetUpPropertyChanged( CellBaseView nativeCell )
 		{
 			var formsCell = nativeCell.Cell as CellBase;
-			var parentElement = formsCell.Parent as Shared.SettingsView;
+			var parentElement = formsCell.Parent as Shared.sv.SettingsView;
 
 			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
@@ -89,7 +90,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( formsCell is null )
 				return; // for HotReload
 
-			var parentElement = formsCell.Parent as Shared.SettingsView;
+			var parentElement = formsCell.Parent as Shared.sv.SettingsView;
 
 			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
 			if ( parentElement != null )

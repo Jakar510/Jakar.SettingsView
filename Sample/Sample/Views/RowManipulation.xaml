@@ -6,6 +6,7 @@
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.RowManipulation">
 
 	<ContentPage.Resources>
@@ -69,11 +70,11 @@
 
 		</StackLayout>
 
-		<settingsView:SettingsView Grid.Column="1"
+		<sv:SettingsView Grid.Column="1"
 								   HeaderHeight="36"
 								   Style="{StaticResource settingsView}"
 								   x:Name="settings">
-			<settingsView:Section Title="Header"
+			<sv:Section Title="Header"
 								  FooterText="Footer"
 								  x:Name="section">
 				<cells:LabelCell IconSource="icon.png"
@@ -90,7 +91,7 @@
 				<cells:CheckboxCell IconSource="icon.png"
 									Title="CheckboxCell"
 									Description="HogeFuga"/>
-			</settingsView:Section>
-		</settingsView:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</Grid>
 </ContentPage>

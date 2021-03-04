@@ -8,6 +8,7 @@
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.ParentPropTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -23,7 +24,7 @@
 			<me:ParentController />
 		</ScrollView>
 
-		<settingsView:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
+		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
 								   SeparatorColor="{Binding SeparatorColor.Value}"
 								   SelectedColor="{Binding SelectedColor.Value}"
 								   HeaderPadding="{Binding HeaderPadding.Value}"
@@ -52,7 +53,7 @@
 								   CellHintFontSize="{Binding CellHintFontSize.Value}"
 								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
 								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
-			<settingsView:Section Title="Section1"
+			<sv:Section Title="Section1"
 								  FooterText="Footer1">
 				<cells:LabelCell IconSource="icon.png"
 								 Title="LabelCell"
@@ -94,8 +95,8 @@
 								 ValueText="inputText" />
 				<cells:ButtonCell IconSource="icon.png"
 								  Title="ButtonCell"/>
-			</settingsView:Section>
-			<settingsView:Section Title="Section2"
+			</sv:Section>
+			<sv:Section Title="Section2"
 								  FooterText="Footer2">
 				<cells:LabelCell Title="LabelCell"
 								 Hint="hint"
@@ -122,9 +123,9 @@
 								 Hint="hint"
 								 ValueText="inputText" />
 				<cells:ButtonCell Title="ButtonCell"/>
-			</settingsView:Section>
+			</sv:Section>
 
-		</settingsView:SettingsView>
+		</sv:SettingsView>
 	</StackLayout>
 
 </ContentPage>

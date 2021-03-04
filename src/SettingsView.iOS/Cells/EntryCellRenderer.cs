@@ -83,12 +83,12 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName )
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName )
 			{
 				UpdateValueTextColor();
 				ValueField.SetNeedsLayout(); // immediately reflect
 			}
-			else if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName || e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName || e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName || e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName || e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath ) { ValueField.BecomeFirstResponder(); }

@@ -8,6 +8,7 @@
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.DataTemplateTest"
 			 x:Name="self">
 	<ContentPage.Resources>
@@ -57,7 +58,7 @@
 			<me:ParentController />
 		</ScrollView>
 
-		<settingsView:SettingsView x:Name="settings"
+		<sv:SettingsView x:Name="settings"
 								   ScrollToBottom="{Binding ScrollToBottom.Value}"
 								   ScrollToTop="{Binding ScrollToTop.Value}"
 								   BackgroundColor="{Binding BackgroundColor.Value}"
@@ -89,22 +90,22 @@
 								   CellHintFontSize="{Binding CellHintFontSize.Value}"
 								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
 								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
-			<settingsView:Section Title="UseDataTemplate"
+			<sv:Section Title="UseDataTemplate"
 								  ItemsSource="{Binding ItemsSource}"
 								  HeaderHeight="50"
 								  UseDragSort="true">
-				<settingsView:Section.ItemTemplate>
+				<sv:Section.ItemTemplate>
 					<DataTemplate>
 						<cells:CommandCell Title="{Binding Name}"
 										   Description="{Binding Days}"
 										   Command="{Binding BindingContext.DoCommand,Source={x:Reference self}}" />
 					</DataTemplate>
-				</settingsView:Section.ItemTemplate>
-			</settingsView:Section>
+				</sv:Section.ItemTemplate>
+			</sv:Section>
 			<!--<ai:Section Title="UseSelector" ItemsSource="{Binding ItemsSource}" ItemTemplate="{StaticResource selector}">
                 
             </ai:Section>-->
 
-		</settingsView:SettingsView>
+		</sv:SettingsView>
 	</StackLayout>
 </ContentPage>

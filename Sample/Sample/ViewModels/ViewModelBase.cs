@@ -3,69 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 using Jakar.SettingsView;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Svg;
+using SettingsView = Jakar.SettingsView.Shared.sv.SettingsView;
 
 namespace Sample.ViewModels
 {
 	public class ViewModelBase : BindableBase
 	{
-		public ReactiveProperty<Color> BackgroundColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Color> SeparatorColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Color> SelectedColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Thickness> HeaderPadding { get; } = new ReactiveProperty<Thickness>();
-		public ReactiveProperty<Color> HeaderTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> HeaderFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<LayoutAlignment> HeaderTextVerticalAlign { get; } = new ReactiveProperty<LayoutAlignment>();
-		public ReactiveProperty<Color> HeaderBackgroundColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> HeaderHeight { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> FooterTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> FooterFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> FooterBackgroundColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Thickness> FooterPadding { get; } = new ReactiveProperty<Thickness>();
-		public ReactiveProperty<int> RowHeight { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<bool> HasUnevenRows { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<Color> CellTitleColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> CellTitleFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> CellValueTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> CellValueTextFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> CellDescriptionColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> CellDescriptionFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> CellBackgroundColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Size> CellIconSize { get; } = new ReactiveProperty<Size>();
-		public ReactiveProperty<double> CellIconRadius { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> CellAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Color> CellHintTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> CellHintFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<bool> UseDescriptionAsValue { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> ShowSectionTopBottomBorder { get; } = new ReactiveProperty<bool>();
+		public ReactiveProperty<Color> BackgroundColor { get; } = new();
+		public ReactiveProperty<Color> SeparatorColor { get; } = new();
+		public ReactiveProperty<Color> SelectedColor { get; } = new();
+		public ReactiveProperty<Thickness> HeaderPadding { get; } = new();
+		public ReactiveProperty<Color> HeaderTextColor { get; } = new();
+		public ReactiveProperty<double> HeaderFontSize { get; } = new();
+		public ReactiveProperty<LayoutAlignment> HeaderTextVerticalAlign { get; } = new();
+		public ReactiveProperty<Color> HeaderBackgroundColor { get; } = new();
+		public ReactiveProperty<double> HeaderHeight { get; } = new();
+		public ReactiveProperty<Color> FooterTextColor { get; } = new();
+		public ReactiveProperty<double> FooterFontSize { get; } = new();
+		public ReactiveProperty<Color> FooterBackgroundColor { get; } = new();
+		public ReactiveProperty<Thickness> FooterPadding { get; } = new();
+		public ReactiveProperty<int> RowHeight { get; } = new();
+		public ReactiveProperty<bool> HasUnevenRows { get; } = new();
+		public ReactiveProperty<Color> CellTitleColor { get; } = new();
+		public ReactiveProperty<double> CellTitleFontSize { get; } = new();
+		public ReactiveProperty<Color> CellValueTextColor { get; } = new();
+		public ReactiveProperty<double> CellValueTextFontSize { get; } = new();
+		public ReactiveProperty<Color> CellDescriptionColor { get; } = new();
+		public ReactiveProperty<double> CellDescriptionFontSize { get; } = new();
+		public ReactiveProperty<Color> CellBackgroundColor { get; } = new();
+		public ReactiveProperty<Size> CellIconSize { get; } = new();
+		public ReactiveProperty<double> CellIconRadius { get; } = new();
+		public ReactiveProperty<Color> CellAccentColor { get; } = new();
+		public ReactiveProperty<Color> CellHintTextColor { get; } = new();
+		public ReactiveProperty<double> CellHintFontSize { get; } = new();
+		public ReactiveProperty<bool> UseDescriptionAsValue { get; } = new();
+		public ReactiveProperty<bool> ShowSectionTopBottomBorder { get; } = new();
 
-		public ReactiveCommand PropertyChangeCommand { get; } = new ReactiveCommand();
+		public ReactiveCommand PropertyChangeCommand { get; } = new();
 
-		public ReactiveProperty<ImageSource> IconSource { get; } = new ReactiveProperty<ImageSource>();
-		public ReactiveProperty<Size> IconSize { get; } = new ReactiveProperty<Size>();
-		public ReactiveProperty<double> IconRadius { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> Description { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> HintText { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> ValueText { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<Color> BgColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<Color> TitleColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> TitleFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> ValueTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> ValueTextFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> DescriptionColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> DescriptionFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<Color> HintTextColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<double> HintFontSize { get; } = new ReactiveProperty<double>();
-		public ReactiveProperty<bool> IsEnabled { get; } = new ReactiveProperty<bool>(true);
+		public ReactiveProperty<ImageSource> IconSource { get; } = new();
+		public ReactiveProperty<Size> IconSize { get; } = new();
+		public ReactiveProperty<double> IconRadius { get; } = new();
+		public ReactiveProperty<string> Title { get; } = new();
+		public ReactiveProperty<string> Description { get; } = new();
+		public ReactiveProperty<string> HintText { get; } = new();
+		public ReactiveProperty<string> ValueText { get; } = new();
+		public ReactiveProperty<Color> BgColor { get; } = new();
+		public ReactiveProperty<Color> TitleColor { get; } = new();
+		public ReactiveProperty<double> TitleFontSize { get; } = new();
+		public ReactiveProperty<Color> ValueTextColor { get; } = new();
+		public ReactiveProperty<double> ValueTextFontSize { get; } = new();
+		public ReactiveProperty<Color> DescriptionColor { get; } = new();
+		public ReactiveProperty<double> DescriptionFontSize { get; } = new();
+		public ReactiveProperty<Color> HintTextColor { get; } = new();
+		public ReactiveProperty<double> HintFontSize { get; } = new();
+		public ReactiveProperty<bool> IsEnabled { get; } = new(true);
 
-		public ReactiveCommand CellChangeCommand { get; } = new ReactiveCommand();
+		public ReactiveCommand CellChangeCommand { get; } = new();
 
 
 		public static Color OuterColor = Color.DeepPink;
@@ -318,52 +319,52 @@ namespace Sample.ViewModels
 			string text = ( obj as Label )?.Text;
 			switch ( text )
 			{
-				case nameof(CellBaseTitle.Title):
+				case nameof(TitleCellBase.Title):
 					NextText(Title, TitleTexts);
 					break;
 				case nameof(LabelCell.ValueText):
 					NextText(ValueText, ValueTexts);
 					break;
-				case nameof(CellBaseDescription.Description):
+				case nameof(DescriptionCellBase.Description):
 					NextText(Description, DescriptionTexts);
 					break;
-				case nameof(CellBaseHintText.Hint):
+				case nameof(HintTextCellBase.Hint):
 					NextText(HintText, HintTexts);
 					break;
-				case nameof(CellBaseTitle.TitleColor):
+				case nameof(TitleCellBase.TitleColor):
 					NextColor(TitleColor, DeepTextColors);
 					break;
 				case nameof(LabelCell.ValueTextColor):
 					NextColor(ValueTextColor, PaleTextColors);
 					break;
-				case nameof(CellBaseDescription.DescriptionColor):
+				case nameof(DescriptionCellBase.DescriptionColor):
 					NextColor(DescriptionColor, PaleTextColors);
 					break;
 				case nameof(CellBase.BackgroundColor):
 					NextColor(BgColor, CellBackColors);
 					break;
-				case nameof(CellBaseHintText.HintColor):
+				case nameof(HintTextCellBase.HintColor):
 					NextColor(HintTextColor, AccentColors);
 					break;
-				case nameof(CellBaseTitle.TitleFontSize):
+				case nameof(TitleCellBase.TitleFontSize):
 					ChangeFontSize(TitleFontSize);
 					break;
 				case nameof(LabelCell.ValueTextFontSize):
 					ChangeFontSize(ValueTextFontSize);
 					break;
-				case nameof(CellBaseDescription.DescriptionFontSize):
+				case nameof(DescriptionCellBase.DescriptionFontSize):
 					ChangeFontSize(DescriptionFontSize);
 					break;
-				case nameof(CellBaseDescription.IconSource):
+				case nameof(DescriptionCellBase.IconSource):
 					ChangeIconSource(IconSource);
 					break;
-				case nameof(CellBaseDescription.IconRadius):
+				case nameof(DescriptionCellBase.IconRadius):
 					ChangeHeight(IconRadius);
 					break;
-				case nameof(CellBaseDescription.IconSize):
+				case nameof(DescriptionCellBase.IconSize):
 					ChangeSize(IconSize);
 					break;
-				case nameof(CellBaseHintText.HintFontSize):
+				case nameof(HintTextCellBase.HintFontSize):
 					ChangeFontSize(HintFontSize);
 					break;
 				case nameof(CellBase.IsEnabled):

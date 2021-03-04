@@ -8,6 +8,7 @@
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.RadioCellTest">
 
 	<ContentPage.Resources>
@@ -48,7 +49,7 @@
 			<me:ParentController />
 		</ScrollView>
 
-		<settingsView:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
+		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
 								   SeparatorColor="{Binding SeparatorColor.Value}"
 								   SelectedColor="{Binding SelectedColor.Value}"
 								   HeaderPadding="{Binding HeaderPadding.Value}"
@@ -78,7 +79,7 @@
 								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
 								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}"
 								   cells:RadioCell.SelectedValue="{Binding GlobalSelected.Value}">
-			<settingsView:Section Title="Section1"
+			<sv:Section Title="Section1"
 								  FooterText="Footer1"
 								  cells:RadioCell.SelectedValue="{Binding Selected.Value}">
 				<cells:RadioCell IsEnabled="{Binding IsEnabled.Value}"
@@ -99,8 +100,8 @@
 								 AccentColor="{Binding OwnAccentColor.Value}"
 								 Value="{Binding RadioItems[2]}" />
 
-			</settingsView:Section>
-			<settingsView:Section Title="Section1"
+			</sv:Section>
+			<sv:Section Title="Section1"
 								  FooterText="Footer1">
 				<cells:RadioCell Title="{Binding RadioItems[3].Name}"
 								 AccentColor="{Binding OwnAccentColor.Value}"
@@ -111,7 +112,7 @@
 				<cells:RadioCell Title="{Binding RadioItems[5].Name}"
 								 AccentColor="{Binding OwnAccentColor.Value}"
 								 Value="{Binding RadioItems[5]}" />
-			</settingsView:Section>
-		</settingsView:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</StackLayout>
 </ContentPage>

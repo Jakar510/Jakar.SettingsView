@@ -6,11 +6,12 @@
 			 xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 prism:ViewModelLocator.AutowireViewModel="True"
 			 x:Class="Sample.Views.MainPage"
 			 Title="MainPage">
-	<settingsView:SettingsView>
-		<settingsView:Section Title="TESTS" HeaderHeight="10">
+	<sv:SettingsView>
+		<sv:Section Title="TESTS" HeaderHeight="10">
 			<cells:CommandCell Title="TestSelectActions"
 							   Command="{Binding GoToTest}"
 							   CommandParameter="TestSelectActions" />
@@ -77,6 +78,6 @@
 			<cells:ButtonCell Title="OnTableViewTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="OnTableViewTest" />
-		</settingsView:Section>
-	</settingsView:SettingsView>
+		</sv:Section>
+	</sv:SettingsView>
 </ContentPage>

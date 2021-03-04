@@ -7,6 +7,7 @@
 			 xmlns:cell="clr-namespace:Sample.Views.Cells"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.CustomFontTest">
 
 	<ContentPage.Resources>
@@ -40,7 +41,7 @@
 			<!-- ちょい小さいフォントサイズ -->
 			<x:Double x:Key="BaseFontSize-">11</x:Double>
 
-			<Style TargetType="settingsView:SettingsView">
+			<Style TargetType="sv:SettingsView">
 				<Setter Property="SeparatorColor"
 						Value="{StaticResource DisabledColor}" />
 				<Setter Property="BackgroundColor"
@@ -125,7 +126,7 @@
 				<Switch IsToggled="{Binding IsItalic.Value}" />
 			</StackLayout>
 		</ScrollView>
-		<settingsView:SettingsView Grid.Column="1"
+		<sv:SettingsView Grid.Column="1"
 								   HasUnevenRows="true"
 								   HeaderHeight="36"
 								   HeaderPadding="14,0,0,6"
@@ -145,7 +146,7 @@
 								   CellHintFontFamily="{Binding ParentHint.Value}"
 								   CellHintFontAttributes="{Binding ParentAttr.Value}">
 
-			<settingsView:Section FooterText="This is a footer. optionaly you can write here.">
+			<sv:Section FooterText="This is a footer. optionaly you can write here.">
 				<cells:CommandCell IconSource="icon.png"
 								   IconSize="60,60"
 								   IconRadius="30"
@@ -158,22 +159,22 @@
 								   DescriptionFontFamily="{Binding Desc.Value}"
 								   TitleFontAttributes="{Binding ChildAttr.Value}"
 								   DescriptionFontAttributes="{Binding ChildAttr.Value}"  />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section Title="LabelCell">
+			<sv:Section Title="LabelCell">
 				<cells:LabelCell Title="Storage"
 								 ValueText="3,065MB" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section Title="CheckableCell">
+			<sv:Section Title="CheckableCell">
 				<cells:SwitchCell Title="Switch"
 								  Checked="true"
 								  Description="This is description. you can write detail explanation of the item here. long text wrap automatically." />
 				<cells:CheckboxCell Title="Checkbox"
 									Checked="true" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section Title="MultiPicker"
+			<sv:Section Title="MultiPicker"
 								  FooterText="This is a multi select picker. you are free to select items until MaxSelectedNumber.">
 				<cells:PickerCell Title="Favorites"
 								  ItemsSource="{Binding ItemsSource}"
@@ -181,41 +182,43 @@
 								  MaxSelectedNumber="3"
 								  SelectedItems="{Binding SelectedItems}"
 								  KeepSelectedUntilBack="true"
-								  PopupPageTitle="select 3 items" />
-			</settingsView:Section>
+								  PopupTitle="select 3 items" />
+			</sv:Section>
 
-			<settingsView:Section Title="Picker 4 Brothers">
+			<sv:Section Title="Picker 4 Brothers">
 				<cells:NumberPickerCell Title="NumberPicker"
 										Min="0"
 										Max="99"
 										Number="15"
-										PopupPageTitle="Select number" />
+										PopupTitle="Select number" />
 				<cells:TimePickerCell Title="TimePicker"
 									  Format="HH:mm"
 									  Time="15:30"
-									  PickerTitle="Select time" />
+									  PopupTitle="Select time" />
 				<cells:DatePickerCell Title="DatePicker"
 									  Format="yyyy/MM/dd (ddd)"
 									  Date="2017/11/11"
 									  MinimumDate="2015/11/10"
 									  MaximumDate="2025/12/31"
-									  TodayText="Today's date" />
+									  TodayText="Today's date"
+									  PopupTitle="Select date" />
 				<cells:TextPickerCell Title="TextPicker"
 									  Items="{Binding TextItems}"
 									  SelectedItem="{Binding SelectedText.Value}"
-									  IsCircularPicker="False" />
-			</settingsView:Section>
+									  IsCircularPicker="False"
+									  PopupTitle="Select item" />
+			</sv:Section>
 
-			<settingsView:Section Title="RadioCell"
+			<sv:Section Title="RadioCell"
 								  FooterText="You can select either TypeA or TypeB."
 								  cells:RadioCell.SelectedValue="1">
 				<cells:RadioCell Title="TypeA"
 								 Value="1" />
 				<cells:RadioCell Title="TypeB"
 								 Value="2" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section Title="Input"
+			<sv:Section Title="Input"
 								  IsVisible="{Binding InputSectionVisible.Value}">
 				<cells:EntryCell Title="EntryCell"
 								 ValueText="{Binding InputText.Value}"
@@ -223,10 +226,10 @@
 								 Keyboard="Email"
 								 ValueTextAlignment="End"
 								 Hint="{Binding InputError.Value}" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section>
-				<settingsView:Section.HeaderView>
+			<sv:Section>
+				<sv:Section.HeaderView>
 					<FlexLayout Direction="Row"
 								JustifyContent="SpaceBetween"
 								AlignItems="End"
@@ -238,23 +241,23 @@
 									 WidthRequest="20"
 									 HeightRequest="20" />
 					</FlexLayout>
-				</settingsView:Section.HeaderView>
-				<settingsView:Section.FooterView>
+				</sv:Section.HeaderView>
+				<sv:Section.FooterView>
 					<Label Text="CustomFooterView. "
 						   TextColor="DeepSkyBlue"
 						   Padding="10,6,10,0" />
-				</settingsView:Section.FooterView>
+				</sv:Section.FooterView>
 				<cell:SliderCell Value="0.5"
 								 Description="CustomCell" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section Title="ButtonCell"
+			<sv:Section Title="ButtonCell"
 								  FooterText="Change input section visibility.">
 				<cells:ButtonCell Title="Toggle Section"
 								  TitleColor="{StaticResource TitleTextColor}"
 								  TitleAlignment="Center"
 								  Command="{Binding SectionToggleCommand}" />
-			</settingsView:Section>
-		</settingsView:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</Grid>
 </ContentPage>

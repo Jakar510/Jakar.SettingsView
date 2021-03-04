@@ -6,8 +6,10 @@ using Android.Views;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Droid;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using SettingsView = Jakar.SettingsView.Shared.sv.SettingsView;
 
 #nullable enable
 [assembly: ExportRenderer(typeof(SettingsView), typeof(SettingsViewRenderer))]
@@ -15,7 +17,7 @@ using Xamarin.Forms.Platform.Android;
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public class SettingsViewRenderer : ViewRenderer<Shared.SettingsView, RecyclerView>
+	public class SettingsViewRenderer : ViewRenderer<Shared.sv.SettingsView, RecyclerView>
 	{
 		protected Page? _ParentPage { get; set; }
 		protected SettingsViewRecyclerAdapter? _Adapter { get; set; }
@@ -29,10 +31,10 @@ namespace Jakar.SettingsView.Droid
 
 		public SettingsViewRenderer( Context context ) : base(context) => AutoPackage = false;
 
-		protected override void OnElementChanged( ElementChangedEventArgs<Shared.SettingsView> e )
+		protected override void OnElementChanged( ElementChangedEventArgs<Shared.sv.SettingsView> e )
 		{
 			base.OnElementChanged(e);
-			Shared.SettingsView? settingsView = e.NewElement;
+			Shared.sv.SettingsView? settingsView = e.NewElement;
 			if ( settingsView is null ) { return; }
 
 			// Fix scrollbar visibility and flash. https://github.com/xamarin/Xamarin.Forms/pull/10893
@@ -97,29 +99,29 @@ namespace Jakar.SettingsView.Droid
 		protected override void OnElementPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.OnElementPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.SettingsView.SeparatorColorProperty.PropertyName )
+			if ( e.PropertyName == Shared.sv.SettingsView.SeparatorColorProperty.PropertyName )
 			{
 				UpdateSeparatorColor();
 				Control.InvalidateItemDecorations();
 			}
-			else if ( e.PropertyName == Shared.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 			else if ( e.PropertyName == TableView.RowHeightProperty.PropertyName ) { UpdateRowHeight(); }
-			else if ( e.PropertyName == Shared.SettingsView.UseDescriptionAsValueProperty.PropertyName ) { _Adapter?.NotifyDataSetChanged(); }
-			else if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName ) { }
-			else if ( e.PropertyName == Shared.SettingsView.ShowSectionTopBottomBorderProperty.PropertyName )
+			else if ( e.PropertyName == Shared.sv.SettingsView.UseDescriptionAsValueProperty.PropertyName ) { _Adapter?.NotifyDataSetChanged(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.SelectedColorProperty.PropertyName ) { }
+			else if ( e.PropertyName == Shared.sv.SettingsView.ShowSectionTopBottomBorderProperty.PropertyName )
 			{
 				//_adapter.NotifyDataSetChanged();
 				Control.InvalidateItemDecorations();
 			}
 			else if ( e.PropertyName == TableView.HasUnevenRowsProperty.PropertyName ) { _Adapter?.NotifyDataSetChanged(); }
-			else if ( e.PropertyName == Shared.SettingsView.ScrollToTopProperty.PropertyName ) { UpdateScrollToTop(); }
-			else if ( e.PropertyName == Shared.SettingsView.ScrollToBottomProperty.PropertyName ) { UpdateScrollToBottom(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToTopProperty.PropertyName ) { UpdateScrollToTop(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToBottomProperty.PropertyName ) { UpdateScrollToBottom(); }
 		}
 
 		protected void UpdateSeparatorColor() { _Divider?.SetTint(Element.SeparatorColor.ToAndroid()); }
 		protected void UpdateRowHeight()
 		{
-			if ( Element.RowHeight < 0 ) { Element.RowHeight = Shared.SettingsView.MIN_ROW_HEIGHT; }
+			if ( Element.RowHeight < 0 ) { Element.RowHeight = Shared.sv.SettingsView.MIN_ROW_HEIGHT; }
 			else { _Adapter?.NotifyDataSetChanged(); }
 		}
 		protected void UpdateScrollToTop()

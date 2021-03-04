@@ -7,10 +7,12 @@ using Foundation;
 using Jakar.SettingsView;
 using Jakar.SettingsView.iOS;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using MobileCoreServices;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+using SettingsView = Jakar.SettingsView.Shared.sv.SettingsView;
 
 [assembly: ExportRenderer(typeof(SettingsView), typeof(SettingsViewRenderer))]
 
@@ -20,7 +22,7 @@ namespace Jakar.SettingsView.iOS
 	/// Settings view renderer.
 	/// </summary>
 	[Preserve(AllMembers = true)]
-	public class SettingsViewRenderer : ViewRenderer<Shared.SettingsView, UITableView>, IUITableViewDragDelegate, IUITableViewDropDelegate
+	public class SettingsViewRenderer : ViewRenderer<Shared.sv.SettingsView, UITableView>, IUITableViewDragDelegate, IUITableViewDropDelegate
 	{
 		internal static readonly string TextHeaderId = "textHeaderView";
 		internal static readonly string TextFooterId = "textFooterView";
@@ -39,7 +41,7 @@ namespace Jakar.SettingsView.iOS
 		/// Ons the element changed.
 		/// </summary>
 		/// <param name="e">E.</param>
-		protected override void OnElementChanged( ElementChangedEventArgs<Shared.SettingsView> e )
+		protected override void OnElementChanged( ElementChangedEventArgs<Shared.sv.SettingsView> e )
 		{
 			base.OnElementChanged(e);
 
@@ -314,11 +316,11 @@ namespace Jakar.SettingsView.iOS
 		protected override void OnElementPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.OnElementPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.SettingsView.SeparatorColorProperty.PropertyName ) { UpdateSeparator(); }
-			else if ( e.PropertyName == Shared.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.SeparatorColorProperty.PropertyName ) { UpdateSeparator(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 			else if ( e.PropertyName == TableView.RowHeightProperty.PropertyName ) { UpdateRowHeight(); }
-			else if ( e.PropertyName == Shared.SettingsView.ScrollToTopProperty.PropertyName ) { UpdateScrollToTop(); }
-			else if ( e.PropertyName == Shared.SettingsView.ScrollToBottomProperty.PropertyName ) { UpdateScrollToBottom(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToTopProperty.PropertyName ) { UpdateScrollToTop(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToBottomProperty.PropertyName ) { UpdateScrollToBottom(); }
 		}
 
 
@@ -516,13 +518,13 @@ namespace Jakar.SettingsView.iOS
 															  // Don't use PerformBatchUpdates. Because can't cancel animations well.
 															  Control.BeginUpdates();
 
-															  (Cell Cell, object Item) deletedSet = section.DeleteSourceItemWithoutNotify(rowIdx);
-															  destSection.InsertSourceItemWithoutNotify(deletedSet.Cell, deletedSet.Item, destinationIndexPath.Row);
+															  (Cell? cell, object? item) = section.DeleteSourceItemWithoutNotify(rowIdx);
+															  destSection.InsertSourceItemWithoutNotify(cell, item, destinationIndexPath.Row);
 															  Control.DeleteRows(GetPaths(secIdx, rowIdx, 1), UITableViewRowAnimation.None);
 															  Control.InsertRows(GetPaths(destinationIndexPath.Section, destinationIndexPath.Row, 1), UITableViewRowAnimation.None);
 
 															  Control.EndUpdates();
-															  Element.SendItemDropped(destSection, deletedSet.Cell);
+															  Element.SendItemDropped(destSection, cell);
 														  }
 
 														  // Cancel animations and restore the scroll position.

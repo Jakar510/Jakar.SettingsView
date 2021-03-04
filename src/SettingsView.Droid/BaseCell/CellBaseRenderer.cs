@@ -1,6 +1,8 @@
 ﻿using Android.Content;
 using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Misc;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms.Platform.Android;
 
 #nullable enable
@@ -31,7 +33,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected void SetUpPropertyChanged( BaseCellView nativeCell )
 		{
 			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
-			Shared.SettingsView parentElement = formsCell.Parent;
+			Shared.sv.SettingsView parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
@@ -46,7 +48,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected void ClearPropertyChanged( BaseCellView nativeCell )
 		{
 			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
-			Shared.SettingsView parentElement = formsCell.Parent;
+			Shared.sv.SettingsView parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
 			if ( parentElement == null ) return;

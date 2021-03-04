@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoreFoundation;
 using Foundation;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -52,7 +52,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		/// Gets the cell parent.
 		/// </summary>
 		/// <value>The cell parent.</value>
-		public Shared.SettingsView CellParent => Cell.Parent as Shared.SettingsView;
+		public Shared.sv.SettingsView CellParent => Cell.Parent as Shared.sv.SettingsView;
 
 		/// <summary>
 		/// Gets the content stack.
@@ -120,22 +120,22 @@ namespace Jakar.SettingsView.iOS.Cells
 		/// <param name="e">E.</param>
 		public virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellTitleColorProperty.PropertyName ) { UpdateTitleColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellTitleFontSizeProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellTitleFontFamilyProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellTitleFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateTitleFont); }
-			else if ( e.PropertyName == Shared.SettingsView.CellDescriptionColorProperty.PropertyName ) { UpdateDescriptionColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellDescriptionFontSizeProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellDescriptionFontFamilyProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellDescriptionFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateDescriptionFont); }
-			else if ( e.PropertyName == Shared.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellHintTextColorProperty.PropertyName ) { UpdateHintTextColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellHintFontSizeProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellHintFontFamilyProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellHintFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateHintFont); }
-			else if ( e.PropertyName == Shared.SettingsView.CellIconSizeProperty.PropertyName ) { UpdateWithForceLayout(UpdateIconSize); }
-			else if ( e.PropertyName == Shared.SettingsView.CellIconRadiusProperty.PropertyName ) { UpdateWithForceLayout(UpdateIconRadius); }
-			else if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName ) { UpdateSelectedColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellTitleColorProperty.PropertyName ) { UpdateTitleColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellTitleFontSizeProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellTitleFontFamilyProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellTitleFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateTitleFont); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionColorProperty.PropertyName ) { UpdateDescriptionColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontSizeProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontFamilyProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateDescriptionFont); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { UpdateHintTextColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellHintFontSizeProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellHintFontFamilyProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellHintFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateHintFont); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellIconSizeProperty.PropertyName ) { UpdateWithForceLayout(UpdateIconSize); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellIconRadiusProperty.PropertyName ) { UpdateWithForceLayout(UpdateIconRadius); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.SelectedColorProperty.PropertyName ) { UpdateSelectedColor(); }
 			else if ( e.PropertyName == TableView.RowHeightProperty.PropertyName ) { UpdateMinRowHeight(); }
 		}
 

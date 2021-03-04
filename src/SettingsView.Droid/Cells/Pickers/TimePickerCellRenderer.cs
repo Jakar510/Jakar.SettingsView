@@ -33,7 +33,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
 				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
-			else if ( e.PropertyName == TimePickerCell.PickerTitleProperty.PropertyName ) { UpdatePickerTitle(); }
+			else if ( e.PropertyName == TimePickerCell.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
 
@@ -44,7 +44,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			base.UpdateCell();
 			UpdateTime();
-			UpdatePickerTitle();
+			UpdatePopupTitle();
 		}
 		private void CreateDialog()
 		{
@@ -62,8 +62,8 @@ namespace Jakar.SettingsView.Droid.Cells
 							Text = string.IsNullOrEmpty(_PopupTitle) ? "Select Time" : _PopupTitle,
 						};
 			
-			title.SetBackgroundColor(_TimePickerCell.PopupBackGroundColor.ToAndroid());
-			title.SetTextColor(_TimePickerCell.PopupTextColor.ToAndroid());
+			title.SetBackgroundColor(_TimePickerCell.Popup.BackgroundColor.ToAndroid());
+			title.SetTextColor(_TimePickerCell.Popup.TitleTextColor.ToAndroid());
 			title.SetPadding(10, 10, 10, 10);
 			
 			_Dialog.SetCustomTitle(title);
@@ -79,7 +79,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Dialog.Show();
 		}
 		private void UpdateTime() { _Value.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
-		private void UpdatePickerTitle() { _PopupTitle = _TimePickerCell.PickerTitle; }
+		private void UpdatePopupTitle() { _PopupTitle = _TimePickerCell.Popup.Title; }
 		private void TimeSelected( object sender, TimePickerDialog.TimeSetEventArgs e )
 		{
 			_TimePickerCell.Time = new TimeSpan(e.HourOfDay, e.Minute, 0);

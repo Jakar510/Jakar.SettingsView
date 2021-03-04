@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UIKit;
 
 namespace Jakar.SettingsView.iOS.Cells
@@ -7,15 +8,15 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Foundation.Preserve(AllMembers = true)]
 	internal class TextPickerSource : UIPickerViewModel
 	{
-		internal IList Items { get; private set; }
+		internal IList<string> Items { get; private set; }
 
 		internal event EventHandler UpdatePickerFromModel;
 
 		internal int SelectedIndex { get; set; }
 
-		internal object SelectedItem { get; set; }
+		internal string SelectedItem { get; set; }
 
-		internal object PreSelectedItem { get; set; }
+		internal string PreSelectedItem { get; set; }
 
 		/// <summary>
 		/// Gets the component count.
@@ -66,7 +67,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		/// Sets the items.
 		/// </summary>
 		/// <param name="items">Items.</param>
-		public void SetItems( IList items ) { Items = items; }
+		public void SetItems( IList<string> items ) { Items = items; }
 
 		/// <summary>
 		/// Ons the update picker form model.

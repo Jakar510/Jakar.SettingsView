@@ -4,6 +4,7 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;

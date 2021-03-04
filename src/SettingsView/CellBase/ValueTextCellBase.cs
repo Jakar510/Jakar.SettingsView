@@ -3,12 +3,12 @@
 using Xamarin.Forms;
 
 #nullable enable
-namespace Jakar.SettingsView.Shared.Cells.Base
+namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class CellBaseValueText : CellBaseValue
+	public class ValueTextCellBase : ValueCellBase
 	{
-		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(CellBaseValueText), -1);
-		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(CellBaseValueText), default(string), BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
+		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(ValueTextCellBase), -1);
+		public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(nameof(ValueText), typeof(string), typeof(ValueTextCellBase), default(string), BindingMode.TwoWay, propertyChanging: ValueTextPropertyChanging);
 		
 		public string ValueText
 		{

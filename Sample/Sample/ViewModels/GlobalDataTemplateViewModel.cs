@@ -7,17 +7,17 @@ namespace Sample.ViewModels
 {
 	public class GlobalDataTemplateViewModel
 	{
-		public ObservableCollection<SectionItem> ItemsSource { get; } = new ObservableCollection<SectionItem>();
+		public ObservableCollection<SectionItem> ItemsSource { get; } = new();
 		public GlobalDataTemplateViewModel()
 		{
 			ItemsSource.Add(new SectionItem(new List<SettingItem>
 											{
-												new SettingItem
+												new()
 												{
 													Title = "TitleA",
 													Name = "AAA"
 												},
-												new SettingItem
+												new()
 												{
 													Title = "TitleB",
 													Name = "BBB"
@@ -29,12 +29,12 @@ namespace Sample.ViewModels
 
 			ItemsSource.Add(new SectionItem(new List<SettingItem>
 											{
-												new SettingItem
+												new()
 												{
 													Title = "TitleC",
 													Name = "CCC"
 												},
-												new SettingItem
+												new()
 												{
 													Title = "TitleD",
 													Name = "DDD"

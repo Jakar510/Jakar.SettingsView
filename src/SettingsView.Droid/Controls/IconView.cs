@@ -6,7 +6,7 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -19,7 +19,7 @@ namespace Jakar.SettingsView.Droid.Controls
 {
 	public class IconView : ImageView, IUpdateIcon<BaseCell.BaseCellView, Bitmap, IImageSourceHandler>
 	{
-		private CellBaseIcon _CurrentCell => _Cell.Cell as CellBaseIcon ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private IconCellBase _CurrentCell => _Cell.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		protected Bitmap? _Image { get; set; }
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
@@ -58,7 +58,7 @@ namespace Jakar.SettingsView.Droid.Controls
 			return true;
 		}
 
-		public Size GetIconSize() => _CurrentCell.IconSize ?? _Cell.CellParent?.CellIconSize ?? Shared.SettingsView.DefaultIconSize;
+		public Size GetIconSize() => _CurrentCell.IconSize ?? _Cell.CellParent?.CellIconSize ?? Shared.sv.SettingsView.DefaultIconSize;
 		public bool Refresh( bool forceLoad = false )
 		{
 			if ( _IconTokenSource != null &&
@@ -177,9 +177,9 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseIcon.IconSizeProperty.PropertyName ||
-				 e.PropertyName == CellBaseIcon.IconRadiusProperty.PropertyName ||
-				 e.PropertyName == CellBaseIcon.IconSourceProperty.PropertyName ) { return Update(); }
+			if ( e.PropertyName == IconCellBase.IconSizeProperty.PropertyName ||
+				 e.PropertyName == IconCellBase.IconRadiusProperty.PropertyName ||
+				 e.PropertyName == IconCellBase.IconSourceProperty.PropertyName ) { return Update(); }
 
 			return false;
 		}
@@ -192,9 +192,9 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellIconRadiusProperty.PropertyName ) { return Update(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellIconRadiusProperty.PropertyName ) { return Update(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellIconSizeProperty.PropertyName ) { return Update(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellIconSizeProperty.PropertyName ) { return Update(); }
 
 			return false;
 		}

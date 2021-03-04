@@ -7,6 +7,7 @@ using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AView = Android.Views.View;
@@ -18,21 +19,21 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewRecyclerAdapter : RecyclerView.Adapter, AView.IOnClickListener, AView.IOnLongClickListener
 	{
-		protected float _MinRowHeight => AndroidContext.ToPixels(Shared.SettingsView.MIN_ROW_HEIGHT);
+		protected float _MinRowHeight => AndroidContext.ToPixels(Shared.sv.SettingsView.MIN_ROW_HEIGHT);
 
 		//Item click. correspond to AdapterView.IOnItemClickListener
 		protected int _SelectedIndex { get; set; } = -1;
 		protected AView? _PreSelectedCell { get; set; }
 
 		protected internal Context AndroidContext { get; }
-		protected Shared.SettingsView _SettingsView { get; set; }
+		protected Shared.sv.SettingsView _SettingsView { get; set; }
 		protected RecyclerView _RecyclerView { get; }
 		protected ModelProxy _Proxy { get; set; }
 
 		protected List<CustomViewHolder> _viewHolders = new List<CustomViewHolder>();
 
 
-		public SettingsViewRecyclerAdapter( Context context, Shared.SettingsView settingsView, RecyclerView recyclerView )
+		public SettingsViewRecyclerAdapter( Context context, Shared.sv.SettingsView settingsView, RecyclerView recyclerView )
 		{
 			AndroidContext = context;
 			_SettingsView = settingsView;
@@ -249,7 +250,7 @@ namespace Jakar.SettingsView.Droid
 
 			if ( cellHeight >= 0 )
 			{
-				view.SetMinimumHeight(Shared.SettingsView.MIN_ROW_HEIGHT / 2);
+				view.SetMinimumHeight(Shared.sv.SettingsView.MIN_ROW_HEIGHT / 2);
 				if ( view.LayoutParameters != null ) view.LayoutParameters.Height = cellHeight;
 			}
 

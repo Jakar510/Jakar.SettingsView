@@ -11,9 +11,9 @@ namespace Jakar.SettingsView.Droid
 	public class SVItemDecoration : RecyclerView.ItemDecoration
 	{
 		private Drawable _Drawable { get; set; }
-		private Shared.SettingsView _SettingsView { get; set; }
+		private Shared.sv.SettingsView _SettingsView { get; set; }
 
-		public SVItemDecoration( Drawable drawable, Shared.SettingsView settingsView )
+		public SVItemDecoration( Drawable drawable, Shared.sv.SettingsView settingsView )
 		{
 			_Drawable = drawable;
 			_SettingsView = settingsView;

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -7,7 +7,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Button cell.
 	/// </summary>
-	public class ButtonCell : CellBaseIcon
+	public class ButtonCell : IconCellBase
 	{
 		/// <summary>
 		/// The title alignment property.

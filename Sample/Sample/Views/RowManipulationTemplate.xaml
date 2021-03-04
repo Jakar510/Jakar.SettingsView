@@ -6,6 +6,7 @@
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.RowManipulationTemplate">
 
 	<ContentPage.Resources>
@@ -84,31 +85,31 @@
 
 		</StackLayout>
 
-		<settingsView:SettingsView Grid.Column="1"
+		<sv:SettingsView Grid.Column="1"
 								   Style="{StaticResource settingsView}"
 								   ItemsSource="{Binding Settings}">
-			<settingsView:SettingsView.ItemTemplate>
+			<sv:SettingsView.ItemTemplate>
 				<DataTemplate>
-					<settingsView:Section ItemsSource="{Binding}"
+					<sv:Section ItemsSource="{Binding}"
 										  IsVisible="{Binding IsVisible.Value}">
-						<settingsView:Section.HeaderView>
+						<sv:Section.HeaderView>
 							<StackLayout>
 								<Label Text="{Binding HeaderText}" />
 							</StackLayout>
-						</settingsView:Section.HeaderView>
-						<settingsView:Section.FooterView>
+						</sv:Section.HeaderView>
+						<sv:Section.FooterView>
 							<Label Text="{Binding FooterText}"
 								   HorizontalTextAlignment="End" />
-						</settingsView:Section.FooterView>
-						<settingsView:Section.ItemTemplate>
+						</sv:Section.FooterView>
+						<sv:Section.ItemTemplate>
 							<DataTemplate>
 								<cells:LabelCell Title="{Binding Text}" />
 							</DataTemplate>
-						</settingsView:Section.ItemTemplate>
-					</settingsView:Section>
+						</sv:Section.ItemTemplate>
+					</sv:Section>
 				</DataTemplate>
-			</settingsView:SettingsView.ItemTemplate>
+			</sv:SettingsView.ItemTemplate>
 
-		</settingsView:SettingsView>
+		</sv:SettingsView>
 	</Grid>
 </ContentPage>

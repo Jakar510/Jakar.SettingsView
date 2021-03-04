@@ -6,9 +6,9 @@ namespace Sample.ViewModels
 {
 	public class CollectionChangedTestViewModel : ViewModelBase
 	{
-		public ReactiveCommand<string> SectionCommand { get; set; } = new ReactiveCommand<string>();
-		public ReactiveProperty<string> HeaderText { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> FooterText { get; } = new ReactiveProperty<string>();
+		public ReactiveCommand<string> SectionCommand { get; set; } = new();
+		public ReactiveProperty<string> HeaderText { get; } = new();
+		public ReactiveProperty<string> FooterText { get; } = new();
 
 		public CollectionChangedTestViewModel()
 		{

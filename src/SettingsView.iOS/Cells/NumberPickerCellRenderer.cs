@@ -93,7 +93,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ||
 				 e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateNumberList(); }
 			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
-			else if ( e.PropertyName == NumberPickerCell.PickerTitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == NumberPickerCell.PopupTitleProperty.PropertyName ) { UpdateTitle(); }
 			else if ( e.PropertyName == NumberPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 		}
 
@@ -127,7 +127,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		}
 		private void UpdateTitle()
 		{
-			_Title.Text = _NumberPickerCell.PickerTitle;
+			_Title.Text = _NumberPickerCell.PopupTitle;
 			_Title.SizeToFit();
 			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}

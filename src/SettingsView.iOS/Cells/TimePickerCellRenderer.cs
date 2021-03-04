@@ -58,7 +58,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void UpdateCell( UITableView tableView )
 		{
 			base.UpdateCell(tableView);
-			UpdatePickerTitle();
+			UpdatePopupTitle();
 			UpdateTime();
 		}
 
@@ -72,7 +72,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
 				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
-			else if ( e.PropertyName == TimePickerCell.PickerTitleProperty.PropertyName ) { UpdatePickerTitle(); }
+			else if ( e.PropertyName == TimePickerCell.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
 		}
 
 		/// <summary>
@@ -178,9 +178,9 @@ namespace Jakar.SettingsView.iOS.Cells
 			_preSelectedDate = _picker.Date;
 		}
 
-		private void UpdatePickerTitle()
+		private void UpdatePopupTitle()
 		{
-			_Title.Text = _TimePickerCell.PickerTitle;
+			_Title.Text = _TimePickerCell.PopupTitle;
 			_Title.SizeToFit();
 			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}

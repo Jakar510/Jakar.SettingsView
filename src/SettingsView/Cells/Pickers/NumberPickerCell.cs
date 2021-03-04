@@ -1,13 +1,13 @@
 ﻿using System.Windows.Input;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class NumberPickerCell : BasePopupCell
+	public class NumberPickerCell : PopupCellBase
 	{
 		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(NumberPickerCell), default(ICommand));
-		// public static BindableProperty PickerTitleProperty = BindableProperty.Create(nameof(PickerTitle), typeof(string), typeof(NumberPickerCell), default(string));
+		// public static BindableProperty PopupTitleProperty = BindableProperty.Create(nameof(PopupTitle), typeof(string), typeof(NumberPickerCell), default(string));
 		public static BindableProperty MaxProperty = BindableProperty.Create(nameof(Max), typeof(int), typeof(NumberPickerCell), 9999);
 		public static BindableProperty MinProperty = BindableProperty.Create(nameof(Min), typeof(int), typeof(NumberPickerCell), 0);
 		public static BindableProperty NumberProperty = BindableProperty.Create(nameof(Number), typeof(int), typeof(NumberPickerCell), default(int), BindingMode.TwoWay);
@@ -30,10 +30,10 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(MaxProperty, value);
 		}
 
-		// public string PickerTitle
+		// public string PopupTitle
 		// {
-		// 	get => (string) GetValue(PickerTitleProperty);
-		// 	set => SetValue(PickerTitleProperty, value);
+		// 	get => (string) GetValue(PopupTitleProperty);
+		// 	set => SetValue(PopupTitleProperty, value);
 		// }
 
 		public ICommand SelectedCommand

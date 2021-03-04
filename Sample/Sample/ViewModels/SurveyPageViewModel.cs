@@ -10,24 +10,24 @@ namespace Sample.ViewModels
 	public class SurveyPageViewModel : BindableBase, INavigatedAware
 	{
 		public ObservableCollection<Hoge> ItemsSource { get; set; }
-		public ReactivePropertySlim<string> Text { get; } = new ReactivePropertySlim<string>();
-		public ReactiveCommand ChangeCommand { get; } = new ReactiveCommand();
+		public ReactivePropertySlim<string> Text { get; } = new();
+		public ReactiveCommand ChangeCommand { get; } = new();
 
 		public SurveyPageViewModel()
 		{
 			ItemsSource = new ObservableCollection<Hoge>(new List<Hoge>
 														 {
-															 new Hoge
+															 new()
 															 {
 																 Name = "A",
 																 Value = 1
 															 },
-															 new Hoge
+															 new()
 															 {
 																 Name = "B",
 																 Value = 2
 															 },
-															 new Hoge
+															 new()
 															 {
 																 Name = "C",
 																 Value = 3

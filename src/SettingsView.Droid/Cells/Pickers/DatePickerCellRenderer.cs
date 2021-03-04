@@ -59,7 +59,7 @@ namespace Jakar.SettingsView.Droid.Cells
 											  day
 											 );
 			
-			dialog.DatePicker.SetBackgroundColor(_DatePickerCell.PopupBackGroundColor.ToAndroid());
+			dialog.DatePicker.SetBackgroundColor(_DatePickerCell.Popup.BackgroundColor.ToAndroid());
 			return dialog;
 		}
 		protected void CallBack( object o, DatePickerDialog.DateSetEventArgs e )

@@ -1,30 +1,31 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
-    <RootNamespace>Jakar.SettingsView.Shared</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+		<RootNamespace>Jakar.SettingsView.Shared</RootNamespace>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <DocumentationFile>bin\Release\netstandard2.0\SettingsView.xml</DocumentationFile>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-	<Reference Include="netstandard" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="project.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\nuget\AzurePipelines.nuspec">
-      <Link>AzurePipelines.nuspec</Link>
-    </None>
-  </ItemGroup>
-  <Import Project="..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets" Condition="Exists('..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets')" />
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>pdbonly</DebugType>
+		<DocumentationFile>bin\Release\netstandard2.0\SettingsView.xml</DocumentationFile>
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+		<Reference Include="netstandard" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="project.json" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\nuget\AzurePipelines.nuspec">
+			<Link>AzurePipelines.nuspec</Link>
+		</None>
+	</ItemGroup>
+	<Import Project="..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets" Condition="Exists('..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets')" />
 </Project>

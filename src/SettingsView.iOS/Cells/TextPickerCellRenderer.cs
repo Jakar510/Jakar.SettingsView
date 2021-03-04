@@ -65,7 +65,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.CellPropertyChanged(sender, e);
 
 			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
-			else if ( e.PropertyName == TextPickerCell.PickerTitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == TextPickerCell.PopupTitleProperty.PropertyName ) { UpdateTitle(); }
 			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else if ( e.PropertyName == TextPickerCell.ItemsProperty.PropertyName ) { UpdateItems(); }
 		}
@@ -173,7 +173,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateItems()
 		{
-			IList items = _TextPickerCell.Items ?? new List<object>();
+			IList<string> items = _TextPickerCell.Items ?? new List<string>();
 			_model.SetItems(items);
 			// Force picker view to reload data from model after change
 			// Otherwise it might access the model based on old view data
@@ -184,7 +184,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateTitle()
 		{
-			_Title.Text = _TextPickerCell.PickerTitle;
+			_Title.Text = _TextPickerCell.PopupTitle;
 			_Title.SizeToFit();
 			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}
@@ -207,7 +207,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
 		}
 
-		private void Select( object item )
+		private void Select( string item )
 		{
 			int idx = _model.Items.IndexOf(item);
 			if ( idx == -1 )

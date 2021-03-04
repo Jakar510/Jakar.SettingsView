@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 
 #nullable enable
@@ -11,11 +12,11 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewSimpleCallback : ItemTouchHelper.SimpleCallback
 	{
-		protected Shared.SettingsView _SettingsView { get; set; }
+		protected Shared.sv.SettingsView _SettingsView { get; set; }
 		protected RowInfo? _FromInfo { get; set; }
 		protected Queue<(RowInfo from, RowInfo to)> _moveHistory = new Queue<(RowInfo from, RowInfo to)>();
 
-		public SettingsViewSimpleCallback( Shared.SettingsView settingsView, int dragDirs, int swipeDirs ) : base(dragDirs, swipeDirs) => _SettingsView = settingsView;
+		public SettingsViewSimpleCallback( Shared.sv.SettingsView settingsView, int dragDirs, int swipeDirs ) : base(dragDirs, swipeDirs) => _SettingsView = settingsView;
 
 		public override bool OnMove( RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target )
 		{
@@ -96,7 +97,7 @@ namespace Jakar.SettingsView.Droid
 			Section section = _moveHistory.Last().to.Section;
 			while ( _moveHistory.Any() )
 			{
-				(RowInfo from, RowInfo to) = _moveHistory.Dequeue();
+				( RowInfo from, RowInfo to ) = _moveHistory.Dequeue();
 				DataSourceMoved(from, to);
 			}
 
@@ -105,6 +106,9 @@ namespace Jakar.SettingsView.Droid
 
 		protected void DataSourceMoved( RowInfo from, RowInfo to )
 		{
+			if ( from.Cell is null ||
+				 to.Cell is null ) return;
+
 			int fromPos = from.Section.IndexOf(from.Cell);
 			int toPos = to.Section.IndexOf(to.Cell);
 			if ( toPos < 0 )
@@ -122,7 +126,7 @@ namespace Jakar.SettingsView.Droid
 			else
 			{
 				System.Diagnostics.Debug.WriteLine($"UpdateSource from:{fromPos} to:{toPos}");
-				( Cell? cell, object? item ) = @from.Section.DeleteSourceItemWithoutNotify(fromPos);
+				( Cell? cell, object? item ) = from.Section.DeleteSourceItemWithoutNotify(fromPos);
 				to.Section.InsertSourceItemWithoutNotify(cell, item, toPos);
 			}
 
@@ -150,8 +154,8 @@ namespace Jakar.SettingsView.Droid
 			if ( !( viewHolder is ContentBodyViewHolder contentHolder ) ) return base.GetDragDirs(recyclerView, viewHolder);
 
 			if ( contentHolder.RowInfo == null ) return base.GetDragDirs(recyclerView, viewHolder);
-			
-			Section section = contentHolder.RowInfo.Section; 
+
+			Section section = contentHolder.RowInfo.Section;
 
 			if ( !section.UseDragSort ) { return 0; }
 
@@ -180,10 +184,7 @@ namespace Jakar.SettingsView.Droid
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing )
-			{
-				_moveHistory.Clear();
-			}
+			if ( disposing ) { _moveHistory.Clear(); }
 
 			base.Dispose(disposing);
 		}

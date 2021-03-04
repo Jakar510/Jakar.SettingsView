@@ -5,6 +5,7 @@ using System.Linq;
 using Jakar.SettingsView;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.sv;
 
 namespace Sample.Views
 {

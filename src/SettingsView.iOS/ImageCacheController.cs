@@ -21,7 +21,7 @@ namespace Jakar.SettingsView.iOS
 				{
 					_CacheInstance = new NSCache();
 					_CacheInstance.CountLimit = CacheCountLimit;
-					Shared.SettingsView._clearCache = Clear;
+					Shared.sv.SettingsView._clearCache = Clear;
 				}
 
 				return _CacheInstance;
@@ -36,7 +36,7 @@ namespace Jakar.SettingsView.iOS
 			_CacheInstance?.RemoveAllObjects();
 			_CacheInstance?.Dispose();
 			_CacheInstance = null;
-			Shared.SettingsView._clearCache = null;
+			Shared.sv.SettingsView._clearCache = null;
 		}
 
 		private static readonly nuint CacheCountLimit = 30;

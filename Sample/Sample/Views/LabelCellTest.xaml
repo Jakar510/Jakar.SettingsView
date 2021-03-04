@@ -8,6 +8,7 @@
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.LabelCellTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -30,7 +31,7 @@
 					   ef:AddCommand.On="true"
 					   ef:AddCommand.Command="{Binding CellChangeCommand}"
 					   ef:AddCommand.EffectColor="#80FFFF00" />
-				<Label Text="PickerTitle"
+				<Label Text="PopupTitle"
 					   ef:AddCommand.On="true"
 					   ef:AddCommand.Command="{Binding CellChangeCommand}"
 					   ef:AddCommand.EffectColor="#80FFFF00" />
@@ -95,7 +96,7 @@
 			<me:ParentController />
 		</ScrollView>
 
-		<settingsView:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
+		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
 								   SeparatorColor="{Binding SeparatorColor.Value}"
 								   SelectedColor="{Binding SelectedColor.Value}"
 								   HeaderPadding="{Binding HeaderPadding.Value}"
@@ -124,7 +125,7 @@
 								   CellHintFontSize="{Binding CellHintFontSize.Value}"
 								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
 								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
-			<settingsView:Section Title="Section1"
+			<sv:Section Title="Section1"
 								  FooterText="Footer1">
 				<cells:LabelCell IsEnabled="{Binding IsEnabled.Value}"
 								 IconSource="{Binding IconSource.Value}"
@@ -177,7 +178,7 @@
 										Number="{Binding Number.Value}"
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
-										PopupPageTitle="{Binding PickerTitle.Value}"
+										PopupTitle="{Binding PopupTitle.Value}"
 										SelectedCommand="{Binding NumberSelectedCommand}" />
 				<cells:TimePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
@@ -196,7 +197,7 @@
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
 									  Format="{Binding TimeFormat.Value}"
-									  PickerTitle="{Binding PickerTitle.Value}" />
+									  PopupTitle="{Binding PopupTitle.Value}" />
 				<cells:DatePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -236,9 +237,9 @@
 									  Tapped="Handle_Tapped"
 									  Items="{Binding TextItems.Value}"
 									  SelectedItem="{Binding TextSelectedItem.Value}"
-									  PickerTitle="{Binding PickerTitle.Value}"
+									  PopupTitle="{Binding PopupTitle.Value}"
 									  SelectedCommand="{Binding TextSelectedCommand}" />
-			</settingsView:Section>
-		</settingsView:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</StackLayout>
 </ContentPage>

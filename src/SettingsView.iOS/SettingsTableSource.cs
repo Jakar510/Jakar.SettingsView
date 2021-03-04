@@ -5,6 +5,7 @@ using Foundation;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
@@ -26,7 +27,7 @@ namespace Jakar.SettingsView.iOS
 		/// <summary>
 		/// The settings view.
 		/// </summary>
-		protected Shared.SettingsView _settingsView;
+		protected Shared.sv.SettingsView _settingsView;
 
 		private bool _disposed;
 
@@ -34,7 +35,7 @@ namespace Jakar.SettingsView.iOS
 		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.iOS.SettingsTableSource"/> class.
 		/// </summary>
 		/// <param name="settingsView">Settings view.</param>
-		public SettingsTableSource( Shared.SettingsView settingsView )
+		public SettingsTableSource( Shared.sv.SettingsView settingsView )
 		{
 			_settingsView = settingsView;
 			_settingsView.ModelChanged += ( sender, e ) =>

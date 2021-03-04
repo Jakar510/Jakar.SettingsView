@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Foundation;
 using Jakar.SettingsView.Shared.Cells;
@@ -15,7 +16,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	{
 		private PickerCell _pickerCell;
 		private PickerCellView _pickerCellNative;
-		private Shared.SettingsView _parent;
+		private Shared.sv.SettingsView _parent;
 		private IList _source;
 		private Dictionary<int, object> _selectedCache = new Dictionary<int, object>();
 		private UIColor _accentColor;
@@ -198,7 +199,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public void InitializeScroll()
 		{
-			IList selectedList = _pickerCell.MergedSelectedList;
+			ObservableCollection<object> selectedList = _pickerCell.Selected;
 
 			foreach ( object item in selectedList )
 			{
@@ -234,7 +235,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			_pickerCell.SelectedItems.Clear();
 
-			foreach ( KeyValuePair<int, object> kv in _selectedCache ) { _pickerCell.SelectedItems.Add(kv.Value); }
+			foreach ( KeyValuePair<int, object> kv in _selectedCache ) { _pickerCell.Selected.Add(kv.Value); }
 
 			_pickerCell.SelectedItem = _selectedCache.Values.FirstOrDefault();
 

@@ -8,15 +8,15 @@ namespace Sample.ViewModels
 {
 	public class EntryCellTestViewModel : ViewModelBase, IDestructible
 	{
-		public ReactiveProperty<Color> OwnAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<int> MaxLength { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<Keyboard> KeyboardType { get; } = new ReactiveProperty<Keyboard>();
-		public ReactiveProperty<string> Placeholder { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> InputText { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<TextAlignment> TextAlignment { get; } = new ReactiveProperty<TextAlignment>();
-		public ReactiveProperty<bool> IsPassword { get; } = new ReactiveProperty<bool>();
+		public ReactiveProperty<Color> OwnAccentColor { get; } = new();
+		public ReactiveProperty<int> MaxLength { get; } = new();
+		public ReactiveProperty<Keyboard> KeyboardType { get; } = new();
+		public ReactiveProperty<string> Placeholder { get; } = new();
+		public ReactiveProperty<string> InputText { get; } = new();
+		public ReactiveProperty<TextAlignment> TextAlignment { get; } = new();
+		public ReactiveProperty<bool> IsPassword { get; } = new();
 
-		public ReactiveCommand CompletedCommand { get; } = new ReactiveCommand();
+		public ReactiveCommand CompletedCommand { get; } = new();
 
 		private static int[] MaxLengths =
 		{

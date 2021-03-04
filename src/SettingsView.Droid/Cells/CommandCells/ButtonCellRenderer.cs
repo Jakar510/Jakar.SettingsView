@@ -7,8 +7,8 @@ using Android.Util;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Extensions;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AButton = Android.Widget.Button;
@@ -59,14 +59,14 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == ButtonCell.CommandProperty.PropertyName ||
 				 e.PropertyName == ButtonCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 
-			else if ( e.PropertyName == CellBaseTitle.TitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == TitleCellBase.TitleProperty.PropertyName ) { UpdateTitle(); }
 
-			else if ( e.PropertyName == CellBaseTitle.TitleFontAttributesProperty.PropertyName ||
-					  e.PropertyName == CellBaseTitle.TitleFontFamilyProperty.PropertyName ) { UpdateFont(); }
+			else if ( e.PropertyName == TitleCellBase.TitleFontAttributesProperty.PropertyName ||
+					  e.PropertyName == TitleCellBase.TitleFontFamilyProperty.PropertyName ) { UpdateFont(); }
 
-			else if ( e.PropertyName == CellBaseTitle.TitleFontSizeProperty.PropertyName ) { UpdateFontSize(); }
+			else if ( e.PropertyName == TitleCellBase.TitleFontSizeProperty.PropertyName ) { UpdateFontSize(); }
 
-			else if ( e.PropertyName == CellBaseTitle.TitleColorProperty.PropertyName ) { UpdateColor(); }
+			else if ( e.PropertyName == TitleCellBase.TitleColorProperty.PropertyName ) { UpdateColor(); }
 
 			else if ( e.PropertyName == ButtonCell.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
 		}

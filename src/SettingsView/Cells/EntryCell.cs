@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class EntryCell : CellBaseValueText, IEntryCellController
+	public class EntryCell : ValueTextCellBase, IEntryCellController
 	{
 		public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(EntryCell), Keyboard.Default);
 		public static readonly BindableProperty CompletedCommandProperty = BindableProperty.Create(nameof(CompletedCommand), typeof(ICommand), typeof(EntryCell), default(ICommand));

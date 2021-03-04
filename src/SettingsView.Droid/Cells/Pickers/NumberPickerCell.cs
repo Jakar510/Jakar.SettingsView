@@ -8,7 +8,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ANumberPicker = Android.Widget.NumberPicker;
@@ -42,7 +42,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ) { UpdateMin(); }
 			else if ( e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateMax(); }
 			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
-			else if ( e.PropertyName == BasePopupCell.PopupTitleProperty.PropertyName ) { UpdatePickerTitle(); }
+			else if ( e.PropertyName == PopupCellBase.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else if ( e.PropertyName == NumberPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
@@ -106,7 +106,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			base.UpdateCell();
 			UpdateMin();
 			UpdateMax();
-			UpdatePickerTitle();
+			UpdatePopupTitle();
 			UpdateNumber();
 			UpdateCommand();
 		}
@@ -115,7 +115,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected void UpdateMax() { _Max = _NumberPickerCell.Max; }
 		protected void UpdateNumber() { _Value.Text = _NumberPickerCell.Number.ToString(); }
 
-		protected void UpdatePickerTitle() { _Popup_Title = _NumberPickerCell.PopupTitle; }
+		protected void UpdatePopupTitle() { _Popup_Title = _NumberPickerCell.Popup.Title; }
 		protected void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
 
 

@@ -10,7 +10,7 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Droid.Interfaces;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Interfaces;
 using Java.Lang;
 using Xamarin.Forms;
@@ -32,7 +32,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		public float DefaultFontSize { get; }
 		protected IEntryCellRenderer _CellRenderer { get; private set; }
 		protected AiEntryCell _CurrentCell { get; private set; }
-		public Shared.SettingsView CellParent => _CurrentCell.Parent;
+		public Shared.sv.SettingsView CellParent => _CurrentCell.Parent;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -269,23 +269,23 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == ValueTextCellBase.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseValue.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseValue.ValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextColorProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
+			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			
 			if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
@@ -303,21 +303,21 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
 
 			return false;
 		}

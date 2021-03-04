@@ -21,26 +21,26 @@ namespace Sample.ViewModels
 	/// </summary>
 	public class LabelCellTestViewModel : ViewModelBase
 	{
-		public ReactiveProperty<TimeSpan> Time { get; } = new ReactiveProperty<TimeSpan>();
-		public ReactiveProperty<string> TimeFormat { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> PickerTitle { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<int> Number { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<int> MaxNum { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<int> MinNum { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<DateTime> Date { get; } = new ReactiveProperty<DateTime>();
-		public ReactiveProperty<string> DateFormat { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<DateTime> MaxDate { get; } = new ReactiveProperty<DateTime>();
-		public ReactiveProperty<DateTime> MinDate { get; } = new ReactiveProperty<DateTime>();
-		public ReactiveProperty<string> TodayText { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<object> CommandParameter { get; } = new ReactiveProperty<object>();
-		public ReactiveProperty<bool> CanExecute { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> KeepSelected { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<IList> TextItems { get; } = new ReactiveProperty<IList>();
-		public ReactiveProperty<object> TextSelectedItem { get; } = new ReactiveProperty<object>();
+		public ReactiveProperty<TimeSpan> Time { get; } = new();
+		public ReactiveProperty<string> TimeFormat { get; } = new();
+		public ReactiveProperty<string> PopupTitle { get; } = new();
+		public ReactiveProperty<int> Number { get; } = new();
+		public ReactiveProperty<int> MaxNum { get; } = new();
+		public ReactiveProperty<int> MinNum { get; } = new();
+		public ReactiveProperty<DateTime> Date { get; } = new();
+		public ReactiveProperty<string> DateFormat { get; } = new();
+		public ReactiveProperty<DateTime> MaxDate { get; } = new();
+		public ReactiveProperty<DateTime> MinDate { get; } = new();
+		public ReactiveProperty<string> TodayText { get; } = new();
+		public ReactiveProperty<object> CommandParameter { get; } = new();
+		public ReactiveProperty<bool> CanExecute { get; } = new();
+		public ReactiveProperty<bool> KeepSelected { get; } = new();
+		public ReactiveProperty<IList> TextItems { get; } = new();
+		public ReactiveProperty<object> TextSelectedItem { get; } = new();
 
-		public ReactiveCommand<int> NumberSelectedCommand { get; set; } = new ReactiveCommand<int>();
-		public ReactiveCommand TextSelectedCommand { get; set; } = new ReactiveCommand();
-		public ReactiveProperty<ReactiveCommand> Command { get; set; } = new ReactiveProperty<ReactiveCommand>();
+		public ReactiveCommand<int> NumberSelectedCommand { get; set; } = new();
+		public ReactiveCommand TextSelectedCommand { get; set; } = new();
+		public ReactiveProperty<ReactiveCommand> Command { get; set; } = new();
 
 		private enum Fruit
 		{
@@ -73,7 +73,7 @@ namespace Sample.ViewModels
 			10
 		};
 
-		private static string[] PickerTitles =
+		private static string[] PopupTitles =
 		{
 			"Hoge",
 			"LongTitleFugaFugaFugaFuga",
@@ -82,10 +82,10 @@ namespace Sample.ViewModels
 
 		private static TimeSpan[] Times =
 		{
-			new TimeSpan(0, 0, 0),
-			new TimeSpan(12, 30, 0),
-			new TimeSpan(23, 20, 15),
-			new TimeSpan(47, 55, 0)
+			new(0, 0, 0),
+			new(12, 30, 0),
+			new(23, 20, 15),
+			new(47, 55, 0)
 		};
 
 		private static string[] TimeFormats =
@@ -97,25 +97,25 @@ namespace Sample.ViewModels
 
 		private static DateTime[] Dates =
 		{
-			new DateTime(2017, 1, 1),
-			new DateTime(2015, 1, 1),
-			new DateTime(2017, 6, 10)
+			new(2017, 1, 1),
+			new(2015, 1, 1),
+			new(2017, 6, 10)
 		};
 
 		private static DateTime[] MinDates =
 		{
-			new DateTime(2016, 1, 1),
-			new DateTime(2017, 4, 1),
-			new DateTime(2017, 10, 10),
-			new DateTime(2017, 12, 15)
+			new(2016, 1, 1),
+			new(2017, 4, 1),
+			new(2017, 10, 10),
+			new(2017, 12, 15)
 		};
 
 		private static DateTime[] MaxDates =
 		{
-			new DateTime(2025, 12, 31),
-			new DateTime(2017, 5, 15),
-			new DateTime(2017, 10, 10),
-			new DateTime(2017, 6, 15)
+			new(2025, 12, 31),
+			new(2017, 5, 15),
+			new(2017, 10, 10),
+			new(2017, 6, 15)
 		};
 
 		private static string[] DateFormats =
@@ -183,7 +183,7 @@ namespace Sample.ViewModels
 		public LabelCellTestViewModel( INavigationService navigationService, IPageDialogService pageDialog )
 		{
 			BackgroundColor.Value = Color.White;
-			PickerTitle.Value = "Hoge";
+			PopupTitle.Value = "Hoge";
 
 			TimeFormat.Value = "t";
 			Time.Value = new TimeSpan(12, 0, 0);
@@ -231,7 +231,7 @@ namespace Sample.ViewModels
 
 					break;
 				case nameof(NumberPickerCell.PopupTitle):
-					NextVal(PickerTitle, PickerTitles);
+					NextVal(PopupTitle, PopupTitles);
 					break;
 				case nameof(Time):
 					NextVal(Time, Times);

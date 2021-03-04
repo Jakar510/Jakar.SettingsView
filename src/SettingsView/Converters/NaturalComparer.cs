@@ -5,7 +5,7 @@ using System.Text;
 
 // Copy from https://github.com/tomochan154/toy-box/edit/master/NaturalComparer.cs
 
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.Converters
 {
 	/// <summary>ソートの方向。</summary>
 	public enum NaturalSortOrder : int

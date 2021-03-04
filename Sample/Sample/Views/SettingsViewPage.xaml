@@ -8,6 +8,7 @@
 			 xmlns:sys="clr-namespace:System;assembly=netstandard"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.SettingsViewPage"
 			 Title="Settings">
 
@@ -42,7 +43,7 @@
 			<!-- ちょい小さいフォントサイズ -->
 			<x:Double x:Key="BaseFontSize-">11</x:Double>
 
-			<Style TargetType="settingsView:SettingsView">
+			<Style TargetType="sv:SettingsView">
 				<Setter Property="SeparatorColor"
 						Value="{StaticResource DisabledColor}" />
 				<Setter Property="BackgroundColor"
@@ -77,15 +78,15 @@
 		</ResourceDictionary>
 	</ContentPage.Resources>
 
-	<settingsView:SettingsView HasUnevenRows="true"
+	<sv:SettingsView HasUnevenRows="true"
 							   HeaderHeight="36"
 							   HeaderPadding="14,0,0,6"
 							   HeaderTextVerticalAlign="End"
 							   FooterPadding="14,4,4,6"
 							   ShowArrowIndicatorForAndroid="True">
 
-		<settingsView:Section FooterText="This is a footer. optionally you can write here.">
-			<settingsView:Section.HeaderView>
+		<sv:Section FooterText="This is a footer. optionally you can write here.">
+			<sv:Section.HeaderView>
 				<StackLayout>
 					<Label Text="abc" />
 					<BoxView Color="Green"
@@ -93,7 +94,7 @@
 					<Slider />
 					<Switch />
 				</StackLayout>
-			</settingsView:Section.HeaderView>
+			</sv:Section.HeaderView>
 			<cells:CommandCell IconSource="icon.png"
 							   IconSize="60,60"
 							   IconRadius="30"
@@ -102,76 +103,84 @@
 							   Description="hoge@fuga.com"
 							   Command="{Binding ToProfileCommand}"
 							   KeepSelectedUntilBack="true" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="LabelCells">
+		<sv:Section Title="LabelCells">
 			<cells:LabelCell Title="Complete"
 							 Hint="Hint"
 							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."
 							 ValueText="Value"
-							 IconSource ="icon" />
+							 IconSource="icon" />
 			<cells:LabelCell Title="Full"
 							 Hint="Hint"
 							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."
-							 ValueText="Value"/>
+							 ValueText="Value" />
 			<cells:LabelCell Title="No Hint"
 							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."
-							 ValueText="Value"/>
+							 ValueText="Value" />
 			<cells:LabelCell Title="Descriptive Title"
-							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically."/>
-		</settingsView:Section>
+							 Description="This is description. you can write detail explanation of the item here. long text wrap automatically." />
+		</sv:Section>
 
-		<settingsView:Section Title="CheckableCell">
+		<sv:Section Title="CheckableCell">
 			<cells:SwitchCell Title="Switch"
 							  Checked="true"
 							  Description="This is description. you can write detail explanation of the item here. long text wrap automatically." />
 			<cells:CheckboxCell Title="Checkbox"
 								Checked="true" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="MultiPicker"
+		<sv:Section Title="MultiPicker"
 							  FooterText="This is a multi select picker. you are free to select items until MaxSelectedNumber.">
 			<cells:PickerCell Title="Favorites"
 							  ItemsSource="{Binding ItemsSource}"
 							  DisplayMember="Name"
 							  MaxSelectedNumber="3"
+							  PopupTitle="Select 3 items"
 							  SelectedItems="{Binding SelectedItems}"
-							  KeepSelectedUntilBack="true"
-							  PopupPageTitle="select 3 items" />
-		</settingsView:Section>
+							  KeepSelectedUntilBack="true"/>
+			<cells:PickerCell Title="Favorites"
+							  ItemsSource="{Binding ItemsSource}"
+							  DisplayMember="Name"
+							  SubDisplayMember="Age"
+							  MaxSelectedNumber="5"
+							  UsePickToClose="True"
+							  PopupTitle="Select 5 items"
+							  SelectedItems="{Binding SelectedItems}"
+							  KeepSelectedUntilBack="true"/>
+		</sv:Section>
 
-		<settingsView:Section Title="Picker 4 Brothers">
+		<sv:Section Title="Picker 4 Brothers">
 			<cells:NumberPickerCell Title="NumberPicker"
 									Min="0"
 									Max="99"
 									Number="15"
-									PopupPageTitle="Select number"
-									ValueTextAlignment="End" />
+									ValueTextAlignment="End"/> 
 			<cells:NumberPickerCell Title="NumberPicker with hint"
 									Min="0"
 									Max="99"
 									Number="15"
 									Hint="Hint"
-									PopupPageTitle="Select number"
-									ValueTextAlignment="End" />
+									ValueTextAlignment="End"/>
 			<cells:TimePickerCell Title="TimePicker"
 								  Format="HH:mm"
 								  Time="15:30"
-								  PickerTitle="Select time"
-								  ValueTextAlignment="End" />
+								  PopupTitle="Select time"
+								  ValueTextAlignment="End"/>
 			<cells:TimePickerCell Title="TimePicker with hint"
 								  Format="HH:mm"
 								  Time="15:30"
 								  Hint="Hint"
-								  PickerTitle="Select time"
-								  ValueTextAlignment="End" />
+								  PopupTitle="Select time"
+								  ValueTextAlignment="End"/>
 			<cells:DatePickerCell Title="DatePicker"
 								  Format="yyyy/MM/dd (ddd)"
 								  Date="2017/11/11"
 								  MinimumDate="2015/11/10"
 								  MaximumDate="2025/12/31"
 								  TodayText="Today's date"
-								  ValueTextAlignment="End" />
+								  PopupTitle="Select date"
+								  ValueTextAlignment="End"/>
 			<cells:DatePickerCell Title="DatePicker with hint"
 								  Hint="Hint"
 								  Format="yyyy/MM/dd (ddd)"
@@ -179,21 +188,24 @@
 								  MinimumDate="2015/11/10"
 								  MaximumDate="2025/12/31"
 								  TodayText="Today's date"
+								  PopupTitle="Select date"
 								  ValueTextAlignment="End"/>
 			<cells:TextPickerCell Title="TextPicker"
 								  Items="{Binding TextItems}"
 								  SelectedItem="{Binding SelectedText.Value}"
 								  IsCircularPicker="False"
-								  ValueTextAlignment="End" />
+								  PopupTitle="Select item"
+								  ValueTextAlignment="End"/>
 			<cells:TextPickerCell Title="TextPicker with hint"
 								  Hint="Hint"
 								  Items="{Binding TextItems}"
 								  SelectedItem="{Binding SelectedText.Value}"
 								  IsCircularPicker="False"
-								  ValueTextAlignment="End" />
-		</settingsView:Section>
+								  PopupTitle="Select item"
+								  ValueTextAlignment="End"/>
+		</sv:Section>
 
-		<settingsView:Section Title="RadioCell"
+		<sv:Section Title="RadioCell"
 							  FooterText="You can select either TypeA or TypeB."
 							  cells:RadioCell.SelectedValue="1">
 			<cells:RadioCell Title="TypeA"
@@ -206,9 +218,9 @@
 			<cells:RadioCell Title="TypeBD"
 							 Description="Description"
 							 Value="4" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="Input"
+		<sv:Section Title="Input"
 							  IsVisible="{Binding InputSectionVisible.Value}">
 			<cells:EntryCell Title="EntryCell"
 							 Description="Description"
@@ -224,18 +236,18 @@
 							 Keyboard="Email"
 							 ValueTextAlignment="End"
 							 Hint="Hint" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="ButtonCell"
+		<sv:Section Title="ButtonCell"
 							  FooterText="Change input section visibility.">
 			<cells:ButtonCell Title="Toggle Section"
 							  TitleColor="{StaticResource TitleTextColor}"
 							  TitleAlignment="Center"
 							  Command="{Binding SectionToggleCommand}" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section  Title="Custom Cell with custom header">
-			<settingsView:Section.HeaderView>
+		<sv:Section Title="Custom Cell with custom header">
+			<sv:Section.HeaderView>
 				<FlexLayout Direction="Row"
 							JustifyContent="SpaceBetween"
 							AlignItems="End"
@@ -247,17 +259,17 @@
 								 WidthRequest="20"
 								 HeightRequest="20" />
 				</FlexLayout>
-			</settingsView:Section.HeaderView>
-			<settingsView:Section.FooterView>
+			</sv:Section.HeaderView>
+			<sv:Section.FooterView>
 				<Label Text="CustomFooterView. "
 					   TextColor="DeepSkyBlue"
 					   Padding="10,6,10,0" />
-			</settingsView:Section.FooterView>
+			</sv:Section.FooterView>
 			<cell:SliderCell Value="0.5"
 							 Description="CustomCell" />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="FormsCell">
+		<sv:Section Title="FormsCell">
 			<ViewCell>
 				<StackLayout Padding="14,8,8,8"
 							 BackgroundColor="White">
@@ -278,8 +290,8 @@
 						   TextColor="{StaticResource PaleTextColor}" />
 				</StackLayout>
 			</ViewCell>
-		</settingsView:Section>
+		</sv:Section>
 
-	</settingsView:SettingsView>
+	</sv:SettingsView>
 
 </ContentPage>

@@ -23,7 +23,7 @@ namespace Jakar.SettingsView.Droid
 			{
 				if ( _CacheInstance != null ) return _CacheInstance;
 				_CacheInstance = new MemoryLimitedLruCache(CacheSize);
-				Shared.SettingsView._clearCache = Clear;
+				Shared.sv.SettingsView._clearCache = Clear;
 
 				return _CacheInstance;
 			}
@@ -37,7 +37,7 @@ namespace Jakar.SettingsView.Droid
 			_CacheInstance?.EvictAll();
 			_CacheInstance?.Dispose();
 			_CacheInstance = null;
-			Shared.SettingsView._clearCache = null;
+			Shared.sv.SettingsView._clearCache = null;
 		}
 	}
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.sv
 {
 	public class SettingsModel : TableModel
 	{
@@ -42,7 +40,7 @@ namespace Jakar.SettingsView.Shared
 		{
 			base.OnRowSelected(item);
 
-			( item as CellBase )?.OnTapped();
+			( item as CellBase.CellBase )?.OnTapped();
 		}
 
 		public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderHeight;

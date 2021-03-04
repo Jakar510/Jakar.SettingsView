@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using Xamarin.Forms;
 
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.sv
 {
 	/// <summary>
 	/// Settings root.
@@ -11,7 +11,7 @@ namespace Jakar.SettingsView.Shared
 	public class SettingsRoot : TableSectionBase<Section>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Shared.SettingsRoot"/> class.
+		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Shared.sv.SettingsRoot"/> class.
 		/// </summary>
 		public SettingsRoot() => CollectionChanged += OnCollectionChanged;
 		~SettingsRoot() { CollectionChanged -= OnCollectionChanged; }

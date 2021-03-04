@@ -3,14 +3,17 @@ using System.Collections.Specialized;
 using Android.App;
 using Android.Content;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Shared.Enumerations;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AListView = Android.Widget.ListView;
+using Switch = Android.Widget.Switch;
 
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
@@ -27,6 +30,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected AlertDialog? _Dialog { get; set; }
 		protected AListView? _ListView { get; set; }
 		protected PickerAdapter? _Adapter { get; set; }
+		protected TextView _TitleLabel { get; set; }
+		
 		protected string _ValueTextCache { get; set; } = string.Empty;
 
 		protected INotifyCollectionChanged? _NotifyCollection { get; set; }
@@ -44,19 +49,17 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			base.CellPropertyChanged(sender, e);
-
 			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
 				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
 				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
 				 e.PropertyName == PickerCell.UseNaturalSortProperty.PropertyName ||
 				 e.PropertyName == PickerCell.SelectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(true); }
-			else if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName ) { UpdateValueText(); }
 			else if ( e.PropertyName == PickerCell.ItemsSourceProperty.PropertyName )
 			{
 				UpdateCollectionChanged();
 				UpdateSelectedItems(true);
 			}
+			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
@@ -72,25 +75,23 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
-			UpdateSelectedItems();
+			UpdateSelectedItems(false);
 			UpdateCollectionChanged();
 		}
-		public void UpdateSelectedItems( bool force = false )
+		public void UpdateSelectedItems( bool force )
 		{
-			if ( !_PickerCell.UseAutoValueText ) { return; }
-
 			if ( force || string.IsNullOrEmpty(_ValueTextCache) )
 			{
 				if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
-				if ( !( _PickerCell.SelectedItems is INotifyCollectionChanged collection ) ) return;
-				_SelectedCollection = collection;
-				_SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged;
+				if ( _PickerCell.SelectedItems is INotifyCollectionChanged collection ) { _SelectedCollection = collection; }
 
 				_ValueTextCache = _PickerCell.GetSelectedItemsText();
+
+				if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 			}
 
-			_Value.Text = _ValueTextCache;
+			_Value.UpdateText(_ValueTextCache);
 		}
 		private void UpdateCollectionChanged()
 		{
@@ -121,29 +122,43 @@ namespace Jakar.SettingsView.Droid.Cells
 		internal void ShowDialog() { CreateDialog(); }
 		protected void CreateDialog()
 		{
-			// _ListView?.Dispose();
+			_ListView?.Dispose();
+			_Adapter?.Dispose();
 			_ListView = new AListView(AndroidContext)
 						{
 							Focusable = false,
 							DescendantFocusability = DescendantFocusability.AfterDescendants,
-							ChoiceMode = _PickerCell.MaxSelectedNumber == 1 ? ChoiceMode.Single : ChoiceMode.Multiple
+							ChoiceMode = _PickerCell.SelectionMode switch
+										 {
+											 SelectMode.Single => ChoiceMode.Single,
+											 _ => ChoiceMode.Multiple,
+										 }
 						};
 			_ListView.SetDrawSelectorOnTop(true);
-			_Adapter = new PickerAdapter(AndroidContext, _PickerCell, _ListView);
+			_Adapter = new PickerAdapter(AndroidContext, this, _PickerCell, _ListView);
+
 			_ListView.OnItemClickListener = _Adapter;
 			_ListView.Adapter = _Adapter;
 
-			_ListView.SetBackgroundColor(_PickerCell.PopupBackGroundColor.ToAndroid());
-			_Adapter.CloseAction = CloseAction;
+			_TitleLabel = new TextView(AndroidContext)
+						  {
+							  Text = _PickerCell.Popup.Title,
+							  Gravity = GravityFlags.Center
+						  };
+			_TitleLabel.SetBackgroundColor(_Adapter.BackgroundColor);
+			_TitleLabel.SetTextColor(_Adapter.TitleTextColor);
+			_TitleLabel.SetTextSize(ComplexUnitType.Sp, _Adapter.FontSize);
+			
 
 			if ( _Dialog is not null ) return;
 			using ( var builder = new AlertDialog.Builder(AndroidContext) )
 			{
-				builder.SetTitle(_PickerCell.PopupTitle);
+				// builder.SetTitle(_PickerCell.PopupTitle);
+				builder.SetCustomTitle(_TitleLabel);
 				builder.SetView(_ListView);
 
-				builder.SetNegativeButton(_PickerCell.PopupCancel, CancelEventHandler);
-				builder.SetPositiveButton(_PickerCell.PopupAccept, AcceptEventHandler);
+				builder.SetNegativeButton(_PickerCell.Popup.Cancel, CancelEventHandler);
+				builder.SetPositiveButton(_PickerCell.Popup.Accept, AcceptEventHandler);
 
 				_Dialog = builder.Create();
 			}
@@ -159,12 +174,14 @@ namespace Jakar.SettingsView.Droid.Cells
 			//_dialog.GetButton((int)DialogButtonType.Positive).SetTextColor(buttonTextColor);
 			//_dialog.GetButton((int)DialogButtonType.Negative).SetTextColor(buttonTextColor);
 		}
-		protected void CloseAction() { _Dialog?.GetButton((int) DialogButtonType.Positive)?.PerformClick(); }
+		protected internal void CloseAction() { _Dialog?.GetButton((int) DialogButtonType.Positive)?.PerformClick(); }
 		protected void CancelEventHandler( object o, DialogClickEventArgs args ) { ClearFocus(); }
 		protected void AcceptEventHandler( object o, DialogClickEventArgs args )
 		{
 			_Adapter?.DoneSelect();
-			UpdateValueText();
+			UpdateSelectedItems(true);
+
+			_PickerCell.InvokeSelectedEvent();
 			_PickerCell.InvokeCommand();
 			ClearFocus();
 		}
@@ -177,19 +194,16 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Dialog?.SetOnDismissListener(null);
 			_Dialog?.Dispose();
 			_Dialog = null;
+
 			_Adapter?.Dispose();
 			_Adapter = null;
+
 			_ListView?.Dispose();
 			_ListView = null;
 
 			Selected = false;
 		}
 
-		protected void UpdateValueText()
-		{
-			if ( _PickerCell.UseAutoValueText ) { UpdateSelectedItems(true); }
-			else { _Value.UpdateText(); }
-		}
 		protected override void EnableCell()
 		{
 			base.EnableCell();
@@ -209,15 +223,13 @@ namespace Jakar.SettingsView.Droid.Cells
 			{
 				_Dialog?.Dispose();
 				_Dialog = null;
+
 				_ListView?.Dispose();
 				_ListView = null;
-				if ( _Adapter is not null )
-				{
-					_Adapter.CloseAction = null;
-					_Adapter.Dispose();
-				}
 
+				_Adapter?.Dispose();
 				_Adapter = null;
+
 				if ( _NotifyCollection != null )
 				{
 					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;

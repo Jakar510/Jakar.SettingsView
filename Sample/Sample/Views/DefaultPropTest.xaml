@@ -5,10 +5,11 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.DefaultPropTest">
 	<StackLayout>
-		<settingsView:SettingsView>
-			<settingsView:Section Title="Section1"
+		<sv:SettingsView>
+			<sv:Section Title="Section1"
 								  FooterText="Footer1">
 				<cells:LabelCell IconSource="icon.png"
 								 Title="LabelCell"
@@ -50,8 +51,8 @@
 								 ValueText="inputText" />
 				<cells:ButtonCell IconSource="icon.png"
 								  Title="ButtonCell"/>
-			</settingsView:Section>
-			<settingsView:Section Title="Section2"
+			</sv:Section>
+			<sv:Section Title="Section2"
 								  FooterText="Footer2">
 				<cells:LabelCell Title="LabelCell"
 								 ValueText="Value" />
@@ -68,8 +69,8 @@
 				<cells:EntryCell Title="EntryCell"
 								 ValueText="inputText" />
 				<cells:ButtonCell Title="ButtonCell"/>
-			</settingsView:Section>
-			<settingsView:Section Title="Section3"
+			</sv:Section>
+			<sv:Section Title="Section3"
 								  FooterText="Footer3">
 				<cells:LabelCell />
 				<cells:CommandCell />
@@ -81,9 +82,9 @@
 				<cells:PickerCell />
 				<cells:EntryCell />
 				<cells:ButtonCell />
-			</settingsView:Section>
+			</sv:Section>
 
-		</settingsView:SettingsView>
+		</sv:SettingsView>
 	</StackLayout>
 
 </ContentPage>

@@ -6,6 +6,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.ReorderTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -53,10 +54,10 @@
 			</StackLayout>
 		</StackLayout>
 
-		<settingsView:SettingsView Grid.Column="1"
+		<sv:SettingsView Grid.Column="1"
 								   Style="{StaticResource settingsView}"
 								   x:Name="settings">
-			<settingsView:Section Title="DisReordableSection">
+			<sv:Section Title="DisReordableSection">
 				<cells:LabelCell Title="Abc" />
 				<cells:LabelCell Title="Def" />
 				<cells:LabelCell Title="Def" />
@@ -75,32 +76,32 @@
 				<cells:LabelCell Title="Def" />
 				<cells:LabelCell Title="Def" />
 				<cells:LabelCell Title="Def" />
-			</settingsView:Section>
+			</sv:Section>
 
-			<settingsView:Section UseDragSort="True"
+			<sv:Section UseDragSort="True"
 								  Title="ReordableSection"
 								  ItemsSource="{Binding ItemsSource}">
-				<settingsView:Section.ItemTemplate>
+				<sv:Section.ItemTemplate>
 					<DataTemplate>
 						<cells:LabelCell Title="{Binding}" />
 					</DataTemplate>
-				</settingsView:Section.ItemTemplate>
-			</settingsView:Section>
+				</sv:Section.ItemTemplate>
+			</sv:Section>
 
-			<settingsView:Section UseDragSort="True"
+			<sv:Section UseDragSort="True"
 								  Title="ReordableSection2"
 								  ItemsSource="{Binding ItemsSource2}">
-				<settingsView:Section.ItemTemplate>
+				<sv:Section.ItemTemplate>
 					<DataTemplate>
 						<cells:LabelCell Title="{Binding}" />
 					</DataTemplate>
-				</settingsView:Section.ItemTemplate>
-			</settingsView:Section>
+				</sv:Section.ItemTemplate>
+			</sv:Section>
 
-			<settingsView:Section Title="DisReordableSection">
+			<sv:Section Title="DisReordableSection">
 				<cells:LabelCell Title="Abc" />
 				<cells:LabelCell Title="Def" />
-			</settingsView:Section>
-		</settingsView:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</Grid>
 </ContentPage>

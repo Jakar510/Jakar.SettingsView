@@ -13,7 +13,7 @@ namespace Jakar.SettingsView.Droid
 	// public class SettingsViewLayoutManager : GridLayoutManager
 	public class SettingsViewLayoutManager : LinearLayoutManager
 	{
-		protected Shared.SettingsView? _SettingsView { get; set; }
+		protected Shared.sv.SettingsView? _SettingsView { get; set; }
 		protected Context? _Context { get; set; }
 		protected Dictionary<Android.Views.View, int> _ItemHeights { get; } = new Dictionary<Android.Views.View, int>();
 
@@ -33,7 +33,7 @@ namespace Jakar.SettingsView.Droid
 		// {
 		// 	_Context = context ?? throw new NullReferenceException(nameof(context));
 		// }
-		public SettingsViewLayoutManager( Context context, Shared.SettingsView settingsView ) : base(context) //, 1, Vertical, false)
+		public SettingsViewLayoutManager( Context context, Shared.sv.SettingsView settingsView ) : base(context) //, 1, Vertical, false)
 		{
 			_Context = context ?? throw new NullReferenceException(nameof(context));
 			_SettingsView = settingsView ?? throw new NullReferenceException(nameof(settingsView));

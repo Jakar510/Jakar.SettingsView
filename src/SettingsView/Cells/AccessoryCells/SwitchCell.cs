@@ -1,7 +1,7 @@
-﻿using Jakar.SettingsView.Shared.Cells.Base;
+﻿using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class SwitchCell : BaseCheckableCell { }
+	public class SwitchCell : CheckableCellBase { }
 }

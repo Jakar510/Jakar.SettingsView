@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Android.Util;
 using Android.Views;
 using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
@@ -15,7 +15,7 @@ namespace Jakar.SettingsView.Droid.Controls
 {
 	public class DescriptionView : BaseTextView
 	{
-		private CellBaseDescription _CurrentCell => _Cell.Cell as CellBaseDescription ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private DescriptionCellBase _CurrentCell => _Cell.Cell as DescriptionCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		public DescriptionView( AContext context ) : base(context) { }
 		public DescriptionView( BaseCellView baseView, AContext context ) : base(baseView, context) { }
@@ -66,29 +66,29 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseDescription.DescriptionProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == DescriptionCellBase.DescriptionProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBaseDescription.DescriptionFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == DescriptionCellBase.DescriptionFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBaseDescription.DescriptionFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseDescription.DescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == DescriptionCellBase.DescriptionFontFamilyProperty.PropertyName ||
+				 e.PropertyName == DescriptionCellBase.DescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == CellBaseDescription.DescriptionColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == DescriptionCellBase.DescriptionColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == CellBaseDescription.DescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == DescriptionCellBase.DescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellDescriptionColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellDescriptionFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellDescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellDescriptionFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellDescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontFamilyProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.CellDescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return false;
 		}

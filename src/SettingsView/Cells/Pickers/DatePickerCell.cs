@@ -1,10 +1,10 @@
 ﻿using System;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class DatePickerCell : BasePopupCell
+	public class DatePickerCell : PopupCellBase
 	{
 		public static BindableProperty DateProperty = BindableProperty.Create(nameof(Date),
 																			  typeof(DateTime),

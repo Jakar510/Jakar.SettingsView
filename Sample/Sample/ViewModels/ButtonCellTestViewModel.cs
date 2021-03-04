@@ -7,11 +7,11 @@ namespace Sample.ViewModels
 {
 	public class ButtonCellTestViewModel : ViewModelBase
 	{
-		public ReactiveProperty<TextAlignment> TitleAlignment { get; } = new ReactiveProperty<TextAlignment>();
-		public ReactiveProperty<object> CommandParameter { get; } = new ReactiveProperty<object>();
-		public ReactiveProperty<bool> CanExecute { get; } = new ReactiveProperty<bool>();
+		public ReactiveProperty<TextAlignment> TitleAlignment { get; } = new();
+		public ReactiveProperty<object> CommandParameter { get; } = new();
+		public ReactiveProperty<bool> CanExecute { get; } = new();
 
-		public ReactiveProperty<ReactiveCommand> Command { get; set; } = new ReactiveProperty<ReactiveCommand>();
+		public ReactiveProperty<ReactiveCommand> Command { get; set; } = new();
 
 		private static ReactiveCommand[] Commands =
 		{

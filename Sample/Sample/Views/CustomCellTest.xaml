@@ -6,12 +6,13 @@
 			 xmlns:cell="clr-namespace:Sample.Views.Cells"
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.CustomCellTest">
 
-	<settingsView:SettingsView Style="{StaticResource settingsView}"
+	<sv:SettingsView Style="{StaticResource settingsView}"
 							   HasUnevenRows="True">
 
-		<settingsView:Section Title="CustomCell">
+		<sv:Section Title="CustomCell">
 			<cell:SliderCell IconSource="icon.png"
 							 Min="0"
 							 Max="1.0"
@@ -20,9 +21,9 @@
 			<cell:MyCellA Text="LastText" />
 			<cell:MyCellB />
 			<cell:MyCellC />
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section Title="CustomCell">
+		<sv:Section Title="CustomCell">
 			<cell:SliderCell IconSource="icon.png"
 							 Min="0"
 							 Max="1.0"
@@ -33,15 +34,15 @@
 			<cell:MyCellB IconSource="icon.png" />
 			<cell:MyCellC IconSource="icon.png" />
 
-		</settingsView:Section>
+		</sv:Section>
 
-		<settingsView:Section ItemsSource="{Binding ItemsSource}">
-			<settingsView:Section.ItemTemplate>
+		<sv:Section ItemsSource="{Binding ItemsSource}">
+			<sv:Section.ItemTemplate>
 				<DataTemplate>
 					<cells:LabelCell Title="{Binding}" />
 				</DataTemplate>
-			</settingsView:Section.ItemTemplate>
-		</settingsView:Section>
+			</sv:Section.ItemTemplate>
+		</sv:Section>
 
-	</settingsView:SettingsView>
+	</sv:SettingsView>
 </ContentPage>

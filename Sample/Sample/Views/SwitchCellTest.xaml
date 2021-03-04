@@ -8,6 +8,7 @@
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:shared="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
+			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.SwitchCellTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -51,7 +52,7 @@
 			<me:ParentController />
 		</ScrollView>
 
-		<shared:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
+		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
 								   SeparatorColor="{Binding SeparatorColor.Value}"
 								   SelectedColor="{Binding SelectedColor.Value}"
 								   HeaderPadding="{Binding HeaderPadding.Value}"
@@ -80,7 +81,7 @@
 								   CellHintFontSize="{Binding CellHintFontSize.Value}"
 								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
 								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
-			<shared:Section Title="Section1"
+			<sv:Section Title="Section1"
 								  FooterText="Footer1"
 								  IsVisible="{Binding IsVisible.Value}">
 				<cells:SwitchCell IsEnabled="{Binding IsEnabled.Value}"
@@ -111,8 +112,8 @@
 									Tapped="Handle_Tapped"
 									AccentColor="{Binding OwnAccentColor.Value}"
 									Checked="{Binding Checked.Value}" />
-			</shared:Section>
-			<shared:Section Title="Section2"
+			</sv:Section>
+			<sv:Section Title="Section2"
 								  FooterText="Footer2">
 				<cells:CheckboxCell IsEnabled="{Binding IsEnabled.Value}"
 									IconSource="{Binding IconSource.Value}"
@@ -128,7 +129,7 @@
 									Tapped="Handle_Tapped"
 									AccentColor="{Binding OwnAccentColor.Value}"
 									Checked="{Binding IsVisible.Value}" />
-			</shared:Section>
-		</shared:SettingsView>
+			</sv:Section>
+		</sv:SettingsView>
 	</StackLayout>
 </ContentPage>

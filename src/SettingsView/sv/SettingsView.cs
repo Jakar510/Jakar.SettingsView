@@ -6,7 +6,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.sv
 {
 	/// <summary>
 	/// Settings view.
@@ -48,7 +48,7 @@ namespace Jakar.SettingsView.Shared
 		public event PropertyChangedEventHandler SectionPropertyChanged;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Shared.SettingsView"/> class.
+		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Shared.sv.SettingsView"/> class.
 		/// </summary>
 		public SettingsView()
 		{
@@ -108,20 +108,20 @@ namespace Jakar.SettingsView.Shared
 		{
 			base.OnPropertyChanged(propertyName);
 			if ( propertyName == HasUnevenRowsProperty.PropertyName ||
-				 propertyName == HeaderHeightProperty.PropertyName ||
-				 propertyName == HeaderFontSizeProperty.PropertyName ||
-				 propertyName == HeaderFontFamilyProperty.PropertyName ||
-				 propertyName == HeaderFontAttributesProperty.PropertyName ||
-				 propertyName == HeaderTextColorProperty.PropertyName ||
-				 propertyName == HeaderBackgroundColorProperty.PropertyName ||
-				 propertyName == HeaderTextVerticalAlignProperty.PropertyName ||
-				 propertyName == HeaderPaddingProperty.PropertyName ||
-				 propertyName == FooterFontSizeProperty.PropertyName ||
-				 propertyName == FooterFontFamilyProperty.PropertyName ||
-				 propertyName == FooterFontAttributesProperty.PropertyName ||
-				 propertyName == FooterTextColorProperty.PropertyName ||
-				 propertyName == FooterBackgroundColorProperty.PropertyName ||
-				 propertyName == FooterPaddingProperty.PropertyName ) { OnModelChanged(); }
+				 propertyName == Shared.SettingsView.HeaderHeightProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderFontSizeProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderFontFamilyProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderFontAttributesProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderTextColorProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderBackgroundColorProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderTextVerticalAlignProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.HeaderPaddingProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterFontSizeProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterFontFamilyProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterFontAttributesProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterTextColorProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterBackgroundColorProperty.PropertyName ||
+				 propertyName == Shared.SettingsView.FooterPaddingProperty.PropertyName ) { OnModelChanged(); }
 		}
 
 		/// <summary>

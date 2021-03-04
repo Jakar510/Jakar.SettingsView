@@ -1,4 +1,4 @@
-﻿using Jakar.SettingsView.Shared.Cells.Base;
+﻿using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -6,7 +6,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Radio cell.
 	/// </summary>
-	public class RadioCell : CellBaseDescription
+	public class RadioCell : DescriptionCellBase
 	{
 		/// <summary>
 		/// The selected value property.

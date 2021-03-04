@@ -4,7 +4,7 @@ using Android.Content;
 using Android.Util;
 using Android.Views;
 using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
@@ -15,7 +15,7 @@ namespace Jakar.SettingsView.Droid.Controls
 {
 	public class HintView : BaseTextView
 	{
-		private CellBaseHintText _CurrentCell => _Cell.Cell as CellBaseHintText ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private HintTextCellBase _CurrentCell => _Cell.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		public HintView( Context context ) : base(context) { }
 		public HintView( BaseCellView baseView, Context context ) : base(baseView, context) { }
@@ -66,29 +66,29 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseHintText.HintProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == HintTextCellBase.HintProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBaseHintText.HintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == HintTextCellBase.HintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBaseHintText.HintFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseHintText.HintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == HintTextCellBase.HintFontFamilyProperty.PropertyName ||
+				 e.PropertyName == HintTextCellBase.HintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == CellBaseHintText.HintColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == HintTextCellBase.HintColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == CellBaseHintText.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == HintTextCellBase.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellHintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellHintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellHintTextColorProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellHintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.CellHintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return false;
 		}

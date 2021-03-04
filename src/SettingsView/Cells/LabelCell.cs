@@ -1,9 +1,9 @@
-﻿using Jakar.SettingsView.Shared.Cells.Base;
+﻿using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class LabelCell : CellBaseValueText
+	public class LabelCell : ValueTextCellBase
 	{
 		/// <summary>
 		/// The ignore use description as value property.

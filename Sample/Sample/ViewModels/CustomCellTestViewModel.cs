@@ -7,7 +7,7 @@ namespace Sample.ViewModels
 	public class CustomCellTestViewModel
 	{
 		public List<int> ItemsSource { get; }
-		public ReactiveCommand<double> ChangedCommand { get; } = new ReactiveCommand<double>();
+		public ReactiveCommand<double> ChangedCommand { get; } = new();
 
 		public CustomCellTestViewModel()
 		{

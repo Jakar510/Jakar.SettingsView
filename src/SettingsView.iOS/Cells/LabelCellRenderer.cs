@@ -68,10 +68,10 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.ParentPropertyChanged(sender, e);
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
-			else if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-					  e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
 		}
 
 		/// <summary>

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -7,7 +7,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Command cell.
 	/// </summary>
-	public class CommandCell : CellBaseDescription
+	public class CommandCell : DescriptionCellBase
 	{
 		/// <summary>
 		/// The command property.

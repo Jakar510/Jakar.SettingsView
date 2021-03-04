@@ -5,7 +5,7 @@ using Android.Content;
 using Android.Util;
 using Android.Views;
 using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
@@ -16,8 +16,8 @@ namespace Jakar.SettingsView.Droid.Controls
 {
 	public class ValueView : BaseTextView
 	{
-		private CellBaseValue _CurrentCell => _Cell.Cell as CellBaseValue ?? throw new NullReferenceException(nameof(_CurrentCell));
-		private CellBaseValueText? _CurrentTextCell => _CurrentCell as CellBaseValueText;
+		private ValueCellBase _CurrentCell => _Cell.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private ValueTextCellBase? _CurrentTextCell => _CurrentCell as ValueTextCellBase;
 
 
 		public ValueView( Context context ) : base(context) => Init();
@@ -29,6 +29,13 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			if ( _CurrentTextCell is null ) return false;
 			Text = _CurrentTextCell.ValueText;
+			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
+
+			return true;
+		}
+		public bool UpdateText( string? text )
+		{
+			Text = text;
 			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
 
 			return true;
@@ -72,29 +79,29 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBaseValueText.ValueTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == ValueTextCellBase.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == CellBaseValue.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == CellBaseValue.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
 
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateColor(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return false;
 		}

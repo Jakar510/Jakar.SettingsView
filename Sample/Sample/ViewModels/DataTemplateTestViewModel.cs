@@ -9,29 +9,29 @@ namespace Sample.ViewModels
 {
 	public class DataTemplateTestViewModel : ViewModelBase
 	{
-		public ReactiveCommand AddCommand { get; set; } = new ReactiveCommand();
-		public ReactiveCommand DelCommand { get; set; } = new ReactiveCommand();
-		public ReactiveCommand RepCommand { get; set; } = new ReactiveCommand();
-		public ReactiveCommand ClrCommand { get; set; } = new ReactiveCommand();
-		public ReactiveCommand BtmCommand { get; set; } = new ReactiveCommand();
-		public ReactiveCommand TopCommand { get; set; } = new ReactiveCommand();
+		public ReactiveCommand AddCommand { get; set; } = new();
+		public ReactiveCommand DelCommand { get; set; } = new();
+		public ReactiveCommand RepCommand { get; set; } = new();
+		public ReactiveCommand ClrCommand { get; set; } = new();
+		public ReactiveCommand BtmCommand { get; set; } = new();
+		public ReactiveCommand TopCommand { get; set; } = new();
 
-		public ReactiveProperty<bool> ScrollToBottom { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> ScrollToTop { get; } = new ReactiveProperty<bool>();
+		public ReactiveProperty<bool> ScrollToBottom { get; } = new();
+		public ReactiveProperty<bool> ScrollToTop { get; } = new();
 
-		public ReactiveCommand DoCommand { get; } = new ReactiveCommand();
+		public ReactiveCommand DoCommand { get; } = new();
 		public ObservableCollection<Person> ItemsSource { get; set; }
 
 		public DataTemplateTestViewModel( IPageDialogService pageDlg )
 		{
 			ItemsSource = new ObservableCollection<Person>(new List<Person>
 														   {
-															   new Person
+															   new()
 															   {
 																   Name = "ABC",
 																   Days = "1,2,3,4"
 															   },
-															   new Person
+															   new()
 															   {
 																   Name = "DEF",
 																   Days = "5,6,7,8"

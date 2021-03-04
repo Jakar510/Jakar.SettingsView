@@ -7,43 +7,43 @@ namespace Sample.ViewModels
 {
 	public class RadioCellTestViewModel : ViewModelBase
 	{
-		public ReactiveProperty<Color> OwnAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<RadioItem> Selected { get; set; } = new ReactiveProperty<RadioItem>();
+		public ReactiveProperty<Color> OwnAccentColor { get; } = new();
+		public ReactiveProperty<RadioItem> Selected { get; set; } = new();
 		public ReactiveProperty<RadioItem> GlobalSelected { get; set; }
-		public List<RadioItem> RadioItems { get; } = new List<RadioItem>();
-		public ReactivePropertySlim<bool> ToggleGlobal { get; } = new ReactivePropertySlim<bool>();
+		public List<RadioItem> RadioItems { get; } = new();
+		public ReactivePropertySlim<bool> ToggleGlobal { get; } = new();
 
 
 		public RadioCellTestViewModel()
 		{
 			RadioItems.AddRange(new List<RadioItem>
 								{
-									new RadioItem
+									new()
 									{
 										Name = "TypeA",
 										Value = 1
 									},
-									new RadioItem
+									new()
 									{
 										Name = "TypeB",
 										Value = 2
 									},
-									new RadioItem
+									new()
 									{
 										Name = "TypeC",
 										Value = 3
 									},
-									new RadioItem
+									new()
 									{
 										Name = "TypeD",
 										Value = 4
 									},
-									new RadioItem
+									new()
 									{
 										Name = "TypeE",
 										Value = 5
 									},
-									new RadioItem
+									new()
 									{
 										Name = "TypeF",
 										Value = 6

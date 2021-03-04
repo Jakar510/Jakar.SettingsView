@@ -23,25 +23,25 @@ namespace Sample.ViewModels
 
 		public ReadOnlyReactiveProperty<string> InputError { get; }
 
-		public ReactiveProperty<bool> InputSectionVisible { get; } = new ReactiveProperty<bool>(true);
+		public ReactiveProperty<bool> InputSectionVisible { get; } = new(true);
 
-		public ReactiveCommand ToProfileCommand { get; set; } = new ReactiveCommand();
+		public ReactiveCommand ToProfileCommand { get; set; } = new();
 		public AsyncReactiveCommand SectionToggleCommand { get; set; }
 
-		public ObservableCollection<Person> ItemsSource { get; } = new ObservableCollection<Person>();
-		public ObservableCollection<Person> SelectedItems { get; } = new ObservableCollection<Person>();
+		public ObservableCollection<Person> ItemsSource { get; } = new();
+		public ObservableCollection<Person> SelectedItems { get; } = new();
 
-		public ObservableCollection<string> TextItems { get; } = new ObservableCollection<string>(new List<string>
-																								  {
-																									  "Red",
-																									  "Blue",
-																									  "Green",
-																									  "Pink",
-																									  "Black",
-																									  "White"
-																								  });
+		public ObservableCollection<string> TextItems { get; } = new(new List<string>
+																	 {
+																		 "Red",
+																		 "Blue",
+																		 "Green",
+																		 "Pink",
+																		 "Black",
+																		 "White"
+																	 });
 
-		public ReactiveProperty<string> SelectedText { get; } = new ReactiveProperty<string>("Green");
+		public ReactiveProperty<string> SelectedText { get; } = new("Green");
 
 		private string[] languages =
 		{
@@ -60,33 +60,33 @@ namespace Sample.ViewModels
 		};
 
 
-		public ReactivePropertySlim<bool> IsHeaderFont { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsFooterFont { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentTitle { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentValue { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentDesc { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentHint { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentBold { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsParentItalic { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsTitle { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsValue { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsDesc { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsHint { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsBold { get; } = new ReactivePropertySlim<bool>();
-		public ReactivePropertySlim<bool> IsItalic { get; } = new ReactivePropertySlim<bool>();
+		public ReactivePropertySlim<bool> IsHeaderFont { get; } = new();
+		public ReactivePropertySlim<bool> IsFooterFont { get; } = new();
+		public ReactivePropertySlim<bool> IsParentTitle { get; } = new();
+		public ReactivePropertySlim<bool> IsParentValue { get; } = new();
+		public ReactivePropertySlim<bool> IsParentDesc { get; } = new();
+		public ReactivePropertySlim<bool> IsParentHint { get; } = new();
+		public ReactivePropertySlim<bool> IsParentBold { get; } = new();
+		public ReactivePropertySlim<bool> IsParentItalic { get; } = new();
+		public ReactivePropertySlim<bool> IsTitle { get; } = new();
+		public ReactivePropertySlim<bool> IsValue { get; } = new();
+		public ReactivePropertySlim<bool> IsDesc { get; } = new();
+		public ReactivePropertySlim<bool> IsHint { get; } = new();
+		public ReactivePropertySlim<bool> IsBold { get; } = new();
+		public ReactivePropertySlim<bool> IsItalic { get; } = new();
 
-		public ReactivePropertySlim<string> HeaderFont { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> FooterFont { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> ParentTitle { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> ParentValue { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> ParentDesc { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> ParentHint { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> Title { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> Value { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> Desc { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<string> Hint { get; } = new ReactivePropertySlim<string>();
-		public ReactivePropertySlim<FontAttributes> ParentAttr { get; } = new ReactivePropertySlim<FontAttributes>(FontAttributes.None);
-		public ReactivePropertySlim<FontAttributes> ChildAttr { get; } = new ReactivePropertySlim<FontAttributes>(FontAttributes.None);
+		public ReactivePropertySlim<string> HeaderFont { get; } = new();
+		public ReactivePropertySlim<string> FooterFont { get; } = new();
+		public ReactivePropertySlim<string> ParentTitle { get; } = new();
+		public ReactivePropertySlim<string> ParentValue { get; } = new();
+		public ReactivePropertySlim<string> ParentDesc { get; } = new();
+		public ReactivePropertySlim<string> ParentHint { get; } = new();
+		public ReactivePropertySlim<string> Title { get; } = new();
+		public ReactivePropertySlim<string> Value { get; } = new();
+		public ReactivePropertySlim<string> Desc { get; } = new();
+		public ReactivePropertySlim<string> Hint { get; } = new();
+		public ReactivePropertySlim<FontAttributes> ParentAttr { get; } = new(FontAttributes.None);
+		public ReactivePropertySlim<FontAttributes> ChildAttr { get; } = new(FontAttributes.None);
 
 
 		public CustomFontTestViewModel( INavigationService navigationService )

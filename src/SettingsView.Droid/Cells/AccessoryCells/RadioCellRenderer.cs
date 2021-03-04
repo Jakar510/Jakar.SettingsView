@@ -6,7 +6,7 @@ using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Controls;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 
@@ -40,12 +40,12 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == BaseCheckableCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
 			else { base.ParentPropertyChanged(sender, e); }
 		}

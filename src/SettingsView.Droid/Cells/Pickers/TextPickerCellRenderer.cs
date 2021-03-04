@@ -9,6 +9,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ANumberPicker = Android.Widget.NumberPicker;
@@ -26,7 +27,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		private TextPickerCell _TextPickerCell => Cell as TextPickerCell ?? throw new NullReferenceException(nameof(_TextPickerCell));
 		private ANumberPicker? _Picker { get; set; }
 		private AlertDialog? _Dialog { get; set; }
-		private string _PickerTitle { get; set; } = string.Empty;
+		private string _PopupTitle { get; set; } = string.Empty;
 		private ICommand? _Command { get; set; }
 
 
@@ -36,7 +37,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
-			else if ( e.PropertyName == TextPickerCell.PickerTitleProperty.PropertyName ) { UpdatePickerTitle(); }
+			else if ( e.PropertyName == PopupCellBase.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
@@ -47,13 +48,13 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void UpdateCell()
 		{
 			base.UpdateCell();
-			UpdatePickerTitle();
+			UpdatePopupTitle();
 			UpdateSelectedItem();
 			UpdateCommand();
 		}
 
 		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem?.ToString(); }
-		private void UpdatePickerTitle() { _PickerTitle = _TextPickerCell.PickerTitle; }
+		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.PopupTitle; }
 		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
 		private void CreateDialog()
@@ -70,24 +71,24 @@ namespace Jakar.SettingsView.Droid.Cells
 						  WrapSelectorWheel = _TextPickerCell.IsCircularPicker,
 						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem), 0),
 					  };
-			
-			_Picker.SetBackgroundColor(_TextPickerCell.PopupBackGroundColor.ToAndroid());
-			_Picker.SetTextColor(_TextPickerCell.PopupTextColor.ToAndroid());
+
+			_Picker.SetBackgroundColor(_TextPickerCell.Popup.BackgroundColor.ToAndroid());
+			_Picker.SetTextColor(_TextPickerCell.Popup.TextColor.ToAndroid());
 			_Picker.SetDisplayedValues(_TextPickerCell.Items.ToArray());
 
 			if ( _Dialog != null ) return;
 			using ( var builder = new AlertDialog.Builder(AndroidContext) )
 			{
-				builder.SetTitle(_PickerTitle);
+				builder.SetTitle(_PopupTitle);
 
 				var parent = new FrameLayout(AndroidContext);
-				parent.SetBackgroundColor(_TextPickerCell.PopupBackGroundColor.ToAndroid());
-				
+				parent.SetBackgroundColor(_TextPickerCell.Popup.BackgroundColor.ToAndroid());
+
 				parent.AddView(_Picker, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center));
 
 				builder.SetView(parent);
-				builder.SetNegativeButton(_TextPickerCell.PopupCancelText, CancelAndClosePopup);
-				builder.SetPositiveButton(_TextPickerCell.PopupAcceptText, AcceptAndClosePopup);
+				builder.SetNegativeButton(_TextPickerCell.Popup.Cancel, CancelAndClosePopup);
+				builder.SetPositiveButton(_TextPickerCell.Popup.Accept, AcceptAndClosePopup);
 
 				_Dialog = builder.Create();
 			}

@@ -6,8 +6,8 @@ namespace Sample.ViewModels
 {
 	public class ReorderTestViewModel
 	{
-		public ObservableCollection<string> ItemsSource { get; } = new ObservableCollection<string>();
-		public ObservableCollection<string> ItemsSource2 { get; } = new ObservableCollection<string>();
+		public ObservableCollection<string> ItemsSource { get; } = new();
+		public ObservableCollection<string> ItemsSource2 { get; } = new();
 
 		public ReorderTestViewModel()
 		{

@@ -7,7 +7,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Views.InputMethods;
 using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AGridLayout = Android.Widget.GridLayout;
@@ -30,7 +30,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected internal Cell Cell { get; set; }
 		public Element Element => Cell;
 		protected internal CellBase CellBase => Cell as CellBase ?? throw new NullReferenceException(nameof(CellBase));
-		protected internal Shared.SettingsView? CellParent => Cell.Parent as Shared.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
+		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
 
 
 		protected internal AContext AndroidContext { get; set; }
@@ -102,7 +102,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		}
 		protected internal virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.SelectedColorProperty.PropertyName ) { UpdateSelectedColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.SelectedColorProperty.PropertyName ) { UpdateSelectedColor(); }
 		}
 		protected internal virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 

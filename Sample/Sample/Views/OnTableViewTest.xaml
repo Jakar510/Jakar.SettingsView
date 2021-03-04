@@ -90,7 +90,7 @@
 										Number="{Binding Number.Value}"
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
-										PickerTitle="{Binding PickerTitle.Value}"
+										PopupTitle="{Binding PopupTitle.Value}"
 										SelectedCommand="{Binding NumberSelectedCommand}" />
 				<cells:TimePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -108,7 +108,7 @@
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
 									  Format="{Binding TimeFormat.Value}"
-									  PickerTitle="{Binding PickerTitle.Value}" />
+									  PopupTitle="{Binding PopupTitle.Value}" />
 				<cells:DatePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
 									  Description="{Binding Description.Value}"
@@ -169,7 +169,7 @@
 								  IconRadius="{Binding IconRadius.Value}"
 								  Tapped="Handle_Tapped"
 								  PopupAccentColor="{Binding OwnAccentColor.Value}"
-								  PageTitle="{Binding PageTitle.Value}"
+								  PopupTitle="{Binding PageTitle.Value}"
 								  ItemsSource="{Binding ItemsSource}"
 								  DisplayMember="{Binding DisplayMember.Value}"
 								  SelectedItems="{Binding SelectedItems}"

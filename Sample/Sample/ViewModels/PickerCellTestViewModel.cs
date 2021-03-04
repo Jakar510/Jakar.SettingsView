@@ -9,27 +9,27 @@ namespace Sample.ViewModels
 {
 	public class PickerCellTestViewModel : ViewModelBase
 	{
-		public ReactiveProperty<Color> OwnAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<string> PageTitle { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> DisplayMember { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> SubDisplayMember { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<string> DisplayMember2 { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<int> MaxSelectedNumber { get; } = new ReactiveProperty<int>();
-		public ReactiveProperty<bool> KeepSelected { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<string> SelectedItemsOrderKey { get; } = new ReactiveProperty<string>();
-		public ReactiveProperty<bool> UseNaturalSort { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> UseAutoValueText { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> UsePickToClose { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> IsVisible { get; } = new ReactiveProperty<bool>(true);
-		public ReactivePropertySlim<Person> SelectedItem { get; } = new ReactivePropertySlim<Person>();
+		public ReactiveProperty<Color> OwnAccentColor { get; } = new();
+		public ReactiveProperty<string> PageTitle { get; } = new();
+		public ReactiveProperty<string> DisplayMember { get; } = new();
+		public ReactiveProperty<string> SubDisplayMember { get; } = new();
+		public ReactiveProperty<string> DisplayMember2 { get; } = new();
+		public ReactiveProperty<int> MaxSelectedNumber { get; } = new();
+		public ReactiveProperty<bool> KeepSelected { get; } = new();
+		public ReactiveProperty<string> SelectedItemsOrderKey { get; } = new();
+		public ReactiveProperty<bool> UseNaturalSort { get; } = new();
+		public ReactiveProperty<bool> UseAutoValueText { get; } = new();
+		public ReactiveProperty<bool> UsePickToClose { get; } = new();
+		public ReactiveProperty<bool> IsVisible { get; } = new(true);
+		public ReactivePropertySlim<Person> SelectedItem { get; } = new();
 
-		public ObservableCollection<Person> ItemsSource { get; } = new ObservableCollection<Person>();
-		public ObservableCollection<int> ItemsSource2 { get; } = new ObservableCollection<int>();
+		public ObservableCollection<Person> ItemsSource { get; } = new();
+		public ObservableCollection<int> ItemsSource2 { get; } = new();
 
-		public ObservableCollection<Person> SelectedItems { get; set; } = new ObservableCollection<Person>();
-		public ObservableCollection<int> SelectedItems2 { get; } = new ObservableCollection<int>();
+		public ObservableCollection<Person> SelectedItems { get; set; } = new();
+		public ObservableCollection<int> SelectedItems2 { get; } = new();
 
-		public ReactiveCommand SelectedCommand { get; } = new ReactiveCommand();
+		public ReactiveCommand SelectedCommand { get; } = new();
 
 		private static string[] PageTitles =
 		{

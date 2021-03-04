@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 #nullable enable
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.Misc
 {
 	public static class InstanceCreator
 	{

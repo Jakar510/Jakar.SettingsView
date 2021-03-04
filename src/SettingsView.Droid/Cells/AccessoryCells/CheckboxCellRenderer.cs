@@ -9,7 +9,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Shared.Cells.Base;
+using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ACheckBox = Android.Widget.CheckBox;
@@ -49,16 +49,16 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == BaseCheckableCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
-			else if ( e.PropertyName == BaseCheckableCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
+			else if ( e.PropertyName == CheckableCellBase.CheckedProperty.PropertyName ) { UpdateChecked(); }
 			else { base.CellPropertyChanged(sender, e); }
 
 			// if ( e.PropertyName == LabelCell.ValueTextFontSizeProperty.PropertyName ) { UpdateValueTextFontSize(); }
 		}
 		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else { base.ParentPropertyChanged(sender, e); }
 		}
 

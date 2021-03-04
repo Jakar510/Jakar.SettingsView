@@ -7,9 +7,9 @@ namespace Sample.ViewModels
 {
 	public class SwitchCellTestViewModel : ViewModelBase
 	{
-		public ReactiveProperty<Color> OwnAccentColor { get; } = new ReactiveProperty<Color>();
-		public ReactiveProperty<bool> Checked { get; } = new ReactiveProperty<bool>();
-		public ReactiveProperty<bool> IsVisible { get; } = new ReactiveProperty<bool>(true);
+		public ReactiveProperty<Color> OwnAccentColor { get; } = new();
+		public ReactiveProperty<bool> Checked { get; } = new();
+		public ReactiveProperty<bool> IsVisible { get; } = new(true);
 
 		// ReSharper disable once IdentifierTypo
 		private static readonly bool[] Bools =

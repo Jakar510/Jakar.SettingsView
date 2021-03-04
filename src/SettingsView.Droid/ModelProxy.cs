@@ -5,6 +5,7 @@ using System.Linq;
 using Android.OS;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -46,7 +47,7 @@ namespace Jakar.SettingsView.Droid
 		private SettingsViewRecyclerAdapter _Adapter { get; set; }
 		private RecyclerView _RecyclerView { get; set; }
 
-		public ModelProxy( Shared.SettingsView settingsView, SettingsViewRecyclerAdapter adapter, RecyclerView recyclerView )
+		public ModelProxy( Shared.sv.SettingsView settingsView, SettingsViewRecyclerAdapter adapter, RecyclerView recyclerView )
 		{
 			_Model = settingsView.Model;
 			_Root = settingsView.Root;

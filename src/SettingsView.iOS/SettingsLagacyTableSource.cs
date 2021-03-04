@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.sv;
 using UIKit;
 using Xamarin.Forms;
 
@@ -15,7 +16,7 @@ namespace Jakar.SettingsView.iOS
 		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.iOS.SettingsLagacyTableSource"/> class.
 		/// </summary>
 		/// <param name="settingsView">Settings view.</param>
-		public SettingsLagacyTableSource( Shared.SettingsView settingsView ) : base(settingsView) { }
+		public SettingsLagacyTableSource( Shared.sv.SettingsView settingsView ) : base(settingsView) { }
 
 		/// <summary>
 		/// Cans the move row.
