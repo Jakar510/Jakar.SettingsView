@@ -13,6 +13,7 @@ using AView = Android.Views.View;
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public abstract class BaseValueCell<TCell> : BaseAiDescriptionCell where TCell : AView
 	{
 		protected HintView _Hint { get; }

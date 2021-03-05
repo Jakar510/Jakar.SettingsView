@@ -9,6 +9,7 @@ using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ANumberPicker = Android.Widget.NumberPicker;
@@ -42,7 +43,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ) { UpdateMin(); }
 			else if ( e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateMax(); }
 			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
-			else if ( e.PropertyName == PopupCellBase.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else if ( e.PropertyName == NumberPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}

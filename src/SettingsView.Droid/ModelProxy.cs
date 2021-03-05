@@ -15,8 +15,8 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public enum ViewType
 	{
-		TextHeader,
-		TextFooter,
+		// TextHeader,
+		// TextFooter,
 		CustomHeader,
 		CustomFooter,
 	}
@@ -122,9 +122,10 @@ namespace Jakar.SettingsView.Droid
 		private void AddSection( NotifyCollectionChangedEventArgs e )
 		{
 			// regard as coming only one item.
-			if ( !( e.NewItems[0] is Section section ) ) return;
+			if ( e.NewItems[0] is not Section section  ) return;
 			int startIndex = RowIndexFromParentCollection(e.NewStartingIndex);
-			Insert(startIndex, new RowInfo(section, section.HeaderView == null ? ViewType.TextHeader : ViewType.CustomHeader));
+			Insert(startIndex, new RowInfo(section, ViewType.CustomHeader));
+			// Insert(startIndex, new RowInfo(section, section.HeaderView == null ? ViewType.TextHeader : ViewType.CustomHeader));
 
 			for ( var i = 0; i < section.Count; i++ )
 			{
@@ -136,7 +137,8 @@ namespace Jakar.SettingsView.Droid
 				Insert(i + 1 + startIndex, rowInfo);
 			}
 
-			Insert(startIndex + section.Count() + 1, new RowInfo(section, section.FooterView == null ? ViewType.TextFooter : ViewType.CustomFooter));
+			Insert(startIndex + section.Count() + 1, new RowInfo(section, ViewType.CustomFooter));
+			// Insert(startIndex + section.Count() + 1, new RowInfo(section, section.FooterView == null ? ViewType.TextFooter : ViewType.CustomFooter));
 
 			_Adapter.NotifyItemRangeInserted(startIndex, section.Count + 2); // add a header and footer
 		}
@@ -145,7 +147,7 @@ namespace Jakar.SettingsView.Droid
 		{
 			// regard as coming only one item.
 			if ( e is null ) throw new NullReferenceException(nameof(e));
-			if ( !( e.OldItems[0] is Section section ) ) throw new ArgumentException("Sender must be of type(Section)", nameof(e.OldItems));
+			if ( e.OldItems[0] is not Section section  ) throw new ArgumentException("Sender must be of type(Section)", nameof(e.OldItems));
 
 			int startIndex = RowIndexFromParentCollection(e.OldStartingIndex);
 
@@ -254,10 +256,10 @@ namespace Jakar.SettingsView.Droid
 			for ( var sectionIndex = 0; sectionIndex < sectionCount; sectionIndex++ )
 			{
 				int sectionRowCount = _Model.GetRowCount(sectionIndex);
-				bool isTextHeader = _Model.GetSectionHeaderView(sectionIndex) == null;
 				Section curSection = _Model.GetSection(sectionIndex);
-
-				Add(new RowInfo(curSection, isTextHeader ? ViewType.TextHeader : ViewType.CustomHeader));
+				// bool isTextHeader = _Model.GetSectionHeaderView(sectionIndex) is null;
+				// Add(new RowInfo(curSection, isTextHeader ? ViewType.TextHeader : ViewType.CustomHeader));
+				Add(new RowInfo(curSection, ViewType.CustomHeader));
 
 				for ( var i = 0; i < sectionRowCount; i++ )
 				{
@@ -265,9 +267,9 @@ namespace Jakar.SettingsView.Droid
 					Add(new RowInfo(curSection, cell, (ViewType) viewTypes[cell.GetType()]));
 				}
 
-				bool isTextFooter = _Model.GetSectionFooterView(sectionIndex) == null;
-
-				Add(new RowInfo(curSection, isTextFooter ? ViewType.TextFooter : ViewType.CustomFooter));
+				// bool isTextFooter = _Model.GetSectionFooterView(sectionIndex) == null;
+				// Add(new RowInfo(curSection, isTextFooter ? ViewType.TextFooter : ViewType.CustomFooter));
+				Add(new RowInfo(curSection, ViewType.CustomFooter));
 			}
 
 			return viewTypes;

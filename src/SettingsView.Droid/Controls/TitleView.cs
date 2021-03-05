@@ -11,6 +11,7 @@ using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Controls
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public class TitleView : BaseTextView
 	{
 		private TitleCellBase _CurrentCell => _Cell.Cell as TitleCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));

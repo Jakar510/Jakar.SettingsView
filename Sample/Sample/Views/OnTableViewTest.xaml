@@ -7,6 +7,7 @@
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.OnTableViewTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -90,8 +91,11 @@
 										Number="{Binding Number.Value}"
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
-										PopupTitle="{Binding PopupTitle.Value}"
-										SelectedCommand="{Binding NumberSelectedCommand}" />
+										SelectedCommand="{Binding NumberSelectedCommand}">
+					<cells:NumberPickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
+					</cells:NumberPickerCell.Popup>
+				</cells:NumberPickerCell>
 				<cells:TimePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
 									  Description="{Binding Description.Value}"
@@ -107,8 +111,11 @@
 									  IconRadius="{Binding IconRadius.Value}"
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
-									  Format="{Binding TimeFormat.Value}"
-									  PopupTitle="{Binding PopupTitle.Value}" />
+									  Format="{Binding TimeFormat.Value}">
+					<cells:TimePickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
+					</cells:TimePickerCell.Popup>
+				</cells:TimePickerCell>
 				<cells:DatePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
 									  Description="{Binding Description.Value}"
@@ -168,14 +175,17 @@
 								  IconSize="{Binding IconSize.Value}"
 								  IconRadius="{Binding IconRadius.Value}"
 								  Tapped="Handle_Tapped"
-								  PopupAccentColor="{Binding OwnAccentColor.Value}"
-								  PopupTitle="{Binding PageTitle.Value}"
 								  ItemsSource="{Binding ItemsSource}"
 								  DisplayMember="{Binding DisplayMember.Value}"
 								  SelectedItems="{Binding SelectedItems}"
 								  MaxSelectedNumber="{Binding MaxSelectedNumber.Value}"
 								  KeepSelectedUntilBack="{Binding KeepSelected.Value}"
-								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}" />
+								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}">
+					<cells:PickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}"
+											AccentColor="{Binding OwnAccentColor.Value}" />
+					</cells:PickerCell.Popup>
+				</cells:PickerCell>
 				<cells:EntryCell IconSource="{Binding IconSource.Value}"
 								 Title="{Binding Title.Value}"
 								 Description="{Binding Description.Value}"

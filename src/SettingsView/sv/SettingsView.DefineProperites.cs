@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows.Input;
+using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
-using Jakar.SettingsView.Shared.sv;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using DropEventArgs = Jakar.SettingsView.Shared.Events.DropEventArgs;
 
 #nullable enable
-namespace Jakar.SettingsView.Shared
+namespace Jakar.SettingsView.Shared.sv
 {
 	public partial class SettingsView
 	{
-		public event EventHandler<DropEventArgs> ItemDropped;
+		internal void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { OnPropertyChanged(e.PropertyName); }
 
-		public static BindableProperty ItemDroppedCommandProperty = BindableProperty.Create(nameof(ItemDroppedCommand), typeof(ICommand), typeof(sv.SettingsView), default(ICommand));
+		public event EventHandler<DropEventArgs>? ItemDropped;
+
+		public static BindableProperty ItemDroppedCommandProperty = BindableProperty.Create(nameof(ItemDroppedCommand), typeof(ICommand), typeof(SettingsView), default(ICommand));
 
 		public ICommand ItemDroppedCommand
 		{
@@ -22,13 +27,40 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(ItemDroppedCommandProperty, value);
 		}
 
+
+	#region Popups
+
+		public static BindableProperty PopupCfgProperty = BindableProperty.Create(nameof(Popup),
+																				  typeof(CellPopupConfig),
+																				  typeof(SettingsView),
+																				  new CellPopupConfig(),
+																				  propertyChanging: PopupCfgPropertyChanging
+																				 );
+
+		private static void PopupCfgPropertyChanging( BindableObject bindable, object oldValue, object newValue )
+		{
+			if ( oldValue is CellPopupConfig old )
+				old.Parent = null;
+			if ( newValue is CellPopupConfig current )
+				current.Parent = (SettingsView) bindable;
+		}
+
+		public CellPopupConfig Popup
+		{
+			get => (CellPopupConfig) GetValue(PopupCfgProperty);
+			set => SetValue(PopupCfgProperty, value);
+		}
+
+	#endregion
+
+
 	#region SettingsView Colors
 
-		public static BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(sv.SettingsView), Color.FromRgb(199, 199, 204));
+		public static BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(SettingsView), Color.FromRgb(199, 199, 204));
 
-		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(SettingsView), Color.Default);
 
-		public new static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public new static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 
 		public new Color BackgroundColor
@@ -53,26 +85,26 @@ namespace Jakar.SettingsView.Shared
 
 	#region Header
 
-		public static BindableProperty HeaderPaddingProperty = BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(sv.SettingsView), new Thickness(14, 8, 8, 8));
+		public static BindableProperty HeaderPaddingProperty = BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(SettingsView), new Thickness(14, 8, 8, 8));
 
-		public static BindableProperty HeaderTextColorProperty = BindableProperty.Create(nameof(HeaderTextColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty HeaderTextColorProperty = BindableProperty.Create(nameof(HeaderTextColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 		public static BindableProperty HeaderFontSizeProperty = BindableProperty.Create(nameof(HeaderFontSize),
 																						typeof(double),
-																						typeof(sv.SettingsView),
+																						typeof(SettingsView),
 																						-1.0d,
-																						defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Small, (sv.SettingsView) bindable)
+																						defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Small, (SettingsView) bindable)
 																					   );
 
-		public static BindableProperty HeaderFontFamilyProperty = BindableProperty.Create(nameof(HeaderFontFamily), typeof(string), typeof(sv.SettingsView), default(string?));
+		public static BindableProperty HeaderFontFamilyProperty = BindableProperty.Create(nameof(HeaderFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
-		public static BindableProperty HeaderFontAttributesProperty = BindableProperty.Create(nameof(HeaderFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
+		public static BindableProperty HeaderFontAttributesProperty = BindableProperty.Create(nameof(HeaderFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
 
-		public static BindableProperty HeaderTextVerticalAlignProperty = BindableProperty.Create(nameof(HeaderTextVerticalAlign), typeof(LayoutAlignment), typeof(sv.SettingsView), LayoutAlignment.End);
+		public static BindableProperty HeaderTextVerticalAlignProperty = BindableProperty.Create(nameof(HeaderTextVerticalAlign), typeof(LayoutAlignment), typeof(SettingsView), LayoutAlignment.End);
 
-		public static BindableProperty HeaderBackgroundColorProperty = BindableProperty.Create(nameof(HeaderBackgroundColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty HeaderBackgroundColorProperty = BindableProperty.Create(nameof(HeaderBackgroundColor), typeof(Color), typeof(SettingsView), Color.Default);
 
-		public static BindableProperty HeaderHeightProperty = BindableProperty.Create(nameof(HeaderHeight), typeof(double), typeof(sv.SettingsView), -1d);
+		public static BindableProperty HeaderHeightProperty = BindableProperty.Create(nameof(HeaderHeight), typeof(double), typeof(SettingsView), -1d);
 
 		public Thickness HeaderPadding
 		{
@@ -86,7 +118,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(HeaderTextColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double HeaderFontSize
 		{
 			get => (double) GetValue(HeaderFontSizeProperty);
@@ -127,23 +159,23 @@ namespace Jakar.SettingsView.Shared
 
 	#region Footer
 
-		public static BindableProperty FooterTextColorProperty = BindableProperty.Create(nameof(FooterTextColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty FooterTextColorProperty = BindableProperty.Create(nameof(FooterTextColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 		public static BindableProperty FooterFontSizeProperty = BindableProperty.Create(nameof(FooterFontSize),
 																						typeof(double),
-																						typeof(sv.SettingsView),
+																						typeof(SettingsView),
 																						-1.0d,
 																						BindingMode.OneWay,
-																						defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Small, (sv.SettingsView) bindable)
+																						defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Small, (SettingsView) bindable)
 																					   );
 
-		public static BindableProperty FooterFontFamilyProperty = BindableProperty.Create(nameof(FooterFontFamily), typeof(string), typeof(sv.SettingsView), default(string?));
+		public static BindableProperty FooterFontFamilyProperty = BindableProperty.Create(nameof(FooterFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
-		public static BindableProperty FooterFontAttributesProperty = BindableProperty.Create(nameof(FooterFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
+		public static BindableProperty FooterFontAttributesProperty = BindableProperty.Create(nameof(FooterFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
 
-		public static BindableProperty FooterBackgroundColorProperty = BindableProperty.Create(nameof(FooterBackgroundColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty FooterBackgroundColorProperty = BindableProperty.Create(nameof(FooterBackgroundColor), typeof(Color), typeof(SettingsView), Color.Default);
 
-		public static BindableProperty FooterPaddingProperty = BindableProperty.Create(nameof(FooterPadding), typeof(Thickness), typeof(sv.SettingsView), new Thickness(14, 8, 14, 8));
+		public static BindableProperty FooterPaddingProperty = BindableProperty.Create(nameof(FooterPadding), typeof(Thickness), typeof(SettingsView), new Thickness(14, 8, 14, 8));
 
 		public Color FooterTextColor
 		{
@@ -151,7 +183,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(FooterTextColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double FooterFontSize
 		{
 			get => (double) GetValue(FooterFontSizeProperty);
@@ -187,20 +219,20 @@ namespace Jakar.SettingsView.Shared
 
 	#region Cell Title
 
-		public static BindableProperty CellTitleColorProperty = BindableProperty.Create(nameof(CellTitleColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty CellTitleColorProperty = BindableProperty.Create(nameof(CellTitleColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 		public static BindableProperty CellTitleFontSizeProperty = BindableProperty.Create(nameof(CellTitleFontSize),
 																						   typeof(double),
-																						   typeof(sv.SettingsView),
+																						   typeof(SettingsView),
 																						   -1.0,
 																						   BindingMode.OneWay,
-																						   defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Default, (sv.SettingsView) bindable)
+																						   defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Default, (SettingsView) bindable)
 																						  );
 
-		public static BindableProperty CellTitleFontFamilyProperty = BindableProperty.Create(nameof(CellTitleFontFamily), typeof(string), typeof(sv.SettingsView), default(string?));
+		public static BindableProperty CellTitleFontFamilyProperty = BindableProperty.Create(nameof(CellTitleFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
-		public static BindableProperty CellTitleFontAttributesProperty = BindableProperty.Create(nameof(CellTitleFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
-		public static BindableProperty CellTitleAlignmentProperty = BindableProperty.Create(nameof(CellTitleAlignment), typeof(TextAlignment), typeof(sv.SettingsView), TextAlignment.Start);
+		public static BindableProperty CellTitleFontAttributesProperty = BindableProperty.Create(nameof(CellTitleFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellTitleAlignmentProperty = BindableProperty.Create(nameof(CellTitleAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.Start);
 
 		public Color CellTitleColor
 		{
@@ -208,7 +240,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellTitleColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double CellTitleFontSize
 		{
 			get => (double) GetValue(CellTitleFontSizeProperty);
@@ -237,14 +269,14 @@ namespace Jakar.SettingsView.Shared
 
 	#region Cell Value
 
-		public static BindableProperty CellValueTextColorProperty = BindableProperty.Create(nameof(CellValueTextColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty CellValueTextColorProperty = BindableProperty.Create(nameof(CellValueTextColor), typeof(Color), typeof(SettingsView), Color.Default);
 
-		public static BindableProperty CellValueTextFontSizeProperty = BindableProperty.Create(nameof(CellValueTextFontSize), typeof(double), typeof(sv.SettingsView), -1.0d);
+		public static BindableProperty CellValueTextFontSizeProperty = BindableProperty.Create(nameof(CellValueTextFontSize), typeof(double), typeof(SettingsView), -1.0d);
 
-		public static BindableProperty CellValueTextFontFamilyProperty = BindableProperty.Create(nameof(CellValueTextFontFamily), typeof(string), typeof(sv.SettingsView), default(string?));
+		public static BindableProperty CellValueTextFontFamilyProperty = BindableProperty.Create(nameof(CellValueTextFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
-		public static BindableProperty CellValueTextFontAttributesProperty = BindableProperty.Create(nameof(CellValueTextFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
-		public static BindableProperty CellValueTextAlignmentProperty = BindableProperty.Create(nameof(CellValueTextAlignment), typeof(TextAlignment), typeof(sv.SettingsView), TextAlignment.End);
+		public static BindableProperty CellValueTextFontAttributesProperty = BindableProperty.Create(nameof(CellValueTextFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellValueTextAlignmentProperty = BindableProperty.Create(nameof(CellValueTextAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.End);
 
 		public Color CellValueTextColor
 		{
@@ -252,7 +284,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellValueTextColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double CellValueTextFontSize
 		{
 			get => (double) GetValue(CellValueTextFontSizeProperty);
@@ -281,14 +313,14 @@ namespace Jakar.SettingsView.Shared
 
 	#region Cell Description
 
-		public static BindableProperty CellDescriptionColorProperty = BindableProperty.Create(nameof(CellDescriptionColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty CellDescriptionColorProperty = BindableProperty.Create(nameof(CellDescriptionColor), typeof(Color), typeof(SettingsView), Color.Default);
 
-		public static BindableProperty CellDescriptionFontSizeProperty = BindableProperty.Create(nameof(CellDescriptionFontSize), typeof(double), typeof(sv.SettingsView), -1.0d);
+		public static BindableProperty CellDescriptionFontSizeProperty = BindableProperty.Create(nameof(CellDescriptionFontSize), typeof(double), typeof(SettingsView), -1.0d);
 
-		public static BindableProperty CellDescriptionFontFamilyProperty = BindableProperty.Create(nameof(CellDescriptionFontFamily), typeof(string), typeof(sv.SettingsView), default(string?));
+		public static BindableProperty CellDescriptionFontFamilyProperty = BindableProperty.Create(nameof(CellDescriptionFontFamily), typeof(string), typeof(SettingsView), default(string?));
 
-		public static BindableProperty CellDescriptionFontAttributesProperty = BindableProperty.Create(nameof(CellDescriptionFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
-		public static BindableProperty CellDescriptionAlignmentProperty = BindableProperty.Create(nameof(CellDescriptionAlignment), typeof(TextAlignment), typeof(sv.SettingsView), TextAlignment.Start);
+		public static BindableProperty CellDescriptionFontAttributesProperty = BindableProperty.Create(nameof(CellDescriptionFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellDescriptionAlignmentProperty = BindableProperty.Create(nameof(CellDescriptionAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.Start);
 
 		public Color CellDescriptionColor
 		{
@@ -296,7 +328,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellDescriptionColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double CellDescriptionFontSize
 		{
 			get => (double) GetValue(CellDescriptionFontSizeProperty);
@@ -325,11 +357,11 @@ namespace Jakar.SettingsView.Shared
 
 	#region Cell Hint
 
-		public static BindableProperty CellHintTextColorProperty = BindableProperty.Create(nameof(CellHintTextColor), typeof(Color), typeof(sv.SettingsView), Color.Red);
-		public static BindableProperty CellHintFontSizeProperty = BindableProperty.Create(nameof(CellHintFontSize), typeof(double), typeof(sv.SettingsView), 10.0d);
-		public static BindableProperty CellHintFontFamilyProperty = BindableProperty.Create(nameof(CellHintFontFamily), typeof(string), typeof(sv.SettingsView), default(string));
-		public static BindableProperty CellHintFontAttributesProperty = BindableProperty.Create(nameof(CellHintFontAttributes), typeof(FontAttributes), typeof(sv.SettingsView), FontAttributes.None);
-		public static BindableProperty CellHintAlignmentProperty = BindableProperty.Create(nameof(CellHintAlignment), typeof(TextAlignment), typeof(sv.SettingsView), TextAlignment.End);
+		public static BindableProperty CellHintTextColorProperty = BindableProperty.Create(nameof(CellHintTextColor), typeof(Color), typeof(SettingsView), Color.Red);
+		public static BindableProperty CellHintFontSizeProperty = BindableProperty.Create(nameof(CellHintFontSize), typeof(double), typeof(SettingsView), 10.0d);
+		public static BindableProperty CellHintFontFamilyProperty = BindableProperty.Create(nameof(CellHintFontFamily), typeof(string), typeof(SettingsView), default(string));
+		public static BindableProperty CellHintFontAttributesProperty = BindableProperty.Create(nameof(CellHintFontAttributes), typeof(FontAttributes), typeof(SettingsView), FontAttributes.None);
+		public static BindableProperty CellHintAlignmentProperty = BindableProperty.Create(nameof(CellHintAlignment), typeof(TextAlignment), typeof(SettingsView), TextAlignment.End);
 
 		public Color CellHintTextColor
 		{
@@ -337,7 +369,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellHintTextColorProperty, value);
 		}
 
-		[TypeConverter(typeof(FontSizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(FontSizeConverter))]
 		public double CellHintFontSize
 		{
 			get => (double) GetValue(CellHintFontSizeProperty);
@@ -369,11 +401,11 @@ namespace Jakar.SettingsView.Shared
 
 		public static Size DefaultIconSize => new Size(36, 36);
 
-		public static BindableProperty CellIconSizeProperty = BindableProperty.Create(nameof(CellIconSize), typeof(Size), typeof(sv.SettingsView), default(Size?));
+		public static BindableProperty CellIconSizeProperty = BindableProperty.Create(nameof(CellIconSize), typeof(Size), typeof(SettingsView), default(Size?));
 
-		public static BindableProperty CellIconRadiusProperty = BindableProperty.Create(nameof(CellIconRadius), typeof(double), typeof(sv.SettingsView), 6.0d);
+		public static BindableProperty CellIconRadiusProperty = BindableProperty.Create(nameof(CellIconRadius), typeof(double), typeof(SettingsView), 6.0d);
 
-		[TypeConverter(typeof(SizeConverter))]
+		[Xamarin.Forms.TypeConverter(typeof(SizeConverter))]
 		public Size? CellIconSize
 		{
 			get => (Size?) GetValue(CellIconSizeProperty);
@@ -394,7 +426,7 @@ namespace Jakar.SettingsView.Shared
 		public static readonly Color DEFAULT_OFF_COLOR = Color.FromRgba(117, 117, 117, 76);
 
 
-		public static BindableProperty CellBackgroundColorProperty = BindableProperty.Create(nameof(CellBackgroundColor), typeof(Color), typeof(sv.SettingsView), Color.Default);
+		public static BindableProperty CellBackgroundColorProperty = BindableProperty.Create(nameof(CellBackgroundColor), typeof(Color), typeof(SettingsView), Color.Default);
 
 		public Color CellBackgroundColor
 		{
@@ -403,7 +435,7 @@ namespace Jakar.SettingsView.Shared
 		}
 
 
-		public static BindableProperty CellAccentColorProperty = BindableProperty.Create(nameof(CellAccentColor), typeof(Color), typeof(sv.SettingsView), DEFAULT_ACCENT_COLOR);
+		public static BindableProperty CellAccentColorProperty = BindableProperty.Create(nameof(CellAccentColor), typeof(Color), typeof(SettingsView), DEFAULT_ACCENT_COLOR);
 
 
 		public Color CellAccentColor
@@ -412,7 +444,7 @@ namespace Jakar.SettingsView.Shared
 			set => SetValue(CellAccentColorProperty, value);
 		}
 
-		public static BindableProperty CellOffColorProperty = BindableProperty.Create(nameof(CellOffColor), typeof(Color), typeof(sv.SettingsView), DEFAULT_OFF_COLOR);
+		public static BindableProperty CellOffColorProperty = BindableProperty.Create(nameof(CellOffColor), typeof(Color), typeof(SettingsView), DEFAULT_OFF_COLOR);
 
 		public Color CellOffColor
 		{
@@ -426,14 +458,14 @@ namespace Jakar.SettingsView.Shared
 
 		public static BindableProperty ScrollToTopProperty = BindableProperty.Create(nameof(ScrollToTop),
 																					 typeof(bool),
-																					 typeof(sv.SettingsView),
+																					 typeof(SettingsView),
 																					 default(bool),
 																					 BindingMode.TwoWay
 																					);
 
 		public static BindableProperty ScrollToBottomProperty = BindableProperty.Create(nameof(ScrollToBottom),
 																						typeof(bool),
-																						typeof(sv.SettingsView),
+																						typeof(SettingsView),
 																						default(bool),
 																						BindingMode.TwoWay
 																					   );
@@ -456,7 +488,7 @@ namespace Jakar.SettingsView.Shared
 
 		public static BindableProperty VisibleContentHeightProperty = BindableProperty.Create(nameof(VisibleContentHeight),
 																							  typeof(double),
-																							  typeof(sv.SettingsView),
+																							  typeof(SettingsView),
 																							  -1d,
 																							  BindingMode.OneWayToSource
 																							 );
@@ -470,29 +502,29 @@ namespace Jakar.SettingsView.Shared
 
 		public static BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
 																					 typeof(IEnumerable),
-																					 typeof(sv.SettingsView),
-																					 default(IEnumerable),
+																					 typeof(SettingsView),
+																					 default(IEnumerable?),
 																					 BindingMode.OneWay,
-																					 propertyChanged: ItemsChanged
+																					 propertyChanged: ItemsSourceChanged
 																					);
 
-		public IEnumerable ItemsSource
+		public IEnumerable? ItemsSource
 		{
-			get => (IEnumerable) GetValue(ItemsSourceProperty);
+			get => (IEnumerable?) GetValue(ItemsSourceProperty);
 			set => SetValue(ItemsSourceProperty, value);
 		}
 
 
-		public static BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(sv.SettingsView), default(DataTemplate));
+		public static BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(SettingsView), default(DataTemplate?));
 
-		public DataTemplate ItemTemplate
+		public DataTemplate? ItemTemplate
 		{
-			get => (DataTemplate) GetValue(ItemTemplateProperty);
+			get => (DataTemplate?) GetValue(ItemTemplateProperty);
 			set => SetValue(ItemTemplateProperty, value);
 		}
 
 
-		public static BindableProperty TemplateStartIndexProperty = BindableProperty.Create(nameof(TemplateStartIndex), typeof(int), typeof(sv.SettingsView), default(int));
+		public static BindableProperty TemplateStartIndexProperty = BindableProperty.Create(nameof(TemplateStartIndex), typeof(int), typeof(SettingsView), default(int));
 
 		public int TemplateStartIndex
 		{
@@ -505,7 +537,7 @@ namespace Jakar.SettingsView.Shared
 	#region Android Only
 
 		//Only Android 
-		public static BindableProperty UseDescriptionAsValueProperty = BindableProperty.Create(nameof(UseDescriptionAsValue), typeof(bool), typeof(sv.SettingsView), false);
+		public static BindableProperty UseDescriptionAsValueProperty = BindableProperty.Create(nameof(UseDescriptionAsValue), typeof(bool), typeof(SettingsView), false);
 
 		public bool UseDescriptionAsValue
 		{
@@ -514,7 +546,7 @@ namespace Jakar.SettingsView.Shared
 		}
 
 		//Only Android
-		public static BindableProperty ShowSectionTopBottomBorderProperty = BindableProperty.Create(nameof(ShowSectionTopBottomBorder), typeof(bool), typeof(sv.SettingsView), true);
+		public static BindableProperty ShowSectionTopBottomBorderProperty = BindableProperty.Create(nameof(ShowSectionTopBottomBorder), typeof(bool), typeof(SettingsView), true);
 
 		public bool ShowSectionTopBottomBorder
 		{
@@ -523,7 +555,7 @@ namespace Jakar.SettingsView.Shared
 		}
 
 		//Only Android
-		public static BindableProperty ShowArrowIndicatorForAndroidProperty = BindableProperty.Create(nameof(ShowArrowIndicatorForAndroid), typeof(bool), typeof(sv.SettingsView), default(bool));
+		public static BindableProperty ShowArrowIndicatorForAndroidProperty = BindableProperty.Create(nameof(ShowArrowIndicatorForAndroid), typeof(bool), typeof(SettingsView), default(bool));
 
 		public bool ShowArrowIndicatorForAndroid
 		{
@@ -535,11 +567,11 @@ namespace Jakar.SettingsView.Shared
 
 
 		private int _TemplatedItemsCount { get; set; }
-		private static void ItemsChanged( BindableObject bindable, object oldValue, object newValue )
+		private static void ItemsSourceChanged( BindableObject bindable, object oldValue, object newValue )
 		{
-			var settingsView = (sv.SettingsView) bindable;
+			var settingsView = (SettingsView) bindable;
 
-			if ( settingsView.ItemTemplate == null ) { return; }
+			if ( settingsView.ItemTemplate is null ) { return; }
 
 			var oldValueAsEnumerable = oldValue as IList;
 			var newValueAsEnumerable = newValue as IList;
@@ -550,12 +582,12 @@ namespace Jakar.SettingsView.Shared
 			// keep the platform from notifying item changed event.
 			settingsView.Root.CollectionChanged -= settingsView.OnCollectionChanged;
 
-			if ( oldValueAsEnumerable != null )
+			if ( oldValueAsEnumerable is not null )
 			{
 				for ( int i = oldValueAsEnumerable.Count - 1; i >= 0; i-- ) { settingsView.Root.RemoveAt(settingsView.TemplateStartIndex + i); }
 			}
 
-			if ( newValueAsEnumerable != null )
+			if ( newValueAsEnumerable is not null )
 			{
 				for ( var i = 0; i < newValueAsEnumerable.Count; i++ )
 				{
@@ -605,7 +637,7 @@ namespace Jakar.SettingsView.Shared
 				}
 				case NotifyCollectionChangedAction.Remove:
 				{
-					if ( e.OldItems != null )
+					if ( e.OldItems is not null )
 					{
 						Root.RemoveAt(e.OldStartingIndex + TemplateStartIndex);
 						_TemplatedItemsCount--;
@@ -635,12 +667,13 @@ namespace Jakar.SettingsView.Shared
 			ItemDropped?.Invoke(this, eventArgs);
 			ItemDroppedCommand?.Execute(eventArgs);
 		}
-		private static Section CreateChildViewFor( DataTemplate template, object item, BindableObject container )
+		private static Section CreateChildViewFor( DataTemplate? template, object item, BindableObject container )
 		{
 			if ( template is DataTemplateSelector selector ) { template = selector.SelectTemplate(item, container); }
 
-			//Binding context
-			template.SetValue(BindingContextProperty, item);
+			if ( template is null ) throw new NullReferenceException(nameof(template));
+
+			template.SetValue(BindingContextProperty, item); //Binding context
 
 			return (Section) template.CreateContent();
 		}

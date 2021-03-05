@@ -8,6 +8,7 @@ using Prism.Navigation;
 using System.Collections;
 using System.Collections.Generic;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Config;
 
 namespace Sample.ViewModels
 {
@@ -207,7 +208,8 @@ namespace Sample.ViewModels
 						   {
 							   await pageDialog.DisplayAlertAsync("Command1", p?.ToString(), "OK");
 							   await navigationService.NavigateAsync("ContentPage");
-						   });
+						   }
+						  );
 
 			Commands[1].Subscribe(async p => { await pageDialog.DisplayAlertAsync("Command2", p?.ToString(), "OK"); });
 			NumberSelectedCommand.Subscribe(async p => { await pageDialog.DisplayAlertAsync("", p.ToString(), "OK"); });
@@ -218,7 +220,7 @@ namespace Sample.ViewModels
 		{
 			base.CellChanged(obj);
 
-			string text = ( obj as Label ).Text;
+			string text = ( obj as Label )?.Text;
 
 			switch ( text )
 			{
@@ -230,7 +232,7 @@ namespace Sample.ViewModels
 					NextVal(MinNum, MinNumbers);
 
 					break;
-				case nameof(NumberPickerCell.PopupTitle):
+				case nameof(PopupConfig.Title):
 					NextVal(PopupTitle, PopupTitles);
 					break;
 				case nameof(Time):
@@ -268,9 +270,12 @@ namespace Sample.ViewModels
 					NextVal(TextItems, TextLists);
 					break;
 				case nameof(TextSelectedItem):
-					if ( TextItems.Value is List<string> ) { TextSelectedItem.Value = TextSelectedItems[0]; }
-					else if ( TextItems.Value is List<int> ) { TextSelectedItem.Value = TextSelectedItems[1]; }
-					else { TextSelectedItem.Value = TextSelectedItems[2]; }
+					TextSelectedItem.Value = TextItems.Value switch
+											 {
+												 List<string> => TextSelectedItems[0],
+												 List<int> => TextSelectedItems[1],
+												 _ => TextSelectedItems[2]
+											 };
 
 					break;
 			}

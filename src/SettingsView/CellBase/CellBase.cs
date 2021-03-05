@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 
@@ -7,6 +8,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 {
 	public class CellBase : Cell
 	{
+		internal void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { OnPropertyChanged(e.PropertyName); }
+
 		public new event EventHandler? Tapped;
 
 		internal new void OnTapped() { Tapped?.Invoke(this, EventArgs.Empty); }

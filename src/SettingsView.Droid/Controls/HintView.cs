@@ -15,6 +15,7 @@ namespace Jakar.SettingsView.Droid.Controls
 {
 	public class HintView : BaseTextView
 	{
+		[Android.Runtime.Preserve(AllMembers = true)]
 		private HintTextCellBase _CurrentCell => _Cell.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		public HintView( Context context ) : base(context) { }

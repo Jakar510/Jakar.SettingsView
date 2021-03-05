@@ -9,6 +9,7 @@
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.PickerCellTest">
 
 	<ContentPage.Resources>
@@ -90,37 +91,37 @@
 		</ScrollView>
 
 		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
-								   SeparatorColor="{Binding SeparatorColor.Value}"
-								   SelectedColor="{Binding SelectedColor.Value}"
-								   HeaderPadding="{Binding HeaderPadding.Value}"
-								   HeaderTextColor="{Binding HeaderTextColor.Value}"
-								   HeaderFontSize="{Binding HeaderFontSize.Value}"
-								   HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
-								   HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
-								   HeaderHeight="{Binding HeaderHeight.Value}"
-								   FooterTextColor="{Binding FooterTextColor.Value}"
-								   FooterFontSize="{Binding FooterFontSize.Value}"
-								   FooterBackgroundColor="{Binding FooterBackgroundColor.Value}"
-								   FooterPadding="{Binding FooterPadding.Value}"
-								   RowHeight="{Binding RowHeight.Value}"
-								   HasUnevenRows="{Binding HasUnevenRows.Value}"
-								   CellTitleColor="{Binding CellTitleColor.Value}"
-								   CellTitleFontSize="{Binding CellTitleFontSize.Value}"
-								   CellValueTextColor="{Binding CellValueTextColor.Value}"
-								   CellValueTextFontSize="{Binding CellValueTextFontSize.Value}"
-								   CellDescriptionColor="{Binding CellDescriptionColor.Value}"
-								   CellDescriptionFontSize="{Binding CellDescriptionFontSize.Value}"
-								   CellBackgroundColor="{Binding CellBackgroundColor.Value}"
-								   CellIconSize="{Binding CellIconSize.Value}"
-								   CellIconRadius="{Binding CellIconRadius.Value}"
-								   CellAccentColor="{Binding CellAccentColor.Value}"
-								   CellHintTextColor="{Binding CellHintTextColor.Value}"
-								   CellHintFontSize="{Binding CellHintFontSize.Value}"
-								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
-								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
+						 SeparatorColor="{Binding SeparatorColor.Value}"
+						 SelectedColor="{Binding SelectedColor.Value}"
+						 HeaderPadding="{Binding HeaderPadding.Value}"
+						 HeaderTextColor="{Binding HeaderTextColor.Value}"
+						 HeaderFontSize="{Binding HeaderFontSize.Value}"
+						 HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
+						 HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
+						 HeaderHeight="{Binding HeaderHeight.Value}"
+						 FooterTextColor="{Binding FooterTextColor.Value}"
+						 FooterFontSize="{Binding FooterFontSize.Value}"
+						 FooterBackgroundColor="{Binding FooterBackgroundColor.Value}"
+						 FooterPadding="{Binding FooterPadding.Value}"
+						 RowHeight="{Binding RowHeight.Value}"
+						 HasUnevenRows="{Binding HasUnevenRows.Value}"
+						 CellTitleColor="{Binding CellTitleColor.Value}"
+						 CellTitleFontSize="{Binding CellTitleFontSize.Value}"
+						 CellValueTextColor="{Binding CellValueTextColor.Value}"
+						 CellValueTextFontSize="{Binding CellValueTextFontSize.Value}"
+						 CellDescriptionColor="{Binding CellDescriptionColor.Value}"
+						 CellDescriptionFontSize="{Binding CellDescriptionFontSize.Value}"
+						 CellBackgroundColor="{Binding CellBackgroundColor.Value}"
+						 CellIconSize="{Binding CellIconSize.Value}"
+						 CellIconRadius="{Binding CellIconRadius.Value}"
+						 CellAccentColor="{Binding CellAccentColor.Value}"
+						 CellHintTextColor="{Binding CellHintTextColor.Value}"
+						 CellHintFontSize="{Binding CellHintFontSize.Value}"
+						 UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
+						 ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
 			<sv:Section Title="Section1"
-								  FooterText="Footer1"
-								  IsVisible="{Binding IsVisible.Value}">
+						FooterText="Footer1"
+						IsVisible="{Binding IsVisible.Value}">
 				<cells:PickerCell IsEnabled="{Binding IsEnabled.Value}"
 								  IconSource="{Binding IconSource.Value}"
 								  Title="{Binding Title.Value}"
@@ -136,8 +137,6 @@
 								  IconSize="{Binding IconSize.Value}"
 								  IconRadius="{Binding IconRadius.Value}"
 								  Tapped="Handle_Tapped"
-								  PopupAccentColor="{Binding OwnAccentColor.Value}"
-								  PopupTitle="{Binding PageTitle.Value}"
 								  ItemsSource="{Binding ItemsSource}"
 								  DisplayMember="{Binding DisplayMember.Value}"
 								  SubDisplayMember="{Binding SubDisplayMember.Value}"
@@ -147,7 +146,12 @@
 								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}"
 								  SelectedCommand="{Binding SelectedCommand}"
 								  UseNaturalSort="{Binding UseNaturalSort.Value}"
-								  UsePickToClose="{Binding UsePickToClose.Value}"/>
+								  UsePickToClose="{Binding UsePickToClose.Value}">
+					<cells:PickerCell.Popup>
+						<config:PopupConfig AccentColor="{Binding OwnAccentColor.Value}"
+											Title="{Binding PageTitle.Value}" />
+					</cells:PickerCell.Popup>
+				</cells:PickerCell>
 				<cells:PickerCell IsEnabled="{Binding IsEnabled.Value}"
 								  IconSource="{Binding IconSource.Value}"
 								  Title="{Binding Title.Value}"
@@ -163,15 +167,18 @@
 								  IconSize="{Binding IconSize.Value}"
 								  IconRadius="{Binding IconRadius.Value}"
 								  Tapped="Handle_Tapped"
-								  PopupAccentColor="{Binding OwnAccentColor.Value}"
-								  PopupTitle="{Binding PageTitle.Value}"
 								  ItemsSource="{Binding ItemsSource2}"
 								  DisplayMember="{Binding DisplayMember2.Value}"
 								  SelectedItems="{Binding SelectedItems2}"
 								  MaxSelectedNumber="{Binding MaxSelectedNumber.Value}"
 								  KeepSelectedUntilBack="{Binding KeepSelected.Value}"
 								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}"
-								  UseNaturalSort="{Binding UseNaturalSort.Value}" />
+								  UseNaturalSort="{Binding UseNaturalSort.Value}" >
+					<cells:PickerCell.Popup>
+						<config:PopupConfig AccentColor="{Binding OwnAccentColor.Value}"
+											Title="{Binding PageTitle.Value}" />
+					</cells:PickerCell.Popup>
+				</cells:PickerCell>
 
 				<cells:PickerCell ItemsSource="{Binding ItemsSource}"
 								  SelectedItem="{Binding SelectedItem.Value}"

@@ -32,21 +32,20 @@ namespace Jakar.SettingsView.Shared.sv
 
 		private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs args )
 		{
-			if ( args.NewItems != null )
+			if ( args.OldItems is not null )
 			{
-				foreach ( Section section in args.NewItems )
+				foreach ( Section section in args.OldItems )
 				{
-					section.SectionCollectionChanged += ChildCollectionChanged;
-					section.SectionPropertyChanged += ChildPropertyChanged;
+					section.SectionCollectionChanged -= ChildCollectionChanged;
+					section.SectionPropertyChanged -= ChildPropertyChanged;
 				}
 			}
 
-			if ( args.OldItems is null )
-				return;
-			foreach ( Section section in args.OldItems )
+			if ( args.NewItems is null ) return;
+			foreach ( Section section in args.NewItems )
 			{
-				section.SectionCollectionChanged -= ChildCollectionChanged;
-				section.SectionPropertyChanged -= ChildPropertyChanged;
+				section.SectionCollectionChanged += ChildCollectionChanged;
+				section.SectionPropertyChanged += ChildPropertyChanged;
 			}
 		}
 	}

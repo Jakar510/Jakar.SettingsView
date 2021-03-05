@@ -14,6 +14,7 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Controls
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public class ValueView : BaseTextView
 	{
 		private ValueCellBase _CurrentCell => _Cell.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));

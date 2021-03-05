@@ -7,6 +7,8 @@ using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -19,7 +21,7 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewRecyclerAdapter : RecyclerView.Adapter, AView.IOnClickListener, AView.IOnLongClickListener
 	{
-		protected float _MinRowHeight => AndroidContext.ToPixels(Shared.sv.SettingsView.MIN_ROW_HEIGHT);
+		protected float _MinRowHeight => AndroidContext.ToPixels(SVConstants.MIN_ROW_HEIGHT);
 
 		//Item click. correspond to AdapterView.IOnItemClickListener
 		protected int _SelectedIndex { get; set; } = -1;
@@ -30,7 +32,7 @@ namespace Jakar.SettingsView.Droid
 		protected RecyclerView _RecyclerView { get; }
 		protected ModelProxy _Proxy { get; set; }
 
-		protected List<CustomViewHolder> _viewHolders = new List<CustomViewHolder>();
+		protected List<CustomViewHolder> _viewHolders = new();
 
 
 		public SettingsViewRecyclerAdapter( Context context, Shared.sv.SettingsView settingsView, RecyclerView recyclerView )
@@ -46,24 +48,22 @@ namespace Jakar.SettingsView.Droid
 
 		protected void SettingsView_ModelChanged( object sender, EventArgs e )
 		{
-			if ( _RecyclerView != null )
-			{
-				_Proxy.FillProxy();
-				NotifyDataSetChanged();
-			}
+			_Proxy.FillProxy();
+			NotifyDataSetChanged();
 		}
 
 		protected void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible((Section) sender); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
-					  e.PropertyName == Section.HeaderViewProperty.PropertyName ||
-					  e.PropertyName == Section.HeaderHeightProperty.PropertyName ) { UpdateSectionHeader((Section) sender); }
+			if ( sender is not Section section ) throw new InvalidOperationException(nameof(sender));
+
+			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible(section); }
+			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ) { UpdateTitle(section); }
+			else if ( e.PropertyName == Section.HeaderViewProperty.PropertyName ) { UpdateSectionHeader(section); } //  || e.PropertyName == Section.HeaderHeightProperty.PropertyName 
 			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName ||
 					  e.PropertyName == Section.FooterViewProperty.PropertyName ||
-					  e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter((Section) sender); }
+					  e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter(section); }
 		}
-
+		private void UpdateTitle( Section section ) { section.UpdateTitle(); }
 		protected void UpdateSectionVisible( Section section )
 		{
 			List<int> indexes = _Proxy.Select(( x, idx ) => new
@@ -100,9 +100,9 @@ namespace Jakar.SettingsView.Droid
 		{
 			CustomViewHolder viewHolder = ( (ViewType) viewType ) switch
 										  {
-											  ViewType.TextHeader => new HeaderViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultHeaderCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultHeaderCell))),
+											  // ViewType.TextHeader => new HeaderViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultHeaderCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultHeaderCell))),
 
-											  ViewType.TextFooter => new FooterViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultFooterCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultFooterCell))),
+											  // ViewType.TextFooter => new FooterViewHolder(AndroidContext.CreateContentView(parent, Resource.Layout.DefaultFooterCell, false) ?? throw new NullReferenceException(nameof(Resource.Layout.DefaultFooterCell))),
 
 											  ViewType.CustomHeader => new CustomHeaderViewHolder(new HeaderFooterContainer(AndroidContext)),
 
@@ -128,7 +128,7 @@ namespace Jakar.SettingsView.Droid
 		{
 			RowInfo rowInfo = _Proxy[position];
 
-			if ( !( holder is CustomViewHolder viewHolder ) ) return;
+			if ( holder is not CustomViewHolder viewHolder ) throw new InvalidOperationException(nameof(rowInfo));
 			viewHolder.RowInfo = rowInfo;
 
 			if ( !rowInfo.Section.IsVisible ||
@@ -144,24 +144,27 @@ namespace Jakar.SettingsView.Droid
 
 			switch ( rowInfo.ViewType )
 			{
-				case ViewType.TextHeader:
-					BindHeaderView((HeaderViewHolder) viewHolder);
-					break;
-
-				case ViewType.TextFooter:
-					BindFooterView((FooterViewHolder) viewHolder);
-					break;
+				// case ViewType.TextHeader:
+				// 	BindHeaderView((HeaderViewHolder) viewHolder);
+				// 	break;
+				//
+				// case ViewType.TextFooter:
+				// 	BindFooterView((FooterViewHolder) viewHolder);
+				// 	break;
 
 				case ViewType.CustomHeader:
-					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.HeaderView);
+					if ( viewHolder is not CustomHeaderViewHolder header ) throw new InvalidOperationException(nameof(header));
+					BindCustomHeaderView(header, rowInfo.Section.HeaderView);
 					break;
 
 				case ViewType.CustomFooter:
-					BindCustomHeaderFooterView(viewHolder, rowInfo.Section.FooterView);
+					if ( viewHolder is not CustomFooterViewHolder footer ) throw new InvalidOperationException(nameof(footer));
+					BindCustomHeaderView(footer, rowInfo.Section.FooterView);
 					break;
 
 				default:
-					BindContentView((ContentBodyViewHolder) viewHolder, position);
+					if ( viewHolder is not ContentBodyViewHolder content ) throw new InvalidOperationException(nameof(content));
+					BindContentView(content, position);
 					break;
 			}
 		}
@@ -182,7 +185,7 @@ namespace Jakar.SettingsView.Droid
 				return;
 			}
 
-			_SettingsView.Model.RowSelected(_Proxy[position].Cell);
+			_SettingsView.Model?.RowSelected(_Proxy[position].Cell);
 
 			cell.RowSelected(this, position);
 		}
@@ -203,7 +206,7 @@ namespace Jakar.SettingsView.Droid
 				return false;
 			}
 
-			_SettingsView.Model.RowLongPressed(_Proxy[position].Cell);
+			_SettingsView.Model?.RowLongPressed(_Proxy[position].Cell);
 
 			return result ?? true;
 		}
@@ -228,127 +231,122 @@ namespace Jakar.SettingsView.Droid
 		}
 
 
-		protected void BindHeaderView( HeaderViewHolder holder )
-		{
-			if ( holder is null ) throw new NullReferenceException(nameof(holder));
-			if ( holder.RowInfo is null ) throw new NullReferenceException(nameof(holder.RowInfo));
-			if ( holder.ItemView is null ) throw new NullReferenceException(nameof(holder.ItemView));
+		// protected void BindHeaderView( HeaderViewHolder holder )
+		// {
+		// 	if ( holder is null ) throw new NullReferenceException(nameof(holder));
+		// 	if ( holder.RowInfo is null ) throw new NullReferenceException(nameof(holder.RowInfo));
+		// 	if ( holder.ItemView is null ) throw new NullReferenceException(nameof(holder.ItemView));
+		//
+		// 	Section section = holder.RowInfo.Section;
+		// 	AView view = holder.ItemView;
+		//
+		// 	//judging cell height
+		// 	int cellHeight;
+		// 	double individualHeight = section.HeaderView.Height;
+		//
+		// 	if ( individualHeight > 0d ) { cellHeight = (int) AndroidContext.ToPixels(individualHeight); }
+		// 	else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) AndroidContext.ToPixels(_SettingsView.HeaderHeight); }
+		// 	else
+		// 	{
+		// 		cellHeight = -1; // Height Auto
+		// 	}
+		//
+		// 	if ( cellHeight >= 0 )
+		// 	{
+		// 		view.SetMinimumHeight((int) ( SVConstants.MIN_ROW_HEIGHT / 2 ));
+		// 		if ( view.LayoutParameters != null ) view.LayoutParameters.Height = cellHeight;
+		// 	}
+		//
+		// 	//text view setting
+		// 	holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.HeaderPadding.Left), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Top), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Right), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Bottom));
+		//
+		// 	holder.TextView.Gravity = _SettingsView.HeaderTextVerticalAlign.ToNativeVertical() | GravityFlags.Left;
+		// 	holder.TextView.TextAlignment = Android.Views.TextAlignment.Gravity;
+		// 	holder.TextView.Typeface = FontUtility.CreateTypeface(_SettingsView.HeaderFontFamily, _SettingsView.HeaderFontAttributes);
+		// 	holder.TextView.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _SettingsView.HeaderFontSize);
+		// 	holder.TextView.SetBackgroundColor(_SettingsView.HeaderBackgroundColor.ToAndroid());
+		//
+		// 	if ( _SettingsView.HeaderTextColor != Color.Default ) { holder.TextView.SetTextColor(_SettingsView.HeaderTextColor.ToAndroid()); }
+		//
+		// 	//update text
+		// 	holder.TextView.Text = section.Title;
+		// }
+		// protected void BindFooterView( FooterViewHolder holder )
+		// {
+		// 	Section? section = holder.RowInfo?.Section;
+		// 	AView view = holder.ItemView;
+		//
+		// 	//footer visible setting
+		// 	if ( string.IsNullOrEmpty(section?.FooterText) )
+		// 	{
+		// 		//if text is empty, hidden (height 0)
+		// 		holder.TextView.Visibility = ViewStates.Gone;
+		// 		view.Visibility = ViewStates.Gone;
+		// 	}
+		// 	else
+		// 	{
+		// 		holder.TextView.Visibility = ViewStates.Visible;
+		// 		view.Visibility = ViewStates.Visible;
+		// 	}
+		//
+		// 	// //judging cell height
+		// 	// if ( section != null )
+		// 	// {
+		// 	// 	double individualHeight = section.FooterHeight;
+		// 	//
+		// 	// 	int cellHeight;
+		// 	// 	if ( individualHeight > 0d ) { cellHeight = (int) _Context.ToPixels(individualHeight); }
+		// 	// 	else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) _Context.ToPixels(_SettingsView.HeaderHeight); }
+		// 	// 	else
+		// 	// 	{
+		// 	// 		cellHeight = -1; // Height Auto
+		// 	// 	}
+		// 	//
+		// 	// 	if ( cellHeight >= 0 )
+		// 	// 	{
+		// 	// 		view.SetMinimumHeight(SVConstants.MIN_ROW_HEIGHT / 2);
+		// 	// 		if ( view.LayoutParameters != null )
+		// 	// 			view.LayoutParameters.Height = cellHeight;
+		// 	// 	}
+		// 	// }
+		//
+		//
+		// 	//text view setting
+		// 	holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.FooterPadding.Left), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Top), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Right), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Bottom));
+		//
+		// 	holder.TextView.Typeface = FontUtility.CreateTypeface(_SettingsView.FooterFontFamily, _SettingsView.FooterFontAttributes);
+		// 	holder.TextView.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _SettingsView.FooterFontSize);
+		// 	holder.TextView.SetBackgroundColor(_SettingsView.FooterBackgroundColor.ToAndroid());
+		// 	if ( _SettingsView.FooterTextColor != Color.Default ) { holder.TextView.SetTextColor(_SettingsView.FooterTextColor.ToAndroid()); }
+		//
+		// 	//update text
+		// 	holder.TextView.Text = section?.FooterText;
+		// }
 
-			Section section = holder.RowInfo.Section;
-			AView view = holder.ItemView;
-
-			//judging cell height
-			int cellHeight;
-			double individualHeight = section.HeaderHeight;
-
-			if ( individualHeight > 0d ) { cellHeight = (int) AndroidContext.ToPixels(individualHeight); }
-			else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) AndroidContext.ToPixels(_SettingsView.HeaderHeight); }
-			else
-			{
-				cellHeight = -1; // Height Auto
-			}
-
-			if ( cellHeight >= 0 )
-			{
-				view.SetMinimumHeight(Shared.sv.SettingsView.MIN_ROW_HEIGHT / 2);
-				if ( view.LayoutParameters != null ) view.LayoutParameters.Height = cellHeight;
-			}
-
-			//text view setting
-			holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.HeaderPadding.Left), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Top), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Right), (int) view.Context.ToPixels(_SettingsView.HeaderPadding.Bottom));
-
-			holder.TextView.Gravity = _SettingsView.HeaderTextVerticalAlign.ToNativeVertical() | GravityFlags.Left;
-			holder.TextView.TextAlignment = Android.Views.TextAlignment.Gravity;
-			holder.TextView.Typeface = FontUtility.CreateTypeface(_SettingsView.HeaderFontFamily, _SettingsView.HeaderFontAttributes);
-			holder.TextView.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _SettingsView.HeaderFontSize);
-			holder.TextView.SetBackgroundColor(_SettingsView.HeaderBackgroundColor.ToAndroid());
-
-			// Single line was done away with.
-			//holder.TextView.SetMaxLines(1);
-			//holder.TextView.SetMinLines(1);
-			//holder.TextView.Ellipsize = TextUtils.TruncateAt.End;
-
-			if ( _SettingsView.HeaderTextColor != Color.Default ) { holder.TextView.SetTextColor(_SettingsView.HeaderTextColor.ToAndroid()); }
-
-			//update text
-			holder.TextView.Text = section.Title;
-		}
-		protected void BindFooterView( FooterViewHolder holder )
-		{
-			Section? section = holder.RowInfo?.Section;
-			AView view = holder.ItemView;
-
-			//footer visible setting
-			if ( string.IsNullOrEmpty(section?.FooterText) )
-			{
-				//if text is empty, hidden (height 0)
-				holder.TextView.Visibility = ViewStates.Gone;
-				view.Visibility = ViewStates.Gone;
-			}
-			else
-			{
-				holder.TextView.Visibility = ViewStates.Visible;
-				view.Visibility = ViewStates.Visible;
-			}
-
-			// //judging cell height
-			// if ( section != null )
-			// {
-			// 	double individualHeight = section.FooterHeight;
-			//
-			// 	int cellHeight;
-			// 	if ( individualHeight > 0d ) { cellHeight = (int) _Context.ToPixels(individualHeight); }
-			// 	else if ( _SettingsView.HeaderHeight > -1 ) { cellHeight = (int) _Context.ToPixels(_SettingsView.HeaderHeight); }
-			// 	else
-			// 	{
-			// 		cellHeight = -1; // Height Auto
-			// 	}
-			//
-			// 	if ( cellHeight >= 0 )
-			// 	{
-			// 		view.SetMinimumHeight(Shared.SettingsView.MIN_ROW_HEIGHT / 2);
-			// 		if ( view.LayoutParameters != null )
-			// 			view.LayoutParameters.Height = cellHeight;
-			// 	}
-			// }
-
-
-			//text view setting
-			holder.TextView.SetPadding((int) view.Context.ToPixels(_SettingsView.FooterPadding.Left), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Top), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Right), (int) view.Context.ToPixels(_SettingsView.FooterPadding.Bottom));
-
-			holder.TextView.Typeface = FontUtility.CreateTypeface(_SettingsView.FooterFontFamily, _SettingsView.FooterFontAttributes);
-			holder.TextView.SetTextSize(Android.Util.ComplexUnitType.Sp, (float) _SettingsView.FooterFontSize);
-			holder.TextView.SetBackgroundColor(_SettingsView.FooterBackgroundColor.ToAndroid());
-			if ( _SettingsView.FooterTextColor != Color.Default ) { holder.TextView.SetTextColor(_SettingsView.FooterTextColor.ToAndroid()); }
-
-			//update text
-			holder.TextView.Text = section?.FooterText;
-		}
-
-		protected void BindCustomHeaderFooterView( CustomViewHolder holder, Xamarin.Forms.View formsView )
-		{
-			switch ( holder )
-			{
-				case CustomHeaderViewHolder header:
-					BindCustomHeaderFooterView(header, formsView);
-					return;
-
-				case CustomFooterViewHolder footer:
-					BindCustomHeaderFooterView(footer, formsView);
-					return;
-			}
-		}
-		protected void BindCustomHeaderFooterView( CustomHeaderViewHolder holder, Xamarin.Forms.View formsView )
+		// protected void BindCustomHeaderFooterView( CustomViewHolder holder, ISectionFooterHeader formsView )
+		// {
+		// 	switch ( holder )
+		// 	{
+		// 		case CustomHeaderViewHolder header:
+		// 			BindCustomHeaderView(header, formsView);
+		// 			return;
+		//
+		// 		case CustomFooterViewHolder footer:
+		// 			BindCustomHeaderView(footer, formsView);
+		// 			return;
+		// 	}
+		// }
+		protected void BindCustomHeaderView( CustomHeaderViewHolder holder, HeaderView formsView )
 		{
 			if ( holder.ItemView is null ) return;
 			holder.ItemView.ViewHolder = holder;
-			holder.ItemView.FormsCell = formsView;
+			holder.ItemView.View = formsView;
 		}
-		protected void BindCustomHeaderFooterView( CustomFooterViewHolder holder, Xamarin.Forms.View formsView )
+		protected void BindCustomHeaderView( CustomFooterViewHolder holder, FooterView formsView )
 		{
 			if ( holder.ItemView is null ) return;
 			holder.ItemView.ViewHolder = holder;
-			holder.ItemView.FormsCell = formsView;
+			holder.ItemView.View = formsView;
 		}
 		protected void BindContentView( ContentBodyViewHolder holder, int position )
 		{
@@ -411,7 +409,7 @@ namespace Jakar.SettingsView.Droid
 
 			holder.Body.AddView(nativeCell, 0);
 
-			
+
 			double height = layout.Height;
 			double cellHeight = holder.Body.Height;
 		}

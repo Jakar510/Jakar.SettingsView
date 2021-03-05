@@ -4,20 +4,39 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 prism:ViewModelLocator.AutowireViewModel="True"
 			 x:Class="Sample.Views.MainPage"
 			 Title="MainPage">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style TargetType="cells:ButtonCell">
+				<Setter Property="TitleFontSize"
+						Value="30" />
+				<Setter Property="TitleColor"
+						Value="Black" />
+				<Setter Property="BackgroundColor"
+						Value="White" />
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
 	<sv:SettingsView>
-		<sv:Section Title="TESTS" HeaderHeight="10">
+		<sv:Section Title="TESTS"
+					FooterText="FooterText">
+			<sv:Section.HeaderView>
+				<sv:DefaultHeaderView HeightRequest="50" />
+			</sv:Section.HeaderView>
 			<cells:CommandCell Title="TestSelectActions"
 							   Command="{Binding GoToTest}"
 							   CommandParameter="TestSelectActions" />
 			<cells:ButtonCell Title="SettingsView"
 							  Command="{Binding GoToPage}"
 							  CommandParameter="SettingsView" />
+			<cells:ButtonCell Title="PickerCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="PickerCellTest" />
 			<cells:ButtonCell Title="SurveyPage"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="SurveyPage" />
@@ -54,9 +73,6 @@
 			<cells:ButtonCell Title="SwitchCellTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="SwitchCellTest" />
-			<cells:ButtonCell Title="PickerCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="PickerCellTest" />
 			<cells:ButtonCell Title="EntryCellTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="EntryCellTest" />

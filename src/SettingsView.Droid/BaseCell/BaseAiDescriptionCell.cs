@@ -8,6 +8,7 @@ using AContext = Android.Content.Context;
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public abstract class BaseAiDescriptionCell : BaseAiTitledCell
 	{
 		protected IconView _Icon { get; }

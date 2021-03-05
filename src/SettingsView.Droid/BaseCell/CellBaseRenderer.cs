@@ -16,7 +16,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 														   Android.Views.ViewGroup parent,
 														   Context context )
 		{
-			if ( !( convertView is TnativeCell nativeCell ) ) { nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TnativeCell>.Create(context, item); }
+			if ( convertView is not TnativeCell nativeCell  ) { nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TnativeCell>.Create(context, item); }
 
 			ClearPropertyChanged(nativeCell);
 
@@ -32,8 +32,8 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 		protected void SetUpPropertyChanged( BaseCellView nativeCell )
 		{
-			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
-			Shared.sv.SettingsView parentElement = formsCell.Parent;
+			if ( nativeCell.Cell is not CellBase formsCell  ) return;
+			Shared.sv.SettingsView? parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
@@ -47,11 +47,11 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 		protected void ClearPropertyChanged( BaseCellView nativeCell )
 		{
-			if ( !( nativeCell.Cell is CellBase formsCell ) ) return;
-			Shared.sv.SettingsView parentElement = formsCell.Parent;
+			if ( nativeCell.Cell is not CellBase formsCell  ) return;
+			Shared.sv.SettingsView? parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
-			if ( parentElement == null ) return;
+			if ( parentElement is null ) return;
 			parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
 			if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }
 		}

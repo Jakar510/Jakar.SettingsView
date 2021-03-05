@@ -13,6 +13,7 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Controls
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public class DescriptionView : BaseTextView
 	{
 		private DescriptionCellBase _CurrentCell => _Cell.Cell as DescriptionCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));

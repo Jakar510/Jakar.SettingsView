@@ -13,6 +13,7 @@ using AView = Android.Views.View;
 namespace Jakar.SettingsView.Droid.Controls
 {
 	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public abstract class BaseTextView : TextView, IUpdateCell<AColor, BaseCellView>
 	{
 		public AColor DefaultTextColor { get; }

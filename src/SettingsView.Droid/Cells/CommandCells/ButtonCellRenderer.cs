@@ -149,7 +149,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !Cell.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_Command?.CanExecute(_ButtonCell.CommandParameter) ?? true);
 		}

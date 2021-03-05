@@ -6,6 +6,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
 	/// <summary>
@@ -14,62 +15,15 @@ namespace Jakar.SettingsView.Shared.sv
 	[ContentProperty("Root")]
 	public partial class SettingsView : TableView
 	{
-		public const int MIN_ROW_HEIGHT = 60;
-		internal static Action _clearCache;
-		/// <summary>
-		/// Clears the cache.
-		/// </summary>
-		public static void ClearCache() { _clearCache?.Invoke(); }
+		internal static Action? _clearCache;
+		private SettingsRoot? _root;
 
-		/// <summary>
-		/// Gets or sets the model.
-		/// </summary>
-		/// <value>The model.</value>
-		public new SettingsModel Model { get; set; }
-
-		/// <summary>
-		/// Occurs when model changed.
-		/// </summary>
-		public new event EventHandler ModelChanged;
-
-		/// <summary>
-		/// Occurs when collection changed.
-		/// </summary>
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-		/// <summary>
-		/// Occurs when section collection changed.
-		/// </summary>
-		public event NotifyCollectionChangedEventHandler SectionCollectionChanged;
-
-		/// <summary>
-		/// Occurs when section property changed.
-		/// </summary>
-		public event PropertyChangedEventHandler SectionPropertyChanged;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.Shared.sv.SettingsView"/> class.
-		/// </summary>
-		public SettingsView()
-		{
-			VerticalOptions = HorizontalOptions = LayoutOptions.FillAndExpand;
-			Root = new SettingsRoot();
-			Model = new SettingsModel(Root);
-		}
-
-
-		private SettingsRoot _root;
-
-		/// <summary>
-		/// Gets or sets the root.
-		/// </summary>
-		/// <value>The root.</value>
 		public new SettingsRoot Root
 		{
-			get => _root;
+			get => _root ?? throw new NullReferenceException(nameof(_root));
 			set
 			{
-				if ( _root != null )
+				if ( _root is not null )
 				{
 					_root.SectionPropertyChanged -= OnSectionPropertyChanged;
 					_root.CollectionChanged -= OnCollectionChanged;
@@ -81,54 +35,76 @@ namespace Jakar.SettingsView.Shared.sv
 				//transfer binding context to the children (maybe...)
 				SetInheritedBindingContext(_root, BindingContext);
 
-				_root.SectionPropertyChanged += OnSectionPropertyChanged;
-				_root.CollectionChanged += OnCollectionChanged;
-				_root.SectionCollectionChanged += OnSectionCollectionChanged;
+				if ( _root is not null )
+				{
+					_root.SectionPropertyChanged += OnSectionPropertyChanged;
+					_root.CollectionChanged += OnCollectionChanged;
+					_root.SectionCollectionChanged += OnSectionCollectionChanged;
+				}
+
 				OnModelChanged();
 			}
 		}
 
-		/// <summary>
-		/// Ons the binding context changed.
-		/// </summary>
+		public new SettingsModel Model { get; set; }
+
+		public new event EventHandler? ModelChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? SectionCollectionChanged;
+		public event PropertyChangedEventHandler? SectionPropertyChanged;
+
+
+		public SettingsView( IEnumerable<CellBase.CellBase> cells ) : this() { Add(new Section(cells)); }
+		public SettingsView( IEnumerable<Section> sections ) : this() { Add(sections); }
+		public SettingsView() : this(new SettingsRoot()) { }
+		public SettingsView( SettingsRoot root ) : this(root, new SettingsModel(root)) { }
+		public SettingsView( SettingsRoot root, SettingsModel model ) : this(root, model, LayoutOptions.FillAndExpand, LayoutOptions.FillAndExpand) { }
+		public SettingsView( SettingsRoot root,
+							 SettingsModel model,
+							 LayoutOptions horizontal,
+							 LayoutOptions vertical )
+		{
+			VerticalOptions = horizontal;
+			HorizontalOptions = vertical;
+			Root = root;
+			Model = model;
+			HasUnevenRows = true;
+		}
+
+
+		public void Add( Section section ) => Root.Add(section);
+		public void Add( IEnumerable<Section> sections ) => Root.Add(sections);
+
+
+		public static void ClearCache() { _clearCache?.Invoke(); }
 		protected override void OnBindingContextChanged()
 		{
 			base.OnBindingContextChanged();
-			if ( Root != null )
+			if ( Root is not null )
 				SetInheritedBindingContext(Root, BindingContext);
 		}
 
 		private void OnSectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { SectionPropertyChanged?.Invoke(sender, e); }
-
-		/// <summary>
-		/// Ons the property changed.
-		/// </summary>
-		/// <param name="propertyName">Property name.</param>
-		protected override void OnPropertyChanged( string propertyName = null )
+		protected override void OnPropertyChanged( string? propertyName = null )
 		{
 			base.OnPropertyChanged(propertyName);
 			if ( propertyName == HasUnevenRowsProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderHeightProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderFontSizeProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderFontFamilyProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderFontAttributesProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderTextColorProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderBackgroundColorProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderTextVerticalAlignProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.HeaderPaddingProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterFontSizeProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterFontFamilyProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterFontAttributesProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterTextColorProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterBackgroundColorProperty.PropertyName ||
-				 propertyName == Shared.SettingsView.FooterPaddingProperty.PropertyName ) { OnModelChanged(); }
+				 propertyName == HeaderHeightProperty.PropertyName ||
+				 propertyName == HeaderFontSizeProperty.PropertyName ||
+				 propertyName == HeaderFontFamilyProperty.PropertyName ||
+				 propertyName == HeaderFontAttributesProperty.PropertyName ||
+				 propertyName == HeaderTextColorProperty.PropertyName ||
+				 propertyName == HeaderBackgroundColorProperty.PropertyName ||
+				 propertyName == HeaderTextVerticalAlignProperty.PropertyName ||
+				 propertyName == HeaderPaddingProperty.PropertyName ||
+				 propertyName == FooterFontSizeProperty.PropertyName ||
+				 propertyName == FooterFontFamilyProperty.PropertyName ||
+				 propertyName == FooterFontAttributesProperty.PropertyName ||
+				 propertyName == FooterTextColorProperty.PropertyName ||
+				 propertyName == FooterBackgroundColorProperty.PropertyName ||
+				 propertyName == FooterPaddingProperty.PropertyName ) { OnModelChanged(); }
 		}
 
-		/// <summary>
-		/// CollectionChanged by the section
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
 		public void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
 			e.NewItems?.Cast<Section>()
@@ -136,30 +112,25 @@ namespace Jakar.SettingsView.Shared.sv
 					  {
 						  section.Parent = this;
 
-						  if ( section.HeaderView != null ) { section.HeaderView.Parent = this; }
+						  if ( section.HeaderView is not null ) { section.HeaderView.Parent = this; }
 
-						  if ( section.FooterView != null ) { section.FooterView.Parent = this; }
+						  if ( section.FooterView is not null ) { section.FooterView.Parent = this; }
 
 						  foreach ( Cell cell in section )
 						  {
 							  object context = cell.BindingContext;
 							  cell.Parent = this; // When setting the parent, the bindingcontext is updated too.
-							  if ( context != null )
+							  if ( context is not null )
 							  {
 								  cell.BindingContext = context; // so set the original bindingcontext again.
 							  }
 						  }
-					  });
+					  }
+					 );
 			//e.NewItems.Cast<Section>().SelectMany(x => x).ForEach(cell =>cell.Parent = this);
 
 			CollectionChanged?.Invoke(sender, e);
 		}
-
-		/// <summary>
-		/// CollectionChanged by the child in section
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">The ${ParameterType} instance containing the event data.</param>
 		public void OnSectionCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
 			e.NewItems?.Cast<Cell>().ForEach(cell => cell.Parent = this);
@@ -169,29 +140,28 @@ namespace Jakar.SettingsView.Shared.sv
 
 		private new void OnModelChanged()
 		{
-			if ( Root == null ) { return; }
+			if ( _root is null ) { return; }
 
 			foreach ( Section section in Root )
 			{
 				section.Parent = this;
-				if ( section.HeaderView != null ) { section.HeaderView.Parent = this; }
+				if ( section.HeaderView is not null ) { section.HeaderView.Parent = this; }
 
-				if ( section.FooterView != null ) { section.FooterView.Parent = this; }
+				if ( section.FooterView is not null ) { section.FooterView.Parent = this; }
 
 				foreach ( Cell cell in section )
 				{
 					object context = cell.BindingContext;
-					cell.Parent = this; // When setting the parent, the bindingcontext is updated too.
-					if ( context != null )
+					cell.Parent = this; // When setting the parent, the binding context is updated too.
+					if ( context is not null )
 					{
-						cell.BindingContext = context; // so set the original bindingcontext again.
+						cell.BindingContext = context; // so set the original binding context again.
 					}
 				}
 			}
 
-			IEnumerable<Cell> cells = Root?.SelectMany(r => r);
-			if ( cells == null ) { return; }
-
+			// IEnumerable<Cell> cells = Root?.SelectMany(r => r);
+			// if ( cells is null ) { return; }
 
 			//foreach (Cell cell in cells)
 			//{
@@ -199,11 +169,15 @@ namespace Jakar.SettingsView.Shared.sv
 			//    cell.Parent = this;
 			//}
 
-			//notify Native
-			ModelChanged?.Invoke(this, EventArgs.Empty);
+			ModelChanged?.Invoke(this, EventArgs.Empty); //notify Native
 		}
 
+
 		//make the unnecessary property existing at TableView sealed.
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0051 // Remove unused private members
 		private new int Intent { get; set; }
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore IDE1006 // Naming Styles
 	}
 }

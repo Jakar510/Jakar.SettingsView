@@ -105,7 +105,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		protected void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !Cell.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_Command?.CanExecute(_CommandCell.CommandParameter) ?? true);
 		}

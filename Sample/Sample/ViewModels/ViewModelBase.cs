@@ -157,7 +157,7 @@ namespace Sample.ViewModels
 		public static ImageSource[] IconSources =
 		{
 			"icon.png",
-			SvgImageSource.FromSvg("umbrella.svg"),
+			SvgImageSource.FromSvgResource("umbrella.svg"),
 			null
 		};
 

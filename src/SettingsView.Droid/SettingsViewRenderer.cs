@@ -5,7 +5,7 @@ using Android.Graphics.Drawables;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 using Jakar.SettingsView.Droid;
-using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -70,7 +70,7 @@ namespace Jakar.SettingsView.Droid
 			while ( elm != null )
 			{
 				elm = elm.Parent;
-				if ( !( elm is Page page ) ) continue;
+				if ( elm is not Page page ) continue;
 				_ParentPage = page;
 				_ParentPage.Appearing += ParentPageAppearing;
 				break;
@@ -84,13 +84,11 @@ namespace Jakar.SettingsView.Droid
 
 			foreach ( Section section in e.OldItems )
 			{
-				if ( section.HeaderView != null )
-				{
-					IVisualElementRenderer header = Platform.GetRenderer(section.HeaderView);
-					if ( header != null ) { _ShouldDisposeRenderers.Add(header); }
-				}
+				// if ( section.HeaderView != null )
+				IVisualElementRenderer header = Platform.GetRenderer(section.HeaderView);
+				if ( header != null ) { _ShouldDisposeRenderers.Add(header); }
 
-				if ( section.FooterView is null ) continue;
+				// if ( section.FooterView is null ) continue;
 				IVisualElementRenderer footer = Platform.GetRenderer(section.FooterView);
 				if ( footer != null ) { _ShouldDisposeRenderers.Add(footer); }
 			}
@@ -121,7 +119,7 @@ namespace Jakar.SettingsView.Droid
 		protected void UpdateSeparatorColor() { _Divider?.SetTint(Element.SeparatorColor.ToAndroid()); }
 		protected void UpdateRowHeight()
 		{
-			if ( Element.RowHeight < 0 ) { Element.RowHeight = Shared.sv.SettingsView.MIN_ROW_HEIGHT; }
+			if ( Element.RowHeight < 0 ) { Element.RowHeight = (int) SVConstants.MIN_ROW_HEIGHT; }
 			else { _Adapter?.NotifyDataSetChanged(); }
 		}
 		protected void UpdateScrollToTop()
@@ -161,9 +159,10 @@ namespace Jakar.SettingsView.Droid
 			{
 				foreach ( Section section in Element.Root )
 				{
-					if ( section.HeaderView != null ) { DisposeChildRenderer(section.HeaderView); }
-
-					if ( section.FooterView != null ) { DisposeChildRenderer(section.FooterView); }
+					// if ( section.HeaderView != null ) { DisposeChildRenderer(section.HeaderView); }
+					// if ( section.FooterView != null ) { DisposeChildRenderer(section.FooterView); }
+					DisposeChildRenderer(section.HeaderView);
+					DisposeChildRenderer(section.FooterView);
 				}
 
 				foreach ( IVisualElementRenderer renderer in _ShouldDisposeRenderers )
@@ -182,6 +181,7 @@ namespace Jakar.SettingsView.Droid
 				Control.RemoveItemDecoration(_ItemDecoration);
 				if ( _ParentPage != null )
 					_ParentPage.Appearing -= ParentPageAppearing;
+
 				_Adapter?.Dispose();
 				_Adapter = null;
 				_LayoutManager?.Dispose();

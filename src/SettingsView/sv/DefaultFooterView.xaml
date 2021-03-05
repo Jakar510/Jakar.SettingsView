@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sv:FooterView xmlns="http://xamarin.com/schemas/2014/forms"
+			xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+			x:Class="Jakar.SettingsView.Shared.sv.DefaultFooterView">
+	<Label x:Name="TitleLabel"
+		   Text="Default Title"
+		   Grid.Column="0"
+		   Grid.Row="0"
+		   VerticalTextAlignment="Center"
+		   HorizontalTextAlignment="Center"
+		   HorizontalOptions="FillAndExpand"
+		   VerticalOptions="FillAndExpand" />
+</sv:FooterView>

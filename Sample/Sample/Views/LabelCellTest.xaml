@@ -9,6 +9,7 @@
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.LabelCellTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -97,36 +98,36 @@
 		</ScrollView>
 
 		<sv:SettingsView BackgroundColor="{Binding BackgroundColor.Value}"
-								   SeparatorColor="{Binding SeparatorColor.Value}"
-								   SelectedColor="{Binding SelectedColor.Value}"
-								   HeaderPadding="{Binding HeaderPadding.Value}"
-								   HeaderTextColor="{Binding HeaderTextColor.Value}"
-								   HeaderFontSize="{Binding HeaderFontSize.Value}"
-								   HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
-								   HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
-								   HeaderHeight="{Binding HeaderHeight.Value}"
-								   FooterTextColor="{Binding FooterTextColor.Value}"
-								   FooterFontSize="{Binding FooterFontSize.Value}"
-								   FooterBackgroundColor="{Binding FooterBackgroundColor.Value}"
-								   FooterPadding="{Binding FooterPadding.Value}"
-								   RowHeight="{Binding RowHeight.Value}"
-								   HasUnevenRows="{Binding HasUnevenRows.Value}"
-								   CellTitleColor="{Binding CellTitleColor.Value}"
-								   CellTitleFontSize="{Binding CellTitleFontSize.Value}"
-								   CellValueTextColor="{Binding CellValueTextColor.Value}"
-								   CellValueTextFontSize="{Binding CellValueTextFontSize.Value}"
-								   CellDescriptionColor="{Binding CellDescriptionColor.Value}"
-								   CellDescriptionFontSize="{Binding CellDescriptionFontSize.Value}"
-								   CellBackgroundColor="{Binding CellBackgroundColor.Value}"
-								   CellIconSize="{Binding CellIconSize.Value}"
-								   CellIconRadius="{Binding CellIconRadius.Value}"
-								   CellAccentColor="{Binding CellAccentColor.Value}"
-								   CellHintTextColor="{Binding CellHintTextColor.Value}"
-								   CellHintFontSize="{Binding CellHintFontSize.Value}"
-								   UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
-								   ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
+						 SeparatorColor="{Binding SeparatorColor.Value}"
+						 SelectedColor="{Binding SelectedColor.Value}"
+						 HeaderPadding="{Binding HeaderPadding.Value}"
+						 HeaderTextColor="{Binding HeaderTextColor.Value}"
+						 HeaderFontSize="{Binding HeaderFontSize.Value}"
+						 HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
+						 HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
+						 HeaderHeight="{Binding HeaderHeight.Value}"
+						 FooterTextColor="{Binding FooterTextColor.Value}"
+						 FooterFontSize="{Binding FooterFontSize.Value}"
+						 FooterBackgroundColor="{Binding FooterBackgroundColor.Value}"
+						 FooterPadding="{Binding FooterPadding.Value}"
+						 RowHeight="{Binding RowHeight.Value}"
+						 HasUnevenRows="{Binding HasUnevenRows.Value}"
+						 CellTitleColor="{Binding CellTitleColor.Value}"
+						 CellTitleFontSize="{Binding CellTitleFontSize.Value}"
+						 CellValueTextColor="{Binding CellValueTextColor.Value}"
+						 CellValueTextFontSize="{Binding CellValueTextFontSize.Value}"
+						 CellDescriptionColor="{Binding CellDescriptionColor.Value}"
+						 CellDescriptionFontSize="{Binding CellDescriptionFontSize.Value}"
+						 CellBackgroundColor="{Binding CellBackgroundColor.Value}"
+						 CellIconSize="{Binding CellIconSize.Value}"
+						 CellIconRadius="{Binding CellIconRadius.Value}"
+						 CellAccentColor="{Binding CellAccentColor.Value}"
+						 CellHintTextColor="{Binding CellHintTextColor.Value}"
+						 CellHintFontSize="{Binding CellHintFontSize.Value}"
+						 UseDescriptionAsValue="{Binding UseDescriptionAsValue.Value}"
+						 ShowSectionTopBottomBorder="{Binding ShowSectionTopBottomBorder.Value}">
 			<sv:Section Title="Section1"
-								  FooterText="Footer1">
+						FooterText="Footer1">
 				<cells:LabelCell IsEnabled="{Binding IsEnabled.Value}"
 								 IconSource="{Binding IconSource.Value}"
 								 Title="{Binding Title.Value}"
@@ -178,8 +179,11 @@
 										Number="{Binding Number.Value}"
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
-										PopupTitle="{Binding PopupTitle.Value}"
-										SelectedCommand="{Binding NumberSelectedCommand}" />
+										SelectedCommand="{Binding NumberSelectedCommand}">
+					<cells:NumberPickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
+					</cells:NumberPickerCell.Popup>
+				</cells:NumberPickerCell>
 				<cells:TimePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -196,8 +200,11 @@
 									  IconRadius="{Binding IconRadius.Value}"
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
-									  Format="{Binding TimeFormat.Value}"
-									  PopupTitle="{Binding PopupTitle.Value}" />
+									  Format="{Binding TimeFormat.Value}" >
+					<cells:TimePickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
+					</cells:TimePickerCell.Popup>
+				</cells:TimePickerCell>
 				<cells:DatePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -237,8 +244,11 @@
 									  Tapped="Handle_Tapped"
 									  Items="{Binding TextItems.Value}"
 									  SelectedItem="{Binding TextSelectedItem.Value}"
-									  PopupTitle="{Binding PopupTitle.Value}"
-									  SelectedCommand="{Binding TextSelectedCommand}" />
+									  SelectedCommand="{Binding TextSelectedCommand}" >
+					<cells:TextPickerCell.Popup>
+						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
+					</cells:TextPickerCell.Popup>
+				</cells:TextPickerCell>
 			</sv:Section>
 		</sv:SettingsView>
 	</StackLayout>

@@ -8,6 +8,7 @@ using AContext = Android.Content.Context;
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public abstract class BaseAiValueCell : BaseValueCell<ValueView> //<TCellTitle, TCell> : CellBaseView where TCell: TextView where TCellTitle : BaseView<TCell>, new()
 	{
 		protected BaseAiValueCell( AContext context, Cell cell ) : base(context, cell) { }

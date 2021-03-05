@@ -92,7 +92,7 @@
 				<DataTemplate>
 					<sv:Section ItemsSource="{Binding}"
 										  IsVisible="{Binding IsVisible.Value}">
-						<sv:Section.HeaderView>
+						<!--<sv:Section.HeaderView>
 							<StackLayout>
 								<Label Text="{Binding HeaderText}" />
 							</StackLayout>
@@ -100,7 +100,7 @@
 						<sv:Section.FooterView>
 							<Label Text="{Binding FooterText}"
 								   HorizontalTextAlignment="End" />
-						</sv:Section.FooterView>
+						</sv:Section.FooterView>-->
 						<sv:Section.ItemTemplate>
 							<DataTemplate>
 								<cells:LabelCell Title="{Binding Text}" />

@@ -60,6 +60,7 @@
     <Compile Include="Controls\TitleView.cs" />
     <Compile Include="Controls\ValueView.cs" />
     <Compile Include="Extensions\LayoutExtensions.cs" />
+    <Compile Include="GetIcons.cs" />
     <Compile Include="Interfaces\ICellRender.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="SettingsViewLayoutManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,17 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\ContentCell.axml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\CollapseSolidBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\CollapseSolidWhite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ExpandSolidBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ExpandSolidWhite.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

@@ -29,7 +29,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		public static readonly AColor YELLOW = AColor.Argb(255, 200, 200, 100);
 		protected internal Cell Cell { get; set; }
 		public Element Element => Cell;
-		protected internal CellBase CellBase => Cell as CellBase ?? throw new NullReferenceException(nameof(CellBase));
+		protected internal CellBase? CellBase => Cell as CellBase;                                      // ?? throw new NullReferenceException(nameof(CellBase));
 		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
 
 
@@ -97,7 +97,8 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 		protected internal virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
+			if ( e.PropertyName == CellBase.IsVisibleProperty.PropertyName ) { UpdateIsVisible(); }
+			else if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
 			else if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 		}
 		protected internal virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -109,7 +110,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected internal virtual void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { }
 		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
 
-
+		protected void UpdateIsVisible() { CellBase?.Section?.ChildVisibilityChanged(); }
 		public void UpdateWithForceLayout( Action updateAction )
 		{
 			updateAction();
@@ -147,15 +148,24 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			Focusable = true;
 			DescendantFocusability = DescendantFocusability.BlockDescendants;
 		}
-		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(CellBase.IsEnabled); }
+		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(Cell.IsEnabled); }
 
 
 		protected void UpdateBackgroundColor()
 		{
-			if ( CellBase.BackgroundColor != Color.Default ) { BackgroundColor.Color = CellBase.BackgroundColor.ToAndroid(); }
-			else if ( CellParent != null &&
-					  CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
-			else { BackgroundColor.Color = AColor.Transparent; }
+			if ( CellBase is not null )
+			{
+				if ( CellBase.BackgroundColor != Color.Default ) { BackgroundColor.Color = CellBase.BackgroundColor.ToAndroid(); }
+				else if ( CellParent != null &&
+						  CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
+				else { BackgroundColor.Color = AColor.Transparent; }
+			}
+			else
+			{
+				if ( CellParent != null &&
+					 CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
+				else { BackgroundColor.Color = AColor.Transparent; }
+			}
 		}
 		protected void UpdateSelectedColor()
 		{
@@ -192,13 +202,16 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		{
 			if ( disposing )
 			{
-				CellBase.PropertyChanged -= CellPropertyChanged;
-				if ( CellParent != null ) CellParent.PropertyChanged -= ParentPropertyChanged;
-
-				if ( CellBase.Section != null )
+				if ( CellBase != null )
 				{
-					CellBase.Section.PropertyChanged -= SectionPropertyChanged;
-					CellBase.Section = null;
+					CellBase.PropertyChanged -= CellPropertyChanged;
+					if ( CellParent != null ) CellParent.PropertyChanged -= ParentPropertyChanged;
+
+					if ( CellBase.Section != null )
+					{
+						CellBase.Section.PropertyChanged -= SectionPropertyChanged;
+						CellBase.Section = null;
+					}
 				}
 
 				BackgroundColor.Dispose();

@@ -10,6 +10,7 @@ using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using ANumberPicker = Android.Widget.NumberPicker;
@@ -37,7 +38,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
-			else if ( e.PropertyName == PopupCellBase.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
@@ -54,7 +55,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem?.ToString(); }
-		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.PopupTitle; }
+		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.Popup.Title; }
 		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
 		private void CreateDialog()
@@ -73,7 +74,7 @@ namespace Jakar.SettingsView.Droid.Cells
 					  };
 
 			_Picker.SetBackgroundColor(_TextPickerCell.Popup.BackgroundColor.ToAndroid());
-			_Picker.SetTextColor(_TextPickerCell.Popup.TextColor.ToAndroid());
+			_Picker.SetTextColor(_TextPickerCell.Popup.ItemColor.ToAndroid());
 			_Picker.SetDisplayedValues(_TextPickerCell.Items.ToArray());
 
 			if ( _Dialog != null ) return;

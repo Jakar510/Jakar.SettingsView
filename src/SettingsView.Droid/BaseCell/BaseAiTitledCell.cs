@@ -11,6 +11,7 @@ using AView = Android.Views.View;
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public abstract class BaseAiTitledCell : BaseCellView
 	{
 		protected internal AView ContentView { get; set; }

@@ -6,24 +6,28 @@
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.ShellTestPage"
 			 NavigationPage.BackButtonTitle=""
 			 Title="ShellTest">
 	<sv:SettingsView BackgroundColor="AliceBlue"
-							   SeparatorColor="Brown">
+					 SeparatorColor="Brown">
 		<sv:Section Title="Section1"
-							  FooterText="Footer1">
+					FooterText="Footer1">
 
-			<cells:PickerCell PopupTitle="Hoge"
-							  ItemsSource="{Binding ItemsSource}"
+			<cells:PickerCell ItemsSource="{Binding ItemsSource}"
 							  BackgroundColor="Beige"
 							  DisplayMember="Name"
 							  SubDisplayMember="Age"
 							  UsePickToClose="True"
 							  SelectionMode="Single"
-							  PopupAccentColor="Red"
 							  TitleColor="Chocolate"
-							  DescriptionColor="BlueViolet" />
+							  DescriptionColor="BlueViolet">
+				<cells:PickerCell.Popup>
+					<config:PopupConfig Title="Hoge"
+										AccentColor="Red" />
+				</cells:PickerCell.Popup>
+			</cells:PickerCell>
 		</sv:Section>
 	</sv:SettingsView>
 </ContentPage>

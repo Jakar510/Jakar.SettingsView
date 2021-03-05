@@ -7,6 +7,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -33,10 +34,9 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
 				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
-			else if ( e.PropertyName == TimePickerCell.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
-
 		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { CreateDialog(); }
 
 
@@ -63,7 +63,7 @@ namespace Jakar.SettingsView.Droid.Cells
 						};
 			
 			title.SetBackgroundColor(_TimePickerCell.Popup.BackgroundColor.ToAndroid());
-			title.SetTextColor(_TimePickerCell.Popup.TitleTextColor.ToAndroid());
+			title.SetTextColor(_TimePickerCell.Popup.TitleColor.ToAndroid());
 			title.SetPadding(10, 10, 10, 10);
 			
 			_Dialog.SetCustomTitle(title);

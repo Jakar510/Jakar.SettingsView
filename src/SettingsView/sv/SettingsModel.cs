@@ -43,7 +43,9 @@ namespace Jakar.SettingsView.Shared.sv
 			( item as CellBase.CellBase )?.OnTapped();
 		}
 
-		public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderHeight;
+		// public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderHeight;
+		// public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderView.Height;
+		public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderView.HeightRequest;
 
 
 		// this method no longer uses except for iOS.CellBaseRenderer.

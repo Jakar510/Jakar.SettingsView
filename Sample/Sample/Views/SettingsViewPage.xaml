@@ -9,6 +9,7 @@
 			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.SettingsViewPage"
 			 Title="Settings">
 
@@ -79,14 +80,14 @@
 	</ContentPage.Resources>
 
 	<sv:SettingsView HasUnevenRows="true"
-							   HeaderHeight="36"
-							   HeaderPadding="14,0,0,6"
-							   HeaderTextVerticalAlign="End"
-							   FooterPadding="14,4,4,6"
-							   ShowArrowIndicatorForAndroid="True">
+					 HeaderHeight="36"
+					 HeaderPadding="14,0,0,6"
+					 HeaderTextVerticalAlign="End"
+					 FooterPadding="14,4,4,6"
+					 ShowArrowIndicatorForAndroid="True">
 
 		<sv:Section FooterText="This is a footer. optionally you can write here.">
-			<sv:Section.HeaderView>
+			<!--<sv:Section.HeaderView>
 				<StackLayout>
 					<Label Text="abc" />
 					<BoxView Color="Green"
@@ -94,7 +95,7 @@
 					<Slider />
 					<Switch />
 				</StackLayout>
-			</sv:Section.HeaderView>
+			</sv:Section.HeaderView>-->
 			<cells:CommandCell IconSource="icon.png"
 							   IconSize="60,60"
 							   IconRadius="30"
@@ -131,23 +132,29 @@
 		</sv:Section>
 
 		<sv:Section Title="MultiPicker"
-							  FooterText="This is a multi select picker. you are free to select items until MaxSelectedNumber.">
+					FooterText="This is a multi select picker. you are free to select items until MaxSelectedNumber.">
 			<cells:PickerCell Title="Favorites"
 							  ItemsSource="{Binding ItemsSource}"
 							  DisplayMember="Name"
 							  MaxSelectedNumber="3"
-							  PopupTitle="Select 3 items"
 							  SelectedItems="{Binding SelectedItems}"
-							  KeepSelectedUntilBack="true"/>
+							  KeepSelectedUntilBack="true" >
+				<cells:PickerCell.Popup>
+					<config:PopupConfig Title="Select 3 item" />
+				</cells:PickerCell.Popup>
+			</cells:PickerCell>
 			<cells:PickerCell Title="Favorites"
 							  ItemsSource="{Binding ItemsSource}"
 							  DisplayMember="Name"
 							  SubDisplayMember="Age"
 							  MaxSelectedNumber="5"
 							  UsePickToClose="True"
-							  PopupTitle="Select 5 items"
 							  SelectedItems="{Binding SelectedItems}"
-							  KeepSelectedUntilBack="true"/>
+							  KeepSelectedUntilBack="true" >
+				<cells:PickerCell.Popup>
+					<config:PopupConfig Title="Select 5 item" />
+				</cells:PickerCell.Popup>
+			</cells:PickerCell>
 		</sv:Section>
 
 		<sv:Section Title="Picker 4 Brothers">
@@ -155,32 +162,41 @@
 									Min="0"
 									Max="99"
 									Number="15"
-									ValueTextAlignment="End"/> 
+									ValueTextAlignment="End" />
 			<cells:NumberPickerCell Title="NumberPicker with hint"
 									Min="0"
 									Max="99"
 									Number="15"
 									Hint="Hint"
-									ValueTextAlignment="End"/>
+									ValueTextAlignment="End" />
 			<cells:TimePickerCell Title="TimePicker"
 								  Format="HH:mm"
 								  Time="15:30"
-								  PopupTitle="Select time"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:TimePickerCell.Popup>
+					<config:PopupConfig Title="Select time" />
+				</cells:TimePickerCell.Popup>
+			</cells:TimePickerCell>
 			<cells:TimePickerCell Title="TimePicker with hint"
 								  Format="HH:mm"
 								  Time="15:30"
 								  Hint="Hint"
-								  PopupTitle="Select time"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:TimePickerCell.Popup>
+					<config:PopupConfig Title="Select time" />
+				</cells:TimePickerCell.Popup>
+			</cells:TimePickerCell>
 			<cells:DatePickerCell Title="DatePicker"
 								  Format="yyyy/MM/dd (ddd)"
 								  Date="2017/11/11"
 								  MinimumDate="2015/11/10"
 								  MaximumDate="2025/12/31"
 								  TodayText="Today's date"
-								  PopupTitle="Select date"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:DatePickerCell.Popup>
+					<config:PopupConfig Title="Select date" />
+				</cells:DatePickerCell.Popup>
+			</cells:DatePickerCell>
 			<cells:DatePickerCell Title="DatePicker with hint"
 								  Hint="Hint"
 								  Format="yyyy/MM/dd (ddd)"
@@ -188,26 +204,35 @@
 								  MinimumDate="2015/11/10"
 								  MaximumDate="2025/12/31"
 								  TodayText="Today's date"
-								  PopupTitle="Select date"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:DatePickerCell.Popup>
+					<config:PopupConfig Title="Select date" />
+				</cells:DatePickerCell.Popup>
+			</cells:DatePickerCell>
 			<cells:TextPickerCell Title="TextPicker"
 								  Items="{Binding TextItems}"
 								  SelectedItem="{Binding SelectedText.Value}"
 								  IsCircularPicker="False"
-								  PopupTitle="Select item"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:TextPickerCell.Popup>
+					<config:PopupConfig Title="Select item" />
+				</cells:TextPickerCell.Popup>
+			</cells:TextPickerCell>
 			<cells:TextPickerCell Title="TextPicker with hint"
 								  Hint="Hint"
 								  Items="{Binding TextItems}"
 								  SelectedItem="{Binding SelectedText.Value}"
 								  IsCircularPicker="False"
-								  PopupTitle="Select item"
-								  ValueTextAlignment="End"/>
+								  ValueTextAlignment="End">
+				<cells:TextPickerCell.Popup>
+					<config:PopupConfig Title="Select item" />
+				</cells:TextPickerCell.Popup>
+			</cells:TextPickerCell>
 		</sv:Section>
 
 		<sv:Section Title="RadioCell"
-							  FooterText="You can select either TypeA or TypeB."
-							  cells:RadioCell.SelectedValue="1">
+					FooterText="You can select either TypeA or TypeB."
+					cells:RadioCell.SelectedValue="1">
 			<cells:RadioCell Title="TypeA"
 							 Value="1" />
 			<cells:RadioCell Title="TypeB"
@@ -221,7 +246,7 @@
 		</sv:Section>
 
 		<sv:Section Title="Input"
-							  IsVisible="{Binding InputSectionVisible.Value}">
+					IsVisible="{Binding InputSectionVisible.Value}">
 			<cells:EntryCell Title="EntryCell"
 							 Description="Description"
 							 ValueText="{Binding InputText.Value}"
@@ -239,7 +264,7 @@
 		</sv:Section>
 
 		<sv:Section Title="ButtonCell"
-							  FooterText="Change input section visibility.">
+					FooterText="Change input section visibility.">
 			<cells:ButtonCell Title="Toggle Section"
 							  TitleColor="{StaticResource TitleTextColor}"
 							  TitleAlignment="Center"
@@ -247,7 +272,7 @@
 		</sv:Section>
 
 		<sv:Section Title="Custom Cell with custom header">
-			<sv:Section.HeaderView>
+			<!--<sv:Section.HeaderView>
 				<FlexLayout Direction="Row"
 							JustifyContent="SpaceBetween"
 							AlignItems="End"
@@ -264,7 +289,7 @@
 				<Label Text="CustomFooterView. "
 					   TextColor="DeepSkyBlue"
 					   Padding="10,6,10,0" />
-			</sv:Section.FooterView>
+			</sv:Section.FooterView>-->
 			<cell:SliderCell Value="0.5"
 							 Description="CustomCell" />
 		</sv:Section>

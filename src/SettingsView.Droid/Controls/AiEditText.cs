@@ -68,7 +68,9 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		private void OnTextChanged( object sender, TextChangedEventArgs e )
 		{
-			string s = e.Text is null ? string.Empty : string.Concat(e.Text);
+			string s = e.Text is null
+						   ? string.Empty
+						   : string.Concat(e.Text);
 			_CurrentCell.SendTextChanged(Text ?? string.Empty, s);
 		}
 		public void Init()
@@ -176,17 +178,21 @@ namespace Jakar.SettingsView.Droid.Controls
 		public bool UpdateText()
 		{
 			RemoveTextChangedListener(_CellRenderer);
-			if ( Text != _CurrentCell.ValueText ) { Text = _CurrentCell.ValueText; }
+			if ( Text != _CurrentCell.ValueText )
+			{
+				if ( string.IsNullOrWhiteSpace(Text) ) { Text = _CurrentCell.ValueText; }
+				else { _CurrentCell.ValueText = Text; }
+			}
 
-			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
+			// Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Invisible : ViewStates.Visible;
 			AddTextChangedListener(_CellRenderer);
 			return true;
 		}
 		public bool UpdateColor() => throw new NotImplementedException();
 		public bool UpdateTextColor()
 		{
-			if ( _CurrentCell.ValueTextColor != Xamarin.Forms.Color.Default ) { SetTextColor(_CurrentCell.ValueTextColor.ToAndroid()); }
-			else if ( CellParent.CellValueTextColor != Xamarin.Forms.Color.Default ) { SetTextColor(CellParent.CellValueTextColor.ToAndroid()); }
+			if ( _CurrentCell.ValueTextColor != Color.Default ) { SetTextColor(_CurrentCell.ValueTextColor.ToAndroid()); }
+			else if ( CellParent.CellValueTextColor != Color.Default ) { SetTextColor(CellParent.CellValueTextColor.ToAndroid()); }
 			else { SetTextColor(DefaultTextColor); }
 
 			return true;
@@ -198,14 +204,18 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool UpdateIsPassword()
 		{
-			TransformationMethod = _CurrentCell.IsPassword ? new PasswordTransformationMethod() : null;
+			TransformationMethod = _CurrentCell.IsPassword
+									   ? new PasswordTransformationMethod()
+									   : null;
 			return true;
 		}
 		public bool UpdatePlaceholder()
 		{
 			Hint = _CurrentCell.Placeholder;
 
-			AColor placeholderColor = _CurrentCell.PlaceholderColor.IsDefault ? AColor.Rgb(210, 210, 210) : _CurrentCell.PlaceholderColor.ToAndroid();
+			AColor placeholderColor = _CurrentCell.PlaceholderColor.IsDefault
+										  ? AColor.Rgb(210, 210, 210)
+										  : _CurrentCell.PlaceholderColor.ToAndroid();
 			SetHintTextColor(placeholderColor);
 			return true;
 		}
@@ -219,9 +229,9 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool UpdateAccentColor()
 		{
-			if ( _CurrentCell.AccentColor != Xamarin.Forms.Color.Default ) { return ChangeTextViewBack(_CurrentCell.AccentColor.ToAndroid()); }
+			if ( _CurrentCell.AccentColor != Color.Default ) { return ChangeTextViewBack(_CurrentCell.AccentColor.ToAndroid()); }
 
-			if ( CellParent.CellAccentColor != Xamarin.Forms.Color.Default ) { return ChangeTextViewBack(CellParent.CellAccentColor.ToAndroid()); }
+			if ( CellParent.CellAccentColor != Color.Default ) { return ChangeTextViewBack(CellParent.CellAccentColor.ToAndroid()); }
 
 			return true;
 		}
@@ -287,7 +297,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == ValueCellBase.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			
+
 			if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
 
 			if ( e.PropertyName == AiEntryCell.PlaceholderProperty.PropertyName ||

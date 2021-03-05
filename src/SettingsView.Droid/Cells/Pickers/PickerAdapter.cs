@@ -69,7 +69,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			else { BackgroundColor = Color.Accent.ToAndroid(); }
 
 
-			if ( pickerCell.Popup.TitleTextColor != Color.Default ) { TitleTextColor = pickerCell.Popup.TitleTextColor.ToAndroid(); }
+			if ( pickerCell.Popup.TitleColor != Color.Default ) { TitleTextColor = pickerCell.Popup.TitleColor.ToAndroid(); }
 			// else if ( _Parent.CellTitleColor != Color.Default ) { TitleTextColor = _Parent.CellTitleColor.ToAndroid(); }
 			else { TitleTextColor = Color.Black.ToAndroid(); }
 
@@ -79,15 +79,15 @@ namespace Jakar.SettingsView.Droid.Cells
 			else { TextColor = Color.Black.ToAndroid(); }
 
 
-			if ( pickerCell.Popup.TitleFontSize > 0 ) { FontSize = pickerCell.Popup.TitleFontSize; }
+			if ( pickerCell.Popup.TitleFontSize > 0 ) { FontSize = (float) pickerCell.Popup.TitleFontSize; }
 			// else if ( _Parent.CellPopup.FontSize > 0 ) { FontSize = _Parent.CellPopup.FontSize; }
 			else { FontSize = 12; }
 
 
-			if ( pickerCell.Popup.ItemDescriptionTextColor != Color.Default ) { DetailColor = pickerCell.Popup.ItemDescriptionTextColor.ToAndroid(); }
+			if ( pickerCell.Popup.ItemDescriptionColor != Color.Default ) { DetailColor = pickerCell.Popup.ItemDescriptionColor.ToAndroid(); }
 			// else if ( _Parent.CellPopup.DescriptionTextColor != Color.Default ) { DetailColor = _Parent.CellPopup.DescriptionTextColor.ToAndroid(); }
 
-			if ( pickerCell.Popup.ItemDescriptionFontSize > 0 ) { DetailFontSize = pickerCell.Popup.ItemDescriptionFontSize; }
+			if ( pickerCell.Popup.ItemDescriptionFontSize > 0 ) { DetailFontSize = (float) pickerCell.Popup.ItemDescriptionFontSize; }
 			// else if ( pickerCell.CellPopup.DescriptionFontSize > 0 ) { DetailFontSize = pickerCell.CellPopup.DescriptionFontSize; }
 			else { DetailFontSize = 10; }
 		}
