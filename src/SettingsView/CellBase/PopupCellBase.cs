@@ -4,7 +4,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class PopupCellBase : ValueCellBase
+	public class PromptCellBase : ValueCellBase
 	{
 		// public static BindableProperty PopupTitleProperty = BindableProperty.Create(nameof(PopupTitle), typeof(string), typeof(PopupCellBase), "Select an item");
 		// public static BindableProperty PopupAcceptProperty = BindableProperty.Create(nameof(PopupAccept), typeof(string), typeof(PopupCellBase), "OK");
@@ -98,15 +98,15 @@ namespace Jakar.SettingsView.Shared.CellBase
 		// 	set => SetValue(PopupCancelProperty, value);
 		// }
 
-		public static BindableProperty PopupCfgProperty = BindableProperty.Create(nameof(Popup), typeof(PopupConfig), typeof(PopupCellBase), new PopupConfig());
+		public static BindableProperty PromptProperty = BindableProperty.Create(nameof(Prompt), typeof(PopupConfig), typeof(PromptCellBase), new PopupConfig());
 
-		public PopupConfig Popup
+		public PopupConfig Prompt
 		{
-			get => (PopupConfig) GetValue(PopupCfgProperty);
-			set => SetValue(PopupCfgProperty, value);
+			get => (PopupConfig) GetValue(PromptProperty);
+			set => SetValue(PromptProperty, value);
 		}
 
-		public static BindableProperty IsCircularPickerProperty = BindableProperty.Create(nameof(IsCircularPicker), typeof(bool), typeof(PopupCellBase), true);
+		public static BindableProperty IsCircularPickerProperty = BindableProperty.Create(nameof(IsCircularPicker), typeof(bool), typeof(PromptCellBase), true);
 
 		public bool IsCircularPicker
 		{

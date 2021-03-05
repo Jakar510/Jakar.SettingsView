@@ -3,6 +3,8 @@ using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -72,7 +74,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
 				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
-			else if ( e.PropertyName == TimePickerCell.PopupTitleProperty.PropertyName ) { UpdatePopupTitle(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePopupTitle(); }
 		}
 
 		/// <summary>
@@ -180,7 +182,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdatePopupTitle()
 		{
-			_Title.Text = _TimePickerCell.PopupTitle;
+			_Title.Text = _TimePickerCell.Prompt.Title;
 			_Title.SizeToFit();
 			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}

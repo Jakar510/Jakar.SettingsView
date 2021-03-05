@@ -9,6 +9,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
 	[Preserve(AllMembers = true)]
@@ -26,7 +27,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		private nfloat _detailFontSize;
 		private UIColor _background;
 		private UITableView _tableView;
-		private INavigation _shellNavigation;
+		private readonly INavigation _shellNavigation;
 
 		internal PickerTableViewController( PickerCellView pickerCellView, UITableView tableView, INavigation shellNavigation = null ) : base(UITableViewStyle.Grouped)
 		{
@@ -37,7 +38,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			_tableView = tableView;
 			_shellNavigation = shellNavigation;
 
-			if ( _pickerCell.SelectedItems == null ) { _pickerCell.SelectedItems = new List<object>(); }
+			_pickerCell.SelectedItems ??= new List<object>();
 
 			SetUpProperties();
 		}
@@ -45,7 +46,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void SetUpProperties()
 		{
-			if ( _pickerCell.PopupAccentColor != Color.Default ) { _accentColor = _pickerCell.PopupAccentColor.ToUIColor(); }
+			if ( _pickerCell.Prompt.AccentColor != Color.Default ) { _accentColor = _pickerCell.Prompt.AccentColor.ToUIColor(); }
 			else if ( _parent.CellAccentColor != Color.Default ) { _accentColor = _parent.CellAccentColor.ToUIColor(); }
 
 			if ( _pickerCell.TitleColor != Color.Default ) { _titleColor = _pickerCell.TitleColor.ToUIColor(); }
@@ -93,7 +94,9 @@ namespace Jakar.SettingsView.iOS.Cells
 			object detail = _pickerCell.SubDisplayValue(_source[indexPath.Row]);
 			reusableCell.DetailTextLabel.Text = $"{detail}";
 
-			reusableCell.Accessory = _selectedCache.ContainsKey(indexPath.Row) ? UITableViewCellAccessory.Checkmark : UITableViewCellAccessory.None;
+			reusableCell.Accessory = _selectedCache.ContainsKey(indexPath.Row)
+										 ? UITableViewCellAccessory.Checkmark
+										 : UITableViewCellAccessory.None;
 
 
 			return reusableCell;
@@ -187,7 +190,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public void InitializeView()
 		{
-			Title = _pickerCell.PopupPageTitle;
+			Title = _pickerCell.Prompt.Title;
 
 			var parent = _pickerCell.Parent;
 			if ( parent != null )
@@ -199,7 +202,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public void InitializeScroll()
 		{
-			ObservableCollection<object> selectedList = _pickerCell.Selected;
+			IList selectedList = _pickerCell.MergedSelectedList;
 
 			foreach ( object item in selectedList )
 			{
@@ -211,20 +214,23 @@ namespace Jakar.SettingsView.iOS.Cells
 					 _selectedCache.Count >= _pickerCell.MaxSelectedNumber ) { break; }
 			}
 
-			if ( selectedList.Count > 0 )
-			{
-				int idx = _source.IndexOf(selectedList[0]);
-				if ( idx < 0 ) { return; }
+			if ( selectedList.Count <= 0 ) return;
+			int index = _source.IndexOf(selectedList[0]);
+			if ( index < 0 ) { return; }
 
-				BeginInvokeOnMainThread(() =>
-										{
-											TableView.ScrollToRow(NSIndexPath.Create(new nint[]
-																					 {
-																						 0,
-																						 idx
-																					 }), UITableViewScrollPosition.Middle, false);
-										});
-			}
+			BeginInvokeOnMainThread(() =>
+									{
+										TableView.ScrollToRow(NSIndexPath.Create(new nint[]
+																				 {
+																					 0,
+																					 index
+																				 }
+																				),
+															  UITableViewScrollPosition.Middle,
+															  false
+															 );
+									}
+								   );
 		}
 
 		/// <summary>
@@ -235,7 +241,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			_pickerCell.SelectedItems.Clear();
 
-			foreach ( KeyValuePair<int, object> kv in _selectedCache ) { _pickerCell.Selected.Add(kv.Value); }
+			foreach ( KeyValuePair<int, object> kv in _selectedCache ) { _pickerCell.MergedSelectedList.Add(kv.Value); }
 
 			_pickerCell.SelectedItem = _selectedCache.Values.FirstOrDefault();
 

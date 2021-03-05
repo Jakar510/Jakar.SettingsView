@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class DatePickerCell : PopupCellBase
+	public class DatePickerCell : PromptCellBase
 	{
 		public static BindableProperty DateProperty = BindableProperty.Create(nameof(Date),
 																			  typeof(DateTime),

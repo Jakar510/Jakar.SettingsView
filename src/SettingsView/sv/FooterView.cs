@@ -3,12 +3,19 @@
 using System;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
+using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
 	public abstract class FooterView : BaseHeaderFooterView, ISectionFooter
 	{
-		protected FooterView() => BackgroundColor = SVConstants.FOOTER_BACKGROUND_COLOR;
+		Section? ISectionFooterHeader.Section { get; set; }
+
+		public abstract void SetText( string? value );
+		public abstract void SetTextColor( Color value );
+		public abstract void SetBackground( Color value );
+
+		protected FooterView() { }
 	}
 }

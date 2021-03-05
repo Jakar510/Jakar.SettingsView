@@ -80,7 +80,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		public void UpdateSelectedItems( bool force )
 		{
-			if ( force || string.IsNullOrEmpty(_ValueTextCache) )
+			if ( force || string.IsNullOrWhiteSpace(_ValueTextCache) )
 			{
 				if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
@@ -142,7 +142,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_TitleLabel = new TextView(AndroidContext)
 						  {
-							  Text = _PickerCell.Popup.Title,
+							  Text = _PickerCell.Prompt.Title,
 							  Gravity = GravityFlags.Center
 						  };
 			_TitleLabel.SetBackgroundColor(_Adapter.BackgroundColor);
@@ -157,8 +157,8 @@ namespace Jakar.SettingsView.Droid.Cells
 				builder.SetCustomTitle(_TitleLabel);
 				builder.SetView(_ListView);
 
-				builder.SetNegativeButton(_PickerCell.Popup.Cancel, CancelEventHandler);
-				builder.SetPositiveButton(_PickerCell.Popup.Accept, AcceptEventHandler);
+				builder.SetNegativeButton(_PickerCell.Prompt.Cancel, CancelEventHandler);
+				builder.SetPositiveButton(_PickerCell.Prompt.Accept, AcceptEventHandler);
 
 				_Dialog = builder.Create();
 			}

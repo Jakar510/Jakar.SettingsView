@@ -180,9 +180,9 @@
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
 										SelectedCommand="{Binding NumberSelectedCommand}">
-					<cells:NumberPickerCell.Popup>
+					<cells:NumberPickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
-					</cells:NumberPickerCell.Popup>
+					</cells:NumberPickerCell.Prompt>
 				</cells:NumberPickerCell>
 				<cells:TimePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
@@ -201,9 +201,9 @@
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
 									  Format="{Binding TimeFormat.Value}" >
-					<cells:TimePickerCell.Popup>
+					<cells:TimePickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
-					</cells:TimePickerCell.Popup>
+					</cells:TimePickerCell.Prompt>
 				</cells:TimePickerCell>
 				<cells:DatePickerCell IsEnabled="{Binding IsEnabled.Value}"
 									  IconSource="{Binding IconSource.Value}"
@@ -245,9 +245,9 @@
 									  Items="{Binding TextItems.Value}"
 									  SelectedItem="{Binding TextSelectedItem.Value}"
 									  SelectedCommand="{Binding TextSelectedCommand}" >
-					<cells:TextPickerCell.Popup>
+					<cells:TextPickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
-					</cells:TextPickerCell.Popup>
+					</cells:TextPickerCell.Prompt>
 				</cells:TextPickerCell>
 			</sv:Section>
 		</sv:SettingsView>

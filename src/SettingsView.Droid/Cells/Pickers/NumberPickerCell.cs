@@ -116,7 +116,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected void UpdateMax() { _Max = _NumberPickerCell.Max; }
 		protected void UpdateNumber() { _Value.Text = _NumberPickerCell.Number.ToString(); }
 
-		protected void UpdatePopupTitle() { _Popup_Title = _NumberPickerCell.Popup.Title; }
+		protected void UpdatePopupTitle() { _Popup_Title = _NumberPickerCell.Prompt.Title; }
 		protected void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
 
 

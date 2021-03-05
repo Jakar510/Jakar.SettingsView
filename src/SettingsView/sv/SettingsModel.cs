@@ -32,9 +32,9 @@ namespace Jakar.SettingsView.Shared.sv
 		public override string GetSectionTitle( int section ) => _root.ElementAt(section).Title;
 
 
-		public virtual View GetSectionHeaderView( int section ) => _root.ElementAt(section).HeaderView;
+		public virtual View GetSectionHeaderView( int section ) => _root.ElementAt(section).HeaderView.View;
 		public virtual string GetFooterText( int section ) => _root.ElementAt(section).FooterText;
-		public virtual View GetSectionFooterView( int section ) => _root.ElementAt(section).FooterView;
+		public virtual View GetSectionFooterView( int section ) => _root.ElementAt(section).FooterView.View;
 
 		protected override void OnRowSelected( object item )
 		{

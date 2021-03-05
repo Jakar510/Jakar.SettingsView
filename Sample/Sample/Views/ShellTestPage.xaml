@@ -23,10 +23,10 @@
 							  SelectionMode="Single"
 							  TitleColor="Chocolate"
 							  DescriptionColor="BlueViolet">
-				<cells:PickerCell.Popup>
+				<cells:PickerCell.Prompt>
 					<config:PopupConfig Title="Hoge"
 										AccentColor="Red" />
-				</cells:PickerCell.Popup>
+				</cells:PickerCell.Prompt>
 			</cells:PickerCell>
 		</sv:Section>
 	</sv:SettingsView>

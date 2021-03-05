@@ -8,6 +8,7 @@ namespace Jakar.SettingsView.Shared.Misc
 {
 	public static class InstanceCreator
 	{
+		public static TItem Create<TItem>(params object[] args) => (TItem) Activator.CreateInstance(typeof(TItem), args);
 		internal static NullReferenceException CreateException( params Type[] args ) => new NullReferenceException($"constructor not found. Requested arg types: {args}");
 	}
 

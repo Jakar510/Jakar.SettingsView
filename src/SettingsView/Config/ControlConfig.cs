@@ -8,12 +8,12 @@ namespace Jakar.SettingsView.Shared.Config
 {
 	public class ControlConfig : SVConfig, IConfigControl
 	{
-		public static BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(ControlConfig), SVConstants.COLOR_DEFAULT);
+		public static BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(ControlConfig), SVConstants.Defaults.COLOR);
 
 		public static BindableProperty FontSizeProperty = BindableProperty.Create(nameof(FontSize),
 																				  typeof(double),
 																				  typeof(ControlConfig),
-																				  SVConstants.FONT_SIZE_DEFAULT,
+																				  SVConstants.Defaults.FONT_SIZE,
 																				  BindingMode.OneWay,
 																				  defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Default, typeof(ControlConfig))
 																				 );
@@ -23,6 +23,7 @@ namespace Jakar.SettingsView.Shared.Config
 
 		public static BindableProperty FontAttributesProperty = BindableProperty.Create(nameof(FontAttributes), typeof(FontAttributes), typeof(ControlConfig), FontAttributes.None);
 		public static BindableProperty AlignmentProperty = BindableProperty.Create(nameof(Alignment), typeof(TextAlignment), typeof(ControlConfig), TextAlignment.Start);
+
 
 		public string? Text
 		{

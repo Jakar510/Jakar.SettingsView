@@ -106,6 +106,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 		public static BindableProperty HeaderHeightProperty = BindableProperty.Create(nameof(HeaderHeight), typeof(double), typeof(SettingsView), -1d);
 
+		// TODO: decide what to do with these: remove / re-purpose / implement
 		public Thickness HeaderPadding
 		{
 			get => (Thickness) GetValue(HeaderPaddingProperty);

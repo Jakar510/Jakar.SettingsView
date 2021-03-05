@@ -5,20 +5,24 @@
 			   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			   xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			   x:Class="Jakar.SettingsView.Shared.sv.DefaultHeaderView"
-			   ColumnDefinitions="0.1*, *"
+			   ColumnDefinitions="0.1*, *, 0.1*"
 			   RowDefinitions="*">
 	<Image x:Name="Icon"
+		   x:FieldModifier="public"
 		   Grid.Column="0"
 		   Grid.Row="0"
 		   HorizontalOptions="Start"
 		   VerticalOptions="FillAndExpand"
 		   Aspect="AspectFit" />
 	<Label x:Name="TitleLabel"
-		   Text="Default Title"
+		   x:FieldModifier="public"
 		   Grid.Column="1"
 		   Grid.Row="0"
+		   FontSize="Header"
+		   FontAttributes="Bold"
 		   VerticalTextAlignment="Center"
 		   HorizontalTextAlignment="Center"
 		   HorizontalOptions="FillAndExpand"
-		   VerticalOptions="FillAndExpand" />
+		   VerticalOptions="FillAndExpand"
+		   x:DataType="sv:Section" />
 </sv:HeaderView>

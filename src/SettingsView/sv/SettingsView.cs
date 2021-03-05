@@ -112,9 +112,9 @@ namespace Jakar.SettingsView.Shared.sv
 					  {
 						  section.Parent = this;
 
-						  if ( section.HeaderView is not null ) { section.HeaderView.Parent = this; }
+						  section.HeaderView.Parent = this;
 
-						  if ( section.FooterView is not null ) { section.FooterView.Parent = this; }
+						  section.FooterView.Parent = this;
 
 						  foreach ( Cell cell in section )
 						  {

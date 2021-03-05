@@ -7,7 +7,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	/// <summary>
 	/// Time picker cell.
 	/// </summary>
-	public class TimePickerCell : PopupCellBase
+	public class TimePickerCell : PromptCellBase
 	{
 		public static BindableProperty TimeProperty = BindableProperty.Create(nameof(Time), typeof(TimeSpan), typeof(TimePickerCell), default(TimeSpan), BindingMode.TwoWay);
 		public static BindableProperty FormatProperty = BindableProperty.Create(nameof(Format), typeof(string), typeof(TimePickerCell), "t");

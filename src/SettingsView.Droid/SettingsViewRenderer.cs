@@ -26,16 +26,18 @@ namespace Jakar.SettingsView.Droid
 		protected SettingsViewSimpleCallback? _SimpleCallback { get; set; }
 		protected SVItemDecoration? _ItemDecoration { get; set; }
 		protected Drawable? _Divider { get; set; }
-		protected List<IVisualElementRenderer> _ShouldDisposeRenderers { get; } = new List<IVisualElementRenderer>();
+		protected List<IVisualElementRenderer> _ShouldDisposeRenderers { get; } = new();
 
 
 		public SettingsViewRenderer( Context context ) : base(context) => AutoPackage = false;
+
 
 		protected override void OnElementChanged( ElementChangedEventArgs<Shared.sv.SettingsView> e )
 		{
 			base.OnElementChanged(e);
 			Shared.sv.SettingsView? settingsView = e.NewElement;
 			if ( settingsView is null ) { return; }
+
 
 			// Fix scrollbar visibility and flash. https://github.com/xamarin/Xamarin.Forms/pull/10893
 			var recyclerView = new RecyclerView(new ContextThemeWrapper(Context, Resource.Style.settingsViewTheme), null, Resource.Attribute.settingsViewStyle);
@@ -85,11 +87,11 @@ namespace Jakar.SettingsView.Droid
 			foreach ( Section section in e.OldItems )
 			{
 				// if ( section.HeaderView != null )
-				IVisualElementRenderer header = Platform.GetRenderer(section.HeaderView);
+				IVisualElementRenderer header = Platform.GetRenderer(section.HeaderView.View);
 				if ( header != null ) { _ShouldDisposeRenderers.Add(header); }
 
 				// if ( section.FooterView is null ) continue;
-				IVisualElementRenderer footer = Platform.GetRenderer(section.FooterView);
+				IVisualElementRenderer footer = Platform.GetRenderer(section.FooterView.View);
 				if ( footer != null ) { _ShouldDisposeRenderers.Add(footer); }
 			}
 		}
@@ -119,7 +121,7 @@ namespace Jakar.SettingsView.Droid
 		protected void UpdateSeparatorColor() { _Divider?.SetTint(Element.SeparatorColor.ToAndroid()); }
 		protected void UpdateRowHeight()
 		{
-			if ( Element.RowHeight < 0 ) { Element.RowHeight = (int) SVConstants.MIN_ROW_HEIGHT; }
+			if ( Element.RowHeight < 0 ) { Element.RowHeight = (int) SVConstants.Defaults.MIN_ROW_HEIGHT; }
 			else { _Adapter?.NotifyDataSetChanged(); }
 		}
 		protected void UpdateScrollToTop()
@@ -161,8 +163,8 @@ namespace Jakar.SettingsView.Droid
 				{
 					// if ( section.HeaderView != null ) { DisposeChildRenderer(section.HeaderView); }
 					// if ( section.FooterView != null ) { DisposeChildRenderer(section.FooterView); }
-					DisposeChildRenderer(section.HeaderView);
-					DisposeChildRenderer(section.FooterView);
+					DisposeChildRenderer(section.HeaderView.View);
+					DisposeChildRenderer(section.FooterView.View);
 				}
 
 				foreach ( IVisualElementRenderer renderer in _ShouldDisposeRenderers )

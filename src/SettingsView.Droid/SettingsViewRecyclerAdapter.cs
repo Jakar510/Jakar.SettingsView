@@ -21,8 +21,6 @@ namespace Jakar.SettingsView.Droid
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class SettingsViewRecyclerAdapter : RecyclerView.Adapter, AView.IOnClickListener, AView.IOnLongClickListener
 	{
-		protected float _MinRowHeight => AndroidContext.ToPixels(SVConstants.MIN_ROW_HEIGHT);
-
 		//Item click. correspond to AdapterView.IOnItemClickListener
 		protected int _SelectedIndex { get; set; } = -1;
 		protected AView? _PreSelectedCell { get; set; }
@@ -57,13 +55,12 @@ namespace Jakar.SettingsView.Droid
 			if ( sender is not Section section ) throw new InvalidOperationException(nameof(sender));
 
 			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible(section); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ) { UpdateTitle(section); }
+			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ) { section.UpdateTitle(); }
 			else if ( e.PropertyName == Section.HeaderViewProperty.PropertyName ) { UpdateSectionHeader(section); } //  || e.PropertyName == Section.HeaderHeightProperty.PropertyName 
 			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName ||
 					  e.PropertyName == Section.FooterViewProperty.PropertyName ||
 					  e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter(section); }
 		}
-		private void UpdateTitle( Section section ) { section.UpdateTitle(); }
 		protected void UpdateSectionVisible( Section section )
 		{
 			List<int> indexes = _Proxy.Select(( x, idx ) => new
@@ -136,11 +133,19 @@ namespace Jakar.SettingsView.Droid
 			{
 				viewHolder.ItemView.Visibility = ViewStates.Gone;
 				viewHolder.ItemView.SetMinimumHeight(0);
-				if ( viewHolder.ItemView.LayoutParameters != null ) viewHolder.ItemView.LayoutParameters.Height = 0;
+				if ( viewHolder.ItemView.LayoutParameters is not null ) viewHolder.ItemView.LayoutParameters.Height = 0;
 				return;
 			}
 
 			viewHolder.ItemView.Visibility = ViewStates.Visible;
+
+			// double minHeight = viewHolder.RowInfo?.ViewType switch
+			// 				   {
+			// 					   ViewType.CustomHeader => SVConstants.Section.Header.MinRowHeight,
+			// 					   ViewType.CustomFooter => SVConstants.Section.Footer.MinRowHeight,
+			// 					   _ => SVConstants.Defaults.MIN_ROW_HEIGHT
+			// 				   };
+			// viewHolder.ItemView.SetMinimumHeight((int) AndroidContext.ToPixels(minHeight));
 
 			switch ( rowInfo.ViewType )
 			{
@@ -154,12 +159,14 @@ namespace Jakar.SettingsView.Droid
 
 				case ViewType.CustomHeader:
 					if ( viewHolder is not CustomHeaderViewHolder header ) throw new InvalidOperationException(nameof(header));
-					BindCustomHeaderView(header, rowInfo.Section.HeaderView);
+					if ( header.ItemView is null ) throw new NullReferenceException(nameof(header.ItemView));
+					header.ItemView.SetContent(rowInfo.Section.HeaderView, rowInfo.Section, viewHolder);
 					break;
 
 				case ViewType.CustomFooter:
 					if ( viewHolder is not CustomFooterViewHolder footer ) throw new InvalidOperationException(nameof(footer));
-					BindCustomHeaderView(footer, rowInfo.Section.FooterView);
+					if ( footer.ItemView is null ) throw new NullReferenceException(nameof(footer.ItemView));
+					footer.ItemView.SetContent(rowInfo.Section.FooterView, rowInfo.Section, viewHolder);
 					break;
 
 				default:
@@ -174,18 +181,14 @@ namespace Jakar.SettingsView.Droid
 		{
 			int position = _RecyclerView.GetChildAdapterPosition(view);
 
-			//TODO: It is desirable that the forms side has Selected property and reflects it.
-			//      But do it at a later as iOS side doesn't have that process.
+			//TODO: It is desirable that the forms side has Selected property and reflects it. But do it at a later as iOS side doesn't have that process.
 			DeselectRow();
 
 			AView? child = GetChild(view);
-			if ( !( child is BaseCellView cell ) ||
-				 !( _Proxy[position].Cell?.IsEnabled ?? false ) ) //if Xamarin.Forms.Cell.IsEnable is false, does nothing. 
-			{
-				return;
-			}
+			if ( child is not BaseCellView cell ||
+				 !( _Proxy[position].Cell?.IsEnabled ?? false ) ) { return; } // if Xamarin.Forms.Cell.IsEnable is false, does nothing. 
 
-			_SettingsView.Model?.RowSelected(_Proxy[position].Cell);
+			_SettingsView.Model.RowSelected(_Proxy[position].Cell);
 
 			cell.RowSelected(this, position);
 		}
@@ -206,7 +209,7 @@ namespace Jakar.SettingsView.Droid
 				return false;
 			}
 
-			_SettingsView.Model?.RowLongPressed(_Proxy[position].Cell);
+			_SettingsView.Model.RowLongPressed(_Proxy[position].Cell);
 
 			return result ?? true;
 		}
@@ -253,7 +256,7 @@ namespace Jakar.SettingsView.Droid
 		//
 		// 	if ( cellHeight >= 0 )
 		// 	{
-		// 		view.SetMinimumHeight((int) ( SVConstants.MIN_ROW_HEIGHT / 2 ));
+		// 		view.SetMinimumHeight((int) ( SVConstants.Section.MIN_ROW_HEIGHT / 2 ));
 		// 		if ( view.LayoutParameters != null ) view.LayoutParameters.Height = cellHeight;
 		// 	}
 		//
@@ -304,7 +307,7 @@ namespace Jakar.SettingsView.Droid
 		// 	//
 		// 	// 	if ( cellHeight >= 0 )
 		// 	// 	{
-		// 	// 		view.SetMinimumHeight(SVConstants.MIN_ROW_HEIGHT / 2);
+		// 	// 		view.SetMinimumHeight(SVConstants.Section.MIN_ROW_HEIGHT / 2);
 		// 	// 		if ( view.LayoutParameters != null )
 		// 	// 			view.LayoutParameters.Height = cellHeight;
 		// 	// 	}
@@ -336,18 +339,18 @@ namespace Jakar.SettingsView.Droid
 		// 			return;
 		// 	}
 		// }
-		protected void BindCustomHeaderView( CustomHeaderViewHolder holder, HeaderView formsView )
-		{
-			if ( holder.ItemView is null ) return;
-			holder.ItemView.ViewHolder = holder;
-			holder.ItemView.View = formsView;
-		}
-		protected void BindCustomHeaderView( CustomFooterViewHolder holder, FooterView formsView )
-		{
-			if ( holder.ItemView is null ) return;
-			holder.ItemView.ViewHolder = holder;
-			holder.ItemView.View = formsView;
-		}
+		// protected void BindCustomHeaderView( CustomHeaderViewHolder holder, Section section )
+		// {
+		// 	if ( holder.ItemView is null ) return;
+		// 	holder.ItemView.ViewHolder = holder;
+		// 	holder.ItemView.SetContent(section.HeaderView, section);
+		// }
+		// protected void BindCustomFooterView( CustomFooterViewHolder holder, Section section )
+		// {
+		// 	if ( holder.ItemView is null ) return;
+		// 	holder.ItemView.ViewHolder = holder;
+		// 	holder.ItemView.SetContent(section.FooterView, section);
+		// }
 		protected void BindContentView( ContentBodyViewHolder holder, int position )
 		{
 			if ( holder is null ) throw new NullReferenceException(nameof(holder));
@@ -360,7 +363,7 @@ namespace Jakar.SettingsView.Droid
 			holder.RowInfo = _Proxy[position];
 
 			AView? nativeCell = holder.Body.GetChildAt(0);
-			if ( nativeCell != null ) { holder.Body.RemoveViewAt(0); }
+			if ( nativeCell is not null ) { holder.Body.RemoveViewAt(0); }
 
 			nativeCell = CellFactory.GetCell(formsCell,
 											 nativeCell,
@@ -377,20 +380,26 @@ namespace Jakar.SettingsView.Droid
 				_PreSelectedCell = nativeCell;
 			}
 
-			var minHeight = (int) Math.Max(AndroidContext.ToPixels(_SettingsView.RowHeight), _MinRowHeight);
+			double _MinHeight = holder.RowInfo?.ViewType switch
+								{
+									ViewType.CustomHeader => SVConstants.Section.Header.MinRowHeight,
+									ViewType.CustomFooter => SVConstants.Section.Footer.MinRowHeight,
+									_ => SVConstants.Defaults.MIN_ROW_HEIGHT
+								};
 
+			var minHeight = (int) AndroidContext.ToPixels(Math.Max(_MinHeight, _SettingsView.RowHeight));
 			//it is necessary to set both
 			layout.SetMinimumHeight(minHeight);
 			nativeCell.SetMinimumHeight(minHeight);
 
-			if ( layout.LayoutParameters != null )
+			if ( layout.LayoutParameters is not null )
 			{
 				if ( !_SettingsView.HasUnevenRows )
 				{
 					// if not Uneven, set the larger one of RowHeight and MinRowHeight.
 					layout.LayoutParameters.Height = minHeight;
 				}
-				else if ( formsCell != null &&
+				else if ( formsCell is not null &&
 						  formsCell.Height > -1 )
 				{
 					// if the cell itself was specified height, set it.
@@ -409,9 +418,8 @@ namespace Jakar.SettingsView.Droid
 
 			holder.Body.AddView(nativeCell, 0);
 
-
-			double height = layout.Height;
-			double cellHeight = holder.Body.Height;
+			// double height = layout.Height;
+			// double cellHeight = holder.Body.Height;
 		}
 
 

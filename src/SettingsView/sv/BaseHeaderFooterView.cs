@@ -1,6 +1,7 @@
 ﻿// unset
 
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable
@@ -23,18 +24,14 @@ namespace Jakar.SettingsView.Shared.sv
 		// 	set => SetValue(TitleColorProperty, value);
 		// }
 
-		public abstract string? Title { get; set; }
-		public abstract Color TitleColor { get; set; }
-		public abstract double FontSize { get; set; }
-		public abstract FontAttributes FontAttributes { get; set; }
-		public abstract string FontFamily { get; set; }
-		public Section? Section { get; set; }
+		public View View => this;
 
-		// public Color BorderColor { get; set; } = SVConstants.BACKGROUND_COLOR;
+
+		// public Color BorderColor { get; set; } = SVConstants.DEFAULT.BACKGROUND_COLOR;
 		// public Thickness BorderThickness { get; set; } = new(0);
 
 		// public virtual SizeRequest HeightRequest { get; set; } = new(Size.Zero, new Size(-1, SVConstants.MIN_ROW_HEIGHT));
-		// public virtual Thickness Padding { get; set; } = new(SVConstants.PADDING);
+		// public virtual Thickness Padding { get; set; } = new(SVConstants.Cell.PADDING);
 		// public virtual Color BackgroundColor { get; set; } = SVConstants.BACKGROUND_COLOR;
 
 
@@ -44,8 +41,8 @@ namespace Jakar.SettingsView.Shared.sv
 			HorizontalOptions = LayoutOptions.Fill;
 			VerticalOptions = LayoutOptions.Fill;
 
-			HeightRequest = SVConstants.MIN_ROW_HEIGHT; // new SizeRequest(Size.Zero, new Size(-1, SVConstants.MIN_ROW_HEIGHT));
-			Padding = new Thickness(SVConstants.PADDING);
+			HeightRequest = SVConstants.Section.Footer.MinRowHeight; 
+			Padding = new Thickness(SVConstants.Section.Header.PADDING);
 			Margin = new Thickness(0);
 		}
 	}

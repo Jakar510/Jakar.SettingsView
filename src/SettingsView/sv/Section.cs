@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable
@@ -25,58 +26,64 @@ namespace Jakar.SettingsView.Shared.sv
 																					 propertyChanged: ItemsChanged
 																					);
 
+
 		public static BindableProperty HeaderViewProperty = BindableProperty.Create(nameof(HeaderView),
-																					typeof(HeaderView),
+																					typeof(ISectionHeader),
 																					typeof(Section),
 																					new DefaultHeaderView(),
 																					propertyChanging: HeaderViewPropertyChanging
 																				   );
 
-		private static void HeaderViewPropertyChanging( BindableObject bindable, object oldValue, object newValue )
-		{
-			if ( bindable is not Section section ) return;
-			if ( oldValue is HeaderView oldHeader ) { oldHeader.Section = null; }
-
-			if ( newValue is HeaderView newHeader ) { newHeader.Section = section; }
-		}
-
 		public static BindableProperty FooterViewProperty = BindableProperty.Create(nameof(FooterView),
-																					typeof(FooterView),
+																					typeof(ISectionFooter),
 																					typeof(Section),
 																					new DefaultFooterView(),
 																					propertyChanging: FooterViewPropertyChanging
 																				   );
 
+		private static void HeaderViewPropertyChanging( BindableObject bindable, object oldValue, object newValue )
+		{
+			if ( bindable is not Section section ) return;
+
+			if ( oldValue is ISectionHeader old ) { Update(old, null); }
+
+			if ( newValue is ISectionHeader item ) { Update(item, section); }
+		}
 		private static void FooterViewPropertyChanging( BindableObject bindable, object oldValue, object newValue )
 		{
-			if ( bindable is not Section section )
-				return;
-			if ( oldValue is FooterView oldFooter ) { oldFooter.Section = null; }
+			if ( bindable is not Section section ) return;
 
-			if ( newValue is FooterView newFooter ) { newFooter.Section = section; }
+			if ( oldValue is ISectionFooter old ) { Update(old, null); }
+
+			if ( newValue is ISectionFooter item ) { Update(item, section); }
 		}
+		private static void Update( ISectionFooterHeader item, Section? section )
+		{
+			item.Section = section;
+			item.BindingContext = section?.BindingContext;
+		}
+
 
 		public new static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title),
 																							typeof(string),
 																							typeof(BaseHeaderFooterView),
 																							default(string?),
-																							propertyChanged: ( bindable, value, newValue ) =>
-																											 {
-																												 if ( bindable is Section section )
-																												 {
-																													 section.HeaderView.Title = newValue?.ToString();
-																												 }
-																											 }
+																							propertyChanging: ( bindable, old_value, new_value ) =>
+																											  {
+																												  if ( old_value == new_value ) return;
+																												  if ( bindable is Section section ) { section.HeaderView.SetText(new_value?.ToString()); }
+																											  }
 																						   );
 
 		public new static readonly BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor),
 																								typeof(Color),
 																								typeof(BaseHeaderFooterView),
-																								SVConstants.HEADER_TITLE_COLOR,
-																								propertyChanged: ( bindable, value, newValue ) =>
-																												 {
-																													 if ( bindable is Section section ) { section.HeaderView.TitleColor = (Color) newValue; }
-																												 }
+																								SVConstants.Section.Footer.TEXT_COLOR,
+																								propertyChanging: ( bindable, old_value, new_value ) =>
+																												  {
+																													  if ( old_value == new_value ) return;
+																													  if ( bindable is Section section ) { section.HeaderView.SetTextColor((Color) new_value); }
+																												  }
 																							   );
 
 
@@ -84,13 +91,14 @@ namespace Jakar.SettingsView.Shared.sv
 																					typeof(string),
 																					typeof(Section),
 																					default(string),
-																					propertyChanged: ( bindable, value, newValue ) =>
-																									 {
-																										 if ( bindable is Section section ) { section.FooterView.Title = newValue?.ToString(); }
-																									 }
+																					propertyChanging: ( bindable, old_value, new_value ) =>
+																									  {
+																										  if ( old_value == new_value ) return;
+																										  if ( bindable is Section section ) { section.FooterView.SetText(new_value?.ToString()); }
+																									  }
 																				   );
 
-		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), true);
+		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SVConstants.Section.Footer.VISIBLE);
 
 
 		public new string? Title
@@ -105,15 +113,15 @@ namespace Jakar.SettingsView.Shared.sv
 			set => SetValue(TextColorProperty, value);
 		}
 
-		public HeaderView HeaderView
+		public ISectionHeader HeaderView
 		{
-			get => (HeaderView) GetValue(HeaderViewProperty);
+			get => (ISectionHeader) GetValue(HeaderViewProperty);
 			set => SetValue(HeaderViewProperty, value);
 		}
 
-		public FooterView FooterView
+		public ISectionFooter FooterView
 		{
-			get => (FooterView) GetValue(FooterViewProperty);
+			get => (ISectionFooter) GetValue(FooterViewProperty);
 			set => SetValue(FooterViewProperty, value);
 		}
 
@@ -177,14 +185,14 @@ namespace Jakar.SettingsView.Shared.sv
 			set => HeaderView.IsCollapsed = value;
 		}
 
-		internal List<Cell> Cache { get; private set; }
+		internal List<Cell> Cache { get; private set; } = new();
 
 
 		public Section()
 		{
 			CollectionChanged += OnCollectionChanged;
 			PropertyChanged += OnPropertyChanged;
-			Cache = new List<Cell>();
+			TextColor = SVConstants.Section.Header.TEXT_COLOR;
 		}
 		public Section( string title ) : this() => Title = title;
 		public Section( SettingsView settingsView ) : this(settingsView, string.Empty) { }
@@ -234,7 +242,7 @@ namespace Jakar.SettingsView.Shared.sv
 		internal void ChildVisibilityChanged() => ShowVisibleCells();
 		private void ShowVisibleCells()
 		{
-			if ( Cache.Count != Count ) { Cache = new List<Cell>(this); }
+			// if ( Cache.Count != Count ) { Cache = new List<Cell>(this); }
 
 			Clear();
 			foreach ( Cell cell in Cache )
@@ -247,7 +255,7 @@ namespace Jakar.SettingsView.Shared.sv
 			}
 		}
 
-		internal void UpdateTitle() { HeaderView.Title = Title; }
+		internal void UpdateTitle() { HeaderView.SetText(Title); }
 
 		public new void Add( Cell cell )
 		{
@@ -264,9 +272,8 @@ namespace Jakar.SettingsView.Shared.sv
 		protected override void OnBindingContextChanged()
 		{
 			base.OnBindingContextChanged();
-			if ( HeaderView != null ) { HeaderView.BindingContext = BindingContext; }
-
-			if ( FooterView != null ) { FooterView.BindingContext = BindingContext; }
+			HeaderView.BindingContext = BindingContext;
+			FooterView.BindingContext = BindingContext;
 		}
 
 		public void MoveSourceItemWithoutNotify( int from, int to )

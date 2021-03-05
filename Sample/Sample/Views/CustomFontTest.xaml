@@ -183,9 +183,9 @@
 								  MaxSelectedNumber="3"
 								  SelectedItems="{Binding SelectedItems}"
 								  KeepSelectedUntilBack="true">
-					<cells:PickerCell.Popup>
+					<cells:PickerCell.Prompt>
 						<config:PopupConfig Title="select 3 items" />
-					</cells:PickerCell.Popup>
+					</cells:PickerCell.Prompt>
 				</cells:PickerCell>
 
 			</sv:Section>
@@ -195,16 +195,16 @@
 										Min="0"
 										Max="99"
 										Number="15">
-					<cells:NumberPickerCell.Popup>
+					<cells:NumberPickerCell.Prompt>
 						<config:PopupConfig Title="select number" />
-					</cells:NumberPickerCell.Popup>
+					</cells:NumberPickerCell.Prompt>
 				</cells:NumberPickerCell>
 				<cells:TimePickerCell Title="TimePicker"
 									  Format="HH:mm"
 									  Time="15:30">
-					<cells:TimePickerCell.Popup>
+					<cells:TimePickerCell.Prompt>
 						<config:PopupConfig Title="select time" />
-					</cells:TimePickerCell.Popup>
+					</cells:TimePickerCell.Prompt>
 				</cells:TimePickerCell>
 				<cells:DatePickerCell Title="DatePicker"
 									  Format="yyyy/MM/dd (ddd)"
@@ -212,17 +212,17 @@
 									  MinimumDate="2015/11/10"
 									  MaximumDate="2025/12/31"
 									  TodayText="Today's date">
-					<cells:DatePickerCell.Popup>
+					<cells:DatePickerCell.Prompt>
 						<config:PopupConfig Title="select date" />
-					</cells:DatePickerCell.Popup>
+					</cells:DatePickerCell.Prompt>
 				</cells:DatePickerCell>
 				<cells:TextPickerCell Title="TextPicker"
 									  Items="{Binding TextItems}"
 									  SelectedItem="{Binding SelectedText.Value}"
 									  IsCircularPicker="False">
-					<cells:TextPickerCell.Popup>
+					<cells:TextPickerCell.Prompt>
 						<config:PopupConfig Title="select item" />
-					</cells:TextPickerCell.Popup>
+					</cells:TextPickerCell.Prompt>
 				</cells:TextPickerCell>
 			</sv:Section>
 

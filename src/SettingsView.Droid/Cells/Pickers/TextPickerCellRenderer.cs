@@ -55,7 +55,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem?.ToString(); }
-		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.Popup.Title; }
+		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.Prompt.Title; }
 		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
 		private void CreateDialog()
@@ -73,8 +73,8 @@ namespace Jakar.SettingsView.Droid.Cells
 						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem), 0),
 					  };
 
-			_Picker.SetBackgroundColor(_TextPickerCell.Popup.BackgroundColor.ToAndroid());
-			_Picker.SetTextColor(_TextPickerCell.Popup.ItemColor.ToAndroid());
+			_Picker.SetBackgroundColor(_TextPickerCell.Prompt.BackgroundColor.ToAndroid());
+			_Picker.SetTextColor(_TextPickerCell.Prompt.ItemColor.ToAndroid());
 			_Picker.SetDisplayedValues(_TextPickerCell.Items.ToArray());
 
 			if ( _Dialog != null ) return;
@@ -83,13 +83,13 @@ namespace Jakar.SettingsView.Droid.Cells
 				builder.SetTitle(_PopupTitle);
 
 				var parent = new FrameLayout(AndroidContext);
-				parent.SetBackgroundColor(_TextPickerCell.Popup.BackgroundColor.ToAndroid());
+				parent.SetBackgroundColor(_TextPickerCell.Prompt.BackgroundColor.ToAndroid());
 
 				parent.AddView(_Picker, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center));
 
 				builder.SetView(parent);
-				builder.SetNegativeButton(_TextPickerCell.Popup.Cancel, CancelAndClosePopup);
-				builder.SetPositiveButton(_TextPickerCell.Popup.Accept, AcceptAndClosePopup);
+				builder.SetNegativeButton(_TextPickerCell.Prompt.Cancel, CancelAndClosePopup);
+				builder.SetPositiveButton(_TextPickerCell.Prompt.Accept, AcceptAndClosePopup);
 
 				_Dialog = builder.Create();
 			}

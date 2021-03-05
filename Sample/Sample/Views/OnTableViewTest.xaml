@@ -92,9 +92,9 @@
 										Max="{Binding MaxNum.Value}"
 										Min="{Binding MinNum.Value}"
 										SelectedCommand="{Binding NumberSelectedCommand}">
-					<cells:NumberPickerCell.Popup>
+					<cells:NumberPickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
-					</cells:NumberPickerCell.Popup>
+					</cells:NumberPickerCell.Prompt>
 				</cells:NumberPickerCell>
 				<cells:TimePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -112,9 +112,9 @@
 									  Tapped="Handle_Tapped"
 									  Time="{Binding Time.Value}"
 									  Format="{Binding TimeFormat.Value}">
-					<cells:TimePickerCell.Popup>
+					<cells:TimePickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}" />
-					</cells:TimePickerCell.Popup>
+					</cells:TimePickerCell.Prompt>
 				</cells:TimePickerCell>
 				<cells:DatePickerCell IconSource="{Binding IconSource.Value}"
 									  Title="{Binding Title.Value}"
@@ -181,10 +181,10 @@
 								  MaxSelectedNumber="{Binding MaxSelectedNumber.Value}"
 								  KeepSelectedUntilBack="{Binding KeepSelected.Value}"
 								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}">
-					<cells:PickerCell.Popup>
+					<cells:PickerCell.Prompt>
 						<config:PopupConfig Title="{Binding PopupTitle.Value}"
 											AccentColor="{Binding OwnAccentColor.Value}" />
-					</cells:PickerCell.Popup>
+					</cells:PickerCell.Prompt>
 				</cells:PickerCell>
 				<cells:EntryCell IconSource="{Binding IconSource.Value}"
 								 Title="{Binding Title.Value}"

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -27,7 +28,8 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			_Hint = BaseTextView.Create<HintView>(ContentView, this, Resource.Id.CellHint);
 			_CellValueStack = ValueStack();
 
-			_Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
+			_Value = InstanceCreator.Create<TCell>(this, AndroidContext);
+			// _Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
 			_CellValueStack.Add(_Value, Extensions.Layout.Match, Extensions.Layout.Wrap, GravityFlags.Fill | GravityFlags.Center);
 		}
 		protected BaseValueCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }

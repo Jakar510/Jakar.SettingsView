@@ -7,8 +7,38 @@ using AView = Android.Views.View;
 #nullable enable
 namespace Jakar.SettingsView.Droid
 {
+#region interfaces
+
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public class CustomViewHolder : RecyclerView.ViewHolder
+	public interface IViewHolder
+	{
+		public RowInfo? RowInfo { get; set; }
+	}
+
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public interface IHeaderViewHolder { }
+
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public interface IFooterViewHolder { }
+
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public interface ICustomViewHolder
+	{
+		public HeaderFooterContainer? ItemView { get; set; }
+	}
+
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public interface IDefaultViewHolder
+	{
+		public ImageView IconView { get; set; }
+		public TextView TextView { get; set; }
+	}
+
+#endregion
+
+
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public class CustomViewHolder : RecyclerView.ViewHolder, IViewHolder
 	{
 		public RowInfo? RowInfo { get; set; }
 
@@ -25,22 +55,6 @@ namespace Jakar.SettingsView.Droid
 
 			base.Dispose(disposing);
 		}
-	}
-
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public interface IHeaderViewHolder { }
-
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public interface IFooterViewHolder { }
-
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public interface ICustomViewHolder { }
-
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public interface IDefaultViewHolder
-	{
-		public ImageView IconView { get; set; }
-		public TextView TextView { get; set; }
 	}
 
 
@@ -103,9 +117,13 @@ namespace Jakar.SettingsView.Droid
 			get => base.ItemView as HeaderFooterContainer;
 			set => base.ItemView = value;
 		}
+
 		public CustomHeaderViewHolder( AView view ) : base(view) { }
 		public CustomHeaderViewHolder( AView view, RowInfo info ) : base(view, info) { }
+		public CustomHeaderViewHolder( AView view, HeaderFooterContainer header ) : base(view) => ItemView = header;
+		public CustomHeaderViewHolder( AView view, RowInfo info, HeaderFooterContainer header ) : base(view, info) => ItemView = header;
 	}
+
 
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class CustomFooterViewHolder : CustomViewHolder, IFooterViewHolder, ICustomViewHolder
@@ -118,6 +136,8 @@ namespace Jakar.SettingsView.Droid
 
 		public CustomFooterViewHolder( AView view ) : base(view) { }
 		public CustomFooterViewHolder( AView view, RowInfo info ) : base(view, info) { }
+		public CustomFooterViewHolder( AView view, HeaderFooterContainer footer ) : base(view) => ItemView = footer;
+		public CustomFooterViewHolder( AView view, RowInfo info, HeaderFooterContainer footer ) : base(view, info) => ItemView = footer;
 	}
 
 
@@ -127,8 +147,8 @@ namespace Jakar.SettingsView.Droid
 		public LinearLayout Body { get; protected set; }
 
 		public ContentBodyViewHolder( AView view ) : base(view) => Body = view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(Resource.Id.ContentCellBody));
-		public ContentBodyViewHolder( AView view, RowInfo info ) : this(view) => RowInfo = info;
-		
+		public ContentBodyViewHolder( AView view, RowInfo info ) : base(view, info) => Body = view.FindViewById<LinearLayout>(Resource.Id.ContentCellBody) ?? throw new NullReferenceException(nameof(Resource.Id.ContentCellBody));
+
 		// public ContentBodyViewHolder( AView view, Context context ) : base(view) => Body = new FormsViewContainer(context);
 		// public ContentBodyViewHolder( AView view, RowInfo info, Context context ) : base(view, info) => Body = new FormsViewContainer(context);
 

@@ -62,8 +62,8 @@ namespace Jakar.SettingsView.Droid.Cells
 							Text = string.IsNullOrEmpty(_PopupTitle) ? "Select Time" : _PopupTitle,
 						};
 			
-			title.SetBackgroundColor(_TimePickerCell.Popup.BackgroundColor.ToAndroid());
-			title.SetTextColor(_TimePickerCell.Popup.TitleColor.ToAndroid());
+			title.SetBackgroundColor(_TimePickerCell.Prompt.BackgroundColor.ToAndroid());
+			title.SetTextColor(_TimePickerCell.Prompt.TitleColor.ToAndroid());
 			title.SetPadding(10, 10, 10, 10);
 			
 			_Dialog.SetCustomTitle(title);
@@ -79,7 +79,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Dialog.Show();
 		}
 		private void UpdateTime() { _Value.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format); }
-		private void UpdatePopupTitle() { _PopupTitle = _TimePickerCell.Popup.Title; }
+		private void UpdatePopupTitle() { _PopupTitle = _TimePickerCell.Prompt.Title; }
 		private void TimeSelected( object sender, TimePickerDialog.TimeSetEventArgs e )
 		{
 			_TimePickerCell.Time = new TimeSpan(e.HourOfDay, e.Minute, 0);

@@ -6,6 +6,7 @@ using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.Shared.CellBase;
 using UIKit;
 using Xamarin.Forms;
 
@@ -65,7 +66,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.CellPropertyChanged(sender, e);
 
 			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
-			else if ( e.PropertyName == TextPickerCell.PopupTitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == TitleCellBase.TitleProperty.PropertyName ) { UpdateTitle(); }
 			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 			else if ( e.PropertyName == TextPickerCell.ItemsProperty.PropertyName ) { UpdateItems(); }
 		}
@@ -184,7 +185,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateTitle()
 		{
-			_Title.Text = _TextPickerCell.PopupTitle;
+			_Title.Text = _TextPickerCell.Title;
 			_Title.SizeToFit();
 			_Title.Frame = new CGRect(0, 0, 160, 44);
 		}

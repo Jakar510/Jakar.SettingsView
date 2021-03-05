@@ -9,35 +9,9 @@ namespace Jakar.SettingsView.Shared.sv
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class DefaultFooterView : FooterView
 	{
-		public override string? Title
-		{
-			get => TitleLabel.Text;
-			set => TitleLabel.Text = value;
-		}
-
-		public override Color TitleColor
-		{
-			get => TitleLabel.TextColor;
-			set => TitleLabel.TextColor = value;
-		}
-
-		public override double FontSize
-		{
-			get => TitleLabel.FontSize;
-			set => TitleLabel.FontSize = value;
-		}
-
-		public override FontAttributes FontAttributes
-		{
-			get => TitleLabel.FontAttributes;
-			set => TitleLabel.FontAttributes = value;
-		}
-
-		public override string FontFamily
-		{
-			get => TitleLabel.FontFamily;
-			set => TitleLabel.FontFamily = value;
-		}
+		public override void SetText( string? value ) { TitleLabel.Text = value; }
+		public override void SetTextColor( Color value ) { TitleLabel.TextColor = value; }
+		public override void SetBackground( Color value ) { BackgroundColor = value; }
 
 
 		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
@@ -45,11 +19,9 @@ namespace Jakar.SettingsView.Shared.sv
 		{
 			InitializeComponent();
 
-			FontSize = SVConstants.FOOTER_FONT_SIZE;
-			TitleColor = SVConstants.FOOTER_TITLE_COLOR;
-
-			TitleLabel.FontSize = SVConstants.TITLE_FONT_SIZE;
-			TitleLabel.TextColor = SVConstants.TEXT_COLOR;
+			BackgroundColor = SVConstants.Section.Footer.BACKGROUND_COLOR;
+			TitleLabel.FontSize = SVConstants.Section.Footer.FONT_SIZE;
+			SetTextColor(SVConstants.Section.Footer.TEXT_COLOR);
 		}
 	}
 }

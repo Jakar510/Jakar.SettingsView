@@ -147,10 +147,10 @@
 								  SelectedCommand="{Binding SelectedCommand}"
 								  UseNaturalSort="{Binding UseNaturalSort.Value}"
 								  UsePickToClose="{Binding UsePickToClose.Value}">
-					<cells:PickerCell.Popup>
+					<cells:PickerCell.Prompt>
 						<config:PopupConfig AccentColor="{Binding OwnAccentColor.Value}"
 											Title="{Binding PageTitle.Value}" />
-					</cells:PickerCell.Popup>
+					</cells:PickerCell.Prompt>
 				</cells:PickerCell>
 				<cells:PickerCell IsEnabled="{Binding IsEnabled.Value}"
 								  IconSource="{Binding IconSource.Value}"
@@ -174,10 +174,10 @@
 								  KeepSelectedUntilBack="{Binding KeepSelected.Value}"
 								  SelectedItemsOrderKey="{Binding SelectedItemsOrderKey.Value}"
 								  UseNaturalSort="{Binding UseNaturalSort.Value}" >
-					<cells:PickerCell.Popup>
+					<cells:PickerCell.Prompt>
 						<config:PopupConfig AccentColor="{Binding OwnAccentColor.Value}"
 											Title="{Binding PageTitle.Value}" />
-					</cells:PickerCell.Popup>
+					</cells:PickerCell.Prompt>
 				</cells:PickerCell>
 
 				<cells:PickerCell ItemsSource="{Binding ItemsSource}"

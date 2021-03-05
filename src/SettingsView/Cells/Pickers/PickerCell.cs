@@ -15,7 +15,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class PickerCell : PopupCellBase
+	public class PickerCell : PromptCellBase
 	{
 		public static readonly BindableProperty UseNaturalSortProperty = BindableProperty.Create(nameof(UseNaturalSort), typeof(bool), typeof(PickerCell), false);
 		public static readonly BindableProperty UsePickToCloseProperty = BindableProperty.Create(nameof(UsePickToClose), typeof(bool), typeof(PickerCell), default(bool));
@@ -258,7 +258,9 @@ namespace Jakar.SettingsView.Shared.Cells
 
 		internal string GetSelectedItemsText()
 		{
-			IList ITEMS = MergedSelectedList;
+			IList? ITEMS = MergedSelectedList;
+			if ( ITEMS is null ) return string.Empty;
+
 			List<string> sortedList;
 			if ( KeyValue is not null )
 			{
