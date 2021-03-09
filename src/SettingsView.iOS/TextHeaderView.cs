@@ -30,7 +30,8 @@ namespace Jakar.SettingsView.iOS
 								 {
 									 c.Priority = 999f; // fix warning-log:Unable to simultaneously satisfy constraints.
 									 c.Active = true;
-								 });
+								 }
+								);
 
 
 			BackgroundView = new UIView();
@@ -60,7 +61,8 @@ namespace Jakar.SettingsView.iOS
 								 {
 									 c.Priority = 999f; // fix warning-log:Unable to simultaneously satisfy constraints.
 									 c.Active = true;
-								 });
+								 }
+								);
 
 			_curAlignment = align;
 			_isInitialized = true;

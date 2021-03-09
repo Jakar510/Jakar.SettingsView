@@ -12,8 +12,7 @@ using EntryCellRenderer = Jakar.SettingsView.iOS.Cells.EntryCellRenderer;
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
+	[Preserve(AllMembers = true)] public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
 
 	[Preserve(AllMembers = true)]
 	public class EntryCellView : CellBaseView
@@ -26,7 +25,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public EntryCellView( Cell formsCell ) : base(formsCell)
 		{
 			ValueField = new UITextField // TODO: enable multi-line entries
-			{
+						 {
 							 BorderStyle = UITextBorderStyle.None,
 							 AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight,
 							 ReturnKeyType = UIReturnKeyType.Done,
@@ -71,10 +70,13 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == AiEntryCell.ValueTextProperty.PropertyName ) { UpdateValueText(); }
-			else if ( e.PropertyName == AiEntryCell.ValueTextFontSizeProperty.PropertyName || e.PropertyName == AiEntryCell.ValueTextFontFamilyProperty.PropertyName || e.PropertyName == AiEntryCell.ValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
+			else if ( e.PropertyName == AiEntryCell.ValueTextFontSizeProperty.PropertyName ||
+					  e.PropertyName == AiEntryCell.ValueTextFontFamilyProperty.PropertyName ||
+					  e.PropertyName == AiEntryCell.ValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
 			else if ( e.PropertyName == AiEntryCell.ValueTextColorProperty.PropertyName ) { UpdateValueTextColor(); }
 			else if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { UpdateKeyboard(); }
-			else if ( e.PropertyName == AiEntryCell.PlaceholderProperty.PropertyName || e.PropertyName == AiEntryCell.PlaceholderColorProperty.PropertyName ) { UpdatePlaceholder(); }
+			else if ( e.PropertyName == AiEntryCell.PlaceholderProperty.PropertyName ||
+					  e.PropertyName == AiEntryCell.PlaceholderColorProperty.PropertyName ) { UpdatePlaceholder(); }
 			else if ( e.PropertyName == AiEntryCell.TextAlignmentProperty.PropertyName ) { UpdateTextAlignment(); }
 			else if ( e.PropertyName == AiEntryCell.IsPasswordProperty.PropertyName ) { UpdateIsPassword(); }
 			else if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { UpdateSelectAction(); }
@@ -88,14 +90,18 @@ namespace Jakar.SettingsView.iOS.Cells
 				UpdateValueTextColor();
 				ValueField.SetNeedsLayout(); // immediately reflect
 			}
-			else if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName || e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName || e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
+			else if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
+					  e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath ) { ValueField.BecomeFirstResponder(); }
 
 		protected override void SetEnabledAppearance( bool isEnabled )
 		{
-			ValueField.Alpha = isEnabled ? 1.0f : 0.3f;
+			ValueField.Alpha = isEnabled
+								   ? 1.0f
+								   : 0.3f;
 
 			base.SetEnabledAppearance(isEnabled);
 		}
@@ -124,7 +130,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private void UpdateValueTextColor()
 		{
 			if ( _EntryCell.ValueTextColor != Color.Default ) { ValueField.TextColor = _EntryCell.ValueTextColor.ToUIColor(); }
-			else if ( CellParent != null && CellParent.CellValueTextColor != Color.Default ) { ValueField.TextColor = CellParent.CellValueTextColor.ToUIColor(); }
+			else if ( CellParent != null &&
+					  CellParent.CellValueTextColor != Color.Default ) { ValueField.TextColor = CellParent.CellValueTextColor.ToUIColor(); }
 
 			ValueField.SetNeedsLayout();
 		}

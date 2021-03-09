@@ -154,7 +154,9 @@ namespace Jakar.SettingsView.iOS
 			}
 
 			headerView.Label.Text = _settingsView.Model.GetSectionTitle((int) section);
-			headerView.Label.TextColor = _settingsView.HeaderTextColor == Color.Default ? UIColor.Gray : _settingsView.HeaderTextColor.ToUIColor();
+			headerView.Label.TextColor = _settingsView.HeaderTextColor == Color.Default
+											 ? UIColor.Gray
+											 : _settingsView.HeaderTextColor.ToUIColor();
 			headerView.Label.Font = FontUtility.CreateNativeFont(_settingsView.HeaderFontFamily, (float) _settingsView.HeaderFontSize, _settingsView.HeaderFontAttributes);
 			//UIFont.SystemFontOfSize((nfloat)_settingsView.HeaderFontSize);
 			headerView.BackgroundView.BackgroundColor = _settingsView.HeaderBackgroundColor.ToUIColor();
@@ -222,7 +224,9 @@ namespace Jakar.SettingsView.iOS
 			}
 
 			footerView.Label.Text = text;
-			footerView.Label.TextColor = _settingsView.FooterTextColor == Color.Default ? UIColor.Gray : _settingsView.FooterTextColor.ToUIColor();
+			footerView.Label.TextColor = _settingsView.FooterTextColor == Color.Default
+											 ? UIColor.Gray
+											 : _settingsView.FooterTextColor.ToUIColor();
 			footerView.Label.Font = FontUtility.CreateNativeFont(_settingsView.FooterFontFamily, (float) _settingsView.FooterFontSize, _settingsView.FooterFontAttributes);
 			//UIFont.SystemFontOfSize((nfloat)_settingsView.FooterFontSize);
 			footerView.BackgroundView.BackgroundColor = _settingsView.FooterBackgroundColor.ToUIColor();
@@ -233,7 +237,9 @@ namespace Jakar.SettingsView.iOS
 
 		private UIView GetNativeSectionHeaderFooterView( View formsView, UITableView tableView, bool isHeader )
 		{
-			string idString = isHeader ? SettingsViewRenderer.CustomHeaderId : SettingsViewRenderer.CustomFooterId;
+			string idString = isHeader
+								  ? SettingsViewRenderer.CustomHeaderId
+								  : SettingsViewRenderer.CustomFooterId;
 			var nativeView = tableView.DequeueReusableHeaderFooterView(idString) as CustomHeaderFooterView;
 			nativeView.UpdateCell(formsView, tableView);
 
@@ -260,7 +266,9 @@ namespace Jakar.SettingsView.iOS
 		public override nint RowsInSection( UITableView tableview, nint section )
 		{
 			Section sec = _settingsView.Model.GetSection((int) section);
-			return sec.IsVisible ? sec.Count : 0;
+			return sec.IsVisible
+					   ? sec.Count
+					   : 0;
 		}
 
 
@@ -282,7 +290,8 @@ namespace Jakar.SettingsView.iOS
 										{
 											await Task.Delay(250);
 											tableView.CellAt(rowAtindexPath).SetSelected(false, true);
-										});
+										}
+									   );
 			}
 
 			return ret;

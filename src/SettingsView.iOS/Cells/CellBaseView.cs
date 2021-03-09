@@ -403,7 +403,9 @@ namespace Jakar.SettingsView.iOS.Cells
 						 else { image = await handler.LoadImageAsync(source, token, scale: scale); }
 
 						 token.ThrowIfCancellationRequested();
-					 }, token)
+					 },
+					 token
+					)
 				.ContinueWith(t =>
 							  {
 								  if ( t.IsCompleted )
@@ -413,9 +415,11 @@ namespace Jakar.SettingsView.iOS.Cells
 															  {
 																  IconView.Image = image;
 																  SetNeedsLayout();
-															  });
+															  }
+															 );
 								  }
-							  });
+							  }
+							 );
 		}
 
 
@@ -518,7 +522,8 @@ namespace Jakar.SettingsView.iOS.Cells
 												   StackH.RemoveFromSuperview();
 												   StackH.Dispose();
 												   StackH = null;
-											   });
+											   }
+											  );
 			}
 
 			base.Dispose(disposing);

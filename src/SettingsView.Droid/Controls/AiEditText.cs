@@ -309,7 +309,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { return UpdateSelectAction(); }
 
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return false;
 		}
@@ -331,7 +331,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			// if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return false;
 		}

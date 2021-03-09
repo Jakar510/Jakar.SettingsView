@@ -11,8 +11,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
+	[Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
 	[Preserve(AllMembers = true)]
 	public class CustomCellView : CellBaseView
@@ -23,7 +22,10 @@ namespace Jakar.SettingsView.iOS.Cells
 		protected CustomCellContent _coreView;
 		private Dictionary<UIView, UIColor> _colorCache = new Dictionary<UIView, UIColor>();
 
-		public CustomCellView( Cell formsCell ) : base(formsCell) => SelectionStyle = CustomCell.IsSelectable ? UITableViewCellSelectionStyle.Default : UITableViewCellSelectionStyle.None;
+		public CustomCellView( Cell formsCell ) : base(formsCell) =>
+			SelectionStyle = CustomCell.IsSelectable
+								 ? UITableViewCellSelectionStyle.Default
+								 : UITableViewCellSelectionStyle.None;
 
 		public override void UpdateConstraints()
 		{

@@ -28,10 +28,14 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			private static Func<T1, TInstance> CreateInstance()
 			{
-				ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder, new[]
-																																										 {
-																																											 typeof(T1)
-																																										 }, null);
+				ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+																			   Type.DefaultBinder,
+																			   new[]
+																			   {
+																				   typeof(T1)
+																			   },
+																			   null
+																			  );
 				ParameterExpression arg1 = Expression.Parameter(typeof(T1));
 				return Expression.Lambda<Func<T1, TInstance>>(Expression.New(constructor, arg1), arg1).Compile();
 			}

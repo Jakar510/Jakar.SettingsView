@@ -38,8 +38,10 @@ namespace Jakar.SettingsView.iOS
 					if ( renderer.ViewController.ParentViewController.GetType() == ModalWrapper )
 					{
 						object modalWrapper = Convert.ChangeType(renderer.ViewController.ParentViewController, ModalWrapper);
-						ModalWapperDispose.Invoke(modalWrapper, new object[]
-																{ });
+						ModalWapperDispose.Invoke(modalWrapper,
+												  new object[]
+												  { }
+												 );
 					}
 				}
 

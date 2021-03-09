@@ -133,20 +133,24 @@ namespace Jakar.SettingsView.iOS.Cells
 							  BarStyle = UIBarStyle.Default,
 							  Translucent = true
 						  };
-			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, ( o, e ) =>
-																				 {
-																					 DummyField.ResignFirstResponder();
-																					 Select(_model.PreSelectedItem);
-																				 });
+			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
+												   ( o, e ) =>
+												   {
+													   DummyField.ResignFirstResponder();
+													   Select(_model.PreSelectedItem);
+												   }
+												  );
 
 			var labelButton = new UIBarButtonItem(_Title);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
-			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, ( o, a ) =>
-																			 {
-																				 _model.OnUpdatePickerFormModel();
-																				 DummyField.ResignFirstResponder();
-																				 _command?.Execute(_model.SelectedItem);
-																			 });
+			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
+												 ( o, a ) =>
+												 {
+													 _model.OnUpdatePickerFormModel();
+													 DummyField.ResignFirstResponder();
+													 _command?.Execute(_model.SelectedItem);
+												 }
+												);
 
 			toolbar.SetItems(new[]
 							 {
@@ -155,7 +159,9 @@ namespace Jakar.SettingsView.iOS.Cells
 								 labelButton,
 								 spacer,
 								 doneButton
-							 }, false);
+							 },
+							 false
+							);
 
 			DummyField.InputView = _picker;
 			DummyField.InputAccessoryView = toolbar;
@@ -213,7 +219,9 @@ namespace Jakar.SettingsView.iOS.Cells
 			int idx = _model.Items.IndexOf(item);
 			if ( idx == -1 )
 			{
-				item = _model.Items.Count == 0 ? null : _model.Items[0];
+				item = _model.Items.Count == 0
+						   ? null
+						   : _model.Items[0];
 				idx = 0;
 			}
 

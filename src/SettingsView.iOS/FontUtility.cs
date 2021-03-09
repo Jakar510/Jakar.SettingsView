@@ -115,7 +115,7 @@ namespace Jakar.SettingsView.iOS
 		private static string CleanseFontName( string fontName )
 		{
 			//First check Alias
-			(bool hasFontAlias, string fontPostScriptName) = FontRegistrar.HasFont(fontName);
+			( bool hasFontAlias, string fontPostScriptName ) = FontRegistrar.HasFont(fontName);
 			if ( hasFontAlias )
 				return fontPostScriptName;
 
@@ -123,7 +123,7 @@ namespace Jakar.SettingsView.iOS
 
 			if ( !string.IsNullOrWhiteSpace(fontFile.Extension) )
 			{
-				(bool hasFont, string filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
+				( bool hasFont, string filePath ) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
 				if ( hasFont )
 					return filePath ?? fontFile.PostScriptName;
 			}
@@ -132,7 +132,7 @@ namespace Jakar.SettingsView.iOS
 				foreach ( string ext in FontFile.Extensions )
 				{
 					string formated = fontFile.FileNameWithExtension(ext);
-					(bool hasFont, string filePath) = FontRegistrar.HasFont(formated);
+					( bool hasFont, string filePath ) = FontRegistrar.HasFont(formated);
 					if ( hasFont )
 						return filePath;
 				}

@@ -133,18 +133,22 @@ namespace Jakar.SettingsView.iOS.Cells
 							  Translucent = true
 						  };
 
-			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, ( o, e ) =>
-																				 {
-																					 DummyField.ResignFirstResponder();
-																					 _picker.Date = _preSelectedDate;
-																				 });
+			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
+												   ( o, e ) =>
+												   {
+													   DummyField.ResignFirstResponder();
+													   _picker.Date = _preSelectedDate;
+												   }
+												  );
 
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
-			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, ( o, a ) =>
-																			 {
-																				 DummyField.ResignFirstResponder();
-																				 Done();
-																			 });
+			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
+												 ( o, a ) =>
+												 {
+													 DummyField.ResignFirstResponder();
+													 Done();
+												 }
+												);
 
 			if ( !string.IsNullOrEmpty(_DatePickerCell.TodayText) )
 			{
@@ -160,7 +164,9 @@ namespace Jakar.SettingsView.iOS.Cells
 									 labelButton,
 									 fixspacer,
 									 doneButton
-								 }, false);
+								 },
+								 false
+								);
 			}
 			else
 			{
@@ -169,7 +175,9 @@ namespace Jakar.SettingsView.iOS.Cells
 									 cancelButton,
 									 spacer,
 									 doneButton
-								 }, false);
+								 },
+								 false
+								);
 			}
 
 			DummyField.InputView = _picker;

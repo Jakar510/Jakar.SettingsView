@@ -86,7 +86,9 @@ namespace Jakar.SettingsView.iOS
 
 				Type type = Xamarin.Forms.Internals.Registrar.Registered.GetHandlerTypeForObject(_formsCell);
 				var reflectableType = renderer as IReflectableType;
-				Type rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : renderer.GetType();
+				Type rendererType = reflectableType != null
+										? reflectableType.GetTypeInfo().AsType()
+										: renderer.GetType();
 				if ( rendererType == type ||
 					 ( renderer.GetType() == FormsInternals.DefaultRenderer ) && type == null )
 					renderer.SetElement(_formsCell);

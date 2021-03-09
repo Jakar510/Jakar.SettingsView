@@ -154,10 +154,12 @@ namespace Jakar.SettingsView.iOS.Cells
 		public CheckBox( CGRect rect ) : base(rect)
 		{
 			AddGestureRecognizer(new UITapGestureRecognizer(( obj ) =>
-																 {
-																	 Selected = !Selected;
-																	 CheckChanged?.Invoke(this);
-																 }));
+															{
+																Selected = !Selected;
+																CheckChanged?.Invoke(this);
+															}
+														   )
+								);
 		}
 
 		/// <summary>

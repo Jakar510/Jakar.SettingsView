@@ -137,19 +137,23 @@ namespace Jakar.SettingsView.iOS.Cells
 							  BarStyle = UIBarStyle.Default,
 							  Translucent = true
 						  };
-			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, ( o, e ) =>
-																				 {
-																					 DummyField.ResignFirstResponder();
-																					 Canceled();
-																				 });
+			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
+												   ( o, e ) =>
+												   {
+													   DummyField.ResignFirstResponder();
+													   Canceled();
+												   }
+												  );
 
 			var labelButton = new UIBarButtonItem(_Title);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
-			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, ( o, a ) =>
-																			 {
-																				 DummyField.ResignFirstResponder();
-																				 Done();
-																			 });
+			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
+												 ( o, a ) =>
+												 {
+													 DummyField.ResignFirstResponder();
+													 Done();
+												 }
+												);
 
 			toolbar.SetItems(new[]
 							 {
@@ -158,7 +162,9 @@ namespace Jakar.SettingsView.iOS.Cells
 								 labelButton,
 								 spacer,
 								 doneButton
-							 }, false);
+							 },
+							 false
+							);
 
 			DummyField.InputView = _picker;
 			DummyField.InputAccessoryView = toolbar;

@@ -31,7 +31,10 @@ namespace Jakar.SettingsView.iOS.Cells
 		/// <returns>The rows in component.</returns>
 		/// <param name="pickerView">Picker view.</param>
 		/// <param name="component">Component.</param>
-		public override nint GetRowsInComponent( UIPickerView pickerView, nint component ) => Items != null ? Items.Count : 0;
+		public override nint GetRowsInComponent( UIPickerView pickerView, nint component ) =>
+			Items != null
+				? Items.Count
+				: 0;
 
 		/// <summary>
 		/// Gets the title.

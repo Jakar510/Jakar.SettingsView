@@ -111,7 +111,9 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _radioCell.Value.GetType().IsValueType ) { result = Equals(_radioCell.Value, SelectedValue); }
 			else { result = ReferenceEquals(_radioCell.Value, SelectedValue); }
 
-			Accessory = result ? UITableViewCellAccessory.Checkmark : UITableViewCellAccessory.None;
+			Accessory = result
+							? UITableViewCellAccessory.Checkmark
+							: UITableViewCellAccessory.None;
 		}
 
 		private void UpdateAccentColor()

@@ -85,7 +85,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 				Type type = Xamarin.Forms.Internals.Registrar.Registered.GetHandlerTypeForObject(_formsCell);
 				// ReSharper disable once SuspiciousTypeConversion.Global
-				if ( renderer is IReflectableType reflectable)
+				if ( renderer is IReflectableType reflectable )
 				{
 					Type rendererType = reflectable.GetTypeInfo().AsType();
 					if ( rendererType == type ||
@@ -107,10 +107,13 @@ namespace Jakar.SettingsView.iOS.Cells
 				 tableView.Frame.Width != _lastFrameWidth )
 			{
 				_lastFrameWidth = tableView.Frame.Width;
-				nfloat width = tableView.Frame.Width - ( CustomCell.UseFullSize ? 0 : 32 ); // CellBaseView layout margin
-				if (renderer.Element != null)
+				nfloat width = tableView.Frame.Width -
+							   ( CustomCell.UseFullSize
+									 ? 0
+									 : 32 ); // CellBaseView layout margin
+				if ( renderer.Element != null )
 				{
-					SizeRequest result = renderer.Element.Measure(tableView.Frame.Width,  double.PositiveInfinity, MeasureFlags.IncludeMargins);
+					SizeRequest result = renderer.Element.Measure(tableView.Frame.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
 					_lastMeasureWidth = result.Request.Width;
 					if ( _formsCell.HorizontalOptions.Alignment == LayoutAlignment.Fill ) { _lastMeasureWidth = width; }
 

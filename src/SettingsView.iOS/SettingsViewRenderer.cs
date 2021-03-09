@@ -112,12 +112,16 @@ namespace Jakar.SettingsView.iOS
 				_parentPage = elm as Page;
 				_parentPage.Appearing += ParentPageAppearing;
 
-				_insetTracker = new KeyboardInsetTracker(_tableview, () => Control.Window, insets => Control.ContentInset = Control.ScrollIndicatorInsets = insets, point =>
-																																									{
-																																										CGPoint offset = Control.ContentOffset;
-																																										offset.Y += point.Y;
-																																										Control.SetContentOffset(offset, true);
-																																									});
+				_insetTracker = new KeyboardInsetTracker(_tableview,
+														 () => Control.Window,
+														 insets => Control.ContentInset = Control.ScrollIndicatorInsets = insets,
+														 point =>
+														 {
+															 CGPoint offset = Control.ContentOffset;
+															 offset.Y += point.Y;
+															 Control.SetContentOffset(offset, true);
+														 }
+														);
 
 				_contentSizeObserver = _tableview.AddObserver("contentSize", NSKeyValueObservingOptions.New, OnContentSizeChanged);
 			}
@@ -455,11 +459,14 @@ namespace Jakar.SettingsView.iOS
 			NSData data = NSData.FromString($"{indexPath.Section},{indexPath.Row}");
 
 			var itemProvider = new NSItemProvider();
-			itemProvider.RegisterDataRepresentation(UTType.PlainText, NSItemProviderRepresentationVisibility.All, ( completionHandler ) =>
-																												  {
-																													  completionHandler(data, null);
-																													  return null;
-																												  });
+			itemProvider.RegisterDataRepresentation(UTType.PlainText,
+													NSItemProviderRepresentationVisibility.All,
+													( completionHandler ) =>
+													{
+														completionHandler(data, null);
+														return null;
+													}
+												   );
 
 			return new UIDragItem[]
 				   {
@@ -484,7 +491,9 @@ namespace Jakar.SettingsView.iOS
 																		   .Split(new char[]
 																				  {
 																					  ','
-																				  }, StringSplitOptions.None)
+																				  },
+																				  StringSplitOptions.None
+																				 )
 																		   .Select(x => int.Parse(x))
 																		   .ToList();
 														  int secIdx = path[0];
@@ -518,7 +527,7 @@ namespace Jakar.SettingsView.iOS
 															  // Don't use PerformBatchUpdates. Because can't cancel animations well.
 															  Control.BeginUpdates();
 
-															  (Cell? cell, object? item) = section.DeleteSourceItemWithoutNotify(rowIdx);
+															  ( Cell? cell, object? item ) = section.DeleteSourceItemWithoutNotify(rowIdx);
 															  destSection.InsertSourceItemWithoutNotify(cell, item, destinationIndexPath.Row);
 															  Control.DeleteRows(GetPaths(secIdx, rowIdx, 1), UITableViewRowAnimation.None);
 															  Control.InsertRows(GetPaths(destinationIndexPath.Section, destinationIndexPath.Row, 1), UITableViewRowAnimation.None);
@@ -536,7 +545,8 @@ namespace Jakar.SettingsView.iOS
 
 														  // nothing occur, even if use the following code.
 														  //coordinator.DropItemToRow(coordinator.Items.First().DragItem, destinationIndexPath);
-													  });
+													  }
+													 );
 		}
 
 		/// <summary>

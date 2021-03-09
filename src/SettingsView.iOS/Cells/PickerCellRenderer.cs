@@ -102,7 +102,8 @@ namespace Jakar.SettingsView.iOS.Cells
 										{
 											await shell.ShellSection.Navigation.PushAsync(page, true);
 											_pickerVC.InitializeScroll();
-										});
+										}
+									   );
 			}
 			else
 			{
