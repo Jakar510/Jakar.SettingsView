@@ -95,7 +95,7 @@ namespace Jakar.SettingsView.Shared.sv
 				 propertyName == HeaderFontAttributesProperty.PropertyName ||
 				 propertyName == HeaderTextColorProperty.PropertyName ||
 				 propertyName == HeaderBackgroundColorProperty.PropertyName ||
-				 propertyName == HeaderTextVerticalAlignProperty.PropertyName ||
+				 // propertyName == HeaderTextVerticalAlignProperty.PropertyName ||
 				 propertyName == HeaderPaddingProperty.PropertyName ||
 				 propertyName == FooterFontSizeProperty.PropertyName ||
 				 propertyName == FooterFontFamilyProperty.PropertyName ||

@@ -55,7 +55,8 @@ namespace Jakar.SettingsView.Droid
 			if ( sender is not Section section ) throw new InvalidOperationException(nameof(sender));
 
 			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible(section); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ) { section.UpdateTitle(); }
+			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
+					  e.PropertyName == TableSectionBase.TextColorProperty.PropertyName ) { section.UpdateHeader(); }
 			else if ( e.PropertyName == Section.HeaderViewProperty.PropertyName ) { UpdateSectionHeader(section); } //  || e.PropertyName == Section.HeaderHeightProperty.PropertyName 
 			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName ||
 					  e.PropertyName == Section.FooterViewProperty.PropertyName ||

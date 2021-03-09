@@ -15,6 +15,7 @@ namespace Jakar.SettingsView.Shared.sv
 		public abstract void SetText( string? value );
 		public abstract void SetTextColor( Color value );
 		public abstract void SetBackground( Color value );
+		public abstract void SetTextFont( double fontSize, string family, FontAttributes attributes );
 
 		protected FooterView() { }
 	}

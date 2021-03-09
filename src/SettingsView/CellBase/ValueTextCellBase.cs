@@ -5,7 +5,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class ValueTextCellBase : ValueCellBase
+	public abstract class ValueTextCellBase : ValueCellBase
 	{
 		public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(nameof(MaxLength), typeof(int), typeof(ValueTextCellBase), -1);
 

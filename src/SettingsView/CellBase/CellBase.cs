@@ -1,15 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
+using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class CellBase : Cell
+	public abstract class CellBase : Cell
 	{
-		internal void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { OnPropertyChanged(e.PropertyName); }
-
 		public new event EventHandler? Tapped;
 
 		internal new void OnTapped() { Tapped?.Invoke(this, EventArgs.Empty); }
@@ -18,10 +18,10 @@ namespace Jakar.SettingsView.Shared.CellBase
 		public static BindableProperty IsVisibleProperty = BindableProperty.Create(nameof(IsVisible),
 																				   typeof(bool),
 																				   typeof(CellBase),
-																				   true,
+																				   SVConstants.Cell.VISIBLE,
 																				   defaultBindingMode: BindingMode.OneWay
 																				  );
-		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), Color.Default);
+		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), SVConstants.Cell.COLOR);
 
 
 		public bool IsVisible
@@ -43,6 +43,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (sv.SettingsView) base.Parent;
 			set => base.Parent = value;
 		}
+
+		internal Color GetBackground() => BackgroundColor == SVConstants.Cell.COLOR ? Parent.CellBackgroundColor : BackgroundColor;
 
 		public virtual void Reload()
 		{

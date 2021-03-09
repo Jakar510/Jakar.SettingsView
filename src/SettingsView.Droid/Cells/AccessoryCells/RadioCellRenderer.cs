@@ -7,6 +7,7 @@ using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
 using Jakar.SettingsView.Droid.Controls;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 
@@ -67,7 +68,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Enable();
 			_Description.Enable();
 			_Accessory.Enabled = true;
-			_Accessory.Alpha = ENABLED_ALPHA;
+			_Accessory.Alpha = SVConstants.Cell.ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
@@ -75,7 +76,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Disable();
 			_Description.Disable();
 			_Accessory.Enabled = false;
-			_Accessory.Alpha = DISABLED_ALPHA;
+			_Accessory.Alpha = SVConstants.Cell.DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()

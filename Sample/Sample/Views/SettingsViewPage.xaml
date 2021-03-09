@@ -82,7 +82,6 @@
 	<sv:SettingsView HasUnevenRows="true"
 					 HeaderHeight="36"
 					 HeaderPadding="14,0,0,6"
-					 HeaderTextVerticalAlign="Center"
 					 FooterPadding="14,4,4,6"
 					 ShowArrowIndicatorForAndroid="True">
 

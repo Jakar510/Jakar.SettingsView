@@ -7,10 +7,12 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using SwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
 using SwitchCellRenderer = Jakar.SettingsView.Droid.Cells.SwitchCellRenderer;
+using AColor = Android.Graphics.Color;
 
 [assembly: ExportRenderer(typeof(SwitchCell), typeof(SwitchCellRenderer))]
 
@@ -58,7 +60,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Enable();
 			_Description.Enable();
 			_Accessory.Enabled = true;
-			_Accessory.Alpha = ENABLED_ALPHA;
+			_Accessory.Alpha = SVConstants.Cell.ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
@@ -66,7 +68,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Disable();
 			_Description.Disable();
 			_Accessory.Enabled = false;
-			_Accessory.Alpha = DISABLED_ALPHA;
+			_Accessory.Alpha = SVConstants.Cell.DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()
@@ -77,14 +79,10 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		private void UpdateOn() { _Accessory.Checked = _AccessoryCell.Checked; }
 
-		private void UpdateAccentColor()
-		{
-			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid()); }
-			else if ( CellParent != null &&
-					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid()); }
-		}
+		private void UpdateAccentColor() { ChangeCheckColor(_AccessoryCell.GetAccentColor().ToAndroid(), _AccessoryCell.GetOffColor().ToAndroid()); }
 
-		protected void ChangeCheckColor( Android.Graphics.Color accent )
+		protected void ChangeCheckColor( AColor accent ) { ChangeCheckColor(accent, AColor.Argb(76, 117, 117, 117)); }
+		protected void ChangeCheckColor( AColor accent, AColor off )
 		{
 			var trackColors = new ColorStateList(new[]
 												 {
@@ -100,12 +98,17 @@ namespace Jakar.SettingsView.Droid.Cells
 												 new int[]
 												 {
 													 accent,
-													 Android.Graphics.Color.Argb(76, 117, 117, 117)
+													 off
 												 }
 												);
 			_Accessory.TrackDrawable?.SetTintList(trackColors);
 
-			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
+			if ( _Accessory.Background is not RippleDrawable ripple )
+			{
+				ripple = CreateRippleDrawable(accent);
+				_Accessory.Background = ripple;
+			}
+
 			ripple.SetColor(new ColorStateList(new[]
 											   {
 												   new[]
@@ -120,11 +123,10 @@ namespace Jakar.SettingsView.Droid.Cells
 											   new int[]
 											   {
 												   accent,
-												   Android.Graphics.Color.Argb(76, 117, 117, 117)
+												   off
 											   }
 											  )
 						   );
-			_Accessory.Background ??= ripple;
 		}
 
 		protected override void Dispose( bool disposing )

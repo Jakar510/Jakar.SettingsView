@@ -8,10 +8,16 @@ using Xamarin.Forms.Xaml;
 namespace Jakar.SettingsView.Shared.sv
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DefaultHeaderView : HeaderView
+	public sealed partial class DefaultHeaderView : HeaderView
 	{
 		public override void SetText( string? value ) { TitleLabel.Text = value; }
 		public override void SetTextColor( Color value ) { TitleLabel.TextColor = value; }
+		public override void SetTextFont( double fontSize, string family, FontAttributes attributes )
+		{
+			TitleLabel.FontFamily = family;
+			TitleLabel.FontAttributes = attributes;
+			TitleLabel.FontSize = fontSize;
+		}
 		public override void SetBackground( Color value ) { BackgroundColor = value; }
 
 		public override ImageSource? Source
@@ -41,6 +47,7 @@ namespace Jakar.SettingsView.Shared.sv
 			ExpandedIcon = Icons.ExpandSolidWhite;
 			Source = ExpandedIcon;
 
+			Padding = SVConstants.Section.Header.PADDING;
 			HeightRequest = SVConstants.Section.Header.MinRowHeight;
 			BackgroundColor = SVConstants.Section.Header.BACKGROUND_COLOR;
 			TitleLabel.FontSize = SVConstants.Section.Header.FONT_SIZE;

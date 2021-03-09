@@ -31,6 +31,7 @@ namespace Jakar.SettingsView.Shared.Config
 		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Item.Description.FontSize);
 
 
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color BackgroundColor
 		{
 			get => (Color) GetValue(BackgroundColorProperty);
@@ -45,11 +46,14 @@ namespace Jakar.SettingsView.Shared.Config
 			set => SetValue(TitleProperty, value);
 		}
 
+
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color TitleColor
 		{
 			get => (Color) GetValue(TitleColorProperty);
 			set => SetValue(TitleColorProperty, value);
 		}
+
 
 		[TypeConverter(typeof(FontSizeConverter))]
 		public double TitleFontSize
@@ -67,6 +71,8 @@ namespace Jakar.SettingsView.Shared.Config
 			set => SetValue(ItemFontSizeProperty, value);
 		}
 
+
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color ItemColor
 		{
 			get => (Color) GetValue(ItemColorProperty);
@@ -75,11 +81,13 @@ namespace Jakar.SettingsView.Shared.Config
 
 		// -----------------------------------------------------------------------------------
 
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color ItemDescriptionColor
 		{
 			get => (Color) GetValue(ItemDescriptionColorProperty);
 			set => SetValue(ItemDescriptionColorProperty, value);
 		}
+
 
 		[TypeConverter(typeof(FontSizeConverter))]
 		public double ItemDescriptionFontSize
@@ -90,6 +98,7 @@ namespace Jakar.SettingsView.Shared.Config
 
 		// -----------------------------------------------------------------------------------
 
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color AccentColor
 		{
 			get => (Color) GetValue(AccentColorProperty);
@@ -105,12 +114,16 @@ namespace Jakar.SettingsView.Shared.Config
 			set => SetValue(SelectedFontSizeProperty, value);
 		}
 
+
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color SelectedColor
 		{
 			get => (Color) GetValue(SelectedColorProperty);
 			set => SetValue(SelectedColorProperty, value);
 		}
 
+
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color SeparatorColor
 		{
 			get => (Color) GetValue(SeparatorColorProperty);

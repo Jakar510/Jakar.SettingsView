@@ -6,7 +6,6 @@
 			 xmlns:l="clr-namespace:AiForms.Layouts;assembly=AiForms.Layouts"
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
 			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
-			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 x:Class="Sample.Views.CollectionChangedTest">
@@ -57,7 +56,6 @@
 								   HeaderPadding="{Binding HeaderPadding.Value}"
 								   HeaderTextColor="{Binding HeaderTextColor.Value}"
 								   HeaderFontSize="{Binding HeaderFontSize.Value}"
-								   HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
 								   HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
 								   HeaderHeight="{Binding HeaderHeight.Value}"
 								   FooterTextColor="{Binding FooterTextColor.Value}"
@@ -120,8 +118,7 @@
 								 Description="HogeFuga"
 								 Hint="hint"
 								 ValueText="inputText" />
-				<cells:ButtonCell IconSource="icon.png"
-								  Title="ButtonCell" />
+				<cells:ButtonCell Title="ButtonCell" />
 			</sv:Section>
 			<sv:Section Title="Section2"
 								  FooterText="Footer2">

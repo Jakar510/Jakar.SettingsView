@@ -44,9 +44,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public bool UpdateIconRadius()
 		{
-			if ( _CurrentCell.IconRadius >= 0 ) { _IconRadius = _Cell.AndroidContext.ToPixels(_CurrentCell.IconRadius); }
-			else if ( _Cell.CellParent != null ) { _IconRadius = _Cell.AndroidContext.ToPixels(_Cell.CellParent.CellIconRadius); }
-
+			_IconRadius = _Cell.AndroidContext.ToPixels(_CurrentCell.GetIconRadius());
 			return true;
 		}
 		public bool UpdateIconSize()
@@ -58,8 +56,9 @@ namespace Jakar.SettingsView.Droid.Controls
 			LayoutParameters.Height = (int) _Cell.AndroidContext.ToPixels(size.Height);
 			return true;
 		}
+		public Size GetIconSize() => _CurrentCell.GetIconSize();
 
-		public Size GetIconSize() => _CurrentCell.IconSize ?? _Cell.CellParent?.CellIconSize ?? Shared.sv.SettingsView.DefaultIconSize;
+
 		public bool Refresh( bool forceLoad = false )
 		{
 			if ( _IconTokenSource != null &&
@@ -209,5 +208,6 @@ namespace Jakar.SettingsView.Droid.Controls
 			SetImageDrawable(null);
 			SetImageBitmap(null);
 		}
+
 	}
 }

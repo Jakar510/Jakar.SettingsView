@@ -18,6 +18,8 @@
 						Value="Black" />
 				<Setter Property="BackgroundColor"
 						Value="White" />
+				<Setter Property="ButtonBackgroundColor"
+						Value="SeaGreen" />
 			</Style>
 		</ResourceDictionary>
 	</ContentPage.Resources>
@@ -25,24 +27,100 @@
 	<sv:SettingsView>
 		<sv:Section Title="TESTS"
 					FooterText="FooterText">
-			<sv:Section.HeaderView>
-				<sv:DefaultHeaderView HeightRequest="50" />
-			</sv:Section.HeaderView>
+			<cells:ButtonCell Title="SettingsView"
+							  BackgroundColor="Black"
+							  ButtonBackgroundColor="SteelBlue"
+							  TitleColor="White"
+							  Command="{Binding GoToPage}"
+							  CommandParameter="SettingsView" />
+			<cells:ButtonCell Title="SurveyPage"
+							  ButtonBackgroundColor="Peru"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="SurveyPage" />
+			<cells:ButtonCell Title="OnTableViewTest"
+							  TitleColor="Blue"
+							  ButtonBackgroundColor="Purple"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="OnTableViewTest" />
+		</sv:Section>
+
+		<sv:Section Title="Custom TESTS"
+					FooterText="FooterText">
 			<cells:CommandCell Title="TestSelectActions"
 							   Command="{Binding GoToTest}"
 							   CommandParameter="TestSelectActions" />
-			<cells:ButtonCell Title="SettingsView"
-							  Command="{Binding GoToPage}"
-							  CommandParameter="SettingsView" />
-			<cells:ButtonCell Title="PickerCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="PickerCellTest" />
-			<cells:ButtonCell Title="SurveyPage"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="SurveyPage" />
 			<cells:ButtonCell Title="CustomFontTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="CustomFontTest" />
+			<cells:ButtonCell Title="CustomCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="CustomCellTest" />
+		</sv:Section>
+
+		<sv:Section Title="Basic TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="LabelCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="LabelCellTest" />
+			<cells:ButtonCell Title="ButtonCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="ButtonCellTest" />
+		</sv:Section>
+
+		<sv:Section Title="Entry TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="EntryCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="EntryCellTest" />
+		</sv:Section>
+
+
+		<sv:Section Title="Picker TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="PickerCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="PickerCellTest" />
+		</sv:Section>
+
+		<sv:Section Title="Xamarin.Forms Cell TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="FormsCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="FormsCellTest" />
+		</sv:Section>
+
+		<sv:Section Title="Property TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="DefaultPropTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="DefaultPropTest" />
+			<cells:ButtonCell Title="ParentPropTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="ParentPropTest" />
+		</sv:Section>
+
+
+		<sv:Section Title="Accessory Cell TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="RadioCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RadioCellTest" />
+			<cells:ButtonCell Title="RadioCellTemplateTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="RadioCellTemplateTest" />
+			<cells:ButtonCell Title="SwitchCellTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="SwitchCellTest" />
+		</sv:Section>
+
+		<sv:Section Title="ItemSource TESTS"
+					FooterText="FooterText">
+			<cells:ButtonCell Title="CollectionChangedTest"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="CollectionChangedTest" />
+			<cells:ButtonCell Title="GlobalDataTemplate"
+							  Command="{Binding GoToTest}"
+							  CommandParameter="GlobalDataTemplate" />
 			<cells:ButtonCell Title="RowManipulation"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="RowManipulation" />
@@ -55,45 +133,7 @@
 			<cells:ButtonCell Title="DataTemplateTest"
 							  Command="{Binding GoToTest}"
 							  CommandParameter="DataTemplateTest" />
-			<cells:ButtonCell Title="DefaultPropTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="DefaultPropTest" />
-			<cells:ButtonCell Title="ParentPropTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="ParentPropTest" />
-			<cells:ButtonCell Title="CollectionChangedTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="CollectionChangedTest" />
-			<cells:ButtonCell Title="CustomCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="CustomCellTest" />
-			<cells:ButtonCell Title="LabelCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="LabelCellTest" />
-			<cells:ButtonCell Title="SwitchCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="SwitchCellTest" />
-			<cells:ButtonCell Title="EntryCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="EntryCellTest" />
-			<cells:ButtonCell Title="ButtonCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="ButtonCellTest" />
-			<cells:ButtonCell Title="RadioCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="RadioCellTest" />
-			<cells:ButtonCell Title="RadioCellTemplateTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="RadioCellTemplateTest" />
-			<cells:ButtonCell Title="GlobalDataTemplate"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="GlobalDataTemplate" />
-			<cells:ButtonCell Title="FormsCellTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="FormsCellTest" />
-			<cells:ButtonCell Title="OnTableViewTest"
-							  Command="{Binding GoToTest}"
-							  CommandParameter="OnTableViewTest" />
+
 		</sv:Section>
 	</sv:SettingsView>
 </ContentPage>

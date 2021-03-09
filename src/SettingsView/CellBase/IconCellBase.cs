@@ -1,36 +1,41 @@
 ﻿// unset
 
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
 using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public class IconCellBase : TitleCellBase
+	public abstract class IconCellBase : TitleCellBase
 	{
 		public static readonly BindableProperty IconSourceProperty = BindableProperty.Create(nameof(IconSource), typeof(ImageSource), typeof(IconCellBase), default(ImageSource?));
-		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size), typeof(IconCellBase), default(Size?));
-		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double), typeof(IconCellBase), -1.0d);
+		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size?), typeof(IconCellBase), default(Size?));
+		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?), typeof(IconCellBase), SVConstants.Cell.ICON_SIZE);
 
 
-		[TypeConverter(typeof(ImageSourceConverter))]
+		[TypeConverter(typeof(SVImageSourceConverter))]
 		public ImageSource? IconSource
 		{
 			get => (ImageSource?) GetValue(IconSourceProperty);
 			set => SetValue(IconSourceProperty, value);
 		}
 
-		[TypeConverter(typeof(SizeConverter))]
+		[TypeConverter(typeof(NullableSizeConverter))]
 		public Size? IconSize
 		{
 			get => (Size?) GetValue(IconSizeProperty);
 			set => SetValue(IconSizeProperty, value);
 		}
 
-		public double IconRadius
+		[TypeConverter(typeof(NullableDoubleTypeConverter))]
+		public double? IconRadius
 		{
-			get => (double) GetValue(IconRadiusProperty);
+			get => (double?) GetValue(IconRadiusProperty);
 			set => SetValue(IconRadiusProperty, value);
 		}
+
+		internal double GetIconRadius() => IconRadius ?? Parent.CellIconRadius;
+		internal Size GetIconSize() => IconSize ?? Parent.CellIconSize;
 	}
 }

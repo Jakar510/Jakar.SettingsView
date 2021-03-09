@@ -26,31 +26,35 @@ namespace Jakar.SettingsView.Droid.Controls
 		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Hint;
-			Visibility = string.IsNullOrEmpty(Text) ? ViewStates.Gone : ViewStates.Visible;
+			Visibility = string.IsNullOrEmpty(Text)
+							 ? ViewStates.Gone
+							 : ViewStates.Visible;
 
 			return true;
 		}
 		public override bool UpdateFontSize()
 		{
-			if ( _CurrentCell.HintFontSize > 0 ) { SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.HintFontSize); }
-			else if ( _Cell.CellParent != null ) { SetTextSize(ComplexUnitType.Sp, (float) _Cell.CellParent.CellHintFontSize); }
-			else { SetTextSize(ComplexUnitType.Sp, DefaultFontSize); }
+			SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.HintConfig.FontSize);
+			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
+
+			return true;
+		}
+		public override bool UpdateTextColor()
+		{
+			SetTextColor(_CurrentCell.HintConfig.Color.ToAndroid());
+			SetTextColor(DefaultTextColor);
 
 			return true;
 		}
 		public override bool UpdateColor()
 		{
-			if ( _CurrentCell.HintColor != Color.Default ) { SetTextColor(_CurrentCell.HintColor.ToAndroid()); }
-			else if ( _Cell.CellParent != null &&
-					  _Cell.CellParent.CellHintTextColor != Color.Default ) { SetTextColor(_Cell.CellParent.CellHintTextColor.ToAndroid()); }
-			else { SetTextColor(DefaultTextColor); }
-
+			SetBackgroundColor(_CurrentCell.GetBackground().ToAndroid());
 			return true;
 		}
 		public override bool UpdateFont()
 		{
-			string? family = _CurrentCell.HintFontFamily ?? _Cell.CellParent?.CellHintFontFamily;
-			FontAttributes attr = _CurrentCell.HintFontAttributes ?? _Cell.CellParent?.CellHintFontAttributes ?? FontAttributes.None;
+			string? family = _CurrentCell.HintConfig.FontFamily;
+			FontAttributes attr = _CurrentCell.DescriptionConfig.FontAttributes;
 
 			Typeface = FontUtility.CreateTypeface(family, attr);
 
@@ -58,7 +62,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 		public bool UpdateTextAlignment()
 		{
-			TextAlignment alignment = _CurrentCell.HintAlignment ?? _CurrentCell.Parent.CellHintAlignment;
+			TextAlignment alignment = _CurrentCell.HintConfig.TextAlignment;
 			TextAlignment = alignment.ToAndroidTextAlignment();
 			Gravity = alignment.ToGravityFlags();
 
@@ -78,6 +82,8 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == HintTextCellBase.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
+			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateColor(); }
+
 			return false;
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
@@ -91,12 +97,15 @@ namespace Jakar.SettingsView.Droid.Controls
 			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ||
 				 e.PropertyName == Shared.sv.SettingsView.CellHintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
+			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateColor(); }
+
 			return false;
 		}
 		public override void Update()
 		{
 			UpdateText();
 			UpdateColor();
+			UpdateTextColor();
 			UpdateFontSize();
 			UpdateFont();
 			UpdateTextAlignment();

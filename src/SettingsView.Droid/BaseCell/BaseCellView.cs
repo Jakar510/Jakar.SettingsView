@@ -8,6 +8,7 @@ using Android.Views;
 using Android.Views.InputMethods;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AGridLayout = Android.Widget.GridLayout;
@@ -23,10 +24,6 @@ namespace Jakar.SettingsView.Droid.BaseCell
 	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : AGridLayout, INativeElementView
 	{
-		protected internal const float DISABLED_ALPHA = 0.3f;
-		protected internal const float ENABLED_ALPHA = 1.0f;
-		public static readonly AColor GRAY = AColor.Argb(125, 180, 180, 180);
-		public static readonly AColor YELLOW = AColor.Argb(255, 200, 200, 100);
 		protected internal Cell Cell { get; set; }
 		public Element Element => Cell;
 		protected internal CellBase? CellBase => Cell as CellBase;                                      // ?? throw new NullReferenceException(nameof(CellBase));
@@ -46,7 +43,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			Cell = cell;
 
 			BackgroundColor = new ColorDrawable();
-			SelectedColor = new ColorDrawable(GRAY);
+			SelectedColor = new ColorDrawable(SVConstants.Cell.Selected.ToAndroid());
 
 			Background = Ripple = CreateRippleDrawable();
 
@@ -60,7 +57,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			AndroidContext = SettingsViewInit.Current;
 
 			BackgroundColor ??= new ColorDrawable();
-			SelectedColor ??= new ColorDrawable(GRAY);
+			SelectedColor ??= new ColorDrawable(SVConstants.Cell.Selected.ToAndroid());
 
 			Ripple ??= CreateRippleDrawable();
 			Background ??= Ripple;
@@ -87,9 +84,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			sel.SetExitFadeDuration(250);
 			sel.SetEnterFadeDuration(250);
 
-			AColor rippleColor = color ?? YELLOW;
-			if ( CellParent != null &&
-				 CellParent.SelectedColor != Color.Default ) { rippleColor = CellParent.SelectedColor.ToAndroid(); }
+			AColor rippleColor = color ?? CellParent?.SelectedColor.ToAndroid() ?? SVConstants.Cell.Ripple.ToAndroid();
 
 			return DrawableUtility.CreateRipple(rippleColor, sel);
 		}
@@ -110,7 +105,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected internal virtual void RowSelected( SettingsViewRecyclerAdapter adapter, int position ) { }
 		protected internal virtual bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position ) => false;
 
-		protected void UpdateIsVisible() { CellBase?.Section?.ChildVisibilityChanged(); }
+		protected void UpdateIsVisible() { CellBase?.Section?.ShowVisibleCells(); }
 		public void UpdateWithForceLayout( Action updateAction )
 		{
 			updateAction();
@@ -151,22 +146,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(Cell.IsEnabled); }
 
 
-		protected void UpdateBackgroundColor()
-		{
-			if ( CellBase is not null )
-			{
-				if ( CellBase.BackgroundColor != Color.Default ) { BackgroundColor.Color = CellBase.BackgroundColor.ToAndroid(); }
-				else if ( CellParent != null &&
-						  CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
-				else { BackgroundColor.Color = AColor.Transparent; }
-			}
-			else
-			{
-				if ( CellParent != null &&
-					 CellParent.CellBackgroundColor != Color.Default ) { BackgroundColor.Color = CellParent.CellBackgroundColor.ToAndroid(); }
-				else { BackgroundColor.Color = AColor.Transparent; }
-			}
-		}
+		protected virtual void UpdateBackgroundColor() { SetBackgroundColor(( CellBase?.GetBackground() ?? Color.Transparent ).ToAndroid()); }
 		protected void UpdateSelectedColor()
 		{
 			if ( CellParent != null &&

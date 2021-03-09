@@ -49,8 +49,7 @@
 								 Description="HogeFuga"
 								 Hint="hint"
 								 ValueText="inputText" />
-				<cells:ButtonCell IconSource="icon.png"
-								  Title="ButtonCell"/>
+				<cells:ButtonCell Title="ButtonCell"/>
 			</sv:Section>
 			<sv:Section Title="Section2"
 								  FooterText="Footer2">

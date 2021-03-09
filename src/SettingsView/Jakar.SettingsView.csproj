@@ -16,7 +16,11 @@
 		<LangVersion>9.0</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Xamarin.CommunityToolkit" Version="1.0.3" />
+		<PackageReference Include="Xamarin.CommunityToolkit.Markup" Version="1.0.3" />
 		<PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2012" />
+		<PackageReference Include="Xamarin.Toolkit.Effects" Version="1.0.0" />
 		<Reference Include="netstandard" />
 	</ItemGroup>
 	<ItemGroup>

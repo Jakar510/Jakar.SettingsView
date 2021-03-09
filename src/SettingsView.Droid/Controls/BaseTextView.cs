@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Android.Util;
 using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using AColor = Android.Graphics.Color;
 using AContext = Android.Content.Context;
@@ -52,8 +53,8 @@ namespace Jakar.SettingsView.Droid.Controls
 		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
 		public virtual void Init()
 		{
-			// Ellipsize = null;
 			// SetSingleLine(false);
+			// Ellipsize = null;
 			// SetMinLines(1);
 			// SetMaxLines(10);
 			// BreakStrategy = BreakStrategy.Balanced; // BreakKind.Word
@@ -66,12 +67,13 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 
 
-		public void Enable() { Alpha = BaseCellView.ENABLED_ALPHA; }
-		public void Disable() { Alpha = BaseCellView.DISABLED_ALPHA; }
+		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
+		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
 
 		
 		public abstract bool UpdateText();
 		public abstract bool UpdateColor();
+		public abstract bool UpdateTextColor();
 		public abstract bool UpdateFontSize();
 		public abstract bool UpdateFont();
 		// public abstract bool UpdateAlignment();

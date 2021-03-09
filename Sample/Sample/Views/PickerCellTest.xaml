@@ -96,7 +96,6 @@
 						 HeaderPadding="{Binding HeaderPadding.Value}"
 						 HeaderTextColor="{Binding HeaderTextColor.Value}"
 						 HeaderFontSize="{Binding HeaderFontSize.Value}"
-						 HeaderTextVerticalAlign="{Binding HeaderTextVerticalAlign.Value}"
 						 HeaderBackgroundColor="{Binding HeaderBackgroundColor.Value}"
 						 HeaderHeight="{Binding HeaderHeight.Value}"
 						 FooterTextColor="{Binding FooterTextColor.Value}"

@@ -13,7 +13,6 @@
 							 HasUnevenRows="True"
 							 HeaderPadding="10"
 							 HeaderFontSize="16"
-							 HeaderTextVerticalAlign="Center"
 							 VerticalOptions="Start"
 							 BackgroundColor="AliceBlue">
 			<sv:Section>

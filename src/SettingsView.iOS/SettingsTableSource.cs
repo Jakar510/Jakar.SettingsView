@@ -114,24 +114,24 @@ namespace Jakar.SettingsView.iOS
 		/// <returns>The height for header.</returns>
 		/// <param name="tableView">Table view.</param>
 		/// <param name="section">Section.</param>
-		public override nfloat GetHeightForHeader( UITableView tableView, nint section )
+		public override nfloat GetHeightForHeader( UITableView tableView, nint sectionID )
 		{
-			Section sec = _settingsView.Model.GetSection((int) section);
+			Section section = _settingsView.Model.GetSection((int) sectionID);
 
-			if ( !sec.IsVisible ) { return nfloat.Epsilon; }
-
-			if ( sec.HeaderView != null )
-			{
-				return UITableView.AutomaticDimension; // automatic height
-			}
-
-			double individualHeight = sec.HeaderHeight;
-
-			if ( individualHeight > 0d ) { return (nfloat) individualHeight; }
-
-			if ( _settingsView.HeaderHeight == -1d ) { return UITableView.AutomaticDimension; }
-
-			return (nfloat) _settingsView.HeaderHeight;
+			return !section.IsVisible
+					   ? nfloat.Epsilon
+					   : UITableView.AutomaticDimension;
+			// if ( !section.IsVisible ) { return nfloat.Epsilon; }
+			//
+			// return UITableView.AutomaticDimension; // automatic height
+			//
+			// double individualHeight = section.HeaderHeight;
+			//
+			// if ( individualHeight > 0d ) { return (nfloat) individualHeight; }
+			//
+			// if ( _settingsView.HeaderHeight == -1d ) { return UITableView.AutomaticDimension; }
+			//
+			// return (nfloat) _settingsView.HeaderHeight;
 		}
 
 		/// <summary>
@@ -161,8 +161,9 @@ namespace Jakar.SettingsView.iOS
 			headerView.Label.Padding = _settingsView.HeaderPadding.ToUIEdgeInsets();
 
 			Section sec = _settingsView.Model.GetSection((int) section);
-			if ( sec.HeaderHeight != -1 ||
-				 _settingsView.HeaderHeight != -1 ) { headerView.SetVerticalAlignment(_settingsView.HeaderTextVerticalAlign); }
+			headerView.SetVerticalAlignment(_settingsView.HeaderTextVerticalAlign);
+			// if ( sec.HeaderHeight != -1 ||
+			// 	 _settingsView.HeaderHeight != -1 ) { headerView.SetVerticalAlignment(_settingsView.HeaderTextVerticalAlign); }
 
 			return headerView;
 		}

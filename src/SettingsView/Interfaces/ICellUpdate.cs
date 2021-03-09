@@ -23,6 +23,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		// public bool UpdateProportions();
 		public bool UpdateText();
 		public bool UpdateColor();
+		public bool UpdateTextColor();
 		public bool UpdateFontSize();
 		public bool UpdateFont();
 		// public abstract bool UpdateAlignment();
@@ -40,7 +41,6 @@ namespace Jakar.SettingsView.Shared.Interfaces
 
 		public void PerformSelectAction();
 		public bool UpdateSelectAction();
-		public bool UpdateTextColor();
 		public bool UpdateKeyboard();
 		public bool UpdateIsPassword();
 		public bool UpdatePlaceholder();

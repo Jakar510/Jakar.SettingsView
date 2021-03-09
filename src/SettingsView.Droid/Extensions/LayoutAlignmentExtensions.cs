@@ -1,52 +1,32 @@
 ﻿using Android.Views;
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid.Extensions
 {
-	/// <summary>
-	/// Layout alignment extensions.
-	/// </summary>
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public static class LayoutAlignmentExtensions
 	{
-		/// <summary>
-		/// Tos the native vertical.
-		/// </summary>
-		/// <returns>The native vertical.</returns>
-		/// <param name="forms">Forms.</param>
 		public static GravityFlags ToNativeVertical( this LayoutAlignment forms )
 		{
-			switch ( forms )
-			{
-				case LayoutAlignment.Start:
-					return GravityFlags.Top;
-				case LayoutAlignment.Center:
-					return GravityFlags.CenterVertical;
-				case LayoutAlignment.End:
-					return GravityFlags.Bottom;
-				default:
-					return GravityFlags.FillHorizontal;
-			}
+			return forms switch
+				   {
+					   LayoutAlignment.Start => GravityFlags.Top,
+					   LayoutAlignment.Center => GravityFlags.CenterVertical,
+					   LayoutAlignment.End => GravityFlags.Bottom,
+					   _ => GravityFlags.FillHorizontal
+				   };
 		}
 
-		/// <summary>
-		/// Tos the native horizontal.
-		/// </summary>
-		/// <returns>The native horizontal.</returns>
-		/// <param name="forms">Forms.</param>
 		public static GravityFlags ToNativeHorizontal( this LayoutAlignment forms )
 		{
-			switch ( forms )
-			{
-				case LayoutAlignment.Start:
-					return GravityFlags.Start;
-				case LayoutAlignment.Center:
-					return GravityFlags.CenterHorizontal;
-				case LayoutAlignment.End:
-					return GravityFlags.End;
-				default:
-					return GravityFlags.FillVertical;
-			}
+			return forms switch
+				   {
+					   LayoutAlignment.Start => GravityFlags.Start,
+					   LayoutAlignment.Center => GravityFlags.CenterHorizontal,
+					   LayoutAlignment.End => GravityFlags.End,
+					   _ => GravityFlags.FillVertical
+				   };
 		}
 	}
 }

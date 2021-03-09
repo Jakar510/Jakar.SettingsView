@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
@@ -78,14 +80,13 @@ namespace Jakar.SettingsView.Shared.sv
 		public new static readonly BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor),
 																								typeof(Color),
 																								typeof(BaseHeaderFooterView),
-																								SVConstants.Section.Footer.TEXT_COLOR,
+																								SVConstants.Section.Header.TEXT_COLOR,
 																								propertyChanging: ( bindable, old_value, new_value ) =>
 																												  {
 																													  if ( old_value == new_value ) return;
 																													  if ( bindable is Section section ) { section.HeaderView.SetTextColor((Color) new_value); }
 																												  }
 																							   );
-
 
 		public static BindableProperty FooterTextProperty = BindableProperty.Create(nameof(FooterText),
 																					typeof(string),
@@ -98,8 +99,9 @@ namespace Jakar.SettingsView.Shared.sv
 																									  }
 																				   );
 
-		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SVConstants.Section.Footer.VISIBLE);
+		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SVConstants.Section.Footer.Visible);
 
+		// --------------------------------------------------------------------------------------
 
 		public new string? Title
 		{
@@ -107,17 +109,31 @@ namespace Jakar.SettingsView.Shared.sv
 			set => SetValue(TitleProperty, value);
 		}
 
+
+		[Xamarin.Forms.TypeConverter(typeof(ColorTypeConverter))]
 		public new Color TextColor
 		{
 			get => (Color) GetValue(TextColorProperty);
 			set => SetValue(TextColorProperty, value);
 		}
+		
+		public DefaultHeaderView? DefaultHeader =>
+			HeaderView is DefaultHeaderView header
+				? header
+				: null;
 
 		public ISectionHeader HeaderView
 		{
 			get => (ISectionHeader) GetValue(HeaderViewProperty);
 			set => SetValue(HeaderViewProperty, value);
 		}
+
+		// --------------------------------------------------------------------------------------
+
+		public DefaultFooterView? DefaultFooter =>
+			FooterView is DefaultFooterView footer
+				? footer
+				: null;
 
 		public ISectionFooter FooterView
 		{
@@ -137,6 +153,7 @@ namespace Jakar.SettingsView.Shared.sv
 			set => SetValue(FooterVisibleProperty, value);
 		}
 
+		// --------------------------------------------------------------------------------------
 
 		public bool IsVisible
 		{
@@ -169,9 +186,10 @@ namespace Jakar.SettingsView.Shared.sv
 			set => SetValue(TemplateStartIndexProperty, value);
 		}
 
-		public SettingsView? Parent { get; set; }
 
 		private int templatedItemsCount;
+
+		// --------------------------------------------------------------------------------------
 
 		public bool IsCollapsible
 		{
@@ -185,8 +203,11 @@ namespace Jakar.SettingsView.Shared.sv
 			set => HeaderView.IsCollapsed = value;
 		}
 
+		// --------------------------------------------------------------------------------------
+
 		internal List<Cell> Cache { get; private set; } = new();
 
+		public SettingsView? Parent { get; set; }
 
 		public Section()
 		{
@@ -195,18 +216,28 @@ namespace Jakar.SettingsView.Shared.sv
 			TextColor = SVConstants.Section.Header.TEXT_COLOR;
 		}
 		public Section( string title ) : this() => Title = title;
-		public Section( SettingsView settingsView ) : this(settingsView, string.Empty) { }
-		public Section( SettingsView settingsView, string? title ) : this()
+		public Section( SettingsView parent ) : this(parent, string.Empty) { }
+		public Section( SettingsView parent, string? title ) : this()
 		{
 			Title = title;
-			Parent = settingsView;
+			Parent = parent;
 		}
 		public Section( Cell cell ) : this() { Add(cell); }
 		public Section( IEnumerable<Cell> cells ) : this() { Add(cells); }
-		public Section( SettingsView settingsView, Cell cell ) : this(settingsView) { Add(cell); }
-		public Section( SettingsView settingsView, IEnumerable<Cell> cells ) : this(settingsView) { Add(cells); }
-		public Section( SettingsView settingsView, string? title, Cell cell ) : this(settingsView, title) { Add(cell); }
-		public Section( SettingsView settingsView, string? title, IEnumerable<Cell> cells ) : this(settingsView, title) { Add(cells); }
+		public Section( params Cell[] cells ) : this() { Add(cells); }
+		public Section( SettingsView parent, Cell cell ) : this(parent) { Add(cell); }
+		public Section( SettingsView parent, IEnumerable<Cell> cells ) : this(parent) { Add(cells); }
+		public Section( SettingsView parent, params Cell[] cells ) : this(parent) { Add(cells); }
+		public Section( SettingsView parent, string? title, Cell cell ) : this(parent, title) { Add(cell); }
+		public Section( SettingsView parent, string? title, IEnumerable<Cell> cells ) : this(parent, title) { Add(cells); }
+		public Section( SettingsView parent, string? title, params Cell[] cells ) : this(parent, title) { Add(cells); }
+		~Section()
+		{
+			if ( Debugger.IsAttached ) { Console.WriteLine($"------------ Section \"{Title}\" is being destructed. ------------"); }
+
+			Cache.Clear();
+			Clear();
+		}
 
 
 		public event NotifyCollectionChangedEventHandler? SectionCollectionChanged;
@@ -222,15 +253,15 @@ namespace Jakar.SettingsView.Shared.sv
 			{
 				if ( IsCollapsed ) return;
 				IsCollapsed = true;
-				Cache = new List<Cell>(this);
+
+				if ( Cache.Count == 0 ) { Cache = new List<Cell>(this); }
+
+				Clear();
 			}
-			else { Expand(true); }
+			else { Expand(); }
 		}
-		public void Expand() => Expand(false);
-		internal void Expand( bool force )
+		public void Expand()
 		{
-			if ( !force &&
-				 !IsCollapsed ) return;
 			ShowVisibleCells();
 			IsCollapsed = false;
 		}
@@ -239,34 +270,38 @@ namespace Jakar.SettingsView.Shared.sv
 			if ( IsCollapsed ) { Collapse(); }
 			else { Expand(); }
 		}
-		internal void ChildVisibilityChanged() => ShowVisibleCells();
-		private void ShowVisibleCells()
+		internal void ShowVisibleCells()
 		{
-			// if ( Cache.Count != Count ) { Cache = new List<Cell>(this); }
-
 			Clear();
 			foreach ( Cell cell in Cache )
 			{
 				if ( cell is CellBase.CellBase baseCell )
 				{
-					if ( baseCell.IsVisible ) base.Add(cell);
+					if ( baseCell.IsVisible ) base.Add(baseCell);
 				}
 				else { base.Add(cell); }
 			}
 		}
 
-		internal void UpdateTitle() { HeaderView.SetText(Title); }
+		internal void UpdateHeader()
+		{
+			HeaderView.SetText(Title);
+			HeaderView.SetTextColor(TextColor);
+		}
+		internal void UpdateFooter() { FooterView.SetText(FooterText); }
 
 		public new void Add( Cell cell )
 		{
 			Cache.Add(cell);
 			base.Add(cell);
 		}
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 		public new void Add( IEnumerable<Cell> cells )
 		{
-			Cache.AddRange(cells);
-			base.Add(cells);
+			foreach ( Cell item in cells ) { Add(item); }
+		}
+		public void Add( params Cell[] cells )
+		{
+			foreach ( Cell item in cells ) { Add(item); }
 		}
 
 		protected override void OnBindingContextChanged()

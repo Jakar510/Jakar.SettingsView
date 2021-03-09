@@ -42,7 +42,6 @@ namespace Jakar.SettingsView.Shared.sv
 			VerticalOptions = LayoutOptions.Fill;
 
 			HeightRequest = SVConstants.Section.Footer.MinRowHeight; 
-			Padding = new Thickness(SVConstants.Section.Header.PADDING);
 			Margin = new Thickness(0);
 		}
 	}

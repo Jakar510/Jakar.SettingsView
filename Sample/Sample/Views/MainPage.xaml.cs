@@ -1,9 +1,18 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace Sample.Views
 {
 	public partial class MainPage : ContentPage
 	{
-		public MainPage() { InitializeComponent(); }
+		public MainPage()
+		{
+			try { InitializeComponent(); }
+			catch ( Exception e )
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+		}
 	}
 }

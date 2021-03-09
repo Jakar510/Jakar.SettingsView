@@ -12,12 +12,14 @@ using AObject = Java.Lang.Object;
 #nullable enable
 namespace Jakar.SettingsView.Droid.Extensions
 {
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public enum Layout
 	{
 		Match,
 		Wrap,
 	}
 
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public enum GridSpec
 	{
 		BaselineAlignment,
@@ -31,16 +33,17 @@ namespace Jakar.SettingsView.Droid.Extensions
 		TopAlignment
 	}
 
+	[Android.Runtime.Preserve(AllMembers = true)]
 	public static class AndroidLayoutExtensions
 	{
-		private static readonly Dictionary<Layout, int> LayoutMapper = new Dictionary<Layout, int>()
+		private static readonly Dictionary<Layout, int> LayoutMapper = new()
 																	   {
 																		   { Layout.Match, ViewGroup.LayoutParams.MatchParent },
 																		   { Layout.Wrap, ViewGroup.LayoutParams.WrapContent },
 																	   };
 
 
-		private static readonly Dictionary<GridSpec, AGridLayout.Alignment?> SpecMapper = new Dictionary<GridSpec, AGridLayout.Alignment?>()
+		private static readonly Dictionary<GridSpec, AGridLayout.Alignment?> SpecMapper = new()
 																						  {
 																							  { GridSpec.BaselineAlignment, AGridLayout.BaselineAlighment },
 																							  { GridSpec.BottomAlignment, AGridLayout.BottomAlighment },

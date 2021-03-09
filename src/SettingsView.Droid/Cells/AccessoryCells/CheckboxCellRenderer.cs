@@ -91,53 +91,17 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 
 		protected void UpdateChecked() { _Accessory.Checked = _AccessoryCell.Checked; }
-		protected void UpdateAccentColor()
-		{
-			if ( _AccessoryCell.AccentColor != Color.Default ) { ChangeCheckColor(_AccessoryCell.AccentColor.ToAndroid(), _AccessoryCell.OffColor.ToAndroid()); }
-			else if ( CellParent != null &&
-					  CellParent.CellAccentColor != Color.Default ) { ChangeCheckColor(CellParent.CellAccentColor.ToAndroid(), CellParent.CellOffColor.ToAndroid()); }
-		}
+		protected void UpdateAccentColor() { ChangeCheckColor(_AccessoryCell.GetAccentColor().ToAndroid(), _AccessoryCell.GetOffColor().ToAndroid()); }
 
 
 		protected void ChangeCheckColor( AColor accent, AColor off )
 		{
-			// _Accessory.SupportButtonTintList = new ColorStateList(new[]
-			// 													  {
-			// 														  new[]
-			// 														  {
-			// 															  Android.Resource.Attribute.StateChecked
-			// 														  },
-			// 														  new[]
-			// 														  {
-			// 															  -Android.Resource.Attribute.StateChecked
-			// 														  },
-			// 													  },
-			// 													  new int[]
-			// 													  {
-			// 														  accent,
-			// 														  Android.Graphics.Color.Argb(76, 117, 117, 117)
-			// 													  }
-			// 													 );
-			// var trackColors = new ColorStateList(new[]
-			// 									 {
-			// 										 new[]
-			// 										 {
-			// 											 Android.Resource.Attribute.StateChecked
-			// 										 },
-			// 										 new[]
-			// 										 {
-			// 											 -Android.Resource.Attribute.StateChecked
-			// 										 },
-			// 									 },
-			// 									 new int[]
-			// 									 {
-			// 										 accent,
-			// 										 Android.Graphics.Color.Argb(76, 117, 117, 117)
-			// 									 }
-			// 									);
-			// _Accessory.ButtonDrawable?.SetTintList(trackColors);
+			if ( _Accessory.Background is not RippleDrawable ripple )
+			{
+				ripple = CreateRippleDrawable(accent);
+				_Accessory.Background = ripple;
+			}
 
-			RippleDrawable ripple = ( _Accessory.Background as RippleDrawable ) ?? CreateRippleDrawable(accent);
 			ripple.SetColor(new ColorStateList(new[]
 											   {
 												   new[]
@@ -156,7 +120,6 @@ namespace Jakar.SettingsView.Droid.Cells
 											   }
 											  )
 						   );
-			_Accessory.Background ??= ripple;
 		}
 
 

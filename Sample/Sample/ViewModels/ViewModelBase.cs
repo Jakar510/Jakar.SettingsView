@@ -294,9 +294,9 @@ namespace Sample.ViewModels
 				case nameof(SettingsView.HeaderHeight):
 					ChangeHeight(HeaderHeight);
 					break;
-				case nameof(SettingsView.HeaderTextVerticalAlign):
-					ChangeAlign(HeaderTextVerticalAlign);
-					break;
+				// case nameof(SettingsView.HeaderTextVerticalAlign):
+					// ChangeAlign(HeaderTextVerticalAlign);
+					// break;
 				case nameof(SettingsView.CellIconSize):
 					ChangeSize(CellIconSize);
 					break;
