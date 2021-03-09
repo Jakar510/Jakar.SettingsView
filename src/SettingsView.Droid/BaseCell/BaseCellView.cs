@@ -17,6 +17,7 @@ using AView = Android.Views.View;
 using Color = Xamarin.Forms.Color;
 using AObject = Java.Lang.Object;
 using AContext = Android.Content.Context;
+using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
@@ -146,7 +147,18 @@ namespace Jakar.SettingsView.Droid.BaseCell
 		protected virtual void UpdateIsEnabled() { SetEnabledAppearance(Cell.IsEnabled); }
 
 
-		protected virtual void UpdateBackgroundColor() { SetBackgroundColor(( CellBase?.GetBackground() ?? Color.Transparent ).ToAndroid()); }
+		protected virtual void UpdateBackgroundColor()
+		{
+			Color color = CellBase?.GetBackground() ?? Color.Transparent;
+
+			if ( CellBase is AiEntryCell _ )
+			{
+				SetBackgroundColor(color.ToAndroid());
+			}
+			else { SetBackgroundColor(color.ToAndroid()); }
+
+			// SetBackgroundColor(color.ToAndroid());
+		}
 		protected void UpdateSelectedColor()
 		{
 			if ( CellParent != null &&

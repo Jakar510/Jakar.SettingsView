@@ -36,7 +36,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (double?) GetValue(DescriptionFontSizeProperty);
 			set => SetValue(DescriptionFontSizeProperty, value);
 		}
-		
+
 		public string? DescriptionFontFamily
 		{
 			get => (string?) GetValue(DescriptionFontFamilyProperty);
@@ -61,9 +61,10 @@ namespace Jakar.SettingsView.Shared.CellBase
 		// internal TextAlignment GetDescriptionTextAlignment() => DescriptionAlignment ?? Parent.CellDescriptionAlignment;
 		// internal Color GetDescriptionColor() => DescriptionColor ?? Parent.CellDescriptionColor;
 		// internal double GetDescriptionFontSize() => DescriptionFontSize ?? Parent.CellDescriptionFontSize;
-		
+
 
 		private DescriptionConfiguration? _config;
+
 		internal DescriptionConfiguration DescriptionConfig
 		{
 			get
@@ -72,6 +73,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 				return _config;
 			}
 		}
+
 		internal class DescriptionConfiguration
 		{
 			private readonly DescriptionCellBase _cell;
@@ -80,7 +82,12 @@ namespace Jakar.SettingsView.Shared.CellBase
 			internal string? FontFamily => _cell.DescriptionFontFamily ?? _cell.Parent.CellDescriptionFontFamily;
 			internal FontAttributes FontAttributes => _cell.DescriptionFontAttributes ?? _cell.Parent.CellDescriptionFontAttributes;
 			internal TextAlignment TextAlignment => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
-			internal Color Color => _cell.DescriptionColor == SVConstants.Cell.COLOR ? _cell.Parent.CellDescriptionColor : _cell.DescriptionColor;
+
+			internal Color Color =>
+				_cell.DescriptionColor == SVConstants.Cell.COLOR
+					? _cell.Parent.CellDescriptionColor
+					: _cell.DescriptionColor;
+
 			internal double FontSize => _cell.DescriptionFontSize ?? _cell.Parent.CellDescriptionFontSize;
 		}
 	}

@@ -2,13 +2,15 @@
 using System.ComponentModel;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public abstract class CellBase : Cell
+
+	public abstract class CellBase : Cell, IVisibleCell
 	{
 		public new event EventHandler? Tapped;
 
@@ -21,6 +23,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 																				   SVConstants.Cell.VISIBLE,
 																				   defaultBindingMode: BindingMode.OneWay
 																				  );
+
 		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), SVConstants.Cell.COLOR);
 
 
@@ -44,7 +47,10 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => base.Parent = value;
 		}
 
-		internal Color GetBackground() => BackgroundColor == SVConstants.Cell.COLOR ? Parent.CellBackgroundColor : BackgroundColor;
+		internal Color GetBackground() =>
+			BackgroundColor == SVConstants.Cell.COLOR
+				? Parent.CellBackgroundColor
+				: BackgroundColor;
 
 		public virtual void Reload()
 		{

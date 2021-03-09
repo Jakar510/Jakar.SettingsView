@@ -4,11 +4,16 @@ using System.Diagnostics.CodeAnalysis;
 using Android.Util;
 using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
 using AColor = Android.Graphics.Color;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
+using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
+using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Controls
@@ -19,10 +24,7 @@ namespace Jakar.SettingsView.Droid.Controls
 	{
 		public AColor DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
-
 		protected BaseCellView _Cell { get; set; }
-
-		// public TextView Label { get; protected set; }
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -63,6 +65,7 @@ namespace Jakar.SettingsView.Droid.Controls
 			// CanScrollVertically(0);
 			// SetScroller(new Scroller(_Cell.AndroidContext));
 
+			SetBackgroundColor(Color.Transparent.ToAndroid());
 			if ( Background != null ) { Background.Alpha = 0; } // hide underline
 		}
 
@@ -70,17 +73,47 @@ namespace Jakar.SettingsView.Droid.Controls
 		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
 		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
 
-		
+
 		public abstract bool UpdateText();
-		public abstract bool UpdateColor();
 		public abstract bool UpdateTextColor();
 		public abstract bool UpdateFontSize();
+		public abstract bool UpdateTextAlignment();
 		public abstract bool UpdateFont();
-		// public abstract bool UpdateAlignment();
 
-		public abstract bool Update( object sender, PropertyChangedEventArgs e );
-		public abstract void Update();
-		public abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
 
+		public virtual void Update()
+		{
+			// UpdateBackgroundColor();
+			UpdateText();
+			UpdateTextColor();
+			UpdateFontSize();
+			UpdateFont();
+			UpdateTextAlignment();
+		}
+
+
+		[SuppressMessage("ReSharper", "InvertIf")]
+		public virtual bool Update( object sender, PropertyChangedEventArgs e )
+		{
+			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName )
+			// {
+			// 	UpdateBackgroundColor();
+			// 	return true;
+			// }
+
+			return false;
+		}
+
+		[SuppressMessage("ReSharper", "InvertIf")]
+		public virtual bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		{
+			// if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName )
+			// {
+			// 	UpdateBackgroundColor();
+			// 	return true;
+			// }
+
+			return false;
+		}
 	}
 }

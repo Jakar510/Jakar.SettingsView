@@ -50,11 +50,6 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			return true;
 		}
-		public override bool UpdateColor()
-		{
-			SetBackgroundColor(_CurrentCell.GetBackground().ToAndroid());
-			return true;
-		}
 		public override bool UpdateFont()
 		{
 			string? family = _CurrentCell.HintConfig.FontFamily;
@@ -64,7 +59,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			return true;
 		}
-		public bool UpdateTextAlignment()
+		public override bool UpdateTextAlignment()
 		{
 			TextAlignment alignment = _CurrentCell.ValueTextConfig.TextAlignment;
 			TextAlignment = alignment.ToAndroidTextAlignment();
@@ -84,15 +79,15 @@ namespace Jakar.SettingsView.Droid.Controls
 			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
 				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
 
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateColor(); }
+			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
-			return false;
+			return base.Update(sender, e);
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
@@ -101,18 +96,7 @@ namespace Jakar.SettingsView.Droid.Controls
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
 				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateColor(); }
-
-			return false;
-		}
-		public override void Update()
-		{
-			UpdateText();
-			UpdateColor();
-			UpdateTextColor();
-			UpdateFontSize();
-			UpdateFont();
-			UpdateTextAlignment();
+			return base.UpdateParent(sender, e);
 		}
 	}
 }

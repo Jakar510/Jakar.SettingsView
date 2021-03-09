@@ -84,6 +84,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			Focusable = true;
 			ImeOptions = ImeAction.Done;
+			SetBackgroundColor(Color.Transparent.ToAndroid());
 			if ( Background != null ) { Background.Alpha = 0; } // hide underline
 		}
 		public void Init( AiEntryCell cell, IEntryCellRenderer renderer )
@@ -202,11 +203,6 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			return true;
 		}
-		public bool UpdateColor()
-		{
-			SetBackgroundColor(_CurrentCell.GetBackground().ToAndroid());
-			return true;
-		}
 		public bool UpdateFont()
 		{
 			string? family = _CurrentCell.HintConfig.FontFamily;
@@ -313,7 +309,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { return UpdateSelectAction(); }
 
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateColor(); }
+			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return false;
 		}
@@ -335,7 +331,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return false;
 		}

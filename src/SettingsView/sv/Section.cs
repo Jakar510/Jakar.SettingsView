@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
@@ -275,11 +276,23 @@ namespace Jakar.SettingsView.Shared.sv
 			Clear();
 			foreach ( Cell cell in Cache )
 			{
-				if ( cell is CellBase.CellBase baseCell )
+				// ReSharper disable once SuspiciousTypeConversion.Global
+				switch (cell)
 				{
-					if ( baseCell.IsVisible ) base.Add(baseCell);
+					case CellBase.CellBase baseCell:
+					{
+						if ( baseCell.IsVisible ) base.Add(baseCell);
+						break;
+					}
+					case IVisibleCell iCell:
+					{
+						if ( iCell.IsVisible ) base.Add(cell);
+						break;
+					}
+					default:
+						base.Add(cell);
+						break;
 				}
-				else { base.Add(cell); }
 			}
 		}
 

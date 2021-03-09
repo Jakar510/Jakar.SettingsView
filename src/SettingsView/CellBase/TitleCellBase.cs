@@ -64,6 +64,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 
 		private TitleConfiguration? _config;
+
 		internal TitleConfiguration TitleConfig
 		{
 			get
@@ -72,15 +73,21 @@ namespace Jakar.SettingsView.Shared.CellBase
 				return _config;
 			}
 		}
+
 		internal class TitleConfiguration
 		{
 			private readonly TitleCellBase _cell;
-			public TitleConfiguration( TitleCellBase cell) => _cell = cell;
+			public TitleConfiguration( TitleCellBase cell ) => _cell = cell;
 
 			internal string? FontFamily => _cell.TitleFontFamily ?? _cell.Parent.CellTitleFontFamily;
 			internal FontAttributes FontAttributes => _cell.TitleFontAttributes ?? _cell.Parent.CellTitleFontAttributes;
 			internal TextAlignment TextAlignment => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
-			internal Color Color => _cell.TitleColor == SVConstants.Cell.COLOR ? _cell.Parent.CellTitleColor : _cell.TitleColor;
+
+			internal Color Color =>
+				_cell.TitleColor == SVConstants.Cell.COLOR
+					? _cell.Parent.CellTitleColor
+					: _cell.TitleColor;
+
 			internal double FontSize => _cell.TitleFontSize ?? _cell.Parent.CellTitleFontSize;
 		}
 	}
