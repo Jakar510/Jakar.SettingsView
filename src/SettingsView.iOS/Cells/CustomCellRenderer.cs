@@ -1,228 +1,161 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
-using Foundation;
-using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
-using UIKit;
+using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
+	[Foundation.Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
-	[Preserve(AllMembers = true)]
-	public class CustomCellView : CellBaseView
+
+	[Foundation.Preserve(AllMembers = true)]
+	public class CustomCellView : BaseAiDescriptionCell
 	{
-		protected CustomCell CustomCell => Cell as CustomCell;
-		protected Action Execute { get; set; }
-		protected ICommand _command;
-		protected CustomCellContent _coreView;
-		private Dictionary<UIView, UIColor> _colorCache = new Dictionary<UIView, UIColor>();
+		protected CustomCell _CustomCell => Cell as CustomCell ?? throw new NullReferenceException(nameof(_CustomCell));
 
-		public CustomCellView( Cell formsCell ) : base(formsCell) =>
-			SelectionStyle = CustomCell.IsSelectable
-								 ? UITableViewCellSelectionStyle.Default
-								 : UITableViewCellSelectionStyle.None;
+		protected Action? _Execute { get; set; }
+		protected ICommand? _Command { get; set; }
 
-		public override void UpdateConstraints()
+		// protected ImageView _IndicatorView { get; set; }
+		protected internal FormsViewContainer Container { get; }
+		protected LinearLayout _AccessoryStack { get; }
+
+		public CustomCellView( Context context, Cell cell ) : base(context, cell)
 		{
-			base.UpdateConstraints();
-			LayoutIfNeeded(); // let the layout immediately reflect when update constraints.
-		}
+			RemoveHint();
+			RemoveCellValueStack();
+			_AccessoryStack = AccessoryStack();
 
-		protected override void SetUpContentView()
-		{
-			base.SetUpContentView();
-
-			if ( CustomCell.ShowArrowIndicator )
+			Container = new FormsViewContainer(AndroidContext, _CustomCell);
+			this.Add(Container,
+					 2,
+					 0,
+					 GridSpec.Fill,
+					 GridSpec.Fill,
+					 Extensions.Layout.Match
+					);
+			if ( !_CustomCell.ShowArrowIndicator )
 			{
-				Accessory = UITableViewCellAccessory.DisclosureIndicator;
-				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
-
-				SetRightMarginZero();
+				// TODO: implement ShowArrowIndicator (_IndicatorView) _AccessoryStack
 			}
 
-			StackV.RemoveArrangedSubview(ContentStack);
-			StackV.RemoveArrangedSubview(DescriptionLabel);
-			ContentStack.RemoveFromSuperview();
-			DescriptionLabel.RemoveFromSuperview();
+			if ( !_CustomCell.UseFullSize ) return;
+			_Icon.RemoveFromParent();
+			_Title.RemoveFromParent();
+			_Description.RemoveFromParent();
 
-			_coreView = new CustomCellContent();
-
-			if ( CustomCell.UseFullSize )
-			{
-				StackH.RemoveArrangedSubview(IconView);
-				IconView.RemoveFromSuperview();
-
-				StackH.LayoutMargins = new UIEdgeInsets(0, 0, 0, 0);
-				StackH.Spacing = 0;
-			}
-
-			StackV.AddArrangedSubview(_coreView);
+			var rMargin = (int) ( _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0 );
+			Container.SetPadding(0, 0, rMargin, 0);
+			_CellLayout.SetPadding(0, 0, 0, 0);
 		}
-
-		protected virtual void UpdateContent( UITableView tableView )
-		{
-			if ( _coreView is null )
-				return; // for HotReload;
-
-			_coreView.CustomCell = CustomCell;
-			_coreView.UpdateCell(CustomCell.Content, tableView);
-		}
+		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 		}
+		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="tableView">Table view.</param>
-		/// <param name="indexPath">Index path.</param>
-		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
+
+		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( !CustomCell.IsSelectable ) { return; }
+			if ( !_CustomCell.IsSelectable ) { return; }
 
-			Execute?.Invoke();
-			if ( !CustomCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
+			_Execute?.Invoke();
+			if ( _CustomCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
 		}
-
-		public override bool RowLongPressed( UITableView tableView, NSIndexPath indexPath )
+		protected internal override bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position )
 		{
-			if ( CustomCell.LongCommand == null ) { return false; }
+			if ( _CustomCell.LongCommand == null ) { return false; }
 
-			CustomCell.SendLongCommand();
+			_CustomCell.SendLongCommand();
 
 			return true;
 		}
 
-		public override void SetHighlighted( bool highlighted, bool animated )
+		protected internal override void UpdateCell()
 		{
-			if ( !highlighted )
-			{
-				base.SetHighlighted(highlighted, animated);
-				return;
-			}
-
-			// https://stackoverflow.com/questions/6745919/uitableviewcell-subview-disappears-when-cell-is-selected
-
-			BackupSubviewsColor(_coreView.Subviews[0], _colorCache);
-
-			base.SetHighlighted(highlighted, animated);
-
-			RestoreSubviewsColor(_coreView.Subviews[0], _colorCache);
-		}
-
-		public override void SetSelected( bool selected, bool animated )
-		{
-			if ( !selected )
-			{
-				base.SetSelected(selected, animated);
-				return;
-			}
-
-			base.SetSelected(selected, animated);
-
-			RestoreSubviewsColor(_coreView.Subviews[0], _colorCache);
-		}
-
-		private void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
-		{
-			colors[view] = view.BackgroundColor;
-
-			foreach ( UIView subView in view.Subviews ) { BackupSubviewsColor(subView, colors); }
-		}
-
-		private void RestoreSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
-		{
-			if ( colors.TryGetValue(view, out UIColor color) ) { view.BackgroundColor = color; }
-
-			foreach ( UIView subView in view.Subviews ) { RestoreSubviewsColor(subView, colors); }
-		}
-
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
-		public override void UpdateCell( UITableView tableView )
-		{
-			base.UpdateCell(tableView);
-			UpdateContent(tableView);
+			base.UpdateCell();
+			UpdateContent();
 			UpdateCommand();
 		}
-
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
+		public void UpdateContent()
 		{
-			if ( disposing )
+			Container.CustomCell = _CustomCell;
+			Container.FormsView = _CustomCell.Content;
+			double height = Container.FormsView.Height;
+			double cellHeight = Height;
+			System.Diagnostics.Debug.WriteLine($"_______CustomHeight_______  content.height {height}      cell.height{cellHeight}");
+		}
+		private void UpdateCommand()
+		{
+			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+
+			_Command = _CustomCell.Command;
+
+			if ( _Command != null )
 			{
-				if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
-
-				Execute = null;
-				_command = null;
-
-				_colorCache.Clear();
-				_colorCache = null;
-
-				_coreView?.RemoveFromSuperview();
-				_coreView?.Dispose();
-				_coreView = null;
+				_Command.CanExecuteChanged += Command_CanExecuteChanged;
+				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
 
-			base.Dispose(disposing);
+			_Execute = () =>
+					   {
+						   if ( _Command == null ) { return; }
+
+						   if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
+					   };
 		}
-
-		protected virtual void UpdateCommand()
-		{
-			if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
-
-			_command = CustomCell.Command;
-
-			if ( _command != null )
-			{
-				_command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_command, EventArgs.Empty);
-			}
-
-			Execute = () =>
-					  {
-						  if ( _command == null ) { return; }
-
-						  if ( _command.CanExecute(CustomCell.CommandParameter) ) { _command.Execute(CustomCell.CommandParameter); }
-					  };
-		}
-
-		/// <summary>
-		/// Updates the is enabled.
-		/// </summary>
 		protected override void UpdateIsEnabled()
 		{
-			if ( _command != null &&
-				 !_command.CanExecute(CustomCell.CommandParameter) ) { return; }
+			if ( _Command != null &&
+				 !_Command.CanExecute(_CustomCell.CommandParameter) ) { return; }
 
 			base.UpdateIsEnabled();
 		}
 
-		protected virtual void Command_CanExecuteChanged( object sender, EventArgs e )
+		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !Cell.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_command.CanExecute(CustomCell.CommandParameter));
+			SetEnabledAppearance(_Command?.CanExecute(_CustomCell.CommandParameter) ?? true);
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+
+				_Execute = null;
+				_Command = null;
+				// _IndicatorView?.RemoveFromParent();
+				// _IndicatorView?.SetImageDrawable(null);
+				// _IndicatorView?.SetImageBitmap(null);
+				// _IndicatorView?.Dispose();
+
+				// _CoreView?.RemoveFromParent();
+				// _CoreView?.Dispose();
+
+				_Icon.Dispose();
+				_Title.Dispose();
+				_Description.Dispose();
+				Container.RemoveFromParent();
+				Container.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

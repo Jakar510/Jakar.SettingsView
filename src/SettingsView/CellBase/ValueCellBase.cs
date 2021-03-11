@@ -1,7 +1,11 @@
 ﻿// unset
 
+using System;
+using System.Runtime.CompilerServices;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
+using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 
 #nullable enable
@@ -50,13 +54,6 @@ namespace Jakar.SettingsView.Shared.CellBase
 		}
 
 
-		// internal string? GetValueTextFontFamily() => ValueTextFontFamily ?? Parent.CellValueTextFontFamily;
-		// internal FontAttributes GetValueTextFontAttributes() => ValueTextFontAttributes ?? Parent.CellValueTextFontAttributes;
-		// internal TextAlignment GetValueTextTextAlignment() => ValueTextAlignment ?? Parent.CellValueTextAlignment;
-		// internal Color GetValueTextColor() => ValueTextColor ?? Parent.CellValueTextColor;
-		// internal double GetValueTextFontSize() => ValueTextFontSize ?? Parent.CellValueTextFontSize;
-
-
 		private ValueTextConfiguration? _config;
 
 		internal ValueTextConfiguration ValueTextConfig
@@ -84,5 +81,13 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 			internal double FontSize => _cell.ValueTextFontSize ?? _cell.Parent.CellValueTextFontSize;
 		}
+	}
+
+	public abstract class ValueCellBase<TValue> : ValueCellBase, IValueChanged<TValue>
+	{
+		public event EventHandler<SVValueChangedEventArgs<TValue>>? ValueChanged;
+
+		void IValueChanged<TValue>.SendValueChanged( TValue value ) { ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value)); }
+		internal IValueChanged<TValue> ValueChangedHandler => this;
 	}
 }

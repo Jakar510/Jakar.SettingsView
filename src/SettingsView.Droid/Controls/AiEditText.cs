@@ -41,7 +41,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
-			Init();
+			Initialize();
 			TextChanged += OnTextChanged;
 		}
 		public AiEditText( AiEntryCell cell, AContext context ) : this(context) => _CurrentCell = cell;
@@ -50,7 +50,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
-			Init();
+			Initialize();
 		}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		public static AiEditText Create( Android.Views.View view, AiEntryCell cell, int id )
@@ -74,7 +74,7 @@ namespace Jakar.SettingsView.Droid.Controls
 						   : string.Concat(e.Text);
 			_CurrentCell.SendTextChanged(Text ?? string.Empty, s);
 		}
-		public void Init()
+		public void Initialize()
 		{
 			SetSingleLine(false);
 			Ellipsize = null; // TextUtils.TruncateAt.End;

@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class TextPickerCell : PromptCellBase
+	public class TextPickerCell : PromptCellBase<string>
 	{
 		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>());
 		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand));

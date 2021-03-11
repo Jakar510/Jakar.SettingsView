@@ -15,7 +15,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public float DefaultFontSize { get; }
 
 		public void SetCell( TCell cell );
-		public void Init();
+		public void Initialize();
 
 		public void Enable();
 		public void Disable();

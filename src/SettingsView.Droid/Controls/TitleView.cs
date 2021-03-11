@@ -65,7 +65,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			if ( e.PropertyName == TitleCellBase.TitleProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == TitleCellBase.TitleColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
+			if ( e.PropertyName == TitleCellBase.TitleColorProperty.PropertyName ) { return UpdateTextColor(); }
 
 			if ( e.PropertyName == TitleCellBase.TitleFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 

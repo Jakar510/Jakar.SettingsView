@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	public class NumberPickerCell : PromptCellBase
+	public class NumberPickerCell : PromptCellBase<int>
 	{
 		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(NumberPickerCell), default(ICommand));
 		// public static BindableProperty PopupTitleProperty = BindableProperty.Create(nameof(PopupTitle), typeof(string), typeof(NumberPickerCell), default(string));

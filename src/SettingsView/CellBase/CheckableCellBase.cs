@@ -1,13 +1,17 @@
 ﻿// unset
 
+using System;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
+using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-	public abstract class CheckableCellBase : DescriptionCellBase
+	public abstract class CheckableCellBase : DescriptionCellBase, IValueChanged<bool>
 	{
 		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color?), typeof(CheckboxCell), SVConstants.Cell.COLOR);
 		public static BindableProperty OffColorProperty = BindableProperty.Create(nameof(OffColor), typeof(Color?), typeof(CheckboxCell), SVConstants.Cell.COLOR);
@@ -40,6 +44,11 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (Color) GetValue(OffColorProperty);
 			set => SetValue(OffColorProperty, value);
 		}
+
+
+		public event EventHandler<SVValueChangedEventArgs<bool>>? ValueChanged;
+		void IValueChanged<bool>.SendValueChanged( bool value ) { ValueChanged?.Invoke(this, new SVValueChangedEventArgs<bool>(value)); }
+		internal IValueChanged<bool> ValueChangedHandler => this;
 
 
 		internal Color GetAccentColor() =>

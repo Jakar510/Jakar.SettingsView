@@ -6,7 +6,7 @@ namespace Jakar.SettingsView.iOS
 	/// <summary>
 	/// Image cache controller.
 	/// </summary>
-	[Preserve(AllMembers = true)]
+	[Foundation.Preserve(AllMembers = true)]
 	public static class ImageCacheController
 	{
 		/// <summary>

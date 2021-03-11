@@ -1,5 +1,8 @@
 ﻿// unset
 
+using System;
+using Jakar.SettingsView.Shared.Interfaces;
+using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 
 #nullable enable
@@ -46,5 +49,14 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 			else { bindable.SetValue(ValueTextProperty, oldString); }
 		}
+	}
+
+
+	public abstract class ValueTextCellBase<TValue> : ValueTextCellBase, IValueChanged<TValue>
+	{
+		public event EventHandler<SVValueChangedEventArgs<TValue>>? ValueChanged;
+
+		void IValueChanged<TValue>.SendValueChanged( TValue value ) { ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value)); }
+		internal IValueChanged<TValue> ValueChangedHandler => this;
 	}
 }

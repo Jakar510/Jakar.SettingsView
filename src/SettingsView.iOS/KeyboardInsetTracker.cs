@@ -11,7 +11,7 @@ namespace Jakar.SettingsView.iOS
 	/// https://github.com/xamarin/Xamarin.Forms/blob/master/Xamarin.Forms.Platform.iOS/Renderers/KeyboardInsetTracker.cs
 	/// </summary>
 	[Foundation.Preserve(AllMembers = true)]
-	internal class KeyboardInsetTracker : IDisposable
+	public class KeyboardInsetTracker : IDisposable
 	{
 		private readonly Func<UIWindow> _fetchWindow;
 		private readonly Action<PointF> _setContentOffset;

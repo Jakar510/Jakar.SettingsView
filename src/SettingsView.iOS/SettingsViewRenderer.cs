@@ -7,6 +7,7 @@ using Foundation;
 using Jakar.SettingsView;
 using Jakar.SettingsView.iOS;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.sv;
 using MobileCoreServices;
 using UIKit;
@@ -16,11 +17,9 @@ using SettingsView = Jakar.SettingsView.Shared.sv.SettingsView;
 
 [assembly: ExportRenderer(typeof(SettingsView), typeof(SettingsViewRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
-	/// <summary>
-	/// Settings view renderer.
-	/// </summary>
 	[Preserve(AllMembers = true)]
 	public class SettingsViewRenderer : ViewRenderer<Shared.sv.SettingsView, UITableView>, IUITableViewDragDelegate, IUITableViewDropDelegate
 	{
@@ -28,127 +27,122 @@ namespace Jakar.SettingsView.iOS
 		internal static readonly string TextFooterId = "textFooterView";
 		internal static readonly string CustomHeaderId = "customHeaderView";
 		internal static readonly string CustomFooterId = "customFooterView";
-		private Page _parentPage;
-		private KeyboardInsetTracker _insetTracker;
-		internal static float MinRowHeight = 48;
-		private UITableView _tableview;
-		private IDisposable _contentSizeObserver;
+		protected Page? _ParentPage { get; set; }
+		protected KeyboardInsetTracker? _InsetTracker { get; set; }
+		protected UITableView? _TableView { get; set; }
+		protected IDisposable? _ContentSizeObserver { get; set; }
 
-		private bool _disposed;
-		private float _topInset;
+		protected bool _disposed;
+		protected float _topInset;
 
-		/// <summary>
-		/// Ons the element changed.
-		/// </summary>
-		/// <param name="e">E.</param>
 		protected override void OnElementChanged( ElementChangedEventArgs<Shared.sv.SettingsView> e )
 		{
 			base.OnElementChanged(e);
 
-			if ( e.OldElement != null )
+			if ( e.OldElement is not null )
 			{
 				e.OldElement.CollectionChanged -= OnCollectionChanged;
 				e.OldElement.SectionCollectionChanged -= OnSectionCollectionChanged;
 				e.OldElement.SectionPropertyChanged -= OnSectionPropertyChanged;
 			}
 
-			if ( e.NewElement != null )
+			if ( e.NewElement is null ) return;
+			_TableView = new UITableView(CGRect.Empty, UITableViewStyle.Grouped);
+
+			if ( UIDevice.CurrentDevice.CheckSystemVersion(11, 0) )
 			{
-				_tableview = new UITableView(CGRect.Empty, UITableViewStyle.Grouped);
+				_TableView.DragDelegate = this;
+				_TableView.DropDelegate = this;
 
-				if ( UIDevice.CurrentDevice.CheckSystemVersion(11, 0) )
-				{
-					_tableview.DragDelegate = this;
-					_tableview.DropDelegate = this;
-
-					_tableview.DragInteractionEnabled = true;
-					_tableview.Source = new SettingsTableSource(Element);
-				}
-				else
-				{
-					_tableview.Editing = true;
-					_tableview.AllowsSelectionDuringEditing = true;
-					// When Editing is true, for some reason, UITableView top margin is displayed.
-					// force removing the margin by the following code.
-					_topInset = 36;
-					_tableview.ContentInset = new UIEdgeInsets(-_topInset, 0, 0, 0);
-
-					_tableview.Source = new SettingsLagacyTableSource(Element);
-				}
-
-				SetNativeControl(_tableview);
-				_tableview.ScrollEnabled = true;
-				_tableview.RowHeight = UITableView.AutomaticDimension;
-				_tableview.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.OnDrag;
-
-				_tableview.CellLayoutMarginsFollowReadableWidth = false;
-
-				_tableview.SectionHeaderHeight = UITableView.AutomaticDimension;
-				_tableview.EstimatedSectionHeaderHeight = UITableView.AutomaticDimension;
-
-				_tableview.SectionFooterHeight = UITableView.AutomaticDimension;
-				_tableview.EstimatedSectionFooterHeight = UITableView.AutomaticDimension;
-
-				_tableview.RegisterClassForHeaderFooterViewReuse(typeof(TextHeaderView), TextHeaderId);
-				_tableview.RegisterClassForHeaderFooterViewReuse(typeof(TextFooterView), TextFooterId);
-				_tableview.RegisterClassForHeaderFooterViewReuse(typeof(CustomHeaderView), CustomHeaderId);
-				_tableview.RegisterClassForHeaderFooterViewReuse(typeof(CustomFooterView), CustomFooterId);
-
-				e.NewElement.CollectionChanged += OnCollectionChanged;
-				e.NewElement.SectionCollectionChanged += OnSectionCollectionChanged;
-				e.NewElement.SectionPropertyChanged += OnSectionPropertyChanged;
-
-				UpdateBackgroundColor();
-				UpdateSeparator();
-				UpdateRowHeight();
-
-				Element elm = Element;
-				while ( elm != null )
-				{
-					elm = elm.Parent;
-					if ( elm is Page ) { break; }
-				}
-
-				_parentPage = elm as Page;
-				_parentPage.Appearing += ParentPageAppearing;
-
-				_insetTracker = new KeyboardInsetTracker(_tableview,
-														 () => Control.Window,
-														 insets => Control.ContentInset = Control.ScrollIndicatorInsets = insets,
-														 point =>
-														 {
-															 CGPoint offset = Control.ContentOffset;
-															 offset.Y += point.Y;
-															 Control.SetContentOffset(offset, true);
-														 }
-														);
-
-				_contentSizeObserver = _tableview.AddObserver("contentSize", NSKeyValueObservingOptions.New, OnContentSizeChanged);
+				_TableView.DragInteractionEnabled = true;
+				_TableView.Source = new SettingsTableSource(Element);
 			}
+			else
+			{
+				_TableView.Editing = true;
+				_TableView.AllowsSelectionDuringEditing = true;
+				// When Editing is true, for some reason, UITableView top margin is displayed.
+				// force removing the margin by the following code.
+				_topInset = 36;
+				_TableView.ContentInset = new UIEdgeInsets(-_topInset, 0, 0, 0);
+
+				_TableView.Source = new SettingsLegacyTableSource(Element);
+			}
+
+			SetNativeControl(_TableView);
+			_TableView.ScrollEnabled = true;
+			_TableView.RowHeight = UITableView.AutomaticDimension;
+			_TableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.OnDrag;
+
+			_TableView.CellLayoutMarginsFollowReadableWidth = false;
+
+			_TableView.SectionHeaderHeight = UITableView.AutomaticDimension;
+			_TableView.EstimatedSectionHeaderHeight = UITableView.AutomaticDimension;
+
+			_TableView.SectionFooterHeight = UITableView.AutomaticDimension;
+			_TableView.EstimatedSectionFooterHeight = UITableView.AutomaticDimension;
+
+			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextHeaderView), TextHeaderId);
+			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextFooterView), TextFooterId);
+			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(CustomHeaderView), CustomHeaderId);
+			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(CustomFooterView), CustomFooterId);
+
+			e.NewElement.CollectionChanged += OnCollectionChanged;
+			e.NewElement.SectionCollectionChanged += OnSectionCollectionChanged;
+			e.NewElement.SectionPropertyChanged += OnSectionPropertyChanged;
+
+			UpdateBackgroundColor();
+			UpdateSeparator();
+			UpdateRowHeight();
+
+			Element elm = Element;
+			while ( elm is not null )
+			{
+				elm = elm.Parent;
+				if ( elm is not Page page ) continue;
+				_ParentPage = page;
+				break;
+			}
+
+			if ( _ParentPage is null ) throw new NullReferenceException(nameof(_ParentPage));
+			_ParentPage.Appearing += ParentPageAppearing;
+
+			_InsetTracker = new KeyboardInsetTracker(_TableView,
+													 () => Control.Window,
+													 insets => Control.ContentInset = Control.ScrollIndicatorInsets = insets,
+													 point =>
+													 {
+														 CGPoint offset = Control.ContentOffset;
+														 offset.Y += point.Y;
+														 Control.SetContentOffset(offset, true);
+													 }
+													);
+
+			_ContentSizeObserver = _TableView.AddObserver(nameof(OnContentSizeChanged), NSKeyValueObservingOptions.New, OnContentSizeChanged);
 		}
 
-		private void OnContentSizeChanged( NSObservedChange change ) { Element.VisibleContentHeight = Control.ContentSize.Height; }
+		protected void OnContentSizeChanged( NSObservedChange change ) { Element.VisibleContentHeight = Control.ContentSize.Height; }
 
-		private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSections(e); }
+		protected void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSections(e); }
 
-		private void OnSectionCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+		protected void OnSectionCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
 			int sectionIdx = Element.Model.GetSectionIndex((Section) sender);
 			UpdateItems(e, sectionIdx, false);
 		}
 
-		private void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		protected void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible((Section) sender); }
 			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
 					  e.PropertyName == Section.HeaderViewProperty.PropertyName ||
-					  e.PropertyName == Section.HeaderHeightProperty.PropertyName ||
+					  // e.PropertyName == Section.HeaderHeightProperty.PropertyName ||
 					  e.PropertyName == Section.FooterTextProperty.PropertyName ||
 					  e.PropertyName == Section.FooterViewProperty.PropertyName ) { UpdateSectionNoAnimation((Section) sender); }
 			else if ( e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFade((Section) sender); }
 		}
 
-		private void UpdateSectionVisible( Section section )
+		protected void UpdateSectionVisible( Section section )
 		{
 			int secIndex = Element.Model.GetSectionIndex(section);
 			Control.BeginUpdates();
@@ -156,7 +150,7 @@ namespace Jakar.SettingsView.iOS
 			Control.EndUpdates();
 		}
 
-		private void UpdateSectionNoAnimation( Section section )
+		protected void UpdateSectionNoAnimation( Section section )
 		{
 			int secIndex = Element.Model.GetSectionIndex(section);
 			Control.BeginUpdates();
@@ -164,7 +158,7 @@ namespace Jakar.SettingsView.iOS
 			Control.EndUpdates();
 		}
 
-		private void UpdateSectionFade( Section section )
+		protected void UpdateSectionFade( Section section )
 		{
 			int secIndex = Element.Model.GetSectionIndex(section);
 			Control.BeginUpdates();
@@ -173,7 +167,7 @@ namespace Jakar.SettingsView.iOS
 		}
 
 
-		private void UpdateSections( NotifyCollectionChangedEventArgs e )
+		protected void UpdateSections( NotifyCollectionChangedEventArgs e )
 		{
 			switch ( e.Action )
 			{
@@ -208,11 +202,11 @@ namespace Jakar.SettingsView.iOS
 			}
 		}
 
-		private void UpdateItems( NotifyCollectionChangedEventArgs e, int section, bool resetWhenGrouped )
+		protected void UpdateItems( NotifyCollectionChangedEventArgs e, int section, bool resetWhenGrouped )
 		{
 			// This means the UITableView hasn't rendered any cells yet
 			// so there's no need to synchronize the rows on the UITableView
-			if ( Control.IndexPathsForVisibleRows == null &&
+			if ( Control.IndexPathsForVisibleRows is null &&
 				 e.Action != NotifyCollectionChangedAction.Reset )
 				return;
 
@@ -271,6 +265,8 @@ namespace Jakar.SettingsView.iOS
 				case NotifyCollectionChangedAction.Reset:
 					Control.ReloadData();
 					return;
+
+				default: throw new ArgumentOutOfRangeException(nameof(e.Action));
 			}
 		}
 
@@ -283,19 +279,10 @@ namespace Jakar.SettingsView.iOS
 		}
 
 
-		private void ParentPageAppearing( object sender, EventArgs e ) { _tableview.DeselectRow(_tableview.IndexPathForSelectedRow, true); }
+		protected void ParentPageAppearing( object sender, EventArgs e ) { _TableView?.DeselectRow(_TableView.IndexPathForSelectedRow, true); }
 
-		/// <summary>
-		/// Gets the size of the desired.
-		/// </summary>
-		/// <returns>The desired size.</returns>
-		/// <param name="widthConstraint">Width constraint.</param>
-		/// <param name="heightConstraint">Height constraint.</param>
-		public override SizeRequest GetDesiredSize( double widthConstraint, double heightConstraint ) => Control.GetSizeRequest(widthConstraint, heightConstraint, MinRowHeight, MinRowHeight);
+		public override SizeRequest GetDesiredSize( double widthConstraint, double heightConstraint ) => Control.GetSizeRequest(widthConstraint, heightConstraint, SVConstants.Defaults.MIN_ROW_HEIGHT, SVConstants.Defaults.MIN_ROW_HEIGHT);
 
-		/// <summary>
-		/// Updates the native widget.
-		/// </summary>
 		protected override void UpdateNativeWidget()
 		{
 			if ( Element.Opacity < 1 )
@@ -312,11 +299,6 @@ namespace Jakar.SettingsView.iOS
 			base.UpdateNativeWidget();
 		}
 
-		/// <summary>
-		/// Ons the element property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
 		protected override void OnElementPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.OnElementPropertyChanged(sender, e);
@@ -328,89 +310,85 @@ namespace Jakar.SettingsView.iOS
 		}
 
 
-		private void UpdateRowHeight()
+		protected void UpdateRowHeight()
 		{
-			_tableview.EstimatedRowHeight = Math.Max((float) Element.RowHeight, MinRowHeight);
-			_tableview.ReloadData();
+			if ( _TableView is null ) throw new NullReferenceException(nameof(_TableView));
+
+			_TableView.EstimatedRowHeight = (nfloat) Math.Max(Element.RowHeight, SVConstants.Defaults.MIN_ROW_HEIGHT);
+			_TableView.ReloadData();
 		}
 
-		private void UpdateBackgroundColor()
+		protected void UpdateBackgroundColor()
 		{
 			Color color = Element.BackgroundColor;
 			if ( color != Color.Default ) { Control.BackgroundColor = color.ToUIColor(); }
 		}
 
-		private void UpdateSeparator()
+		protected void UpdateSeparator()
 		{
 			Color color = Element.SeparatorColor;
 			Control.SeparatorColor = color.ToUIColor();
 		}
 
-		private void UpdateScrollToTop()
+		protected void UpdateScrollToTop()
 		{
-			if ( Element.ScrollToTop )
+			if ( !Element.ScrollToTop ) return;
+			if ( _TableView is null ) throw new NullReferenceException(nameof(_TableView));
+			if ( _TableView.NumberOfSections() == 0 )
 			{
-				if ( _tableview.NumberOfSections() == 0 )
-				{
-					Element.ScrollToTop = false;
-					return;
-				}
-
-				var sectionIdx = 0;
-				nint rows = _tableview.NumberOfRowsInSection(sectionIdx);
-				if ( rows > 0 )
-				{
-					_tableview.SetContentOffset(new CGPoint(0, _topInset), false);
-					//_tableview.ScrollToRow(NSIndexPath.Create(0, 0), UITableViewScrollPosition.Top, false);
-				}
-
 				Element.ScrollToTop = false;
+				return;
 			}
-		}
 
-		private void UpdateScrollToBottom()
-		{
-			if ( Element.ScrollToBottom )
+			var sectionIdx = 0;
+			nint rows = _TableView.NumberOfRowsInSection(sectionIdx);
+			if ( rows > 0 )
 			{
-				nint sectionIdx = _tableview.NumberOfSections() - 1;
-				if ( sectionIdx < 0 )
-				{
-					Element.ScrollToBottom = false;
-					return;
-				}
-
-				nint rowIdx = _tableview.NumberOfRowsInSection(sectionIdx) - 1;
-
-				if ( sectionIdx >= 0 &&
-					 rowIdx >= 0 ) { _tableview.ScrollToRow(NSIndexPath.Create(sectionIdx, rowIdx), UITableViewScrollPosition.Top, false); }
-
-				Element.ScrollToBottom = false;
+				_TableView.SetContentOffset(new CGPoint(0, _topInset), false);
+				//_tableview.ScrollToRow(NSIndexPath.Create(0, 0), UITableViewScrollPosition.Top, false);
 			}
+
+			Element.ScrollToTop = false;
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
+		protected void UpdateScrollToBottom()
+		{
+			if ( _TableView is null ) throw new NullReferenceException(nameof(_TableView));
+			if ( !Element.ScrollToBottom ) return;
+
+			nint sectionIdx = _TableView.NumberOfSections() - 1;
+			if ( sectionIdx < 0 )
+			{
+				Element.ScrollToBottom = false;
+				return;
+			}
+
+			nint rowIdx = _TableView.NumberOfRowsInSection(sectionIdx) - 1;
+
+			if ( sectionIdx >= 0 &&
+				 rowIdx >= 0 ) { _TableView.ScrollToRow(NSIndexPath.Create(sectionIdx, rowIdx), UITableViewScrollPosition.Top, false); }
+
+			Element.ScrollToBottom = false;
+		}
+
 		protected override void Dispose( bool disposing )
 		{
-			_parentPage.Appearing -= ParentPageAppearing;
+			if ( _ParentPage is not null ) _ParentPage.Appearing -= ParentPageAppearing;
 
 			if ( _disposed ) { return; }
 
 			if ( disposing )
 			{
-				_contentSizeObserver.Dispose();
-				_contentSizeObserver = null;
+				_ContentSizeObserver?.Dispose();
+				_ContentSizeObserver = null;
 				Element.CollectionChanged -= OnCollectionChanged;
 				Element.SectionCollectionChanged -= OnSectionCollectionChanged;
 				Element.SectionPropertyChanged -= OnSectionPropertyChanged;
-				_insetTracker?.Dispose();
-				_insetTracker = null;
+				_InsetTracker?.Dispose();
+				_InsetTracker = null;
 				foreach ( UIView subview in Subviews ) { DisposeSubviews(subview); }
 
-				_tableview = null;
+				_TableView = null;
 			}
 
 			_disposed = true;
@@ -418,11 +396,11 @@ namespace Jakar.SettingsView.iOS
 			base.Dispose(disposing);
 		}
 
-		private void DisposeSubviews( UIView view )
+		protected void DisposeSubviews( UIView view )
 		{
 			var ver = view as IVisualElementRenderer;
 
-			if ( ver == null )
+			if ( ver is null )
 			{
 				foreach ( UIView subView in view.Subviews ) { DisposeSubviews(subView); }
 
@@ -432,13 +410,6 @@ namespace Jakar.SettingsView.iOS
 			view.Dispose();
 		}
 
-		/// <summary>
-		/// Gets the items for beginning drag session.
-		/// </summary>
-		/// <returns>The items for beginning drag session.</returns>
-		/// <param name="tableView">Table view.</param>
-		/// <param name="session">Session.</param>
-		/// <param name="indexPath">Index path.</param>
 		public UIDragItem[] GetItemsForBeginningDragSession( UITableView tableView, IUIDragSession session, NSIndexPath indexPath )
 		{
 			Section section = Element.Model.GetSection(indexPath.Section);
@@ -461,14 +432,15 @@ namespace Jakar.SettingsView.iOS
 			var itemProvider = new NSItemProvider();
 			itemProvider.RegisterDataRepresentation(UTType.PlainText,
 													NSItemProviderRepresentationVisibility.All,
-													( completionHandler ) =>
+													delegate( ItemProviderDataCompletionHandler completion_handler )
 													{
-														completionHandler(data, null);
-														return null;
+														completion_handler(data, null!);
+														return null!;
+														// return new NSProgress();
 													}
 												   );
 
-			return new UIDragItem[]
+			return new[]
 				   {
 					   new UIDragItem(itemProvider)
 				   };
@@ -482,19 +454,19 @@ namespace Jakar.SettingsView.iOS
 		public void PerformDrop( UITableView tableView, IUITableViewDropCoordinator coordinator )
 		{
 			NSIndexPath? destinationIndexPath = coordinator.DestinationIndexPath;
-			if ( destinationIndexPath == null ) { return; }
+			if ( destinationIndexPath is null ) { return; }
 
 			coordinator.Session.LoadObjects<NSString>(items =>
 													  {
 														  List<int> path = items[0]
 																		   .ToString()
-																		   .Split(new char[]
+																		   .Split(new[]
 																				  {
 																					  ','
 																				  },
 																				  StringSplitOptions.None
 																				 )
-																		   .Select(x => int.Parse(x))
+																		   .Select(int.Parse)
 																		   .ToList();
 														  int secIdx = path[0];
 														  int rowIdx = path[1];
@@ -508,7 +480,7 @@ namespace Jakar.SettingsView.iOS
 														  CGPoint offset = Control.ContentOffset;
 														  UITableViewCell fromCell = Control.CellAt(NSIndexPath.FromRowSection(rowIdx, secIdx));
 
-														  if ( section.ItemsSource == null )
+														  if ( section.ItemsSource is null )
 														  {
 															  // Don't use PerformBatchUpdates. Because can't cancel animations well.
 															  Control.BeginUpdates();
@@ -533,13 +505,13 @@ namespace Jakar.SettingsView.iOS
 															  Control.InsertRows(GetPaths(destinationIndexPath.Section, destinationIndexPath.Row, 1), UITableViewRowAnimation.None);
 
 															  Control.EndUpdates();
-															  Element.SendItemDropped(destSection, cell);
+															  if ( cell is not null ) Element.SendItemDropped(destSection, cell);
 														  }
 
 														  // Cancel animations and restore the scroll position.
 														  UITableViewCell toCell = Control.CellAt(destinationIndexPath);
-														  toCell?.Layer?.RemoveAllAnimations();
-														  fromCell?.Layer?.RemoveAllAnimations();
+														  toCell.Layer.RemoveAllAnimations();
+														  fromCell.Layer.RemoveAllAnimations();
 														  Control.Layer.RemoveAllAnimations();
 														  Control.SetContentOffset(offset, false);
 
@@ -549,9 +521,6 @@ namespace Jakar.SettingsView.iOS
 													 );
 		}
 
-		/// <summary>
-		/// Ensure that the drop session contains a drag item with a data representation that the view can consume.
-		/// </summary>
 		[Export("tableView:canHandleDropSession:")]
 		public bool CanHandleDropSession( UITableView tableView, IUIDropSession session ) => session.CanLoadObjects(typeof(NSString));
 
@@ -564,25 +533,14 @@ namespace Jakar.SettingsView.iOS
 		[Export("tableView:dropSessionDidExit:")]
 		public void DropSessionDidExit( UITableView tableView, IUIDropSession session ) { }
 
-		/// <summary>
-		/// A drop proposal from a table view includes two items: a drop operation,
-		/// typically .move or .copy; and an intent, which declares the action the
-		/// table view will take upon receiving the items. (A drop proposal from a
-		/// custom view does includes only a drop operation, not an intent.)
-		/// </summary>
 		[Export("tableView:dropSessionDidUpdate:withDestinationIndexPath:")]
 		public UITableViewDropProposal DropSessionDidUpdate( UITableView tableView, IUIDropSession session, NSIndexPath destinationIndexPath )
 		{
-			if ( destinationIndexPath == null ) { return new UITableViewDropProposal(UIDropOperation.Cancel); }
-
 			// this dragging is from UITableView.
-			if ( tableView.HasActiveDrag )
-			{
-				if ( session.Items.Length > 1 ) { return new UITableViewDropProposal(UIDropOperation.Cancel); }
-				else { return new UITableViewDropProposal(UIDropOperation.Move, UITableViewDropIntent.Automatic); }
-			}
-
-			return new UITableViewDropProposal(UIDropOperation.Cancel);
+			if ( !tableView.HasActiveDrag ) return new UITableViewDropProposal(UIDropOperation.Cancel);
+			return session.Items.Length > 1
+					   ? new UITableViewDropProposal(UIDropOperation.Cancel)
+					   : new UITableViewDropProposal(UIDropOperation.Move, UITableViewDropIntent.Automatic);
 		}
 	}
 }

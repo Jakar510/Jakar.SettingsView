@@ -21,9 +21,9 @@ namespace Jakar.SettingsView.Droid.Controls
 		private ValueTextCellBase? _CurrentTextCell => _CurrentCell as ValueTextCellBase;
 
 
-		public ValueView( Context context ) : base(context) => Init();
-		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Init();
-		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Init();
+		public ValueView( Context context ) : base(context) => Initialize();
+		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Initialize();
+		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Initialize();
 
 
 		public override bool UpdateText() => _CurrentTextCell is not null && UpdateText(_CurrentTextCell.ValueText);
@@ -79,9 +79,9 @@ namespace Jakar.SettingsView.Droid.Controls
 			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
 				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
+			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return base.Update(sender, e);
 		}

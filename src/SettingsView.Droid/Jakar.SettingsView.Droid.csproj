@@ -100,6 +100,7 @@
     <Compile Include="SettingsViewLayoutManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="android.cd" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>

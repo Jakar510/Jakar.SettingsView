@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseAiAccessoryCell&lt;TAccessory&gt;" Collapsed="true">
+    <Position X="3.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>BaseCell\BaseAiAccessoryCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseAiDescriptionCell" Collapsed="true">
+    <Position X="14" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAACBCAAAAAAAAAAACAAAAAAAAAEAEAAAAIAAAA=</HashCode>
+      <FileName>BaseCell\BaseAiDescriptionCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseAiTitledCell" Collapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYgAIACBGAAAAACAAAAACAEAIAAAACIAEEAAAAAAAw=</HashCode>
+      <FileName>BaseCell\BaseAiTitledCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseAiValueCell" Collapsed="true">
+    <Position X="18.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAACBCAAAAAAAAAAACAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>BaseCell\BaseAiValueCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseCellView" Collapsed="true">
+    <Position X="15" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAACFCAAAAAARAhAAyAECAAQRiACAEAQIgQAABA=</HashCode>
+      <FileName>BaseCell\BaseCellView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.BaseValueCell&lt;TCell&gt;" Collapsed="true">
+    <Position X="17.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BaseCell\BaseValueCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.BaseCell.CellBaseRenderer&lt;TNativeCell&gt;" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAQAAAAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BaseCell\CellBaseRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CheckboxCellRenderer" Collapsed="true">
+    <Position X="24" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\CheckboxCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CheckboxCellView" Collapsed="true">
+    <Position X="6" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAkAAACFCAAAAAAAAAAACAQAAAAAAAAAEAAgBAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\CheckboxCellRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.RadioCellRenderer" Collapsed="true">
+    <Position X="1.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\RadioCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.RadioCellView" Collapsed="true">
+    <Position X="1.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAgAAACFCAAAAAAAAAAACAAAAAAQAIIAEEAAAAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\RadioCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.SwitchCellRenderer" Collapsed="true">
+    <Position X="6" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\SwitchCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.SwitchCellView" Collapsed="true">
+    <Position X="3.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAkAAACFCAAAAAAAAAAACAQAAAAAAAAAEAAABAAAAA=</HashCode>
+      <FileName>Cells\AccessoryCells\SwitchCellRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.ButtonCellRenderer" Collapsed="true">
+    <Position X="12.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\CommandCells\ButtonCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.ButtonCellView" Collapsed="true">
+    <Position X="28.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAEACFCAQAAAAAAAAQTCChEAABIAJAEAAAAAAIII=</HashCode>
+      <FileName>Cells\CommandCells\ButtonCellRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CommandCellRenderer" Collapsed="true">
+    <Position X="19.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\CommandCells\CommandCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CommandCellView" Collapsed="true">
+    <Position X="26.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEACFCAAAQAAAAAgQTAAAAAAAAAAAEAAAAAAAAI=</HashCode>
+      <FileName>Cells\CommandCells\CommandCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CustomCellRenderer" Collapsed="true">
+    <Position X="28.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\CustomCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.CustomCellView" Collapsed="true">
+    <Position X="8.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEQCECAAAYACQAAAQTAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Cells\CustomCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.EntryCellRenderer" Collapsed="true">
+    <Position X="3.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\EntryCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.EntryCellView" Collapsed="true">
+    <Position X="10.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQgAAACBCAAAACAAAAAISCQAAAAABAAIEBAAAAAAAA=</HashCode>
+      <FileName>Cells\EntryCellRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.LabelCellRenderer" Collapsed="true">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\LabelCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.LabelCellView" Collapsed="true">
+    <Position X="15" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Cells\LabelCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.DatePickerCellRenderer" Collapsed="true">
+    <Position X="17.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\DatePickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.DatePickerCellView" Collapsed="true">
+    <Position X="19.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAESAAAEAQAAAEACEAAAAAAAAAAEAABQAAAAA=</HashCode>
+      <FileName>Cells\Pickers\DatePickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.NumberPickerCellRenderer" Collapsed="true">
+    <Position X="26.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\NumberPickerCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.NumberPickerCellView" Collapsed="true">
+    <Position X="24" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAEgA0CBCAAAAAEAAATAEABAAAAACEEQAEAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\NumberPickerCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.PickerAdapter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="36.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAJgAAAAECAAAAAJCAAACgQACEAAAAAAAAABABARAAE=</HashCode>
+      <FileName>Cells\Pickers\PickerAdapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.PickerInnerView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="38" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAACAAAACAAAAAAAAAAoAAABAEAEAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\PickerAdapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.PickerCellRenderer" Collapsed="true">
+    <Position X="8.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\PickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.PickerCellView" Collapsed="true">
+    <Position X="12.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgCFKAAAiABgAAAASEAABAAAwAgCUQAABAMAEA=</HashCode>
+      <FileName>Cells\Pickers\PickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.TextPickerCellRenderer" Collapsed="true">
+    <Position X="15" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\TextPickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.TextPickerCellView" Collapsed="true">
+    <Position X="17.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEgAECBCAAAAAEAQAzAEAAAAAAAAAEAAIAAAEAA=</HashCode>
+      <FileName>Cells\Pickers\TextPickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.TimePickerCellRenderer" Collapsed="true">
+    <Position X="21.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells\Pickers\TimePickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Cells.TimePickerCellView" Collapsed="true">
+    <Position X="21.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAECAAAQAAAEAAASAEAAAAAAACAEAAAAAAIAA=</HashCode>
+      <FileName>Cells\Pickers\TimePickerCellRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.AiEditText" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="31" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGwEEACARCgQAQEAAAAAiACEhABgAGAAAAAiAAAABAA=</HashCode>
+      <FileName>Controls\AiEditText.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.BaseTextView" Collapsed="true">
+    <Position X="3.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEEAAAAAgQAQAAAAAACACEhAAgAEABAAAgAAAAAAE=</HashCode>
+      <FileName>Controls\BaseTextView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.DescriptionView" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAgAAAAAAAAAgACEgAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\DescriptionView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.HintView" Collapsed="true">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAgAAAAAAAAAgACEgAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\HintView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.IconView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="34.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQEAAEBECBAAAAAAAAAgEAEAQAAAEQAAQBAAAAAAAE=</HashCode>
+      <FileName>Controls\IconView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.RadioCheck" Collapsed="true">
+    <Position X="31" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Controls\RadioCheck.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.SimpleCheck" Collapsed="true">
+    <Position X="34.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Controls\SimpleCheck.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.TitleView" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAgAAAAAAAAAgACEgAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\TitleView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Controls.ValueView" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAgAAAAAAAAAgACEgAAgAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Controls\ValueView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.DrawableUtility" Collapsed="true">
+    <Position X="34.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAACAA=</HashCode>
+      <FileName>DrawableUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.FontUtility" Collapsed="true">
+    <Position X="36.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAAABAgAAAAAIAAAAEAAAAAAAAAEgAAAAAAABAAAQ=</HashCode>
+      <FileName>FontUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.FormsViewContainer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="38" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAEAAECAAEQAAEAgAASAggAAAgADAAEAAAAAACAA=</HashCode>
+      <FileName>FormsViewContainer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.GetIcons" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="31" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GetIcons.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.HeaderFooterContainer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="32.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAVABEAAECIAAAABEAgAASAAAAAghEAAAEAACAAAAAA=</HashCode>
+      <FileName>HeaderFooterContainer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.ImageCacheController" Collapsed="true">
+    <Position X="36.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAEAABAAAA=</HashCode>
+      <FileName>ImageCacheController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.MemoryLimitedLruCache" Collapsed="true">
+    <Position X="32.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>MemoryLimitedLruCache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.RowInfo" Collapsed="true">
+    <Position X="32.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAACIAAAAA=</HashCode>
+      <FileName>ModelProxy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.ModelProxy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="34.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAABAAAACAABBQAAAAAkAAAABAQQAgAAACACAEAAME=</HashCode>
+      <FileName>ModelProxy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SettingsViewInit" Collapsed="true">
+    <Position X="34.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>SettingsViewInit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SettingsViewLayoutManager" Collapsed="true">
+    <Position X="36.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAAACAABAAABAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>SettingsViewLayoutManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SettingsViewRecyclerAdapter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="38" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIIMAEEACAAAgAAECIAAAiCgQAAAQAEAQJEAgQAAEA=</HashCode>
+      <FileName>SettingsViewRecyclerAdapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SettingsViewRenderer" Collapsed="true">
+    <Position X="31" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAgAUCAAAAAIBDgCAAAAMBAQAABAAAACAAAIAAA=</HashCode>
+      <FileName>SettingsViewRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SettingsViewSimpleCallback" Collapsed="true">
+    <Position X="32.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAACAAAAAAQEAAAAAAAAAABAAggAAAEAAAEAA=</HashCode>
+      <FileName>SettingsViewSimpleCallback.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.SVItemDecoration" Collapsed="true">
+    <Position X="36.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAACAAAAAIAABAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>SVItemdecoration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.CustomViewHolder" Collapsed="true">
+    <Position X="2.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.CustomHeaderViewHolder" Collapsed="true">
+    <Position X="0.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.CustomFooterViewHolder" Collapsed="true">
+    <Position X="2.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.ContentBodyViewHolder" Collapsed="true">
+    <Position X="5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Extensions.JavaObjectExtensions" Collapsed="true">
+    <Position X="38" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\JavaObjectExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Extensions.LayoutAlignmentExtensions" Collapsed="true">
+    <Position X="31" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\LayoutAlignmentExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Extensions.AndroidLayoutExtensions" Collapsed="true">
+    <Position X="32.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAQAEAABAAAAAAAAAAAAgAAAgAAAAAAAAI=</HashCode>
+      <FileName>Extensions\LayoutExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Jakar.SettingsView.Droid.Extensions.TextAlignmentExtensions" Collapsed="true">
+    <Position X="38" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Extensions\TextAlignmentExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Jakar.SettingsView.Droid.IViewHolder" Collapsed="true">
+    <Position X="31" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Jakar.SettingsView.Droid.IHeaderViewHolder" Collapsed="true">
+    <Position X="38" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Jakar.SettingsView.Droid.IFooterViewHolder" Collapsed="true">
+    <Position X="36.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Jakar.SettingsView.Droid.ICustomViewHolder" Collapsed="true">
+    <Position X="31" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Jakar.SettingsView.Droid.IDefaultViewHolder" Collapsed="true">
+    <Position X="32.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ViewHolders.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Jakar.SettingsView.Droid.Interfaces.IEntryCellRenderer" Collapsed="true">
+    <Position X="34.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Interfaces\ICellRender.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Jakar.SettingsView.Droid.ViewType" Collapsed="true">
+    <Position X="34.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ModelProxy.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Jakar.SettingsView.Droid.Extensions.Layout" Collapsed="true">
+    <Position X="32.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\LayoutExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Jakar.SettingsView.Droid.Extensions.GridSpec" Collapsed="true">
+    <Position X="31" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAAAQAAACAAAAASAACAAAIAAAAAAIAAA=</HashCode>
+      <FileName>Extensions\LayoutExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

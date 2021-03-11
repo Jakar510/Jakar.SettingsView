@@ -73,11 +73,11 @@ namespace Jakar.SettingsView.Droid.Controls
 			if ( e.PropertyName == HintTextCellBase.HintFontFamilyProperty.PropertyName ||
 				 e.PropertyName == HintTextCellBase.HintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == HintTextCellBase.HintColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
+			if ( e.PropertyName == HintTextCellBase.HintColorProperty.PropertyName ) { return UpdateTextColor(); }
 
 			if ( e.PropertyName == HintTextCellBase.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return base.Update(sender, e);
 		}

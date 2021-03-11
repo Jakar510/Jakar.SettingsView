@@ -32,14 +32,14 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
-			Init();
+			Initialize();
 		}
 		protected BaseTextView( BaseCellView cell, AContext context ) : this(context) => SetCell(cell);
 		protected BaseTextView( AContext context, IAttributeSet attributes ) : base(context, attributes)
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
-			Init();
+			Initialize();
 		}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -53,7 +53,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 
 		public void SetMaxWidth( int width, double factor ) => SetMaxWidth((int) ( width * factor ));
-		public virtual void Init()
+		public virtual void Initialize()
 		{
 			// SetSingleLine(false);
 			// Ellipsize = null;
