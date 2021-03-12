@@ -1,5 +1,6 @@
 ﻿using System;
 using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;

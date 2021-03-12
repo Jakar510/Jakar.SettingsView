@@ -16,10 +16,10 @@ using EntryCellRenderer = Jakar.SettingsView.iOS.Cells.EntryCellRenderer;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class EntryCellView : BaseValueCell<AiEditText>, IEntryCellRenderer
 	{
 		protected bool _HasFocus { get; set; }

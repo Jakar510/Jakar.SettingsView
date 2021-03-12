@@ -6,7 +6,6 @@ using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Cells.Sources;
-using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
@@ -19,11 +18,11 @@ using Xamarin.Forms.PlatformConfiguration;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class NumberPickerCellRenderer : CellBaseRenderer<NumberPickerCellView> { }
 
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class NumberPickerCellView : BasePickerCell
 	{
 		protected NumberPickerCell _NumberPickerCell => Cell as NumberPickerCell ?? throw new NullReferenceException(nameof(_NumberPickerCell));

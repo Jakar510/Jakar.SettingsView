@@ -19,10 +19,10 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
+	[Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
 
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class PickerCellView : BasePickerCell
 	{
 		protected PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));

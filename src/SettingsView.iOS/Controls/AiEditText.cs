@@ -17,7 +17,7 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class AiEditText : UITextField, IUpdateEntryCell<IEntryCellRenderer, Color, AiEntryCell>
 	{
 		protected bool _HasFocus { get; set; }

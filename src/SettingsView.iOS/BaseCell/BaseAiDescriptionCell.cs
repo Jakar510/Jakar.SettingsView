@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;

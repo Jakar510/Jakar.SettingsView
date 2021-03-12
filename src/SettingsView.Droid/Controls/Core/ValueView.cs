@@ -1,60 +1,68 @@
 ﻿using System;
 using System.ComponentModel;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
+using Android.Content;
+using Android.Util;
+using Android.Views;
+using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
+using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.Droid.Controls.Core
 {
-	[Foundation.Preserve(AllMembers = true)]
-	public class ValueView : BaseTextView<BaseAiValueCell>
+	[Android.Runtime.Preserve(AllMembers = true)]
+	public class ValueView : BaseTextView
 	{
-		private ValueCellBase _CurrentCell => _Renderer.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		private ValueCellBase _CurrentCell => _Cell.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 		private ValueTextCellBase? _CurrentTextCell => _CurrentCell as ValueTextCellBase;
 
 
-		public ValueView( BaseAiValueCell renderer ) : base(renderer) => Initialize();
+		public ValueView( Context context ) : base(context) => Initialize();
+		public ValueView( BaseCellView baseView, Context context ) : base(baseView, context) => Initialize();
+		public ValueView( Context context, IAttributeSet attributes ) : base(context, attributes) => Initialize();
 
 
 		public override bool UpdateText() => _CurrentTextCell is not null && UpdateText(_CurrentTextCell.ValueText);
 		public bool UpdateText( string? text )
 		{
 			Text = text;
-			Hidden = string.IsNullOrEmpty(Text);
+			Visibility = string.IsNullOrEmpty(Text)
+							 ? ViewStates.Gone
+							 : ViewStates.Visible;
 
 			return true;
 		}
 		public override bool UpdateFontSize()
 		{
-			ContentScaleFactor = (nfloat) _CurrentCell.ValueTextConfig.FontSize;
+			SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.ValueTextConfig.FontSize);
+			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
 
 			return true;
 		}
 		public override bool UpdateTextColor()
 		{
-			TextColor = _CurrentCell.ValueTextConfig.Color.ToUIColor();
+			SetTextColor(_CurrentCell.ValueTextConfig.Color.ToAndroid());
+			SetTextColor(DefaultTextColor);
 
 			return true;
 		}
 		public override bool UpdateFont()
 		{
-			string? family = _CurrentCell.ValueTextConfig.FontFamily;
+			string? family = _CurrentCell.HintConfig.FontFamily;
 			FontAttributes attr = _CurrentCell.ValueTextConfig.FontAttributes;
-			var size = (float) _CurrentCell.ValueTextConfig.FontSize;
 
-			Font = FontUtility.CreateNativeFont(family, size, attr);
+			Typeface = FontUtility.CreateTypeface(family, attr);
 
 			return true;
 		}
 		public override bool UpdateTextAlignment()
 		{
 			TextAlignment alignment = _CurrentCell.ValueTextConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
+			TextAlignment = alignment.ToAndroidTextAlignment();
+			Gravity = alignment.ToGravityFlags();
 
 			return true;
 		}
@@ -78,7 +86,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			// if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 

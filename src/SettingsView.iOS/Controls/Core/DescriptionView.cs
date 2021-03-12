@@ -5,11 +5,10 @@ using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class DescriptionView : BaseTextView<BaseAiDescriptionCell>

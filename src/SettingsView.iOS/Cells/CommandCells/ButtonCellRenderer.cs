@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Extensions;
-using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
@@ -17,9 +17,9 @@ using Xamarin.Forms.Platform.iOS;
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)] internal class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
+	[Preserve(AllMembers = true)] internal class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class ButtonCellView : BaseCellView // IBorderVisualElementRenderer
 	{
 		protected internal UIColor? DefaultTextColor { get; }

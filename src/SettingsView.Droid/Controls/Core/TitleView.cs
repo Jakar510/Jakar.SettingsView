@@ -9,7 +9,7 @@ using Xamarin.Forms.Platform.Android;
 using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Controls
+namespace Jakar.SettingsView.Droid.Controls.Core
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class TitleView : BaseTextView

@@ -4,6 +4,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Droid.Controls;
+using Jakar.SettingsView.Droid.Controls.Core;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Misc;

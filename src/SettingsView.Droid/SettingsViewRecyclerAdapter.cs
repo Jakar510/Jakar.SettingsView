@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Jakar.SettingsView.Droid.Controls;
 using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;

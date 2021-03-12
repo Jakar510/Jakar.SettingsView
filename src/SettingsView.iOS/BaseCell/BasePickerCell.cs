@@ -2,13 +2,13 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Foundation;
-using Jakar.SettingsView.iOS.OLD_Cells;
+using Jakar.SettingsView.iOS.Controls;
 using UIKit;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.iOS.BaseCell
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public abstract class BasePickerCell : BaseAiValueCell
 	{
 		protected NoCaretField _DummyField { get; set; }

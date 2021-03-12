@@ -8,7 +8,7 @@ using UIKit;
 
 namespace Jakar.SettingsView.iOS.Interfaces
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public interface IEntryCellRenderer
 	{
 		public void UpdateWithForceLayout( Action updateAction );

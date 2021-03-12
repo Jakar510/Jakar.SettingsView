@@ -3,7 +3,7 @@ using Foundation;
 
 namespace Jakar.SettingsView.iOS
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public static class ImageCacheController
 	{
 		public static NSCache Instance

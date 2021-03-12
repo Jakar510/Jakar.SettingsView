@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Android.Runtime;
 using Jakar.SettingsView.Droid.Controls;
+using Jakar.SettingsView.Droid.Controls.Core;
 using Xamarin.Forms;
 using AContext = Android.Content.Context;
 

@@ -15,10 +15,10 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CheckboxCellView : BaseAiAccessoryCell<SimpleCheck>
 	{
 		protected CheckboxCell _AccessoryCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_AccessoryCell));

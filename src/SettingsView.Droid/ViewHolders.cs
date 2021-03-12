@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Jakar.SettingsView.Droid.Controls;
 using Xamarin.Forms;
 using AView = Android.Views.View;
 

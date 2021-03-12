@@ -4,8 +4,8 @@ using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Extensions;
-using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.sv;
 using ObjCRuntime;
 using UIKit;
@@ -14,7 +14,7 @@ using Xamarin.Forms.Platform.iOS;
 
 namespace Jakar.SettingsView.iOS
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class SettingsTableSource : UITableViewSource
 	{
 		protected Shared.sv.SettingsView _SettingsView { get; set; }
@@ -101,33 +101,30 @@ namespace Jakar.SettingsView.iOS
 			//
 			// return (nfloat) _settingsView.HeaderHeight;
 		}
-		public override UIView GetViewForHeader( UITableView tableView, nint section ) // TODO: fix this
+		public override UIView GetViewForHeader( UITableView tableView, nint sectionId ) // TODO: fix this
 		{
-			View formsView = _SettingsView.Model.GetSectionHeaderView((int) section);
-			if ( formsView != null ) { return GetNativeSectionHeaderFooterView(formsView, tableView, true); }
+			Section section = _SettingsView.Model.GetSection((int) sectionId);
+			if ( section is null ) throw new NullReferenceException(nameof(section));
+			return GetNativeSectionHeaderFooterView(section.HeaderView, tableView, section);
 
-
-			if ( tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextHeaderId) is not TextHeaderView headerView )
-			{
-				// for HotReload
-				return new UIView();
-			}
-
-			headerView.Label.Text = _SettingsView.Model.GetSectionTitle((int) section);
-			headerView.Label.TextColor = _SettingsView.HeaderTextColor == Color.Default
-											 ? UIColor.Gray
-											 : _SettingsView.HeaderTextColor.ToUIColor();
-			headerView.Label.Font = FontUtility.CreateNativeFont(_SettingsView.HeaderFontFamily, (float) _SettingsView.HeaderFontSize, _SettingsView.HeaderFontAttributes);
-			//UIFont.SystemFontOfSize((nfloat)_settingsView.HeaderFontSize);
-			headerView.BackgroundView.BackgroundColor = _SettingsView.HeaderBackgroundColor.ToUIColor();
-			headerView.Label.Padding = _SettingsView.HeaderPadding.ToUIEdgeInsets();
-
-			Section sec = _SettingsView.Model.GetSection((int) section);
-			headerView.SetVerticalAlignment(_SettingsView.HeaderTextVerticalAlign);
-			// if ( sec.HeaderHeight != -1 ||
-			// 	 _settingsView.HeaderHeight != -1 ) { headerView.SetVerticalAlignment(_settingsView.HeaderTextVerticalAlign); }
-
-			return headerView;
+			// throw new InvalidOperationException(nameof(formsView));
+			// if ( tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextHeaderId) is not TextHeaderView headerView ) { return new UIView(); } // for HotReload
+			//
+			// headerView.Label.Text = _SettingsView.Model.GetSectionTitle((int) section);
+			// headerView.Label.TextColor = _SettingsView.HeaderTextColor == Color.Default
+			// 								 ? UIColor.Gray
+			// 								 : _SettingsView.HeaderTextColor.ToUIColor();
+			// headerView.Label.Font = FontUtility.CreateNativeFont(_SettingsView.HeaderFontFamily, (float) _SettingsView.HeaderFontSize, _SettingsView.HeaderFontAttributes);
+			// //UIFont.SystemFontOfSize((nfloat)_settingsView.HeaderFontSize);
+			// headerView.BackgroundView.BackgroundColor = _SettingsView.HeaderBackgroundColor.ToUIColor();
+			// headerView.Label.Padding = _SettingsView.HeaderPadding.ToUIEdgeInsets();
+			//
+			// Section sec = _SettingsView.Model.GetSection((int) section);
+			// headerView.SetVerticalAlignment(_SettingsView.HeaderTextVerticalAlign);
+			// // if ( sec.HeaderHeight != -1 ||
+			// // 	 _settingsView.HeaderHeight != -1 ) { headerView.SetVerticalAlignment(_settingsView.HeaderTextVerticalAlign); }
+			//
+			// return headerView;
 		}
 
 		public override nfloat GetHeightForFooter( UITableView tableView, nint section )
@@ -153,42 +150,42 @@ namespace Jakar.SettingsView.iOS
 
 			return UITableView.AutomaticDimension;
 		}
-		public override UIView GetViewForFooter( UITableView tableView, nint section )
+		public override UIView GetViewForFooter( UITableView tableView, nint sectionId )
 		{
-			View formsView = _SettingsView.Model.GetSectionFooterView((int) section);
-			if ( formsView != null ) { return GetNativeSectionHeaderFooterView(formsView, tableView, false); }
+			Section section = _SettingsView.Model.GetSection((int) sectionId);
+			if ( section is null ) throw new NullReferenceException(nameof(section));
+			return GetNativeSectionHeaderFooterView(section.FooterView, tableView, section);
 
-			string text = _SettingsView.Model.GetFooterText((int) section);
-
-			if ( string.IsNullOrEmpty(text) ) { return new UIView(CGRect.Empty); }
-
-			var footerView = tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextFooterId) as TextFooterView;
-
-			if ( footerView is null )
-			{
-				// for HotReload
-				return new UIView();
-			}
-
-			footerView.Label.Text = text;
-			footerView.Label.TextColor = _SettingsView.FooterTextColor == Color.Default
-											 ? UIColor.Gray
-											 : _SettingsView.FooterTextColor.ToUIColor();
-			footerView.Label.Font = FontUtility.CreateNativeFont(_SettingsView.FooterFontFamily, (float) _SettingsView.FooterFontSize, _SettingsView.FooterFontAttributes);
-			//UIFont.SystemFontOfSize((nfloat)_settingsView.FooterFontSize);
-			footerView.BackgroundView.BackgroundColor = _SettingsView.FooterBackgroundColor.ToUIColor();
-			footerView.Label.Padding = _SettingsView.FooterPadding.ToUIEdgeInsets();
-
-			return footerView;
+			// throw new InvalidOperationException(nameof(formsView));
+			// string text = _SettingsView.Model.GetFooterText((int) section);
+			//
+			// if ( string.IsNullOrEmpty(text) ) { return new UIView(CGRect.Empty); }
+			//
+			// if ( tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextFooterId) is not TextFooterView footerView ) { return new UIView(); } // for HotReload
+			//
+			// footerView.Label.Text = text;
+			// footerView.Label.TextColor = _SettingsView.FooterTextColor == Color.Default
+			// 								 ? UIColor.Gray
+			// 								 : _SettingsView.FooterTextColor.ToUIColor();
+			// footerView.Label.Font = FontUtility.CreateNativeFont(_SettingsView.FooterFontFamily, (float) _SettingsView.FooterFontSize, _SettingsView.FooterFontAttributes);
+			// //UIFont.SystemFontOfSize((nfloat)_settingsView.FooterFontSize);
+			// footerView.BackgroundView.BackgroundColor = _SettingsView.FooterBackgroundColor.ToUIColor();
+			// footerView.Label.Padding = _SettingsView.FooterPadding.ToUIEdgeInsets();
+			//
+			// return footerView;
 		}
 
-		private UIView GetNativeSectionHeaderFooterView( View formsView, UITableView tableView, bool isHeader )
+		protected UIView GetNativeSectionHeaderFooterView( ISectionHeader header, UITableView tableView, Section section )
 		{
-			string idString = isHeader
-								  ? SettingsViewRenderer.CustomHeaderId
-								  : SettingsViewRenderer.CustomFooterId;
-			var nativeView = tableView.DequeueReusableHeaderFooterView(idString) as CustomHeaderFooterView;
-			nativeView?.UpdateCell(formsView, tableView); // TODO: fix this
+			var nativeView = (CustomHeaderFooterView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomHeaderId);
+			nativeView.SetContent(header, section, tableView);
+
+			return nativeView;
+		}
+		protected UIView GetNativeSectionHeaderFooterView( ISectionFooter footer, UITableView tableView, Section section )
+		{
+			var nativeView = (CustomHeaderFooterView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomFooterId);
+			nativeView.SetContent(footer, section, tableView);
 
 			return nativeView;
 		}

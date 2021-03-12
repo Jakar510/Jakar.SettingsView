@@ -4,7 +4,6 @@ using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
@@ -16,10 +15,10 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class DatePickerCellRenderer : CellBaseRenderer<DatePickerCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class DatePickerCellView : BasePickerCell
 	{
 		protected DatePickerCell _DatePickerCell => Cell as DatePickerCell ?? throw new NullReferenceException(nameof(_DatePickerCell));

@@ -8,13 +8,14 @@ using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
+using Jakar.SettingsView.Shared.Misc;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Platform.Android;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid
+namespace Jakar.SettingsView.Droid.Controls
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class HeaderFooterContainer : FrameLayout, INativeElementView
@@ -27,7 +28,7 @@ namespace Jakar.SettingsView.Droid
 		protected IVisualElementRenderer? _Renderer { get; set; }
 
 
-		private ISectionFooterHeader? _content;
+		protected ISectionFooterHeader? _content;
 
 		protected ISectionFooterHeader? _Content
 		{
@@ -64,22 +65,21 @@ namespace Jakar.SettingsView.Droid
 					{
 						_content = value;
 						_content.DisableLayout = true;
-						foreach ( var element in _content.Descendants() )
+						foreach ( var element in _content.View.Descendants() )
 						{
 							if ( element is VisualElement v ) v.DisableLayout = true;
 						}
 
 						renderer.SetElement(_content.View);
-
 						Platform.SetRenderer(_content.View, _Renderer);
 
 						_content.DisableLayout = false;
-						foreach ( var element in _content.Descendants() )
+						foreach ( var element in _content.View.Descendants() )
 						{
 							if ( element is VisualElement v ) v.DisableLayout = false;
 						}
 
-						var viewAsLayout = _Content as Layout;
+						var viewAsLayout = _content.View as Layout;
 						viewAsLayout?.ForceLayout();
 
 						Update();
@@ -143,7 +143,6 @@ namespace Jakar.SettingsView.Droid
 
 			_Renderer.UpdateLayout();
 		}
-
 		protected override void OnMeasure( int widthMeasureSpec, int heightMeasureSpec )
 		{
 			int width = MeasureSpec.GetSize(widthMeasureSpec);
@@ -174,16 +173,16 @@ namespace Jakar.SettingsView.Droid
 
 		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
-			else if ( e.PropertyName == Section.TitleProperty.PropertyName ) { UpdateTitle(); }
-			else if ( e.PropertyName == Section.TextColorProperty.PropertyName ) { UpdateTextColor(); }
-			else if ( e.PropertyName == VisualElement.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
-			else if ( e.PropertyName == HeaderView.IsCollapsedProperty.PropertyName ) { ShowHideSection(); }
-			else if ( e.PropertyName == HeaderView.IsCollapsibleProperty.PropertyName ) { UpdateIsCollapsible(); }
+			if ( e.IsEqual(Cell.IsEnabledProperty) ) { UpdateIsEnabled(); }
+			else if ( e.IsEqual(Section.TitleProperty) ) { UpdateTitle(); }
+			else if ( e.IsEqual(Section.TextColorProperty) ) { UpdateTextColor(); }
+			else if ( e.IsEqual(VisualElement.IsEnabledProperty) ) { UpdateIsEnabled(); }
+			else if ( e.IsEqual(HeaderView.IsCollapsedProperty) ) { ShowHideSection(); }
+			else if ( e.IsEqual(HeaderView.IsCollapsibleProperty) ) { UpdateIsCollapsible(); }
 		}
-		private void UpdateIsCollapsible() { Clickable = _Header?.IsCollapsible ?? false; }
-		private void ShowHideSection() { _Content?.Section?.ShowHideSection(); }
-		private void UpdateTitle()
+		protected void UpdateIsCollapsible() { Clickable = _Header?.IsCollapsible ?? false; }
+		protected void ShowHideSection() { _Content?.Section?.ShowHideSection(); }
+		protected void UpdateTitle()
 		{
 			if ( _Content is null ) throw new NullReferenceException(nameof(_Content));
 			if ( _Content.Section is null ) throw new NullReferenceException(nameof(_Content.Section));
@@ -192,7 +191,7 @@ namespace Jakar.SettingsView.Droid
 
 			if ( _Content is ISectionFooter footer ) { footer.SetText(_Content.Section.FooterText); }
 		}
-		private void UpdateTextColor()
+		protected void UpdateTextColor()
 		{
 			if ( _Content is null ) throw new NullReferenceException(nameof(_Content));
 			if ( _Content.Section is null ) throw new NullReferenceException(nameof(_Content.Section));

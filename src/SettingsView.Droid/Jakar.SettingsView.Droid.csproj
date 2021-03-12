@@ -53,13 +53,13 @@
     <Compile Include="BaseCell\BaseAiDescriptionCell.cs" />
     <Compile Include="BaseCell\BaseAiTitledCell.cs" />
     <Compile Include="BaseCell\BaseAiValueCell.cs" />
-    <Compile Include="Controls\BaseTextView.cs" />
-    <Compile Include="Controls\DescriptionView.cs" />
-    <Compile Include="Controls\HintView.cs" />
+    <Compile Include="Controls\Core\BaseTextView.cs" />
+    <Compile Include="Controls\Core\DescriptionView.cs" />
+    <Compile Include="Controls\Core\HintView.cs" />
     <Compile Include="Controls\IconView.cs" />
     <Compile Include="Controls\RadioCheck.cs" />
-    <Compile Include="Controls\TitleView.cs" />
-    <Compile Include="Controls\ValueView.cs" />
+    <Compile Include="Controls\Core\TitleView.cs" />
+    <Compile Include="Controls\Core\ValueView.cs" />
     <Compile Include="Extensions\LayoutExtensions.cs" />
     <Compile Include="GetIcons.cs" />
     <Compile Include="Interfaces\ICellRender.cs" />
@@ -95,7 +95,7 @@
     <Compile Include="ViewHolders.cs" />
     <Compile Include="FormsViewContainer.cs" />
     <Compile Include="Cells\CustomCellRenderer.cs" />
-    <Compile Include="HeaderFooterContainer.cs" />
+    <Compile Include="Controls\HeaderFooterContainer.cs" />
     <Compile Include="FontUtility.cs" />
     <Compile Include="SettingsViewLayoutManager.cs" />
   </ItemGroup>
@@ -186,5 +186,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ExpandSolidWhite.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

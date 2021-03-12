@@ -11,7 +11,7 @@ using AContext = Android.Content.Context;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Controls
+namespace Jakar.SettingsView.Droid.Controls.Core
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class DescriptionView : BaseTextView

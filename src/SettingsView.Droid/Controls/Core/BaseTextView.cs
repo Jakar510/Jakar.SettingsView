@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Android.Util;
 using Android.Widget;
-using Jakar.SettingsView.Droid.BaseCell;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
@@ -13,10 +11,9 @@ using AColor = Android.Graphics.Color;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
 using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
-using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Controls
+namespace Jakar.SettingsView.Droid.Controls.Core
 {
 	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 	[Android.Runtime.Preserve(AllMembers = true)]

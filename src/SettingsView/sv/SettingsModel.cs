@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
@@ -26,16 +28,16 @@ namespace Jakar.SettingsView.Shared.sv
 		public override int GetRowCount( int section ) => _Root.ElementAt(section).Count;
 		public override int GetSectionCount() => _Root.Count();
 
-		public virtual Section GetSection( int section ) => _Root.ElementAtOrDefault(section);
-		public virtual Section GetSectionFromCell( Cell cell ) { return _Root.FirstOrDefault(x => x.Contains(cell)); }
+		public virtual Section? GetSection( int section ) => _Root.ElementAtOrDefault(section);
+		public virtual Section? GetSectionFromCell( Cell cell ) { return _Root.FirstOrDefault(x => x.Contains(cell)); }
 		public virtual int GetSectionIndex( Section section ) => _Root.IndexOf(section);
 
-		public override string GetSectionTitle( int section ) => _Root.ElementAt(section).Title;
+		public override string? GetSectionTitle( int section ) => _Root.ElementAt(section).Title;
 
 
-		public virtual View GetSectionHeaderView( int section ) => _Root.ElementAt(section).HeaderView.View;
-		public virtual string GetFooterText( int section ) => _Root.ElementAt(section).FooterText;
-		public virtual View GetSectionFooterView( int section ) => _Root.ElementAt(section).FooterView.View;
+		public virtual ISectionHeader GetSectionHeaderView( int section ) => _Root.ElementAt(section).HeaderView;
+		public virtual string? GetFooterText( int section ) => _Root.ElementAt(section).FooterText;
+		public virtual ISectionFooter GetSectionFooterView( int section ) => _Root.ElementAt(section).FooterView;
 
 		protected override void OnRowSelected( object item )
 		{

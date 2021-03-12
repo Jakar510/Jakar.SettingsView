@@ -17,10 +17,10 @@ using Xamarin.Forms.PlatformConfiguration;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class TimePickerCellView : BasePickerCell
 	{
 		protected TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));

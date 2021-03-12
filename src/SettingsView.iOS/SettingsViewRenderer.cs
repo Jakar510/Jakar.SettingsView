@@ -8,6 +8,7 @@ using Jakar.SettingsView;
 using Jakar.SettingsView.iOS;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Misc;
 using Jakar.SettingsView.Shared.sv;
 using MobileCoreServices;
 using UIKit;
@@ -23,10 +24,12 @@ namespace Jakar.SettingsView.iOS
 	[Preserve(AllMembers = true)]
 	public class SettingsViewRenderer : ViewRenderer<Shared.sv.SettingsView, UITableView>, IUITableViewDragDelegate, IUITableViewDropDelegate
 	{
-		internal static readonly string TextHeaderId = "textHeaderView";
-		internal static readonly string TextFooterId = "textFooterView";
-		internal static readonly string CustomHeaderId = "customHeaderView";
-		internal static readonly string CustomFooterId = "customFooterView";
+		internal static string TextHeaderId { get; } = "textHeaderView";
+		internal static string TextFooterId { get; } = "textFooterView";
+		internal static string CustomHeaderId { get; } = "customHeaderView";
+		internal static string CustomFooterId { get; } = "customFooterView";
+
+
 		protected Page? _ParentPage { get; set; }
 		protected KeyboardInsetTracker? _InsetTracker { get; set; }
 		protected UITableView? _TableView { get; set; }
@@ -82,8 +85,9 @@ namespace Jakar.SettingsView.iOS
 			_TableView.SectionFooterHeight = UITableView.AutomaticDimension;
 			_TableView.EstimatedSectionFooterHeight = UITableView.AutomaticDimension;
 
-			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextHeaderView), TextHeaderId);
-			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextFooterView), TextFooterId);
+			// _TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextHeaderView), TextHeaderId);
+			// _TableView.RegisterClassForHeaderFooterViewReuse(typeof(TextFooterView), TextFooterId);
+
 			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(CustomHeaderView), CustomHeaderId);
 			_TableView.RegisterClassForHeaderFooterViewReuse(typeof(CustomFooterView), CustomFooterId);
 
@@ -133,13 +137,14 @@ namespace Jakar.SettingsView.iOS
 
 		protected void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible((Section) sender); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
-					  e.PropertyName == Section.HeaderViewProperty.PropertyName ||
-					  // e.PropertyName == Section.HeaderHeightProperty.PropertyName ||
-					  e.PropertyName == Section.FooterTextProperty.PropertyName ||
-					  e.PropertyName == Section.FooterViewProperty.PropertyName ) { UpdateSectionNoAnimation((Section) sender); }
-			else if ( e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFade((Section) sender); }
+			if ( e.IsEqual(Section.IsVisibleProperty) ) { UpdateSectionVisible((Section) sender); }
+			else if ( e.IsOneOf(Section.TitleProperty,
+								Section.TextColorProperty,
+								Section.HeaderViewProperty,
+								Section.FooterTextProperty,
+								Section.FooterViewProperty
+							   ) ) { UpdateSectionNoAnimation((Section) sender); }
+			else if ( e.IsEqual(Section.FooterVisibleProperty) ) { UpdateSectionFade((Section) sender); }
 		}
 
 		protected void UpdateSectionVisible( Section section )
@@ -301,12 +306,12 @@ namespace Jakar.SettingsView.iOS
 
 		protected override void OnElementPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			base.OnElementPropertyChanged(sender, e);
-			if ( e.PropertyName == Shared.sv.SettingsView.SeparatorColorProperty.PropertyName ) { UpdateSeparator(); }
-			else if ( e.PropertyName == Shared.sv.SettingsView.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
-			else if ( e.PropertyName == TableView.RowHeightProperty.PropertyName ) { UpdateRowHeight(); }
-			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToTopProperty.PropertyName ) { UpdateScrollToTop(); }
-			else if ( e.PropertyName == Shared.sv.SettingsView.ScrollToBottomProperty.PropertyName ) { UpdateScrollToBottom(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.SeparatorColorProperty) ) { UpdateSeparator(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.BackgroundColorProperty) ) { UpdateBackgroundColor(); }
+			else if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateRowHeight(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.ScrollToTopProperty) ) { UpdateScrollToTop(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.ScrollToBottomProperty) ) { UpdateScrollToBottom(); }
+			else { base.OnElementPropertyChanged(sender, e); }
 		}
 
 

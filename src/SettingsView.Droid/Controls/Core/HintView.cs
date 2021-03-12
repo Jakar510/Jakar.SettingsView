@@ -1,59 +1,65 @@
 ﻿using System;
 using System.ComponentModel;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
+using Android.Content;
+using Android.Util;
+using Android.Views;
+using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
-using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
+using Xamarin.Forms.Platform.Android;
+using BaseCellView = Jakar.SettingsView.Droid.BaseCell.BaseCellView;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.Droid.Controls.Core
 {
-		[Foundation.Preserve(AllMembers = true)]
-	public class HintView<TCell> : BaseTextView<BaseValueCell<TCell>> where TCell : UIView
+	public class HintView : BaseTextView
 	{
-		private HintTextCellBase _CurrentCell => _Renderer.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		[Android.Runtime.Preserve(AllMembers = true)]
+		private HintTextCellBase _CurrentCell => _Cell.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
-		public HintView( BaseValueCell<TCell> renderer ) : base(renderer) { }
+		public HintView( Context context ) : base(context) { }
+		public HintView( BaseCellView baseView, Context context ) : base(baseView, context) { }
+		public HintView( Context context, IAttributeSet attributes ) : base(context, attributes) { }
 
 
 		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Hint;
-			Hidden = string.IsNullOrEmpty(Text);
+			Visibility = string.IsNullOrEmpty(Text)
+							 ? ViewStates.Gone
+							 : ViewStates.Visible;
 
 			return true;
 		}
 		public override bool UpdateFontSize()
 		{
-			ContentScaleFactor = (nfloat) _CurrentCell.HintConfig.FontSize;
+			SetTextSize(ComplexUnitType.Sp, (float) _CurrentCell.HintConfig.FontSize);
 			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
 
 			return true;
 		}
 		public override bool UpdateTextColor()
 		{
-			TextColor = _CurrentCell.HintConfig.Color.ToUIColor();
+			SetTextColor(_CurrentCell.HintConfig.Color.ToAndroid());
+			SetTextColor(DefaultTextColor);
 
 			return true;
 		}
 		public override bool UpdateFont()
 		{
 			string? family = _CurrentCell.HintConfig.FontFamily;
-			FontAttributes attr = _CurrentCell.HintConfig.FontAttributes;
-			var size = (float) _CurrentCell.HintConfig.FontSize;
+			FontAttributes attr = _CurrentCell.DescriptionConfig.FontAttributes;
 
-			Font = FontUtility.CreateNativeFont(family, size, attr);
+			Typeface = FontUtility.CreateTypeface(family, attr);
 
 			return true;
 		}
 		public override bool UpdateTextAlignment()
 		{
-			TextAlignment alignment = _CurrentCell.DescriptionConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
+			TextAlignment alignment = _CurrentCell.HintConfig.TextAlignment;
+			TextAlignment = alignment.ToAndroidTextAlignment();
+			Gravity = alignment.ToGravityFlags();
 
 			return true;
 		}
@@ -71,11 +77,13 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			if ( e.PropertyName == HintTextCellBase.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
+			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+
 			return base.Update(sender, e);
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 

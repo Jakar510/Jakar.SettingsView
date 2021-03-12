@@ -14,7 +14,7 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : CellTableViewCell
 	{
 		// internal NSLayoutConstraint LeftMarginConstraint { get; private set; }

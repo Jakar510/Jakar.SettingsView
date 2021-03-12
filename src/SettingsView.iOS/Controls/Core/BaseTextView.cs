@@ -6,10 +6,9 @@ using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 	[Foundation.Preserve(AllMembers = true)]

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.OLD_Cells;
+using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;
@@ -13,11 +13,11 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
 
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CommandCellView : BaseAiDescriptionCell
 	{
 		protected ICommand? _Command { get; set; }

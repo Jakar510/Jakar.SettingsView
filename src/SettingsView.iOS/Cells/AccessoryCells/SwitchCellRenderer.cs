@@ -16,10 +16,10 @@ using SwitchCellRenderer = Jakar.SettingsView.iOS.Cells.SwitchCellRenderer;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class SwitchCellView : BaseAiAccessoryCell<UISwitch>
 	{
 		protected SwitchCell _AccessoryCell => Cell as SwitchCell ?? throw new NullReferenceException(nameof(_AccessoryCell));
