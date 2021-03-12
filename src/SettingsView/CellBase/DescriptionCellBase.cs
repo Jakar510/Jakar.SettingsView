@@ -7,6 +7,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class DescriptionCellBase : IconCellBase
 	{
 		public static readonly BindableProperty DescriptionProperty = BindableProperty.Create(nameof(Description), typeof(string), typeof(DescriptionCellBase), default(string));

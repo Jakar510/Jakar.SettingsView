@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Jakar.SettingsView.Shared.Converters
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	[TypeConversion(typeof(Size?))]
 	public class NullableSizeConverter : TypeConverter
 	{

@@ -1,55 +1,56 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class CustomCellContent : UIView
 	{
-		private WeakReference<IVisualElementRenderer> _rendererRef;
-		private bool _disposed;
-		private NSLayoutConstraint _heightConstraint;
-		private View _formsCell;
-		public CustomCell CustomCell { get; set; }
-		private double _lastFrameWidth = -9999d;
-		private double _lastMeasureWidth = -9999d;
-		private double _lastMeasureHeight = -9999d;
+		protected WeakReference<IVisualElementRenderer>? _RendererRef { get; set; }
+		protected bool _Disposed { get; set; }
+		protected NSLayoutConstraint? _HeightConstraint { get; set; }
+		protected View? _View { get; set; }
+		protected CustomCell _CustomCell { get; set; }
 
-		public CustomCellContent() { }
+		protected double _lastFrameWidth = -9999d;
+		protected double _lastMeasureWidth = -9999d;
+		protected double _lastMeasureHeight = -9999d;
+
+		public CustomCellContent( CustomCell cell ) => _CustomCell = cell;
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( _disposed ) { return; }
+			if ( _Disposed ) { return; }
 
 			if ( disposing )
 			{
-				if ( _formsCell != null ) { _formsCell.PropertyChanged -= CellPropertyChanged; }
+				if ( _View != null ) { _View.PropertyChanged -= CellPropertyChanged; }
 
-				CustomCell = null;
+				_HeightConstraint?.Dispose();
+				_HeightConstraint = null;
 
-				_heightConstraint?.Dispose();
-				_heightConstraint = null;
-
-				IVisualElementRenderer renderer = null;
-				if ( _rendererRef != null &&
-					 _rendererRef.TryGetTarget(out renderer) &&
+				IVisualElementRenderer? renderer = null;
+				if ( _RendererRef != null &&
+					 _RendererRef.TryGetTarget(out renderer) &&
 					 renderer.Element != null )
 				{
 					FormsInternals.DisposeModelAndChildrenRenderers(renderer.Element);
-					_rendererRef = null;
+					_RendererRef = null;
 				}
 
 				renderer?.Dispose();
 
-				_formsCell = null;
+				_View = null;
 			}
 
-			_disposed = true;
+			_Disposed = true;
 
 			base.Dispose(disposing);
 		}
@@ -61,36 +62,36 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
 		}
 
-		protected virtual void UpdateIsEnabled() { UserInteractionEnabled = _formsCell.IsEnabled; }
+		protected virtual void UpdateIsEnabled() { UserInteractionEnabled = _View?.IsEnabled ?? false; }
 
-		public virtual void UpdateCell( View cell, UITableView tableView )
+		public virtual void UpdateCell( View cell, UITableView? tableView )
 		{
-			if ( _formsCell == cell &&
-				 !CustomCell.IsForceLayout ) { return; }
+			if ( _View == cell &&
+				 !_CustomCell.IsForceLayout ) { return; }
 
-			CustomCell.IsForceLayout = false;
+			_CustomCell.IsForceLayout = false;
 
-			if ( _formsCell != null ) { _formsCell.PropertyChanged -= CellPropertyChanged; }
+			if ( _View != null ) { _View.PropertyChanged -= CellPropertyChanged; }
 
-			_formsCell = cell;
-			_formsCell.PropertyChanged += CellPropertyChanged;
+			_View = cell;
+			_View.PropertyChanged += CellPropertyChanged;
 
-			if ( _rendererRef == null ||
-				 !_rendererRef.TryGetTarget(out IVisualElementRenderer renderer) ) { renderer = GetNewRenderer(); }
+			if ( _RendererRef == null ||
+				 !_RendererRef.TryGetTarget(out IVisualElementRenderer renderer) ) { renderer = GetNewRenderer(); }
 			else
 			{
 				if ( renderer.Element != null &&
 					 renderer == Platform.GetRenderer(renderer.Element) )
 					renderer.Element.ClearValue(FormsInternals.RendererProperty);
 
-				Type type = Xamarin.Forms.Internals.Registrar.Registered.GetHandlerTypeForObject(_formsCell);
+				Type type = Xamarin.Forms.Internals.Registrar.Registered.GetHandlerTypeForObject(_View);
 				// ReSharper disable once SuspiciousTypeConversion.Global
 				if ( renderer is IReflectableType reflectable )
 				{
 					Type rendererType = reflectable.GetTypeInfo().AsType();
 					if ( rendererType == type ||
 						 ( renderer.GetType() == FormsInternals.DefaultRenderer ) && type == null )
-						renderer.SetElement(_formsCell);
+						renderer.SetElement(_View);
 					else
 					{
 						//when cells are getting reused the element could be already set to another cell
@@ -101,39 +102,39 @@ namespace Jakar.SettingsView.iOS.Controls
 				}
 			}
 
-			Platform.SetRenderer(_formsCell, renderer);
+			Platform.SetRenderer(_View, renderer);
 
-			if ( !CustomCell.IsMeasureOnce ||
-				 tableView.Frame.Width != _lastFrameWidth )
+			if ( tableView != null &&
+				 ( !_CustomCell.IsMeasureOnce || !tableView.Frame.Width.ToDouble().Equals(_lastFrameWidth) ) )
 			{
 				_lastFrameWidth = tableView.Frame.Width;
 				nfloat width = tableView.Frame.Width -
-							   ( CustomCell.UseFullSize
+							   ( _CustomCell.UseFullSize
 									 ? 0
 									 : 32 ); // CellBaseView layout margin
 				if ( renderer.Element != null )
 				{
 					SizeRequest result = renderer.Element.Measure(tableView.Frame.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
 					_lastMeasureWidth = result.Request.Width;
-					if ( _formsCell.HorizontalOptions.Alignment == LayoutAlignment.Fill ) { _lastMeasureWidth = width; }
+					if ( _View.HorizontalOptions.Alignment == LayoutAlignment.Fill ) { _lastMeasureWidth = width; }
 
 					_lastMeasureHeight = result.Request.Height;
 				}
 
-				if ( _heightConstraint != null )
+				if ( _HeightConstraint != null )
 				{
-					_heightConstraint.Active = false;
-					_heightConstraint?.Dispose();
+					_HeightConstraint.Active = false;
+					_HeightConstraint?.Dispose();
 				}
 
-				_heightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo((nfloat) _lastMeasureHeight);
-				_heightConstraint.Priority = 999f;
-				_heightConstraint.Active = true;
+				_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo((nfloat) _lastMeasureHeight);
+				_HeightConstraint.Priority = 999f;
+				_HeightConstraint.Active = true;
 
 				renderer.NativeView.UpdateConstraintsIfNeeded();
 			}
 
-			Layout.LayoutChildIntoBoundingRegion(_formsCell, new Rectangle(0, 0, _lastMeasureWidth, _lastMeasureHeight));
+			Layout.LayoutChildIntoBoundingRegion(_View, new Rectangle(0, 0, _lastMeasureWidth, _lastMeasureHeight));
 
 			UpdateNativeCell();
 		}
@@ -141,8 +142,8 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected virtual IVisualElementRenderer GetNewRenderer()
 		{
-			IVisualElementRenderer newRenderer = Platform.CreateRenderer(_formsCell);
-			_rendererRef = new WeakReference<IVisualElementRenderer>(newRenderer);
+			IVisualElementRenderer newRenderer = Platform.CreateRenderer(_View);
+			_RendererRef = new WeakReference<IVisualElementRenderer>(newRenderer);
 			AddSubview(newRenderer.NativeView);
 
 			UIView native = newRenderer.NativeView;

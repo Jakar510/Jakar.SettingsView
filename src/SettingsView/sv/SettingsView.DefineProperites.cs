@@ -13,6 +13,7 @@ using DropEventArgs = Jakar.SettingsView.Shared.Events.DropEventArgs;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public partial class SettingsView
 	{
 		internal void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { OnPropertyChanged(e.PropertyName); }

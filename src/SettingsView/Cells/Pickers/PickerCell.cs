@@ -15,6 +15,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class PickerCell : PromptCellBase<object>
 	{
 		public static readonly BindableProperty UseNaturalSortProperty = BindableProperty.Create(nameof(UseNaturalSort), typeof(bool), typeof(PickerCell), false);

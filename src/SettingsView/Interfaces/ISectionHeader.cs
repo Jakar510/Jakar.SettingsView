@@ -6,6 +6,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public interface ISectionHeader : ISectionFooterHeader
 	{
 		public bool IsCollapsed { get; set; }

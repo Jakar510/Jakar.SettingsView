@@ -5,14 +5,15 @@ using Xamarin.Forms.Internals;
 
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class SettingsModel : TableModel
 	{
 		private static readonly BindableProperty PathProperty = BindableProperty.Create("Path", typeof(Tuple<int, int>), typeof(Cell), null);
 
-		private readonly SettingsRoot _root;
+		private SettingsRoot _Root { get; set; }
 
 		
-		public SettingsModel( SettingsRoot settingsRoot ) => _root = settingsRoot;
+		public SettingsModel( SettingsRoot settingsRoot ) => _Root = settingsRoot;
 
 		
 		public override Cell GetCell( int section, int row )
@@ -21,20 +22,20 @@ namespace Jakar.SettingsView.Shared.sv
 			SetPath(cell, new Tuple<int, int>(section, row));
 			return cell;
 		}
-		public override object GetItem( int section, int row ) => _root.ElementAt(section)[row];
-		public override int GetRowCount( int section ) => _root.ElementAt(section).Count;
-		public override int GetSectionCount() => _root.Count();
+		public override object GetItem( int section, int row ) => _Root.ElementAt(section)[row];
+		public override int GetRowCount( int section ) => _Root.ElementAt(section).Count;
+		public override int GetSectionCount() => _Root.Count();
 
-		public virtual Section GetSection( int section ) => _root.ElementAtOrDefault(section);
-		public virtual Section GetSectionFromCell( Cell cell ) { return _root.FirstOrDefault(x => x.Contains(cell)); }
-		public virtual int GetSectionIndex( Section section ) => _root.IndexOf(section);
+		public virtual Section GetSection( int section ) => _Root.ElementAtOrDefault(section);
+		public virtual Section GetSectionFromCell( Cell cell ) { return _Root.FirstOrDefault(x => x.Contains(cell)); }
+		public virtual int GetSectionIndex( Section section ) => _Root.IndexOf(section);
 
-		public override string GetSectionTitle( int section ) => _root.ElementAt(section).Title;
+		public override string GetSectionTitle( int section ) => _Root.ElementAt(section).Title;
 
 
-		public virtual View GetSectionHeaderView( int section ) => _root.ElementAt(section).HeaderView.View;
-		public virtual string GetFooterText( int section ) => _root.ElementAt(section).FooterText;
-		public virtual View GetSectionFooterView( int section ) => _root.ElementAt(section).FooterView.View;
+		public virtual View GetSectionHeaderView( int section ) => _Root.ElementAt(section).HeaderView.View;
+		public virtual string GetFooterText( int section ) => _Root.ElementAt(section).FooterText;
+		public virtual View GetSectionFooterView( int section ) => _Root.ElementAt(section).FooterView.View;
 
 		protected override void OnRowSelected( object item )
 		{
@@ -45,7 +46,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 		// public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderHeight;
 		// public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderView.Height;
-		public virtual double GetHeaderHeight( int section ) => _root.ElementAt(section).HeaderView.HeightRequest;
+		public virtual double GetHeaderHeight( int section ) => _Root.ElementAt(section).HeaderView.HeightRequest;
 
 
 		// this method no longer uses except for iOS.CellBaseRenderer.

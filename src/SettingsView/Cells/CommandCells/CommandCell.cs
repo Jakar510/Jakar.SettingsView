@@ -4,6 +4,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class CommandCell : DescriptionCellBase
 	{
 		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CommandCell), default(ICommand));

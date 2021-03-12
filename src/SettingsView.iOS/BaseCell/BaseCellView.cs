@@ -116,6 +116,13 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			Cell = cell;
 			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
+			_RootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
+
+			_RootView.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor).Active = true;
+			_RootView.TrailingAnchor.ConstraintEqualTo(ContentView.TrailingAnchor).Active = true;
+
+			_RootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
+			_RootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
 
 			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Horizontal);
 			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
@@ -123,7 +130,6 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
 			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
 
-			_RootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
 			NSLayoutConstraint height = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
 			height.Active = true;
 			height.Priority = SVConstants.Layout.Priority.Required;

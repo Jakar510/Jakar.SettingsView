@@ -5,6 +5,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Config
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class CellPopupConfig : SVConfig
 	{
 		public static BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(CellPopupConfig), default(string));

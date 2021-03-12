@@ -8,6 +8,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class HeaderView : BaseHeaderFooterView, ISectionHeader
 	{
 		public static readonly BindableProperty IsCollapsibleProperty = BindableProperty.Create(nameof(IsCollapsible), typeof(bool), typeof(HeaderView), default(bool));

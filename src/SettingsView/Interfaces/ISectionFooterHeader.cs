@@ -7,6 +7,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public interface ISectionFooterHeader : IVisualElementController, INotifyPropertyChanged
 	{
 		// https://github.com/muak/AiForms.SettingsView/issues/118

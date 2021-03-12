@@ -5,6 +5,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public interface IConfigHeader
 	{
 		public Color BackgroundColor { get; set; }

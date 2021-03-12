@@ -9,6 +9,7 @@ using EntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Interfaces
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public interface IUpdateCell<out TColor, in TCell>
 	{
 		public TColor DefaultTextColor { get; }

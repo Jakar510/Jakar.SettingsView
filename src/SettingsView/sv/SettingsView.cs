@@ -9,10 +9,7 @@ using Xamarin.Forms.Internals;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
-	/// <summary>
-	/// Settings view.
-	/// </summary>
-	[ContentProperty("Root")]
+	[ContentProperty(nameof(Root))]
 	public partial class SettingsView : TableView
 	{
 		internal static Action? _clearCache;

@@ -7,6 +7,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class TitleCellBase : CellBase
 	{
 		public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(TitleCellBase), default(string));

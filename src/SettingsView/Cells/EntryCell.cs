@@ -6,6 +6,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Cells
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class EntryCell : ValueTextCellBase<string?>, IEntryCellController
 	{
 		public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(EntryCell), Keyboard.Default);

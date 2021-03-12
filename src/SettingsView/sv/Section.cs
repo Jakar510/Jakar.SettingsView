@@ -14,6 +14,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class Section : TableSectionBase<Cell>
 	{
 		public static BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(Section), default(DataTemplate));

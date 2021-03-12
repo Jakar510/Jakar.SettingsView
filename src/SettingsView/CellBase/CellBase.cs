@@ -9,7 +9,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
-
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class CellBase : Cell, IVisibleCell
 	{
 		public new event EventHandler? Tapped;

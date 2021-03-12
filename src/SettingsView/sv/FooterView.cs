@@ -8,6 +8,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class FooterView : BaseHeaderFooterView, ISectionFooter
 	{
 		Section? ISectionFooterHeader.Section { get; set; }

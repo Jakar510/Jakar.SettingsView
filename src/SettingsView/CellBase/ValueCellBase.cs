@@ -11,6 +11,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class ValueCellBase : HintTextCellBase
 	{
 		public static readonly BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color?), typeof(ValueTextCellBase), SVConstants.Cell.COLOR);

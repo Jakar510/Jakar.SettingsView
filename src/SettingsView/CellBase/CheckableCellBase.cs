@@ -11,6 +11,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class CheckableCellBase : DescriptionCellBase, IValueChanged<bool>
 	{
 		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color?), typeof(CheckboxCell), SVConstants.Cell.COLOR);

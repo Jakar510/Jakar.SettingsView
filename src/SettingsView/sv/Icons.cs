@@ -4,11 +4,13 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.sv
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public interface IIcons
 	{
 		public ImageSource GetImageSource( string name );
 	}
 
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public static class Icons
 	{
 		private static readonly IIcons service = DependencyService.Get<IIcons>();

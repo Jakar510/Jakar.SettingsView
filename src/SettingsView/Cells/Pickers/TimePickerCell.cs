@@ -4,9 +4,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
-	/// <summary>
-	/// Time picker cell.
-	/// </summary>
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class TimePickerCell : PromptCellBase<TimeSpan>
 	{
 		public static BindableProperty TimeProperty = BindableProperty.Create(nameof(Time), typeof(TimeSpan), typeof(TimePickerCell), default(TimeSpan), BindingMode.TwoWay);

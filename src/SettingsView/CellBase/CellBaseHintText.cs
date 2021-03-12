@@ -7,6 +7,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class HintTextCellBase : DescriptionCellBase
 	{
 		public static readonly BindableProperty HintProperty = BindableProperty.Create(nameof(Hint), typeof(string), typeof(HintTextCellBase), default(string));

@@ -8,6 +8,7 @@ using System.Text;
 namespace Jakar.SettingsView.Shared.Converters
 {
 	/// <summary>ソートの方向。</summary>
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public enum NaturalSortOrder : int
 	{
 	#region Enum
@@ -25,6 +26,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	}
 
 	/// <summary>自然順の比較オプション。</summary>
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	[Flags()]
 	public enum NaturalComparerOptions
 	{
@@ -73,6 +75,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	}
 
 	/// <summary>自然順の比較機能を提供します。</summary>
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class NaturalComparer : IComparer<string>, IComparer
 	{
 	#region Enum

@@ -3,6 +3,7 @@
 #nullable enable
 namespace Jakar.SettingsView.Shared.Config
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class CellConfig : BaseConfig, IParent<CellBase.CellBase>
 	{
 		public CellBase.CellBase? Parent { get; set; }

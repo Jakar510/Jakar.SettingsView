@@ -52,7 +52,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			ContentStack.RemoveFromSuperview();
 			DescriptionLabel.RemoveFromSuperview();
 
-			_CoreView = new CustomCellContent();
+			_CoreView = new CustomCellContent(_CustomCell);
 
 			if ( _CustomCell.UseFullSize )
 			{
@@ -66,14 +66,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			StackV.AddArrangedSubview(_CoreView);
 		}
 
-		protected virtual void UpdateContent( UITableView tableView )
-		{
-			if ( _CoreView is null )
-				return; // for HotReload;
-
-			_CoreView.CustomCell = _CustomCell;
-			_CoreView.UpdateCell(_CustomCell.Content, tableView);
-		}
+		protected virtual void UpdateContent( UITableView tableView ) { _CoreView.UpdateCell(_CustomCell.Content, tableView); }
 
 
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -184,11 +177,11 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			}
 
 			_Execute = () =>
-					  {
-						  if ( _Command == null ) { return; }
+					   {
+						   if ( _Command == null ) { return; }
 
-						  if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
-					  };
+						   if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
+					   };
 		}
 
 		protected override void UpdateIsEnabled()

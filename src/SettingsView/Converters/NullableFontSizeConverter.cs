@@ -7,6 +7,7 @@ using Xamarin.Forms.Xaml;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Converters
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	[TypeConversion(typeof(double))]
 	public class NullableFontSizeConverter : FontSizeConverter // IExtendedTypeConverter 
 	{

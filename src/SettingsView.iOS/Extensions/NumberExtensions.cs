@@ -11,6 +11,8 @@ namespace Jakar.SettingsView.iOS.Extensions
 		public static nfloat ToNFloat( this float value ) => value;
 		public static nfloat ToNFloat( this int value ) => value;
 
-
+		public static double ToDouble( this nfloat value ) => value;
+		public static float ToFloat( this nfloat value ) => (float) value;
+		public static int ToInt( this nfloat value ) => (int) value;
 	}
 }

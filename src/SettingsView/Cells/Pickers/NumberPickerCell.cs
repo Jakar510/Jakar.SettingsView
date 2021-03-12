@@ -4,6 +4,7 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class NumberPickerCell : PromptCellBase<int>
 	{
 		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(NumberPickerCell), default(ICommand));

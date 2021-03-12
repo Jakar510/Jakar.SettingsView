@@ -4,6 +4,8 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
+	// [ContentProperty(nameof(nameof(Prompt)))]
 	public abstract class PromptCellBase<TValue> : ValueCellBase<TValue>
 	{
 		// public static BindableProperty PopupTitleProperty = BindableProperty.Create(nameof(PopupTitle), typeof(string), typeof(PopupCellBase), "Select an item");

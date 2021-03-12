@@ -7,6 +7,7 @@ using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
@@ -16,18 +17,17 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
 
-	[Foundation.Preserve(AllMembers = true)]
+	[Preserve(AllMembers = true)]
 	public class CustomCellView : BaseAiDescriptionCell
 	{
 		protected CustomCell _CustomCell => Cell as CustomCell ?? throw new NullReferenceException(nameof(_CustomCell));
-		protected Action? _Execute { get; set; }
 		protected ICommand? _Command { get; set; }
 		protected CustomCellContent _CoreView { get; set; }
-		private Dictionary<UIView, UIColor> _ColorCache { get; set; } = new();
+		protected Dictionary<UIView, UIColor> _ColorCache { get; set; } = new();
 
 
 		public CustomCellView( Cell cell ) : base(cell)
@@ -45,7 +45,20 @@ namespace Jakar.SettingsView.iOS.Cells
 			// ContentStack.RemoveFromSuperview();
 			// DescriptionLabel.RemoveFromSuperview();
 
-			_CoreView = new CustomCellContent();
+			_CoreView = new CustomCellContent(_CustomCell);
+			_CoreView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
+
+			_CoreView.LeadingAnchor.ConstraintEqualTo(_RootView.LeadingAnchor).Active = true;
+			_CoreView.TrailingAnchor.ConstraintEqualTo(_RootView.TrailingAnchor).Active = true;
+
+			_CoreView.TopAnchor.ConstraintEqualTo(_RootView.TopAnchor).Active = true;
+			_CoreView.BottomAnchor.ConstraintEqualTo(_RootView.BottomAnchor).Active = true;
+
+			_CoreView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Horizontal);
+			_CoreView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
+
+			_CoreView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			_CoreView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
 
 			if ( _CustomCell.UseFullSize )
 			{
@@ -71,11 +84,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			LayoutIfNeeded(); // let the layout immediately reflect when update constraints.
 		}
 
-		protected virtual void UpdateContent( UITableView tableView )
-		{
-			_CoreView.CustomCell = _CustomCell;
-			_CoreView.UpdateCell(_CustomCell.Content, tableView);
-		}
+		protected virtual void UpdateContent( UITableView? tableView ) { _CoreView.UpdateCell(_CustomCell.Content, tableView); }
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -88,7 +97,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( !_CustomCell.IsSelectable ) { return; }
 
-			_Execute?.Invoke();
+			Execute();
 			if ( !_CustomCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 
 			// base.RowSelected(tableView, indexPath);
@@ -97,9 +106,9 @@ namespace Jakar.SettingsView.iOS.Cells
 		protected internal override bool RowLongPressed( UITableView tableView, NSIndexPath indexPath )
 		{
 			_CustomCell.LongCommand?.Execute(this);
-			_CustomCell?.SendLongCommand();
+			_CustomCell.SendLongCommand();
 
-			return _CustomCell is null;
+			return true;
 			// return base.RowLongPressed(tableView, indexPath);
 		}
 
@@ -133,46 +142,28 @@ namespace Jakar.SettingsView.iOS.Cells
 			RestoreSubviewsColor(_CoreView.Subviews[0], _ColorCache);
 		}
 
-		private void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
+		protected void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
 		{
+			if ( view.BackgroundColor is null )  return;
+			
 			colors[view] = view.BackgroundColor;
 
 			foreach ( UIView subView in view.Subviews ) { BackupSubviewsColor(subView, colors); }
 		}
-
-		private void RestoreSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
+		protected void RestoreSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
 		{
 			if ( colors.TryGetValue(view, out UIColor color) ) { view.BackgroundColor = color; }
 
 			foreach ( UIView subView in view.Subviews ) { RestoreSubviewsColor(subView, colors); }
 		}
 
-		public override void UpdateCell( UITableView tableView )
+		protected internal override void UpdateCell( UITableView? tableView )
 		{
 			base.UpdateCell(tableView);
 			UpdateContent(tableView);
 			UpdateCommand();
 		}
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
-
-				_Execute = null;
-				_Command = null;
-
-				_ColorCache.Clear();
-				_ColorCache = null;
-
-				_CoreView?.RemoveFromSuperview();
-				_CoreView?.Dispose();
-				_CoreView = null;
-			}
-
-			base.Dispose(disposing);
-		}
 
 		protected virtual void UpdateCommand()
 		{
@@ -185,13 +176,14 @@ namespace Jakar.SettingsView.iOS.Cells
 				_Command.CanExecuteChanged += Command_CanExecuteChanged;
 				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
+			
+			Execute();
+		}
+		protected void Execute()
+		{
+			if ( _Command is null ) { return; }
 
-			_Execute = () =>
-					   {
-						   if ( _Command == null ) { return; }
-
-						   if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
-					   };
+			if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
 		}
 
 		protected override void UpdateIsEnabled()
@@ -204,9 +196,9 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected virtual void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !_CustomCell.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_Command.CanExecute(_CustomCell.CommandParameter));
+			SetEnabledAppearance(_Command?.CanExecute(_CustomCell.CommandParameter) ?? _CustomCell.IsEnabled);
 		}
 
 
@@ -214,14 +206,14 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( disposing )
 			{
-				_Command.CanExecuteChanged -= Command_CanExecuteChanged;
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+				
+				_Command = null;
 
+				_ColorCache.Clear();
 
-				_Icon.Dispose();
-				_Title.Dispose();
-				_Description.Dispose();
-				Container.RemoveFromParent();
-				Container.Dispose();
+				_CoreView.RemoveFromSuperview();
+				_CoreView.Dispose();
 			}
 
 			base.Dispose(disposing);

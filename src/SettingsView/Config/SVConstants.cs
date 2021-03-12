@@ -5,6 +5,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.Shared.Config
 {
+	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public static class SVConstants
 	{
 		public static class Defaults
