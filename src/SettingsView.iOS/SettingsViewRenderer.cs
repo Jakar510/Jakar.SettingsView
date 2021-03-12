@@ -24,8 +24,8 @@ namespace Jakar.SettingsView.iOS
 	[Preserve(AllMembers = true)]
 	public class SettingsViewRenderer : ViewRenderer<Shared.sv.SettingsView, UITableView>, IUITableViewDragDelegate, IUITableViewDropDelegate
 	{
-		internal static string TextHeaderId { get; } = "textHeaderView";
-		internal static string TextFooterId { get; } = "textFooterView";
+		// internal static string TextHeaderId { get; } = "textHeaderView";
+		// internal static string TextFooterId { get; } = "textFooterView";
 		internal static string CustomHeaderId { get; } = "customHeaderView";
 		internal static string CustomFooterId { get; } = "customFooterView";
 
@@ -417,8 +417,8 @@ namespace Jakar.SettingsView.iOS
 
 		public UIDragItem[] GetItemsForBeginningDragSession( UITableView tableView, IUIDragSession session, NSIndexPath indexPath )
 		{
-			Section section = Element.Model.GetSection(indexPath.Section);
-			if ( !section.UseDragSort )
+			Section? section = Element.Model.GetSection(indexPath.Section);
+			if ( !( section?.UseDragSort ?? false ) )
 			{
 				return new UIDragItem[]
 					   { };

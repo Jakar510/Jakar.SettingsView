@@ -10,26 +10,31 @@ namespace Jakar.SettingsView.Shared.sv
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class SettingsModel : TableModel
 	{
-		private static readonly BindableProperty PathProperty = BindableProperty.Create("Path", typeof(Tuple<int, int>), typeof(Cell), null);
+		protected static readonly BindableProperty PathProperty = BindableProperty.Create("Path", typeof(Tuple<int, int>), typeof(Cell));
 
-		private SettingsRoot _Root { get; set; }
-
-		
+		protected SettingsRoot _Root { get; }
 		public SettingsModel( SettingsRoot settingsRoot ) => _Root = settingsRoot;
-
 		
+
 		public override Cell GetCell( int section, int row )
 		{
 			var cell = (Cell) GetItem(section, row);
 			SetPath(cell, new Tuple<int, int>(section, row));
 			return cell;
 		}
-		public override object GetItem( int section, int row ) => _Root.ElementAt(section)[row];
+		public override object GetItem( int section, int row ) => _Root.ElementAt(section)[row] ?? throw new NullReferenceException($"Can't get section number {section} and row number {row}");
 		public override int GetRowCount( int section ) => _Root.ElementAt(section).Count;
 		public override int GetSectionCount() => _Root.Count();
 
 		public virtual Section? GetSection( int section ) => _Root.ElementAtOrDefault(section);
 		public virtual Section? GetSectionFromCell( Cell cell ) { return _Root.FirstOrDefault(x => x.Contains(cell)); }
+		public virtual (int section, int cell) GetIndexesFromCell( Cell cell )
+		{
+			Section? section = _Root.FirstOrDefault(x => x.Contains(cell));
+			return section is null
+					   ? ( -1, -1 )
+					   : ( GetSectionIndex(section), section.IndexOf(cell) );
+		}
 		public virtual int GetSectionIndex( Section section ) => _Root.IndexOf(section);
 
 		public override string? GetSectionTitle( int section ) => _Root.ElementAt(section).Title;
@@ -58,12 +63,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			return (Tuple<int, int>) item.GetValue(PathProperty);
 		}
-
-
 		// ReSharper disable once SuggestBaseTypeForParameter
-		private static void SetPath( Cell item, Tuple<int, int> index )
-		{
-			item?.SetValue(PathProperty, index);
-		}
+		protected static void SetPath( Cell item, Tuple<int, int> index ) { item.SetValue(PathProperty, index); }
 	}
 }

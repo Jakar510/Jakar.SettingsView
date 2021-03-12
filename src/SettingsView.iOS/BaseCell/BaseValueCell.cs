@@ -19,34 +19,34 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected BaseValueCell( Cell cell ) : base(cell)
 		{
 			_ValueStack = CreateStackView(UILayoutConstraintAxis.Vertical);
+			_ContentView.AddArrangedSubview(_ValueStack);
 			_ValueStack.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
-			var valueStackWidth = NSLayoutConstraint.Create(_ValueStack,
-													   NSLayoutAttribute.Width,
-													   NSLayoutRelation.Equal,
-													   _ContentView,
-													   NSLayoutAttribute.Width,
-													   SVConstants.Layout.ColumnFactors.ValueStack,
-													   SVConstants.Layout.Factor.Zero
-													  );
-			_ValueStack.AddConstraint(valueStackWidth);
-			_ValueStack.AddArrangedSubview(_Title);
+			// var valueStackWidth = NSLayoutConstraint.Create(_ValueStack,
+			// 										   NSLayoutAttribute.Width,
+			// 										   NSLayoutRelation.Equal,
+			// 										   _ContentView,
+			// 										   NSLayoutAttribute.Width,
+			// 										   SVConstants.Layout.ColumnFactors.ValueStack,
+			// 										   SVConstants.Layout.Factor.Zero
+			// 										  );
+			// _ValueStack.AddConstraint(valueStackWidth);
+			NSLayoutConstraint width = _ValueStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.ValueStack);
+			width.Active = true;
+			width.Priority = SVConstants.Layout.Priority.HIGH;
 
 			// -----------------------------------------------------------------------------------
 
 			_Hint = new HintView<TCell>(this);
-			_Hint.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
-
 			_ValueStack.AddArrangedSubview(_Hint);
+			_Hint.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
 
 			// -----------------------------------------------------------------------------------
 
 			_Value = InstanceCreator.Create<TCell>(this);
-			_Value.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
 			_ValueStack.AddArrangedSubview(_Value);
+			_Value.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
 
 			// -----------------------------------------------------------------------------------
-
-			_ContentView.AddArrangedSubview(_ValueStack);
 		}
 
 

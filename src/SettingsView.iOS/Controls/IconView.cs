@@ -108,8 +108,12 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		private void LoadIconImage( IImageSourceHandler handler, ImageSource source )
 		{
-			_iconTokenSource = new CancellationTokenSource();
-			CancellationToken token = _iconTokenSource.Token;
+			_IconTokenSource?.Cancel();
+			_IconTokenSource?.Dispose();
+			_IconTokenSource = null;
+
+			_IconTokenSource = new CancellationTokenSource();
+			CancellationToken token = _IconTokenSource.Token;
 			UIImage? image = null;
 
 			var scale = (float) UIScreen.MainScreen.Scale;

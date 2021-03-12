@@ -119,6 +119,7 @@ namespace Jakar.SettingsView.Shared.Config
 					public static readonly FontAttributes Attributes = FontAttributes.None;
 				}
 
+				public static readonly Color PLACEHOLDER_COLOR = Color.SlateGray;
 				public static readonly Color TEXT_COLOR = Color.Black;
 				public static readonly TextAlignment Alignment = TextAlignment.End;
 			}
@@ -213,6 +214,7 @@ namespace Jakar.SettingsView.Shared.Config
 
 	#endregion
 
+
 	#region LAYOUT
 
 		public static class Layout
@@ -247,5 +249,7 @@ namespace Jakar.SettingsView.Shared.Config
 		}
 
 	#endregion
+
+
 	}
 }

@@ -15,18 +15,20 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected BaseAiAccessoryCell( Cell cell ) : base(cell)
 		{
 			_Accessory = InstanceCreator.Create<TAccessory>(this);
-
-			_Accessory.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
-			var valueStackWidth = NSLayoutConstraint.Create(_Accessory,
-															NSLayoutAttribute.Width,
-															NSLayoutRelation.Equal,
-															_ContentView,
-															NSLayoutAttribute.Width,
-															SVConstants.Layout.ColumnFactors.Accessory,
-															SVConstants.Layout.Factor.Zero
-														   );
-			_Accessory.AddConstraint(valueStackWidth);
 			_ContentView.AddArrangedSubview(_Accessory);
+			_Accessory.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
+			// var valueStackWidth = NSLayoutConstraint.Create(_Accessory,
+			// 												NSLayoutAttribute.Width,
+			// 												NSLayoutRelation.Equal,
+			// 												_ContentView,
+			// 												NSLayoutAttribute.Width,
+			// 												SVConstants.Layout.ColumnFactors.Accessory,
+			// 												SVConstants.Layout.Factor.Zero
+			// 											   );
+			// _Accessory.AddConstraint(valueStackWidth);
+			NSLayoutConstraint width = _Accessory.WidthAnchor.ConstraintEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.Accessory);
+			width.Active = true;
+			width.Priority = SVConstants.Layout.Priority.DefaultHigh;
 		}
 
 		protected override void Dispose( bool disposing )

@@ -5,6 +5,7 @@ using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Enumerations;
 using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
@@ -129,22 +130,22 @@ namespace Jakar.SettingsView.iOS.Controls
 			UITextPosition end = EndOfDocument;
 			switch ( _CurrentCell.OnSelectAction )
 			{
-				case AiEntryCell.SelectAction.None:
+				case SelectAction.None:
 					break;
 
-				case AiEntryCell.SelectAction.Start:
+				case SelectAction.Start:
 					SelectedTextRange = GetTextRange(start, start);
 					Select(this);
 
 					break;
 
-				case AiEntryCell.SelectAction.End:
+				case SelectAction.End:
 					SelectedTextRange = GetTextRange(end, end);
 					Select(this);
 
 					break;
 
-				case AiEntryCell.SelectAction.All:
+				case SelectAction.All:
 					SelectedTextRange = GetTextRange(start, end);
 					Select(this);
 					//SelectAll(ValueField);
@@ -161,10 +162,10 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			ClearsOnBeginEditing = _CurrentCell.OnSelectAction switch
 								   {
-									   AiEntryCell.SelectAction.None => false,
-									   AiEntryCell.SelectAction.Start => false,
-									   AiEntryCell.SelectAction.End => false,
-									   AiEntryCell.SelectAction.All => true,
+									   SelectAction.None => false,
+									   SelectAction.Start => false,
+									   SelectAction.End => false,
+									   SelectAction.All => true,
 									   _ => throw new ArgumentOutOfRangeException()
 								   };
 			return true;
@@ -222,22 +223,17 @@ namespace Jakar.SettingsView.iOS.Controls
 		public bool UpdatePlaceholder()
 		{
 			// https://stackoverflow.com/a/23610570/9530917
-			UIColor placeholderColor = _CurrentCell.PlaceholderColor.IsDefault
-										   ? SVConstants.Cell.PlaceholderColor.ToUIColor()
-										   : _CurrentCell.PlaceholderColor.ToUIColor();
+			UIColor placeholderColor = _CurrentCell.GetPlaceholderColor().ToUIColor();
 			AttributedPlaceholder = new NSAttributedString(_CurrentCell.Placeholder, Font, placeholderColor);
 			return true;
 		}
-		public bool UpdateAccentColor()
+		public bool UpdateAccentColor() =>
+			ChangeTextViewBack(_CurrentCell.GetAccentColor());
+		public bool ChangeTextViewBack( Color accent )
 		{
-			if ( _CurrentCell.AccentColor != Color.Default ) { return ChangeTextViewBack(_CurrentCell.AccentColor.ToUIColor()); }
-
-			if ( CellParent.CellAccentColor != Color.Default ) { return ChangeTextViewBack(CellParent.CellAccentColor.ToUIColor()); }
-
+			TintColor = accent.ToUIColor();
 			return true;
 		}
-
-		public bool ChangeTextViewBack( Color accent ) { return true; }
 		protected void ValueFieldOnTouchUpInside( object sender, EventArgs e ) { PerformSelectAction(); }
 		protected void TextField_EditingChanged( object sender, EventArgs e ) { _CurrentCell.ValueText = Text; }
 		protected void ValueField_EditingDidBegin( object sender, EventArgs e ) { _HasFocus = true; }

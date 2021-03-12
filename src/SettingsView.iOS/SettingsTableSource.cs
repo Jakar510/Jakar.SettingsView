@@ -12,6 +12,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]
@@ -44,23 +45,17 @@ namespace Jakar.SettingsView.iOS
 
 			var renderer = (CellRenderer) Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IRegisterable>(cell.GetType());
 
-			//get recycle cell
-			UITableViewCell reusableCell = tableView.DequeueReusableCell(id);
-			//get native cell
-			UITableViewCell nativeCell = renderer.GetCell(cell, reusableCell, tableView);
+			UITableViewCell reusableCell = tableView.DequeueReusableCell(id);             // get recycle cell
+			UITableViewCell nativeCell = renderer.GetCell(cell, reusableCell, tableView); // get native cell
 
-			UITableViewCell cellWithContent = nativeCell;
-
-			// Sometimes iOS for returns a dequeued cell whose Layer is hidden. 
-			// This prevents it from showing up, so lets turn it back on!
-			if ( cellWithContent.Layer.Hidden )
-				cellWithContent.Layer.Hidden = false;
+			// Sometimes iOS for returns a dequeued cell whose Layer is hidden. This prevents it from showing up, so lets turn it back on!
+			if ( nativeCell.Layer.Hidden ) { nativeCell.Layer.Hidden = false; }
 
 			// Because the layer was hidden we need to layout the cell by hand
-			cellWithContent?.LayoutSubviews();
+			nativeCell.LayoutSubviews();
 
 			//selected background
-			if ( !( nativeCell is CellBaseView ) ) { nativeCell.SelectionStyle = UITableViewCellSelectionStyle.None; }
+			if ( nativeCell is not BaseCellView ) { nativeCell.SelectionStyle = UITableViewCellSelectionStyle.None; }
 
 			return nativeCell;
 		}
@@ -73,7 +68,7 @@ namespace Jakar.SettingsView.iOS
 
 			if ( h.Equals(-1) )
 			{
-				//automatic height
+				// automatic height
 				return tableView.RowHeight;
 			}
 
@@ -83,11 +78,11 @@ namespace Jakar.SettingsView.iOS
 
 		public override nfloat GetHeightForHeader( UITableView tableView, nint sectionID )
 		{
-			Section section = _SettingsView.Model.GetSection((int) sectionID);
+			Section? section = _SettingsView.Model.GetSection((int) sectionID);
 
-			return !section.IsVisible
-					   ? nfloat.Epsilon
-					   : UITableView.AutomaticDimension;
+			return ( section?.IsVisible ?? false )
+					   ? UITableView.AutomaticDimension
+					   : nfloat.Epsilon;
 
 			// if ( !section.IsVisible ) { return nfloat.Epsilon; }
 			//
@@ -103,7 +98,7 @@ namespace Jakar.SettingsView.iOS
 		}
 		public override UIView GetViewForHeader( UITableView tableView, nint sectionId ) // TODO: fix this
 		{
-			Section section = _SettingsView.Model.GetSection((int) sectionId);
+			Section? section = _SettingsView.Model.GetSection((int) sectionId);
 			if ( section is null ) throw new NullReferenceException(nameof(section));
 			return GetNativeSectionHeaderFooterView(section.HeaderView, tableView, section);
 
@@ -127,32 +122,20 @@ namespace Jakar.SettingsView.iOS
 			// return headerView;
 		}
 
-		public override nfloat GetHeightForFooter( UITableView tableView, nint section )
+		public override nfloat GetHeightForFooter( UITableView tableView, nint sectionId )
 		{
-			Section sec = _SettingsView.Model.GetSection((int) section);
+			Section? section = _SettingsView.Model.GetSection((int) sectionId);
+			if ( section is null ) throw new NullReferenceException(nameof(section));
 
-			if ( !sec.IsVisible ) { return nfloat.Epsilon; }
+			if ( !section.IsVisible ) { return nfloat.Epsilon; }
 
-			if ( !sec.FooterVisible ) { return nfloat.Epsilon; }
+			if ( !section.FooterVisible ) { return nfloat.Epsilon; }
 
-			if ( sec.FooterView != null )
-			{
-				return UITableView.AutomaticDimension; // automatic height
-			}
-
-			string footerText = sec.FooterText;
-
-			if ( string.IsNullOrEmpty(footerText) )
-			{
-				//hide footer
-				return nfloat.Epsilon; // must not zero
-			}
-
-			return UITableView.AutomaticDimension;
+			return UITableView.AutomaticDimension; // automatic height
 		}
 		public override UIView GetViewForFooter( UITableView tableView, nint sectionId )
 		{
-			Section section = _SettingsView.Model.GetSection((int) sectionId);
+			Section? section = _SettingsView.Model.GetSection((int) sectionId);
 			if ( section is null ) throw new NullReferenceException(nameof(section));
 			return GetNativeSectionHeaderFooterView(section.FooterView, tableView, section);
 
@@ -190,18 +173,18 @@ namespace Jakar.SettingsView.iOS
 			return nativeView;
 		}
 
-		public override nint RowsInSection( UITableView tableview, nint section )
+		public override nint RowsInSection( UITableView tableview, nint sectionId )
 		{
-			Section sec = _SettingsView.Model.GetSection((int) section);
-			return sec.IsVisible
-					   ? sec.Count
+			Section? section = _SettingsView.Model.GetSection((int) sectionId);
+			return ( section?.IsVisible ?? false )
+					   ? section.Count
 					   : 0;
 		}
 
 
 		public override bool ShouldShowMenu( UITableView tableView, NSIndexPath rowAtIndexPath )
 		{
-			if ( _SettingsView.Model.GetSection(rowAtIndexPath.Section).UseDragSort ) { return false; }
+			if ( _SettingsView.Model.GetSection(rowAtIndexPath.Section)?.UseDragSort ?? false ) { return false; }
 
 			var ret = false;
 			if ( tableView.CellAt(rowAtIndexPath) is BaseCellView cell )
@@ -221,6 +204,7 @@ namespace Jakar.SettingsView.iOS
 
 			return true;
 		}
+
 
 		// TODO: what is this? what it do?
 		public override bool CanPerformAction( UITableView tableView,
@@ -246,13 +230,12 @@ namespace Jakar.SettingsView.iOS
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( !_disposed )
+			if ( disposing && !_disposed )
 			{
 				_SettingsView.ModelChanged -= OnSettingsViewOnModelChanged;
-				_SettingsView = null;
+				_disposed = true;
 			}
 
-			_disposed = true;
 
 			base.Dispose(disposing);
 		}

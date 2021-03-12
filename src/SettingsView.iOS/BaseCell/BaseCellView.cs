@@ -17,71 +17,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : CellTableViewCell
 	{
-		// internal NSLayoutConstraint LeftMarginConstraint { get; private set; }
-		// internal NSLayoutConstraint RightMarginConstraint { get; private set; }
-		// internal NSLayoutConstraint TopMarginConstraint { get; private set; }
-		// internal NSLayoutConstraint BottomMarginConstraint { get; private set; }
-		// internal NSLayoutConstraint WidthConstraint { get; set; }
-		// internal NSLayoutConstraint MinHeightConstraint { get; set; }
-
-		// RightMarginConstraint = NSLayoutConstraint.Create(this,
-		// 												  NSLayoutAttribute.TrailingMargin,
-		// 												  NSLayoutRelation.Equal,
-		// 												  _ContentView,
-		// 												  NSLayoutAttribute.TrailingMargin,
-		// 												  Factor.One,
-		// 												  (float) SVConstants.Cell.PADDING.Left
-		// 												 );
-		// LeftMarginConstraint = NSLayoutConstraint.Create(this,
-		// 												 NSLayoutAttribute.LeadingMargin,
-		// 												 NSLayoutRelation.Equal,
-		// 												 _ContentView,
-		// 												 NSLayoutAttribute.LeadingMargin,
-		// 												 Factor.One,
-		// 												 (float) SVConstants.Cell.PADDING.Right
-		// 												);
-		//
-		// TopMarginConstraint = NSLayoutConstraint.Create(this,
-		// 												NSLayoutAttribute.TopMargin,
-		// 												NSLayoutRelation.Equal,
-		// 												_ContentView,
-		// 												NSLayoutAttribute.TopMargin,
-		// 												Factor.One,
-		// 												(float) SVConstants.Cell.PADDING.Top
-		// 											   );
-		// BottomMarginConstraint = NSLayoutConstraint.Create(this,
-		// 												   NSLayoutAttribute.BottomMargin,
-		// 												   NSLayoutRelation.Equal,
-		// 												   _ContentView,
-		// 												   NSLayoutAttribute.BottomMargin,
-		// 												   Factor.One,
-		// 												   (float) SVConstants.Cell.PADDING.Bottom
-		// 												  );
-		//
-		// WidthConstraint = NSLayoutConstraint.Create(this,
-		// 											NSLayoutAttribute.Width,
-		// 											NSLayoutRelation.GreaterThanOrEqual,
-		// 											_ContentView,
-		// 											NSLayoutAttribute.Width,
-		// 											Factor.One,
-		// 											Factor.Zero
-		// 										   );
-		// MinHeightConstraint = NSLayoutConstraint.Create(this,
-		// 												NSLayoutAttribute.Height,
-		// 												NSLayoutRelation.GreaterThanOrEqual,
-		// 												_ContentView,
-		// 												NSLayoutAttribute.Height,
-		// 												Factor.One,
-		// 												(float) SVConstants.Defaults.MIN_ROW_HEIGHT
-		// 											   );
-		// _ContentView.AddConstraint(RightMarginConstraint);
-		// _ContentView.AddConstraint(LeftMarginConstraint);
-		// _ContentView.AddConstraint(BottomMarginConstraint);
-		// _ContentView.AddConstraint(TopMarginConstraint);
-		// _ContentView.AddConstraint(WidthConstraint);
-		// _ContentView.AddConstraint(MinHeightConstraint);
-
 		private UIStackView? _rootView;
+		private UIStackView? _contentView;
 
 		protected UIStackView _RootView
 		{
@@ -91,10 +28,40 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				_rootView?.RemoveFromSuperview();
 				_rootView = value;
 				ContentView.AddSubview(_rootView);
+
+				// _rootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
+				// _rootView.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor).Active = true;
+				// _rootView.TrailingAnchor.ConstraintEqualTo(ContentView.TrailingAnchor).Active = true;
+
+				_rootView.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
+				_rootView.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
+
+				_rootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
+				_rootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+
+				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+
+				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+
+				NSLayoutConstraint height = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
+				height.Active = true;
+				height.Priority = SVConstants.Layout.Priority.HIGH;
+
 			}
 		}
 
-		protected UIStackView _ContentView { get; set; }
+		protected UIStackView _ContentView
+		{
+			get => _contentView ?? throw new NullReferenceException(nameof(_contentView));
+			set
+			{
+				_contentView = value;
+				_RootView.AddArrangedSubview(_contentView);
+				_contentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
+			}
+		}
 
 		protected internal CellBase? CellBase => Cell as CellBase;                                      // ?? throw new NullReferenceException(nameof(CellBase));
 		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
@@ -116,28 +83,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			Cell = cell;
 			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
-			_RootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
-
-			_RootView.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor).Active = true;
-			_RootView.TrailingAnchor.ConstraintEqualTo(ContentView.TrailingAnchor).Active = true;
-
-			_RootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
-			_RootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
-
-			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Horizontal);
-			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
-
-			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-
-			NSLayoutConstraint height = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
-			height.Active = true;
-			height.Priority = SVConstants.Layout.Priority.Required;
-
-
 			_ContentView = CreateStackView(UILayoutConstraintAxis.Horizontal);
-			_ContentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
-			_RootView.AddArrangedSubview(_ContentView);
 		}
 		private void UpdateSelectedColor()
 		{

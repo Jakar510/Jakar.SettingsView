@@ -34,12 +34,18 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			_Button = new UIButton()
 					  {
-						  HorizontalAlignment = UIControlContentHorizontalAlignment.Fill, 
+						  HorizontalAlignment = UIControlContentHorizontalAlignment.Fill,
 						  VerticalAlignment = UIControlContentVerticalAlignment.Fill
 					  };
+
 			DefaultFontSize = _Button.TitleLabel.ContentScaleFactor;
 			DefaultTextColor = _Button.TitleLabel.TextColor;
-			_ContentView.AddSubview(_Button);
+			ContentView.AddSubview(_Button);
+
+			_Button.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
+			_Button.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
+			_Button.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
+			_Button.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
 		}
 
 
@@ -66,12 +72,6 @@ namespace Jakar.SettingsView.iOS.Cells
 			else if ( e.PropertyName == TitleCellBase.TitleAlignmentProperty.PropertyName ) { UpdateTitleAlignment(); }
 		}
 
-		public bool OnLongClick( View? v )
-		{
-			RunLong();
-			return true;
-		}
-		public void OnClick( View? v ) { Run(); }
 		protected void Run()
 		{
 			if ( _Command is null ) { return; }

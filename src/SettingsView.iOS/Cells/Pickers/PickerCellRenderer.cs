@@ -26,8 +26,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	public class PickerCellView : BasePickerCell
 	{
 		protected PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
-		protected ListView? _ListView { get; set; }
-		
+
 		protected string _ValueTextCache { get; set; } = string.Empty;
 		protected PickerTableViewController? _PickerVC { get; set; }
 
@@ -50,8 +49,7 @@ namespace Jakar.SettingsView.iOS.Cells
 						   PickerCell.DisplayMemberProperty,
 						   PickerCell.UseNaturalSortProperty,
 						   PickerCell.SelectedItemsOrderKeyProperty
-						  ) )
-			{ UpdateSelectedItems(); }
+						  ) ) { UpdateSelectedItems(); }
 
 			//else if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName )
 			// {
@@ -64,8 +62,7 @@ namespace Jakar.SettingsView.iOS.Cells
 				UpdateCollectionChanged();
 				UpdateSelectedItems();
 			}
-			else
-			{ base.CellPropertyChanged(sender, e); }
+			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )
@@ -76,6 +73,10 @@ namespace Jakar.SettingsView.iOS.Cells
 				return;
 			}
 
+			SetUp(tableView, indexPath);
+		}
+		protected override void SetUp( UITableView tableView, NSIndexPath indexPath )
+		{
 			_PickerVC?.Dispose();
 
 			UINavigationController? navigationController = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
@@ -83,27 +84,27 @@ namespace Jakar.SettingsView.iOS.Cells
 			{
 				// When use Shell, the NativeView is wrapped in a Forms.ContentPage.
 				_PickerVC = new PickerTableViewController(_PickerCell, tableView, shell.ShellSection.Navigation)
-				{
-					TableView =
+							{
+								TableView =
 								{
 									ContentInset = new UIEdgeInsets(44, 0, 44, 0)
 								}
-				};
+							};
 				// Fix height broken. For some reason, TableView ContentSize is broken.
 				var page = new ContentPage
-				{
-					Content = _PickerVC.TableView.ToView()
-				};
+						   {
+							   Content = _PickerVC.TableView.ToView()
+						   };
 				;
 				page.Title = _PickerCell.Prompt.Title;
 
 				// Fire manually because INavigation.PushAsync does not work ViewDidAppear and ViewWillAppear.
 				_PickerVC.ViewDidAppear(false);
 				BeginInvokeOnMainThread(async () =>
-				{
-					await shell.ShellSection.Navigation.PushAsync(page, true);
-					_PickerVC.Initialize();
-				}
+										{
+											await shell.ShellSection.Navigation.PushAsync(page, true);
+											_PickerVC.Initialize();
+										}
 									   );
 			}
 			else
@@ -113,8 +114,7 @@ namespace Jakar.SettingsView.iOS.Cells
 				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVC, true));
 			}
 
-			if ( !_PickerCell.KeepSelectedUntilBack )
-			{ tableView.DeselectRow(indexPath, true); }
+			if ( !_PickerCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 		protected UINavigationController? GetUINavigationController( UIViewController? controller )
 		{
@@ -149,32 +149,23 @@ namespace Jakar.SettingsView.iOS.Cells
 					   ? controller.ChildViewControllers.Select(GetUINavigationController).FirstOrDefault(child => child is not null)
 					   : null;
 		}
-		
-		protected internal override void UpdateCell( UITableView? tableView )
-		{
-			base.UpdateCell(tableView);
-			UpdateSelectedItems();
-			UpdateCollectionChanged();
-		}
+
 
 		public void UpdateSelectedItems()
 		{
-			if ( _SelectedCollection != null )
-			{ _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
+			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
 			_SelectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
 
-			if ( _SelectedCollection != null )
-			{ _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
+			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 
 			_Value.Text = _PickerCell.GetSelectedItemsText();
 		}
-		
+
 
 		private void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( !CellBase.IsEnabled )
-			{ return; }
+			if ( !CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
 		}
@@ -206,7 +197,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _NotifyCollection is not null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
 
-			if ( _PickerCell.ItemsSource is not INotifyCollectionChanged collection  ) return;
+			if ( _PickerCell.ItemsSource is not INotifyCollectionChanged collection ) return;
 			_NotifyCollection = collection;
 			_NotifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
 			ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -218,8 +209,14 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			base.UpdateIsEnabled();
 		}
-		
-		
+
+
+		protected internal override void UpdateCell( UITableView? tableView )
+		{
+			base.UpdateCell(tableView);
+			UpdateSelectedItems();
+			UpdateCollectionChanged();
+		}
 		protected override void EnableCell()
 		{
 			base.EnableCell();
@@ -233,40 +230,26 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Description.Disable();
 		}
 
-		protected override void SetUp()
-		{
 
-		}
+
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_Dialog?.Dispose();
-				_Dialog = null;
+				_PickerVC?.Dispose();
+				_PickerVC = null;
 
-				_ListView?.Dispose();
-				_ListView = null;
-
-				_Adapter?.Dispose();
-				_Adapter = null;
-
-				if ( _NotifyCollection != null )
+				if ( _NotifyCollection is not null )
 				{
 					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
 					_NotifyCollection = null;
 				}
 
-				if ( _SelectedCollection != null )
+				if ( _SelectedCollection is not null )
 				{
 					_SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
 					_SelectedCollection = null;
 				}
-
-				// _IndicatorView?.RemoveFromParent();
-				// _IndicatorView?.SetImageDrawable(null);
-				// _IndicatorView?.SetImageBitmap(null);
-				// _IndicatorView?.Dispose();
-				// _IndicatorView = null;
 			}
 
 			base.Dispose(disposing);

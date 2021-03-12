@@ -33,7 +33,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		}
 
 		protected virtual void ShowPopup() { _DummyField.BecomeFirstResponder(); }
-		protected abstract void SetUp();
+		protected virtual void SetUp() { }
+		protected virtual void SetUp( UITableView tableView, NSIndexPath indexPath ) { }
 
 
 		protected override void Dispose( bool disposing )

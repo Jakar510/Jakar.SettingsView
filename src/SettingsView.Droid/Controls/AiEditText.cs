@@ -12,6 +12,7 @@ using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Droid.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Enumerations;
 using Jakar.SettingsView.Shared.Interfaces;
 using Java.Lang;
 using Xamarin.Forms;
@@ -125,23 +126,23 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			switch ( _CurrentCell.OnSelectAction )
 			{
-				case AiEntryCell.SelectAction.None:
+				case SelectAction.None:
 					break;
 
 
-				case AiEntryCell.SelectAction.Start:
+				case SelectAction.Start:
 					//Selection.SetSelection(_EditText, 0);
 					SetSelection(0, 0);
 
 					break;
 
-				case AiEntryCell.SelectAction.End:
+				case SelectAction.End:
 					//Selection.SetSelection(_EditText, length - 1);
 					SetSelection(Length(), Length());
 
 					break;
 
-				case AiEntryCell.SelectAction.All:
+				case SelectAction.All:
 					//Selection.SetSelection(_EditText, 0, length);
 					SelectAll();
 
@@ -157,12 +158,12 @@ namespace Jakar.SettingsView.Droid.Controls
 			// https://stackoverflow.com/questions/20838227/set-cursor-position-in-android-edit-text/20838295
 			switch ( _CurrentCell.OnSelectAction )
 			{
-				case AiEntryCell.SelectAction.None:
-				case AiEntryCell.SelectAction.Start:
-				case AiEntryCell.SelectAction.End:
+				case SelectAction.None:
+				case SelectAction.Start:
+				case SelectAction.End:
 					break;
 
-				case AiEntryCell.SelectAction.All:
+				case SelectAction.All:
 					SetTextIsSelectable(true);
 					SetSelectAllOnFocus(true);
 
@@ -237,21 +238,11 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			Hint = _CurrentCell.Placeholder;
 
-			AColor placeholderColor = _CurrentCell.PlaceholderColor.IsDefault
-										  ? SVConstants.Cell.PlaceholderColor.ToAndroid()
-										  : _CurrentCell.PlaceholderColor.ToAndroid();
+			AColor placeholderColor = _CurrentCell.GetPlaceholderColor().ToAndroid();
 			SetHintTextColor(placeholderColor);
 			return true;
 		}
-		public bool UpdateAccentColor()
-		{
-			if ( _CurrentCell.AccentColor != Color.Default ) { return ChangeTextViewBack(_CurrentCell.AccentColor.ToAndroid()); }
-
-			if ( CellParent.CellAccentColor != Color.Default ) { return ChangeTextViewBack(CellParent.CellAccentColor.ToAndroid()); }
-
-			return true;
-		}
-
+		public bool UpdateAccentColor() => ChangeTextViewBack(_CurrentCell.GetAccentColor().ToAndroid());
 		public bool ChangeTextViewBack( AColor accent )
 		{
 			var colorList = new ColorStateList(new[]
@@ -265,10 +256,10 @@ namespace Jakar.SettingsView.Droid.Controls
 													   -Android.Resource.Attribute.StateFocused
 												   },
 											   },
-											   new int[]
+											   new[]
 											   {
-												   AColor.Argb(255, accent.R, accent.G, accent.B),
-												   AColor.Argb(255, 200, 200, 200)
+												   accent.ToArgb(),
+												   CellParent.SelectedColor.ToAndroid() // AColor.Argb(255, 200, 200, 200)
 											   }
 											  );
 			Background?.SetTintList(colorList);

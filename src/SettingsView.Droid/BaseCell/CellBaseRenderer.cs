@@ -20,7 +20,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			if ( convertView is not TNativeCell nativeCell )
 			{
 				nativeCell = InstanceCreator.Create<TNativeCell>( context, item);
-				// nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TnativeCell>.Create(context, item);
+				// nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TNativeCell>.Create(context, item);
 			}
 
 			ClearPropertyChanged(nativeCell);
@@ -42,9 +42,10 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if ( parentElement is null ) return;
 			parentElement.PropertyChanged += nativeCell.ParentPropertyChanged;
-			Section section = parentElement.Model.GetSectionFromCell(formsCell);
+			Section? section = parentElement.Model.GetSectionFromCell(formsCell);
 			if ( section is null ) return;
 			formsCell.Section = section;
 			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
@@ -56,6 +57,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			Shared.sv.SettingsView? parentElement = formsCell.Parent;
 
 			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if ( parentElement is null ) return;
 			parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
 			if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }

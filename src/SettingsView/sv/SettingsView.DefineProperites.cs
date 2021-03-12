@@ -306,6 +306,14 @@ namespace Jakar.SettingsView.Shared.sv
 
 		public static BindableProperty CellValueTextFontAttributesProperty = BindableProperty.Create(nameof(CellValueTextFontAttributes), typeof(FontAttributes), typeof(SettingsView), SVConstants.SV.Value.Font.Attributes);
 		public static BindableProperty CellValueTextAlignmentProperty = BindableProperty.Create(nameof(CellValueTextAlignment), typeof(TextAlignment), typeof(SettingsView), SVConstants.SV.Value.Alignment);
+		public static BindableProperty CellPlaceholderColorProperty = BindableProperty.Create(nameof(CellPlaceholderColor), typeof(Color), typeof(SettingsView), SVConstants.SV.Value.PLACEHOLDER_COLOR);
+
+		[Xamarin.Forms.TypeConverter(typeof(ColorTypeConverter))]
+		public Color CellPlaceholderColor
+		{
+			get => (Color) GetValue(CellPlaceholderColorProperty);
+			set => SetValue(CellPlaceholderColorProperty, value);
+		}
 
 		[Xamarin.Forms.TypeConverter(typeof(ColorTypeConverter))]
 		public Color CellValueTextColor
@@ -470,7 +478,7 @@ namespace Jakar.SettingsView.Shared.sv
 		public static BindableProperty CellBackgroundColorProperty = BindableProperty.Create(nameof(CellBackgroundColor), typeof(Color), typeof(SettingsView), SVConstants.SV.BACKGROUND_COLOR);
 		public static BindableProperty CellOffColorProperty = BindableProperty.Create(nameof(CellOffColor), typeof(Color), typeof(SettingsView), SVConstants.SV.OFF_COLOR);
 		public static BindableProperty CellAccentColorProperty = BindableProperty.Create(nameof(CellAccentColor), typeof(Color), typeof(SettingsView), SVConstants.SV.ACCENT_COLOR);
-
+		 
 		public Color CellBackgroundColor
 		{
 			get => (Color) GetValue(CellBackgroundColorProperty);
