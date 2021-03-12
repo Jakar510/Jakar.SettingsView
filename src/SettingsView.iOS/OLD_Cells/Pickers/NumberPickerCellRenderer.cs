@@ -3,6 +3,8 @@ using System.Windows.Input;
 using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Cells.Sources;
 using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
@@ -21,12 +23,12 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 	{
 		public UITextField DummyField { get; set; }
 
-		private NumberPickerSource _Model { get; set; }
-		private UILabel _Title { get; set; }
-		private UIPickerView _Picker { get; set; }
-		private ICommand? _Command { get; set; }
+		protected NumberPickerSource _Model { get; set; }
+		protected UILabel _PopupTitle { get; set; }
+		protected UIPickerView _Dialog { get; set; }
+		protected ICommand? _Command { get; set; }
 
-		private NumberPickerCell _NumberPickerCell => Cell as NumberPickerCell ?? throw new NullReferenceException(nameof(_NumberPickerCell));
+		protected NumberPickerCell _NumberPickerCell => Cell as NumberPickerCell ?? throw new NullReferenceException(nameof(_NumberPickerCell));
 
 
 		public NumberPickerCellView( Cell formsCell ) : base(formsCell)
@@ -42,11 +44,11 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			SelectionStyle = UITableViewCellSelectionStyle.Default;
 
 
-			_Picker = new UIPickerView();
+			_Dialog = new UIPickerView();
 
 			nfloat width = UIScreen.MainScreen.Bounds.Width;
 
-			_Title = new UILabel
+			_PopupTitle = new UILabel
 					 {
 						 TextAlignment = UITextAlignment.Center
 					 };
@@ -64,7 +66,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 												   }
 												  );
 
-			var labelButton = new UIBarButtonItem(_Title);
+			var labelButton = new UIBarButtonItem(_PopupTitle);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
 												 ( o, a ) =>
@@ -86,11 +88,11 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 							 false
 							);
 
-			DummyField.InputView = _Picker;
+			DummyField.InputView = _Dialog;
 			DummyField.InputAccessoryView = toolbar;
 
 			_Model = new NumberPickerSource();
-			_Picker.Model = _Model;
+			_Dialog.Model = _Model;
 
 			_Model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
 		}
@@ -101,7 +103,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ||
 				 e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateNumberList(); }
 			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
-			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePopupTitle(); }
 			else if ( e.PropertyName == NumberPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
 		}
 
@@ -114,34 +116,32 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		public override void UpdateCell( UITableView tableView )
 		{
 			base.UpdateCell(tableView);
-			if ( DummyField is null )
-				return; // For HotReload
 
 			UpdateNumberList();
 			UpdateNumber();
-			UpdateTitle();
+			UpdatePopupTitle();
 			UpdateCommand();
 		}
 
-		private void UpdateNumber()
+		protected void UpdateNumber()
 		{
 			Select(_NumberPickerCell.Number);
 			ValueLabel.Text = _NumberPickerCell.Number.ToString();
 		}
-		private void UpdateNumberList()
+		protected void UpdateNumberList()
 		{
 			_Model.SetNumbers(_NumberPickerCell.Min, _NumberPickerCell.Max);
 			Select(_NumberPickerCell.Number);
 		}
-		private void UpdateTitle()
+		protected void UpdatePopupTitle()
 		{
-			_Title.Text = _NumberPickerCell.Title;
-			_Title.SizeToFit();
-			_Title.Frame = new CGRect(0, 0, 160, 44);
+			_PopupTitle.Text = _NumberPickerCell.Title;
+			_PopupTitle.SizeToFit();
+			_PopupTitle.Frame = new CGRect(0, 0, 160, 44);
 		}
 
-		private void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
-		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
+		protected void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
+		protected void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
 			_NumberPickerCell.Number = _Model.SelectedItem;
 			ValueLabel.Text = _Model.SelectedItem.ToString();
@@ -150,13 +150,10 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		public override void LayoutSubviews()
 		{
 			base.LayoutSubviews();
-			if ( DummyField is null )
-				return; // For HotReload
-
 			DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
 		}
 
-		private void Select( int number )
+		protected void Select( int number )
 		{
 			int idx = _Model.Items.IndexOf(number);
 			if ( idx == -1 )
@@ -165,7 +162,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				idx = 0;
 			}
 
-			_Picker.Select(idx, 0, false);
+			_Dialog.Select(idx, 0, false);
 			_Model.SelectedItem = number;
 			_Model.SelectedIndex = idx;
 			_Model.PreSelectedItem = number;
@@ -178,9 +175,9 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				_Model.UpdatePickerFromModel -= Model_UpdatePickerFromModel;
 				DummyField.RemoveFromSuperview();
 				DummyField?.Dispose();
-				_Title?.Dispose();
+				_PopupTitle?.Dispose();
 				_Model?.Dispose();
-				_Picker?.Dispose();
+				_Dialog?.Dispose();
 				_Command = null;
 			}
 

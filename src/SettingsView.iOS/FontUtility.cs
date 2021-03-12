@@ -6,108 +6,103 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	public static class FontUtility
 	{
-		private static readonly Dictionary<ToNativeFontFontKey, UIFont> ToUiFont = new Dictionary<ToNativeFontFontKey, UIFont>();
+		private static readonly Dictionary<ToNativeFontFontKey, UIFont> ToUiFont = new();
 		private static readonly string _defaultFontName = UIFont.SystemFontOfSize(12).Name;
 
-		public static UIFont CreateNativeFont( string fontFamily, float fontSize, FontAttributes fontAttributes = FontAttributes.None ) => ToNativeFont(fontFamily, fontSize, fontAttributes, _ToNativeFont);
-
-		private static UIFont ToNativeFont( string family,
-											float size,
-											FontAttributes attributes,
-											Func<string, float, FontAttributes, UIFont> factory )
+		public static UIFont CreateNativeFont( string? family, float size, FontAttributes attributes = FontAttributes.None )
 		{
 			var key = new ToNativeFontFontKey(family, size, attributes);
 
 			lock ( ToUiFont )
 			{
-				UIFont value;
-				if ( ToUiFont.TryGetValue(key, out value) )
+				if ( ToUiFont.TryGetValue(key, out UIFont value) )
 					return value;
 			}
 
-			UIFont generatedValue = factory(family, size, attributes);
+			UIFont generatedValue = ToNativeFont(family, size, attributes);
 
 			lock ( ToUiFont )
 			{
-				UIFont value;
-				if ( !ToUiFont.TryGetValue(key, out value) )
-					ToUiFont.Add(key, value = generatedValue);
+				if ( !ToUiFont.TryGetValue(key, out UIFont value) ) { ToUiFont.Add(key, value = generatedValue); }
+
 				return value;
 			}
 		}
 
-		private static UIFont _ToNativeFont( string family, float size, FontAttributes attributes )
+		private static UIFont ToNativeFont( string? family, float size, FontAttributes attributes )
 		{
 			bool bold = ( attributes & FontAttributes.Bold ) != 0;
 			bool italic = ( attributes & FontAttributes.Italic ) != 0;
 
-			if ( family != null &&
-				 family != _defaultFontName )
+			if ( family is not null )
 			{
-				try
+				if ( family != _defaultFontName )
 				{
-					UIFont result = null;
-					if ( UIFont.FamilyNames.Contains(family) )
+					try
 					{
-						UIFontDescriptor descriptor = new UIFontDescriptor().CreateWithFamily(family);
-
-						if ( bold || italic )
+						UIFont result;
+						if ( UIFont.FamilyNames.Contains(family) )
 						{
-							var traits = (UIFontDescriptorSymbolicTraits) 0;
-							if ( bold )
-								traits = traits | UIFontDescriptorSymbolicTraits.Bold;
-							if ( italic )
-								traits = traits | UIFontDescriptorSymbolicTraits.Italic;
+							using UIFontDescriptor descriptor = new UIFontDescriptor().CreateWithFamily(family);
 
-							descriptor = descriptor.CreateWithTraits(traits);
-							result = UIFont.FromDescriptor(descriptor, size);
-							if ( result != null )
-								return result;
+							if ( bold || italic )
+							{
+								var traits = (UIFontDescriptorSymbolicTraits) 0;
+
+								if ( bold )
+									traits |= UIFontDescriptorSymbolicTraits.Bold;
+
+								if ( italic )
+									traits |= UIFontDescriptorSymbolicTraits.Italic;
+
+								result = UIFont.FromDescriptor(descriptor.CreateWithTraits(traits), size);
+								if ( result is not null )
+									return result;
+							}
 						}
-					}
 
-					string cleansedFont = CleanseFontName(family);
-					result = UIFont.FromName(cleansedFont, size);
-					if ( family.StartsWith(".SFUI", StringComparison.InvariantCultureIgnoreCase) )
-					{
-						string fontWeight = family.Split('-').LastOrDefault();
-
-						if ( !string.IsNullOrWhiteSpace(fontWeight) &&
-							 Enum.TryParse<UIFontWeight>(fontWeight, true, out UIFontWeight uIFontWeight) )
+						string cleansedFont = CleanseFontName(family);
+						result = UIFont.FromName(cleansedFont, size);
+						if ( family.StartsWith(".SFUI", StringComparison.InvariantCultureIgnoreCase) )
 						{
-							result = UIFont.SystemFontOfSize(size, uIFontWeight);
+							string? fontWeight = family.Split('-').LastOrDefault();
+
+							if ( !string.IsNullOrWhiteSpace(fontWeight) &&
+								 Enum.TryParse<UIFontWeight>(fontWeight, true, out UIFontWeight uIFontWeight) )
+							{
+								result = UIFont.SystemFontOfSize(size, uIFontWeight);
+								return result;
+							}
+
+							result = UIFont.SystemFontOfSize(size, UIFontWeight.Regular);
 							return result;
 						}
 
-						result = UIFont.SystemFontOfSize(size, UIFontWeight.Regular);
-						return result;
-					}
+						result ??= UIFont.FromName(family, size);
 
-					if ( result == null )
-						result = UIFont.FromName(family, size);
-					if ( result != null )
-						return result;
+						if ( result is not null )
+							return result;
+					}
+					catch { Debug.WriteLine("Could not load font named: {0}", family); }
 				}
-				catch { Debug.WriteLine("Could not load font named: {0}", family); }
 			}
 
 			if ( bold && italic )
 			{
-				UIFont defaultFont = UIFont.SystemFontOfSize(size);
+				using UIFont defaultFont = UIFont.SystemFontOfSize(size);
 
 				UIFontDescriptor descriptor = defaultFont.FontDescriptor.CreateWithTraits(UIFontDescriptorSymbolicTraits.Bold | UIFontDescriptorSymbolicTraits.Italic);
 				return UIFont.FromDescriptor(descriptor, 0);
 			}
 
-			if ( italic )
-				return UIFont.ItalicSystemFontOfSize(size);
+			if ( italic ) return UIFont.ItalicSystemFontOfSize(size);
 
-			if ( bold )
-				return UIFont.BoldSystemFontOfSize(size);
+			if ( bold ) return UIFont.BoldSystemFontOfSize(size);
 
 			return UIFont.SystemFontOfSize(size);
 		}
@@ -116,8 +111,7 @@ namespace Jakar.SettingsView.iOS
 		{
 			//First check Alias
 			( bool hasFontAlias, string fontPostScriptName ) = FontRegistrar.HasFont(fontName);
-			if ( hasFontAlias )
-				return fontPostScriptName;
+			if ( hasFontAlias ) return fontPostScriptName;
 
 			FontFile fontFile = FontFile.FromString(fontName);
 
@@ -131,10 +125,9 @@ namespace Jakar.SettingsView.iOS
 			{
 				foreach ( string ext in FontFile.Extensions )
 				{
-					string formated = fontFile.FileNameWithExtension(ext);
-					( bool hasFont, string filePath ) = FontRegistrar.HasFont(formated);
-					if ( hasFont )
-						return filePath;
+					string formatted = fontFile.FileNameWithExtension(ext);
+					( bool hasFont, string filePath ) = FontRegistrar.HasFont(formatted);
+					if ( hasFont ) return filePath;
 				}
 			}
 
@@ -143,14 +136,15 @@ namespace Jakar.SettingsView.iOS
 
 		private struct ToNativeFontFontKey
 		{
-			internal ToNativeFontFontKey( string family, float size, FontAttributes attributes )
+			internal ToNativeFontFontKey( string? family, float size, FontAttributes attributes )
 			{
 				_family = family;
 				_size = size;
 				_attributes = attributes;
 			}
+
 #pragma warning disable 0414 // these are not called explicitly, but they are used to establish uniqueness. allow it!
-			private string _family;
+			private string? _family;
 			private float _size;
 			private FontAttributes _attributes;
 #pragma warning restore 0414

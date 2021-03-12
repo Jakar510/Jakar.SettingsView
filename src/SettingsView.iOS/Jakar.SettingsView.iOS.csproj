@@ -69,9 +69,9 @@
     <Compile Include="Cells\CustomCellRenderer.cs" />
     <Compile Include="Cells\EntryCellRenderer.cs" />
     <Compile Include="Cells\LabelCellRenderer.cs" />
+    <Compile Include="Cells\Pickers\Sources\BasePickerSource.cs" />
     <Compile Include="Cells\Pickers\DatePickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\NumberPickerCell.cs" />
-    <Compile Include="Cells\Pickers\PickerAdapter.cs" />
     <Compile Include="Cells\Pickers\PickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\TextPickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Controls\SimpleCheck.cs" />
     <Compile Include="Controls\TitleView.cs" />
     <Compile Include="Controls\ValueView.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="GetIcons.cs" />
     <Compile Include="Interfaces\IEntryCellRenderer.cs" />
     <Compile Include="Controls\CheckBox.cs" />
@@ -97,9 +98,9 @@
     <Compile Include="OLD_Cells\LabelCellRenderer.cs" />
     <Compile Include="OLD_Cells\NoCaretField.cs" />
     <Compile Include="OLD_Cells\Pickers\NumberPickerCellRenderer.cs" />
-    <Compile Include="OLD_Cells\Pickers\NumberPickerSource.cs" />
+    <Compile Include="Cells\Pickers\Sources\NumberPickerSource.cs" />
     <Compile Include="OLD_Cells\Pickers\PickerCellRenderer.cs" />
-    <Compile Include="OLD_Cells\Pickers\PickerTableViewController.cs" />
+    <Compile Include="Cells\Pickers\Sources\PickerTableViewController.cs" />
     <Compile Include="OLD_Cells\AccessoryCells\SwitchCellRenderer.cs" />
     <Compile Include="Extensions\StackViewAlignmentExtensions.cs" />
     <Compile Include="Extensions\ThicknessExtensions.cs" />
@@ -113,7 +114,7 @@
     <Compile Include="OLD_Cells\CommandCells\ButtonCellRenderer.cs" />
     <Compile Include="SettingsLagacyTableSource.cs" />
     <Compile Include="OLD_Cells\Pickers\TextPickerCellRenderer.cs" />
-    <Compile Include="OLD_Cells\Pickers\TextPickerSource.cs" />
+    <Compile Include="Cells\Pickers\Sources\TextPickerSource.cs" />
     <Compile Include="OLD_Cells\AccessoryCells\RadioCellRenderer.cs" />
     <Compile Include="TextHeaderView.cs" />
     <Compile Include="CustomHeaderFooterView.cs" />

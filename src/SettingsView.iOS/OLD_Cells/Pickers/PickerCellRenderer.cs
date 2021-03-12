@@ -3,8 +3,10 @@ using System.Linq;
 using Foundation;
 using GameKit;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Cells.Sources;
 using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Misc;
 using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
@@ -12,6 +14,7 @@ using Xamarin.Forms.Platform.iOS;
 
 // [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.OLD_Cells
 {
 	// [Foundation.Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
@@ -19,10 +22,10 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 	[Foundation.Preserve(AllMembers = true)]
 	public class PickerCellView : LabelCellView
 	{
-		private PickerCell _PickerCell => Cell as PickerCell;
-		private PickerTableViewController _pickerVC;
-		private INotifyCollectionChanged _notifyCollection;
-		private INotifyCollectionChanged _selectedCollection;
+		protected PickerCell _PickerCell => Cell as PickerCell;
+		protected PickerTableViewController? _PickerVC { get; set; }
+		protected INotifyCollectionChanged _NotifyCollection { get; set; }
+		protected INotifyCollectionChanged _SelectedCollection { get; set; }
 
 
 		public PickerCellView( Cell formsCell ) : base(formsCell)
@@ -35,24 +38,25 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
-				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
-				 e.PropertyName == PickerCell.UseNaturalSortProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(); }
+			if ( e.IsOneOf(PickerCell.SelectedItemsProperty,
+						   PickerCell.SelectedItemProperty,
+						   PickerCell.DisplayMemberProperty,
+						   PickerCell.UseNaturalSortProperty,
+						   PickerCell.SelectedItemsOrderKeyProperty
+						  ) ) { UpdateSelectedItems(); }
 
-			if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName )
-			{
-				if ( _PickerCell.UseAutoValueText ) { UpdateSelectedItems(); }
-				else { UpdateValueText(); }
-			}
+			//else if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName )
+			// {
+			// 	if ( _PickerCell.UseAutoValueText ) { UpdateSelectedItems(); }
+			// 	else { UpdateValueText(); }
+			// }
 
-			if ( e.PropertyName == PickerCell.ItemsSourceProperty.PropertyName )
+			else if ( e.IsEqual(PickerCell.ItemsSourceProperty.PropertyName) )
 			{
 				UpdateCollectionChanged();
 				UpdateSelectedItems();
 			}
+			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
@@ -63,44 +67,49 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				return;
 			}
 
-			_pickerVC?.Dispose();
+			_PickerVC?.Dispose();
 
-			UINavigationController naviCtrl = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
-			if ( naviCtrl is ShellSectionRenderer shell )
+			UINavigationController? navigationController = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
+			if ( navigationController is ShellSectionRenderer shell )
 			{
 				// When use Shell, the NativeView is wrapped in a Forms.ContentPage.
-				_pickerVC = new PickerTableViewController(this, tableView, shell.ShellSection.Navigation);
+				_PickerVC = new PickerTableViewController(_PickerCell, tableView, shell.ShellSection.Navigation)
+							{
+								TableView =
+								{
+									ContentInset = new UIEdgeInsets(44, 0, 44, 0)
+								}
+							};
 				// Fix height broken. For some reason, TableView ContentSize is broken.
-				_pickerVC.TableView.ContentInset = new UIEdgeInsets(44, 0, 44, 0);
-				var page = new ContentPage();
-				page.Content = _pickerVC.TableView.ToView();
+				var page = new ContentPage
+						   {
+							   Content = _PickerVC.TableView.ToView()
+						   };
 				;
-				page.Title = _PickerCell.PageTitle;
+				page.Title = _PickerCell.Prompt.Title;
 
 				// Fire manually because INavigation.PushAsync does not work ViewDidAppear and ViewWillAppear.
-				_pickerVC.ViewDidAppear(false);
-				_pickerVC.InitializeView();
+				_PickerVC.ViewDidAppear(false);
 				BeginInvokeOnMainThread(async () =>
 										{
 											await shell.ShellSection.Navigation.PushAsync(page, true);
-											_pickerVC.InitializeScroll();
+											_PickerVC.Initialize();
 										}
 									   );
 			}
 			else
 			{
 				// When use traditional navigation.
-				_pickerVC = new PickerTableViewController(this, tableView);
-				BeginInvokeOnMainThread(() => naviCtrl.PushViewController(_pickerVC, true));
+				_PickerVC = new PickerTableViewController(_PickerCell, tableView);
+				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVC, true));
 			}
-
 
 			if ( !_PickerCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 
-		private class NavDelegate : UINavigationControllerDelegate
+		protected class NavDelegate : UINavigationControllerDelegate
 		{
-			private readonly ShellSectionRenderer _self;
+			protected readonly ShellSectionRenderer _self;
 
 			public NavDelegate( ShellSectionRenderer renderer ) => _self = renderer;
 
@@ -120,24 +129,24 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			if ( !_PickerCell.UseAutoValueText ) { return; }
 
-			if ( _selectedCollection != null ) { _selectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
+			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
-			_selectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
+			_SelectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
 
-			if ( _selectedCollection != null ) { _selectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
+			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 
 			ValueLabel.Text = _PickerCell.GetSelectedItemsText();
 		}
 
-		private void UpdateCollectionChanged()
+		protected void UpdateCollectionChanged()
 		{
-			if ( _notifyCollection != null ) { _notifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
+			if ( _NotifyCollection != null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
 
-			_notifyCollection = _PickerCell.ItemsSource as INotifyCollectionChanged;
+			_NotifyCollection = _PickerCell.ItemsSource as INotifyCollectionChanged;
 
-			if ( _notifyCollection != null )
+			if ( _NotifyCollection != null )
 			{
-				_notifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
+				_NotifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
 				ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 			}
 		}
@@ -150,32 +159,32 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			base.UpdateIsEnabled();
 		}
 
-		private void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+		protected void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
 			if ( !CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
 		}
 
-		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(); }
+		protected void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(); }
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_pickerVC?.Dispose();
-				_pickerVC = null;
+				_PickerVC?.Dispose();
+				_PickerVC = null;
 
-				if ( _notifyCollection != null )
+				if ( _NotifyCollection != null )
 				{
-					_notifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
-					_notifyCollection = null;
+					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
+					_NotifyCollection = null;
 				}
 
-				if ( _selectedCollection != null )
+				if ( _SelectedCollection != null )
 				{
-					_selectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
-					_selectedCollection = null;
+					_SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
+					_SelectedCollection = null;
 				}
 			}
 
@@ -183,7 +192,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		}
 
 #nullable enable
-		private UINavigationController? GetUINavigationController( UIViewController? controller )
+		protected UINavigationController? GetUINavigationController( UIViewController? controller )
 		{
 			// Refer to https://forums.xamarin.com/discussion/comment/294088/#Comment_294088
 			switch ( controller )

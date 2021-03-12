@@ -4,49 +4,49 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	public static class FormsInternals
 	{
-		// Get internal members
-		public static BindableProperty RendererProperty = (BindableProperty) typeof(Platform).GetField("RendererProperty", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+		// Get internal members... why? xamarin.forms why internal??
+		public static BindableProperty? RendererProperty = (BindableProperty?) typeof(Platform).GetField("RendererProperty", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
 		public static Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.Platform+DefaultRenderer");
 		public static Type ModalWrapper = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.ModalWrapper");
-		public static MethodInfo ModalWapperDispose = ModalWrapper.GetMethod("Dispose");
+		public static MethodInfo? ModalWrapperDispose = ModalWrapper.GetMethod("Dispose");
 
 		// From internal Platform class
 		public static void DisposeModelAndChildrenRenderers( Element view )
 		{
 			IVisualElementRenderer renderer;
-			foreach ( VisualElement child in view.Descendants() )
+			foreach ( Element element in view.Descendants() )
 			{
+				if ( element is not VisualElement child ) continue;
 				renderer = Platform.GetRenderer(child);
 				child.ClearValue(RendererProperty);
+				if ( renderer is null ) continue;
+				renderer.NativeView.RemoveFromSuperview();
+				renderer.Dispose();
+			}
 
-				if ( renderer != null )
+			if ( view is VisualElement visual )
+			{
+				renderer = Platform.GetRenderer(visual);
+				if ( renderer is not null )
 				{
+					if ( renderer.ViewController?.ParentViewController is not null &&
+						 renderer.ViewController.ParentViewController.GetType() == ModalWrapper )
+					{
+						object modalWrapper = Convert.ChangeType(renderer.ViewController.ParentViewController, ModalWrapper);
+						ModalWrapperDispose?.Invoke(modalWrapper,
+													new object[]
+													{ }
+												   );
+					}
+
 					renderer.NativeView.RemoveFromSuperview();
 					renderer.Dispose();
 				}
-			}
-
-			renderer = Platform.GetRenderer((VisualElement) view);
-			if ( renderer != null )
-			{
-				if ( renderer.ViewController != null )
-				{
-					if ( renderer.ViewController.ParentViewController.GetType() == ModalWrapper )
-					{
-						object modalWrapper = Convert.ChangeType(renderer.ViewController.ParentViewController, ModalWrapper);
-						ModalWapperDispose.Invoke(modalWrapper,
-												  new object[]
-												  { }
-												 );
-					}
-				}
-
-				renderer.NativeView.RemoveFromSuperview();
-				renderer.Dispose();
 			}
 
 			view.ClearValue(RendererProperty);
@@ -55,18 +55,12 @@ namespace Jakar.SettingsView.iOS
 		// From internal Platform class
 		public static void DisposeRendererAndChildren( IVisualElementRenderer rendererToRemove )
 		{
-			if ( rendererToRemove == null )
-				return;
+			if ( rendererToRemove.Element is not null &&
+				 Platform.GetRenderer(rendererToRemove.Element) == rendererToRemove ) { rendererToRemove.Element.ClearValue(RendererProperty); }
 
-			if ( rendererToRemove.Element != null &&
-				 Platform.GetRenderer(rendererToRemove.Element) == rendererToRemove )
-				rendererToRemove.Element.ClearValue(RendererProperty);
-
-			UIView[] subviews = rendererToRemove.NativeView.Subviews;
-			for ( var i = 0; i < subviews.Length; i++ )
+			foreach ( UIView view in rendererToRemove.NativeView.Subviews )
 			{
-				var childRenderer = subviews[i] as IVisualElementRenderer;
-				if ( childRenderer != null )
+				if ( view is IVisualElementRenderer childRenderer )
 					DisposeRendererAndChildren(childRenderer);
 			}
 

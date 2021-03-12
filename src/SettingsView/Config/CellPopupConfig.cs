@@ -5,14 +5,14 @@ using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Config
 {
-	public class CellPopupConfig : SVConfig, IConfigPopup
+	public class CellPopupConfig : SVConfig
 	{
 		public static BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(CellPopupConfig), default(string));
-		public static BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellPopupConfig), Color.Black);
+		public static BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Title.COLOR);
 		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Title.FONT_SIZE);
 
 
-		public static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellPopupConfig), Color.White);
+		public static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.BACKGROUND_COLOR);
 		public static BindableProperty AcceptProperty = BindableProperty.Create(nameof(Accept), typeof(string), typeof(CellPopupConfig), SVConstants.Prompt.ACCEPT_TEXT);
 		public static BindableProperty CancelProperty = BindableProperty.Create(nameof(Cancel), typeof(string), typeof(CellPopupConfig), SVConstants.Prompt.CANCEL_TEXT);
 
@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Shared.Config
 		public static BindableProperty ItemColorProperty = BindableProperty.Create(nameof(ItemColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Item.COLOR);
 
 
-		public static BindableProperty ItemDescriptionColorProperty = BindableProperty.Create(nameof(ItemDescriptionColor), typeof(Color), typeof(CellPopupConfig), Color.SlateGray);
+		public static BindableProperty ItemDescriptionColorProperty = BindableProperty.Create(nameof(ItemDescriptionColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Item.Description.Color);
 		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Item.Description.FontSize);
 
 

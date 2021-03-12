@@ -18,14 +18,14 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 	[Foundation.Preserve(AllMembers = true)]
 	public class CustomCellView : CellBaseView
 	{
-		protected CustomCell CustomCell => Cell as CustomCell;
-		protected Action Execute { get; set; }
-		protected ICommand _command;
-		protected CustomCellContent _coreView;
-		private Dictionary<UIView, UIColor> _colorCache = new Dictionary<UIView, UIColor>();
+		protected CustomCell _CustomCell => Cell as CustomCell;
+		protected Action _Execute { get; set; }
+		protected ICommand _Command { get; set; }
+		protected CustomCellContent _CoreView { get; set; }
+		private Dictionary<UIView, UIColor> _ColorCache { get; set; } = new();
 
 		public CustomCellView( Cell formsCell ) : base(formsCell) =>
-			SelectionStyle = CustomCell.IsSelectable
+			SelectionStyle = _CustomCell.IsSelectable
 								 ? UITableViewCellSelectionStyle.Default
 								 : UITableViewCellSelectionStyle.None;
 
@@ -39,7 +39,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			base.SetUpContentView();
 
-			if ( CustomCell.ShowArrowIndicator )
+			if ( _CustomCell.ShowArrowIndicator )
 			{
 				Accessory = UITableViewCellAccessory.DisclosureIndicator;
 				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
@@ -52,9 +52,9 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			ContentStack.RemoveFromSuperview();
 			DescriptionLabel.RemoveFromSuperview();
 
-			_coreView = new CustomCellContent();
+			_CoreView = new CustomCellContent();
 
-			if ( CustomCell.UseFullSize )
+			if ( _CustomCell.UseFullSize )
 			{
 				StackH.RemoveArrangedSubview(IconView);
 				IconView.RemoveFromSuperview();
@@ -63,16 +63,16 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				StackH.Spacing = 0;
 			}
 
-			StackV.AddArrangedSubview(_coreView);
+			StackV.AddArrangedSubview(_CoreView);
 		}
 
 		protected virtual void UpdateContent( UITableView tableView )
 		{
-			if ( _coreView is null )
+			if ( _CoreView is null )
 				return; // for HotReload;
 
-			_coreView.CustomCell = CustomCell;
-			_coreView.UpdateCell(CustomCell.Content, tableView);
+			_CoreView.CustomCell = _CustomCell;
+			_CoreView.UpdateCell(_CustomCell.Content, tableView);
 		}
 
 
@@ -85,17 +85,17 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( !CustomCell.IsSelectable ) { return; }
+			if ( !_CustomCell.IsSelectable ) { return; }
 
-			Execute?.Invoke();
-			if ( !CustomCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
+			_Execute?.Invoke();
+			if ( !_CustomCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 
 		public override bool RowLongPressed( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( CustomCell.LongCommand == null ) { return false; }
+			if ( _CustomCell.LongCommand == null ) { return false; }
 
-			CustomCell.SendLongCommand();
+			_CustomCell.SendLongCommand();
 
 			return true;
 		}
@@ -110,11 +110,11 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 			// https://stackoverflow.com/questions/6745919/uitableviewcell-subview-disappears-when-cell-is-selected
 
-			BackupSubviewsColor(_coreView.Subviews[0], _colorCache);
+			BackupSubviewsColor(_CoreView.Subviews[0], _ColorCache);
 
 			base.SetHighlighted(highlighted, animated);
 
-			RestoreSubviewsColor(_coreView.Subviews[0], _colorCache);
+			RestoreSubviewsColor(_CoreView.Subviews[0], _ColorCache);
 		}
 
 		public override void SetSelected( bool selected, bool animated )
@@ -127,7 +127,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 			base.SetSelected(selected, animated);
 
-			RestoreSubviewsColor(_coreView.Subviews[0], _colorCache);
+			RestoreSubviewsColor(_CoreView.Subviews[0], _ColorCache);
 		}
 
 		private void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
@@ -155,17 +155,17 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			if ( disposing )
 			{
-				if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Execute = null;
-				_command = null;
+				_Execute = null;
+				_Command = null;
 
-				_colorCache.Clear();
-				_colorCache = null;
+				_ColorCache.Clear();
+				_ColorCache = null;
 
-				_coreView?.RemoveFromSuperview();
-				_coreView?.Dispose();
-				_coreView = null;
+				_CoreView?.RemoveFromSuperview();
+				_CoreView?.Dispose();
+				_CoreView = null;
 			}
 
 			base.Dispose(disposing);
@@ -173,28 +173,28 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		protected virtual void UpdateCommand()
 		{
-			if ( _command != null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-			_command = CustomCell.Command;
+			_Command = _CustomCell.Command;
 
-			if ( _command != null )
+			if ( _Command != null )
 			{
-				_command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_command, EventArgs.Empty);
+				_Command.CanExecuteChanged += Command_CanExecuteChanged;
+				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
 
-			Execute = () =>
+			_Execute = () =>
 					  {
-						  if ( _command == null ) { return; }
+						  if ( _Command == null ) { return; }
 
-						  if ( _command.CanExecute(CustomCell.CommandParameter) ) { _command.Execute(CustomCell.CommandParameter); }
+						  if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
 					  };
 		}
 
 		protected override void UpdateIsEnabled()
 		{
-			if ( _command != null &&
-				 !_command.CanExecute(CustomCell.CommandParameter) ) { return; }
+			if ( _Command != null &&
+				 !_Command.CanExecute(_CustomCell.CommandParameter) ) { return; }
 
 			base.UpdateIsEnabled();
 		}
@@ -203,7 +203,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			if ( !CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_command.CanExecute(CustomCell.CommandParameter));
+			SetEnabledAppearance(_Command.CanExecute(_CustomCell.CommandParameter));
 		}
 	}
 }

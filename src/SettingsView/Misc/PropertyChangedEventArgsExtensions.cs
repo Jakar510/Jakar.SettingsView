@@ -15,7 +15,7 @@ namespace Jakar.SettingsView.Shared.Misc
 		public static bool IsOneOf( this PropertyChangedEventArgs e, params string[] properties ) => properties.Any(property => property == e.PropertyName);
 
 
-		public static bool IsEqual( this PropertyChangedEventArgs e, BindableProperty properties ) => e.IsEqual(properties.PropertyName);
-		public static bool IsEqual( this PropertyChangedEventArgs e, string properties ) => e.PropertyName == properties;
+		public static bool IsEqual( this PropertyChangedEventArgs e, BindableProperty property ) => e.IsEqual(property.PropertyName);
+		public static bool IsEqual( this PropertyChangedEventArgs e, string property ) => e.PropertyName == property;
 	}
 }

@@ -60,16 +60,5 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Hint.Update();
 			_Value.Update();
 		}
-
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_Hint.Dispose();
-				_Value.Dispose();
-			}
-
-			base.Dispose(disposing);
-		}
 	}
 }

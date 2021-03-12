@@ -1,32 +1,43 @@
 ﻿using System;
 using CoreGraphics;
 using UIKit;
+using Xamarin.Forms.Platform.iOS;
 using PointF = CoreGraphics.CGPoint;
 using RectangleF = CoreGraphics.CGRect;
 
 namespace Jakar.SettingsView.iOS
 {
-	/// <summary>
-	/// Copy from
-	/// https://github.com/xamarin/Xamarin.Forms/blob/master/Xamarin.Forms.Platform.iOS/Renderers/KeyboardInsetTracker.cs
-	/// </summary>
 	[Foundation.Preserve(AllMembers = true)]
 	public class KeyboardInsetTracker : IDisposable
 	{
+		// https://github.com/xamarin/Xamarin.Forms/blob/master/Xamarin.Forms.Platform.iOS/Renderers/KeyboardInsetTracker.cs
 		private readonly Func<UIWindow> _fetchWindow;
 		private readonly Action<PointF> _setContentOffset;
 		private readonly Action<UIEdgeInsets> _setInsetAction;
-		private readonly UIView _targetView;
+		private readonly UIScrollView _targetView;
 		private bool _disposed;
-
+		private UIEdgeInsets _currentInset;
 		private RectangleF _lastKeyboardRect;
+		private ShellScrollViewTracker _shellScrollViewTracker;
 
-		public KeyboardInsetTracker( UIView targetView, Func<UIWindow> fetchWindow, Action<UIEdgeInsets> setInsetAction ) : this(targetView, fetchWindow, setInsetAction, null) { }
 
-		public KeyboardInsetTracker( UIView targetView,
+		public KeyboardInsetTracker( UIScrollView targetView, Func<UIWindow> fetchWindow, Action<UIEdgeInsets> setInsetAction ) : this(targetView, fetchWindow, setInsetAction, null) { }
+
+		public KeyboardInsetTracker( UIScrollView targetView,
 									 Func<UIWindow> fetchWindow,
 									 Action<UIEdgeInsets> setInsetAction,
-									 Action<PointF> setContentOffset )
+									 Action<PointF> setContentOffset ) : this(targetView,
+																			  fetchWindow,
+																			  setInsetAction,
+																			  setContentOffset,
+																			  null
+																			 ) { }
+
+		public KeyboardInsetTracker( UIScrollView targetView,
+									 Func<UIWindow> fetchWindow,
+									 Action<UIEdgeInsets> setInsetAction,
+									 Action<PointF> setContentOffset,
+									 IVisualElementRenderer renderer )
 		{
 			_setContentOffset = setContentOffset;
 			_targetView = targetView;
@@ -34,16 +45,22 @@ namespace Jakar.SettingsView.iOS
 			_setInsetAction = setInsetAction;
 			KeyboardObserver.KeyboardWillShow += OnKeyboardShown;
 			KeyboardObserver.KeyboardWillHide += OnKeyboardHidden;
+			if ( renderer != null )
+				_shellScrollViewTracker = new ShellScrollViewTracker(renderer);
 		}
 
 		public void Dispose()
 		{
 			if ( _disposed )
 				return;
+
 			_disposed = true;
 
 			KeyboardObserver.KeyboardWillShow -= OnKeyboardShown;
 			KeyboardObserver.KeyboardWillHide -= OnKeyboardHidden;
+
+			_shellScrollViewTracker?.Dispose();
+			_shellScrollViewTracker = null;
 		}
 
 		//This method allows us to update the insets if the Frame changes
@@ -62,11 +79,16 @@ namespace Jakar.SettingsView.iOS
 				return;
 			}
 
-			UIView field = FindFirstResponder(_targetView);
+			var field = (UIView) _targetView.GetType()
+											.GetMethod("FindFirstResponder")
+											?.Invoke(_targetView,
+													 new object[]
+													 { }
+													);
 
 			//the view that is triggering the keyboard is not inside our UITableView?
 			//if (field == null)
-			//  return;
+			//	return;
 
 			CGSize boundsSize = _targetView.Frame.Size;
 
@@ -75,23 +97,27 @@ namespace Jakar.SettingsView.iOS
 			//let's see how much does it cover our target view
 			CGRect overlay = RectangleF.Intersect(rect, _targetView.Frame);
 
+			_currentInset = _targetView.ContentInset;
 			_setInsetAction(new UIEdgeInsets(0, 0, overlay.Height, 0));
 
-			if ( field is UITextView &&
-				 _setContentOffset != null )
-			{
-				nfloat keyboardTop = boundsSize.Height - overlay.Height;
-				CGPoint fieldPosition = field.ConvertPointToView(field.Frame.Location, _targetView.Superview);
-				nfloat fieldBottom = fieldPosition.Y + field.Frame.Height;
-				nfloat offset = fieldBottom - keyboardTop;
-				if ( offset > 0 )
-					_setContentOffset(new PointF(0, offset));
-			}
+			if ( field is not UITextView ||
+				 _setContentOffset is null ) return;
+			nfloat keyboardTop = boundsSize.Height - overlay.Height;
+			CGPoint fieldPosition = field.ConvertPointToView(field.Frame.Location, _targetView.Superview);
+			nfloat fieldBottom = fieldPosition.Y + field.Frame.Height;
+			nfloat offset = fieldBottom - keyboardTop;
+			if ( offset > 0 )
+				_setContentOffset(new PointF(0, offset));
 		}
+
+		public void OnLayoutSubviews() => _shellScrollViewTracker?.OnLayoutSubviews();
 
 		private void OnKeyboardHidden( object sender, UIKeyboardEventArgs args )
 		{
-			_setInsetAction(new UIEdgeInsets(0, 0, 0, 0));
+			if ( _shellScrollViewTracker == null ||
+				 !_shellScrollViewTracker.Reset() )
+				_setInsetAction(new UIEdgeInsets(0, 0, 0, 0));
+
 			_lastKeyboardRect = RectangleF.Empty;
 		}
 
@@ -100,25 +126,10 @@ namespace Jakar.SettingsView.iOS
 			_lastKeyboardRect = args.FrameEnd;
 			UpdateInsets();
 		}
-
-		//元は拡張メソッドだけど移植がめんどいので個別切り出し
-		private UIView FindFirstResponder( UIView view )
-		{
-			if ( view.IsFirstResponder )
-				return view;
-
-			foreach ( UIView subView in view.Subviews )
-			{
-				UIView firstResponder = FindFirstResponder(subView);
-				if ( firstResponder != null )
-					return firstResponder;
-			}
-
-			return null;
-		}
 	}
 
-	internal static class KeyboardObserver
+
+	public static class KeyboardObserver
 	{
 		static KeyboardObserver()
 		{

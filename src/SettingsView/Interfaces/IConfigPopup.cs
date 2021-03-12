@@ -15,12 +15,12 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public Color TitleColor { get; set; }
 
 		[TypeConverter(typeof(FontSizeConverter))]
-		public double TitleFontSize { get; set; }
+		public double? TitleFontSize { get; set; }
 
 		// -----------------------------------------------------------------------------------
 
 		[TypeConverter(typeof(FontSizeConverter))]
-		public double ItemFontSize { get; set; }
+		public double? ItemFontSize { get; set; }
 
 		public Color ItemColor { get; set; }
 
@@ -29,7 +29,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public Color ItemDescriptionColor { get; set; }
 
 		[TypeConverter(typeof(FontSizeConverter))]
-		public double ItemDescriptionFontSize { get; set; }
+		public double? ItemDescriptionFontSize { get; set; }
 
 		// -----------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		// -----------------------------------------------------------------------------------
 
 		[TypeConverter(typeof(FontSizeConverter))]
-		public double SelectedFontSize { get; set; }
+		public double? SelectedFontSize { get; set; }
 
 		public Color SelectedColor { get; set; }
 

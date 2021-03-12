@@ -29,6 +29,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			DefaultTextColor = TextColor.ToColor();
 			DefaultFontSize = (float) ContentScaleFactor;
 
+
 			_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
 			Initialize();
 		}
@@ -51,7 +52,14 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public virtual void Initialize()
 		{
-			base.Init();
+			LineBreakMode = UILineBreakMode.WordWrap;
+			Lines = 10;
+			BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
+			AdjustsLetterSpacingToFitWidth = true;
+			AdjustsFontSizeToFitWidth = true;
+			TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
+
+
 			BackgroundColor = Color.Transparent.ToUIColor();
 		}
 

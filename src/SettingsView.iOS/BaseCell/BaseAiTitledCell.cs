@@ -12,7 +12,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	{
 		protected TitleView _Title { get; }
 
-		protected BaseAiTitledCell( Cell cell ) : base(cell) { _Title = new TitleView(this); }
+		protected BaseAiTitledCell( Cell cell ) : base(cell) => _Title = new TitleView(this);
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -45,8 +45,13 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected override void Dispose( bool disposing )
 		{
+			if ( disposing )
+			{
+				_Title.RemoveFromSuperview();
+				_Title.Dispose();
+			}
+
 			base.Dispose(disposing);
-			_Title.Dispose();
 		}
 	}
 }

@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Runtime.Remoting.Contexts;
+using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Cells.Sources;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Enumerations;
+using Jakar.SettingsView.Shared.Misc;
+using ObjCRuntime;
+using UIKit;
 using Xamarin.Forms;
+using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
@@ -16,15 +23,13 @@ namespace Jakar.SettingsView.iOS.Cells
 
 
 	[Foundation.Preserve(AllMembers = true)]
-	public class PickerCellView : BaseAiValueCell, IDialogInterfaceOnShowListener, IDialogInterfaceOnDismissListener
+	public class PickerCellView : BasePickerCell
 	{
 		protected PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
-		protected AlertDialog? _Dialog { get; set; }
 		protected ListView? _ListView { get; set; }
-		protected PickerAdapter? _Adapter { get; set; }
-		protected TextView _TitleLabel { get; set; }
 		
 		protected string _ValueTextCache { get; set; } = string.Empty;
+		protected PickerTableViewController? _PickerVC { get; set; }
 
 		protected INotifyCollectionChanged? _NotifyCollection { get; set; }
 		protected INotifyCollectionChanged? _SelectedCollection { get; set; }
@@ -40,28 +45,141 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
-				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
-				 e.PropertyName == PickerCell.UseNaturalSortProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(true); }
-			else if ( e.PropertyName == PickerCell.ItemsSourceProperty.PropertyName )
+			if ( e.IsOneOf(PickerCell.SelectedItemsProperty,
+						   PickerCell.SelectedItemProperty,
+						   PickerCell.DisplayMemberProperty,
+						   PickerCell.UseNaturalSortProperty,
+						   PickerCell.SelectedItemsOrderKeyProperty
+						  ) )
+			{ UpdateSelectedItems(); }
+
+			//else if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName )
+			// {
+			// 	if ( _PickerCell.UseAutoValueText ) { UpdateSelectedItems(); }
+			// 	else { UpdateValueText(); }
+			// }
+
+			else if ( e.IsEqual(PickerCell.ItemsSourceProperty.PropertyName) )
 			{
 				UpdateCollectionChanged();
-				UpdateSelectedItems(true);
+				UpdateSelectedItems();
 			}
-			else { base.CellPropertyChanged(sender, e); }
+			else
+			{ base.CellPropertyChanged(sender, e); }
 		}
 
 		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( _PickerCell.ItemsSource == null ||
-				 _PickerCell.ItemsSource.Count == 0 ) { return; }
+			if ( _PickerCell.ItemsSource == null )
+			{
+				tableView.DeselectRow(indexPath, true);
+				return;
+			}
 
-			if ( _PickerCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
+			_PickerVC?.Dispose();
 
-			ShowDialog();
+			UINavigationController? navigationController = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
+			if ( navigationController is ShellSectionRenderer shell )
+			{
+				// When use Shell, the NativeView is wrapped in a Forms.ContentPage.
+				_PickerVC = new PickerTableViewController(_PickerCell, tableView, shell.ShellSection.Navigation)
+				{
+					TableView =
+								{
+									ContentInset = new UIEdgeInsets(44, 0, 44, 0)
+								}
+				};
+				// Fix height broken. For some reason, TableView ContentSize is broken.
+				var page = new ContentPage
+				{
+					Content = _PickerVC.TableView.ToView()
+				};
+				;
+				page.Title = _PickerCell.Prompt.Title;
+
+				// Fire manually because INavigation.PushAsync does not work ViewDidAppear and ViewWillAppear.
+				_PickerVC.ViewDidAppear(false);
+				BeginInvokeOnMainThread(async () =>
+				{
+					await shell.ShellSection.Navigation.PushAsync(page, true);
+					_PickerVC.Initialize();
+				}
+									   );
+			}
+			else
+			{
+				// When use traditional navigation.
+				_PickerVC = new PickerTableViewController(_PickerCell, tableView);
+				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVC, true));
+			}
+
+			if ( !_PickerCell.KeepSelectedUntilBack )
+			{ tableView.DeselectRow(indexPath, true); }
 		}
+		protected UINavigationController? GetUINavigationController( UIViewController? controller )
+		{
+			// Refer to https://forums.xamarin.com/discussion/comment/294088/#Comment_294088
+			switch ( controller )
+			{
+				case null:
+					return null;
+
+				case UINavigationController navigation:
+					return navigation;
+
+				case UITabBarController tabBarController:
+				{
+					//in case Root->Tab->Navi->Page
+					return GetUINavigationController(tabBarController.SelectedViewController);
+				}
+
+				default:
+				{
+					if ( controller.PresentedViewController is UINavigationController navigationCtl )
+					{
+						// on modal page
+						return GetUINavigationController(navigationCtl);
+					}
+
+					break;
+				}
+			}
+
+			return controller.ChildViewControllers.Any()
+					   ? controller.ChildViewControllers.Select(GetUINavigationController).FirstOrDefault(child => child is not null)
+					   : null;
+		}
+		
+		protected internal override void UpdateCell( UITableView? tableView )
+		{
+			base.UpdateCell(tableView);
+			UpdateSelectedItems();
+			UpdateCollectionChanged();
+		}
+
+		public void UpdateSelectedItems()
+		{
+			if ( _SelectedCollection != null )
+			{ _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
+
+			_SelectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
+
+			if ( _SelectedCollection != null )
+			{ _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
+
+			_Value.Text = _PickerCell.GetSelectedItemsText();
+		}
+		
+
+		private void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+		{
+			if ( !CellBase.IsEnabled )
+			{ return; }
+
+			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
+		}
+
+		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(); }
 
 		protected internal override void UpdateCell()
 		{
@@ -86,9 +204,9 @@ namespace Jakar.SettingsView.iOS.Cells
 		}
 		private void UpdateCollectionChanged()
 		{
-			if ( _NotifyCollection != null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
+			if ( _NotifyCollection is not null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
 
-			if ( !( _PickerCell.ItemsSource is INotifyCollectionChanged collection ) ) return;
+			if ( _PickerCell.ItemsSource is not INotifyCollectionChanged collection  ) return;
 			_NotifyCollection = collection;
 			_NotifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
 			ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -100,101 +218,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			base.UpdateIsEnabled();
 		}
-
-		private void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
-		{
-			if ( !Cell.IsEnabled ) { return; }
-
-			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
-		}
-		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(true); }
-
-
-		internal void ShowDialog() { CreateDialog(); }
-		protected void CreateDialog()
-		{
-			_ListView?.Dispose();
-			_Adapter?.Dispose();
-			_ListView = new AListView()
-						{
-							Focusable = false,
-							DescendantFocusability = DescendantFocusability.AfterDescendants,
-							ChoiceMode = _PickerCell.SelectionMode switch
-										 {
-											 SelectMode.Single => ChoiceMode.Single,
-											 _ => ChoiceMode.Multiple,
-										 }
-						};
-			_ListView.SetDrawSelectorOnTop(true);
-			_Adapter = new PickerAdapter(this, _PickerCell, _ListView);
-
-			_ListView.OnItemClickListener = _Adapter;
-			_ListView.Adapter = _Adapter;
-
-			_TitleLabel = new TextView(AndroidContext)
-						  {
-							  Text = _PickerCell.Prompt.Title,
-							  Gravity = GravityFlags.Center
-						  };
-			_TitleLabel.SetBackgroundColor(_Adapter.BackgroundColor);
-			_TitleLabel.SetTextColor(_Adapter.TitleTextColor);
-			_TitleLabel.SetTextSize(ComplexUnitType.Sp, _Adapter.FontSize);
-			
-
-			if ( _Dialog is not null ) return;
-			using ( var builder = new AlertDialog.Builder(AndroidContext) )
-			{
-				// builder.SetTitle(_PickerCell.PopupTitle);
-				builder.SetCustomTitle(_TitleLabel);
-				builder.SetView(_ListView);
-
-				builder.SetNegativeButton(_PickerCell.Prompt.Cancel, CancelEventHandler);
-				builder.SetPositiveButton(_PickerCell.Prompt.Accept, AcceptEventHandler);
-
-				_Dialog = builder.Create();
-			}
-
-			if ( _Dialog is null ) return;
-			_Dialog.SetCanceledOnTouchOutside(true);
-			_Dialog.SetOnDismissListener(this);
-			_Dialog.SetOnShowListener(this);
-			_Dialog.Show();
-
-			// Pending
-			//var buttonTextColor = _PickerCell.AccentColor.IsDefault ? Xamarin.Forms.Color.Accent.ToAndroid() : _PickerCell.AccentColor.ToAndroid();
-			//_dialog.GetButton((int)DialogButtonType.Positive).SetTextColor(buttonTextColor);
-			//_dialog.GetButton((int)DialogButtonType.Negative).SetTextColor(buttonTextColor);
-		}
-		protected internal void CloseAction() { _Dialog?.GetButton((int) DialogButtonType.Positive)?.PerformClick(); }
-		protected void CancelEventHandler( object o, DialogClickEventArgs args ) { ClearFocus(); }
-		protected void AcceptEventHandler( object o, DialogClickEventArgs args )
-		{
-			_Adapter?.DoneSelect();
-			UpdateSelectedItems(true);
-
-			_PickerCell.InvokeSelectedEvent();
-			_PickerCell.InvokeCommand();
-			ClearFocus();
-		}
-
-
-		public void OnShow( IDialogInterface? dialog ) { _Adapter?.RestoreSelect(); }
-		public void OnDismiss( IDialogInterface? dialog )
-		{
-			_Dialog?.SetOnShowListener(null);
-			_Dialog?.SetOnDismissListener(null);
-			_Dialog?.Dispose();
-			_Dialog = null;
-
-			_Adapter?.Dispose();
-			_Adapter = null;
-
-			_ListView?.Dispose();
-			_ListView = null;
-
-			Selected = false;
-		}
-
+		
+		
 		protected override void EnableCell()
 		{
 			base.EnableCell();
@@ -208,6 +233,10 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Description.Disable();
 		}
 
+		protected override void SetUp()
+		{
+
+		}
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )

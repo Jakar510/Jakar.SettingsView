@@ -143,8 +143,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		}
 		private void UpdateHintFont()
 		{
-			if ( HintLabel is null )
-				return; // for HotReload
+			if ( HintLabel is null ) return; // for HotReload
 
 			string family = CellBase.HintFontFamily ?? CellParent.CellHintFontFamily;
 			FontAttributes attr = CellBase.HintFontAttributes ?? CellParent.CellHintFontAttributes;
@@ -440,14 +439,16 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		private void SetUpHintLabel()
 		{
-			HintLabel = new UILabel();
-			HintLabel.LineBreakMode = UILineBreakMode.Clip;
-			HintLabel.Lines = 0;
-			HintLabel.TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
-			HintLabel.AdjustsFontSizeToFitWidth = true;
-			HintLabel.BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
-			HintLabel.TextAlignment = UITextAlignment.Right;
-			HintLabel.AdjustsLetterSpacingToFitWidth = true;
+			HintLabel = new UILabel
+						{
+							LineBreakMode = UILineBreakMode.WordWrap,
+							Lines = 0,
+							TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic,
+							AdjustsFontSizeToFitWidth = true,
+							BaselineAdjustment = UIBaselineAdjustment.AlignCenters,
+							TextAlignment = UITextAlignment.Right,
+							AdjustsLetterSpacingToFitWidth = true
+						};
 
 			AddSubview(HintLabel);
 

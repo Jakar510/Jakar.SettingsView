@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
+using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.Shared.Cells;
+using Jakar.SettingsView.Shared.Misc;
+using UIKit;
 using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
@@ -11,93 +16,165 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Foundation.Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
+	[Foundation.Preserve(AllMembers = true)]
+	public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
 
 	[Foundation.Preserve(AllMembers = true)]
 	public class CustomCellView : BaseAiDescriptionCell
 	{
 		protected CustomCell _CustomCell => Cell as CustomCell ?? throw new NullReferenceException(nameof(_CustomCell));
-
 		protected Action? _Execute { get; set; }
 		protected ICommand? _Command { get; set; }
+		protected CustomCellContent _CoreView { get; set; }
+		private Dictionary<UIView, UIColor> _ColorCache { get; set; } = new();
 
-		// protected ImageView _IndicatorView { get; set; }
-		protected internal FormsViewContainer Container { get; }
-		protected LinearLayout _AccessoryStack { get; }
 
-		public CustomCellView( Context context, Cell cell ) : base(context, cell)
+		public CustomCellView( Cell cell ) : base(cell)
 		{
-			RemoveHint();
-			RemoveCellValueStack();
-			_AccessoryStack = AccessoryStack();
-
-			Container = new FormsViewContainer(AndroidContext, _CustomCell);
-			this.Add(Container,
-					 2,
-					 0,
-					 GridSpec.Fill,
-					 GridSpec.Fill,
-					 Extensions.Layout.Match
-					);
-			if ( !_CustomCell.ShowArrowIndicator )
+			if ( _CustomCell.ShowArrowIndicator )
 			{
-				// TODO: implement ShowArrowIndicator (_IndicatorView) _AccessoryStack
+				Accessory = UITableViewCellAccessory.DisclosureIndicator;
+				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
+
+				SetRightMarginZero();
 			}
 
-			if ( !_CustomCell.UseFullSize ) return;
-			_Icon.RemoveFromParent();
-			_Title.RemoveFromParent();
-			_Description.RemoveFromParent();
+			// StackV.RemoveArrangedSubview(ContentStack);
+			// StackV.RemoveArrangedSubview(DescriptionLabel);
+			// ContentStack.RemoveFromSuperview();
+			// DescriptionLabel.RemoveFromSuperview();
 
-			var rMargin = (int) ( _CustomCell.ShowArrowIndicator ? AndroidContext.ToPixels(10) : 0 );
-			Container.SetPadding(0, 0, rMargin, 0);
-			_CellLayout.SetPadding(0, 0, 0, 0);
+			_CoreView = new CustomCellContent();
+
+			if ( _CustomCell.UseFullSize )
+			{
+				_RootView.RemoveArrangedSubview(_ContentView);
+
+				_Icon.RemoveFromSuperview();
+
+				_ContentView.RemoveArrangedSubview(_TitleStack);
+				_TitleStack.RemoveFromSuperview();
+				_Title.RemoveFromSuperview();
+				_Description.RemoveFromSuperview();
+
+				_RootView.LayoutMargins = new UIEdgeInsets(0, 0, 0, 0);
+				_RootView.Spacing = 0;
+			}
+
+			_RootView.AddArrangedSubview(_CoreView);
 		}
-		public CustomCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+
+		public override void UpdateConstraints()
+		{
+			base.UpdateConstraints();
+			LayoutIfNeeded(); // let the layout immediately reflect when update constraints.
+		}
+
+		protected virtual void UpdateContent( UITableView tableView )
+		{
+			_CoreView.CustomCell = _CustomCell;
+			_CoreView.UpdateCell(_CustomCell.Content, tableView);
+		}
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.CellPropertyChanged(sender, e);
-
-			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
-				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
+			if ( e.IsOneOf(CommandCell.CommandProperty, CommandCell.CommandParameterProperty) ) { UpdateCommand(); }
+			else { base.CellPropertyChanged(sender, e); }
 		}
-		// protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.ParentPropertyChanged(sender, e); }
-
 
 		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
 			if ( !_CustomCell.IsSelectable ) { return; }
 
 			_Execute?.Invoke();
-			if ( _CustomCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
-		}
-		protected internal override bool RowLongPressed( SettingsViewRecyclerAdapter adapter, int position )
-		{
-			if ( _CustomCell.LongCommand == null ) { return false; }
+			if ( !_CustomCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 
-			_CustomCell.SendLongCommand();
-
-			return true;
+			// base.RowSelected(tableView, indexPath);
 		}
 
-		protected internal override void UpdateCell()
+		protected internal override bool RowLongPressed( UITableView tableView, NSIndexPath indexPath )
 		{
-			base.UpdateCell();
-			UpdateContent();
+			_CustomCell.LongCommand?.Execute(this);
+			_CustomCell?.SendLongCommand();
+
+			return _CustomCell is null;
+			// return base.RowLongPressed(tableView, indexPath);
+		}
+
+		public override void SetHighlighted( bool highlighted, bool animated )
+		{
+			if ( !highlighted )
+			{
+				base.SetHighlighted(highlighted, animated);
+				return;
+			}
+
+			// https://stackoverflow.com/questions/6745919/uitableviewcell-subview-disappears-when-cell-is-selected
+
+			BackupSubviewsColor(_CoreView.Subviews[0], _ColorCache);
+
+			base.SetHighlighted(highlighted, animated);
+
+			RestoreSubviewsColor(_CoreView.Subviews[0], _ColorCache);
+		}
+
+		public override void SetSelected( bool selected, bool animated )
+		{
+			if ( !selected )
+			{
+				base.SetSelected(selected, animated);
+				return;
+			}
+
+			base.SetSelected(selected, animated);
+
+			RestoreSubviewsColor(_CoreView.Subviews[0], _ColorCache);
+		}
+
+		private void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
+		{
+			colors[view] = view.BackgroundColor;
+
+			foreach ( UIView subView in view.Subviews ) { BackupSubviewsColor(subView, colors); }
+		}
+
+		private void RestoreSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
+		{
+			if ( colors.TryGetValue(view, out UIColor color) ) { view.BackgroundColor = color; }
+
+			foreach ( UIView subView in view.Subviews ) { RestoreSubviewsColor(subView, colors); }
+		}
+
+		public override void UpdateCell( UITableView tableView )
+		{
+			base.UpdateCell(tableView);
+			UpdateContent(tableView);
 			UpdateCommand();
 		}
-		public void UpdateContent()
+
+		protected override void Dispose( bool disposing )
 		{
-			Container.CustomCell = _CustomCell;
-			Container.FormsView = _CustomCell.Content;
-			double height = Container.FormsView.Height;
-			double cellHeight = Height;
-			System.Diagnostics.Debug.WriteLine($"_______CustomHeight_______  content.height {height}      cell.height{cellHeight}");
+			if ( disposing )
+			{
+				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+
+				_Execute = null;
+				_Command = null;
+
+				_ColorCache.Clear();
+				_ColorCache = null;
+
+				_CoreView?.RemoveFromSuperview();
+				_CoreView?.Dispose();
+				_CoreView = null;
+			}
+
+			base.Dispose(disposing);
 		}
-		private void UpdateCommand()
+
+		protected virtual void UpdateCommand()
 		{
 			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
@@ -116,6 +193,7 @@ namespace Jakar.SettingsView.iOS.Cells
 						   if ( _Command.CanExecute(_CustomCell.CommandParameter) ) { _Command.Execute(_CustomCell.CommandParameter); }
 					   };
 		}
+
 		protected override void UpdateIsEnabled()
 		{
 			if ( _Command != null &&
@@ -124,11 +202,11 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.UpdateIsEnabled();
 		}
 
-		private void Command_CanExecuteChanged( object sender, EventArgs e )
+		protected virtual void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !Cell.IsEnabled ) { return; }
+			if ( !CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_Command?.CanExecute(_CustomCell.CommandParameter) ?? true);
+			SetEnabledAppearance(_Command.CanExecute(_CustomCell.CommandParameter));
 		}
 
 
@@ -136,17 +214,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( disposing )
 			{
-				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+				_Command.CanExecuteChanged -= Command_CanExecuteChanged;
 
-				_Execute = null;
-				_Command = null;
-				// _IndicatorView?.RemoveFromParent();
-				// _IndicatorView?.SetImageDrawable(null);
-				// _IndicatorView?.SetImageBitmap(null);
-				// _IndicatorView?.Dispose();
-
-				// _CoreView?.RemoveFromParent();
-				// _CoreView?.Dispose();
 
 				_Icon.Dispose();
 				_Title.Dispose();

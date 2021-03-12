@@ -4,6 +4,7 @@ using System.Windows.Input;
 using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Cells.Sources;
 using Jakar.SettingsView.iOS.OLD_Cells;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
@@ -12,6 +13,7 @@ using Xamarin.Forms;
 
 // [assembly: ExportRenderer(typeof(TextPickerCell), typeof(TextPickerCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.OLD_Cells
 {
 	// [Foundation.Preserve(AllMembers = true)] public class TextPickerCellRenderer : CellBaseRenderer<TextPickerCellView> { }
@@ -19,22 +21,24 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 	[Foundation.Preserve(AllMembers = true)]
 	public class TextPickerCellView : LabelCellView
 	{
-		public UITextField DummyField { get; set; }
+		protected UITextField _DummyField { get; set; }
 
-		private TextPickerSource _model;
-		private UILabel _Title;
-		private UIPickerView _picker;
-		private ICommand _command;
+		protected TextPickerSource? _Model { get; set; }
+		protected UILabel? _PopupTitle { get; set; }
+		protected UIPickerView? _Picker { get; set; }
+		protected ICommand? _Command { get; set; }
 
-		private TextPickerCell _TextPickerCell => Cell as TextPickerCell;
+		protected TextPickerCell _TextPickerCell => Cell as TextPickerCell;
 
 		public TextPickerCellView( Cell formsCell ) : base(formsCell)
 		{
-			DummyField = new NoCaretField();
-			DummyField.BorderStyle = UITextBorderStyle.None;
-			DummyField.BackgroundColor = UIColor.Clear;
-			ContentView.AddSubview(DummyField);
-			ContentView.SendSubviewToBack(DummyField);
+			_DummyField = new NoCaretField
+						  {
+							  BorderStyle = UITextBorderStyle.None,
+							  BackgroundColor = UIColor.Clear
+						  };
+			ContentView.AddSubview(_DummyField);
+			ContentView.SendSubviewToBack(_DummyField);
 
 			SelectionStyle = UITableViewCellSelectionStyle.Default;
 
@@ -54,7 +58,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
 			tableView.DeselectRow(indexPath, true);
-			DummyField.BecomeFirstResponder();
+			_DummyField.BecomeFirstResponder();
 		}
 
 		public override void UpdateCell( UITableView tableView )
@@ -70,30 +74,30 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			if ( disposing )
 			{
-				_model.UpdatePickerFromModel -= Model_UpdatePickerFromModel;
-				DummyField.RemoveFromSuperview();
-				DummyField?.Dispose();
-				DummyField = null;
-				_Title?.Dispose();
-				_Title = null;
-				_model?.Dispose();
-				_model = null;
-				_picker?.Dispose();
-				_picker = null;
-				_command = null;
+				_Model.UpdatePickerFromModel -= Model_UpdatePickerFromModel;
+				_DummyField.RemoveFromSuperview();
+				_DummyField?.Dispose();
+				_DummyField = null;
+				_PopupTitle?.Dispose();
+				_PopupTitle = null;
+				_Model?.Dispose();
+				_Model = null;
+				_Picker?.Dispose();
+				_Picker = null;
+				_Command = null;
 			}
 
 			base.Dispose(disposing);
 		}
 
-		private void SetUpPicker()
+		protected void SetUpPicker()
 		{
-			_picker = new UIPickerView();
+			_Picker = new UIPickerView();
 
 			nfloat width = UIScreen.MainScreen.Bounds.Width;
 
-			_Title = new UILabel();
-			_Title.TextAlignment = UITextAlignment.Center;
+			_PopupTitle = new UILabel();
+			_PopupTitle.TextAlignment = UITextAlignment.Center;
 
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
 						  {
@@ -103,19 +107,19 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
 												   ( o, e ) =>
 												   {
-													   DummyField.ResignFirstResponder();
-													   Select(_model.PreSelectedItem);
+													   _DummyField.ResignFirstResponder();
+													   Select(_Model.PreSelectedItem);
 												   }
 												  );
 
-			var labelButton = new UIBarButtonItem(_Title);
+			var labelButton = new UIBarButtonItem(_PopupTitle);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
 												 ( o, a ) =>
 												 {
-													 _model.OnUpdatePickerFormModel();
-													 DummyField.ResignFirstResponder();
-													 _command?.Execute(_model.SelectedItem);
+													 _Model.OnUpdatePickerFormModel();
+													 _DummyField.ResignFirstResponder();
+													 _Command?.Execute(_Model.SelectedItem);
 												 }
 												);
 
@@ -130,69 +134,69 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 							 false
 							);
 
-			DummyField.InputView = _picker;
-			DummyField.InputAccessoryView = toolbar;
+			_DummyField.InputView = _Picker;
+			_DummyField.InputAccessoryView = toolbar;
 
-			_model = new TextPickerSource();
-			_picker.Model = _model;
+			_Model = new TextPickerSource();
+			_Picker.Model = _Model;
 
-			_model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
+			_Model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
 		}
 
-		private void UpdateSelectedItem()
+		protected void UpdateSelectedItem()
 		{
 			Select(_TextPickerCell.SelectedItem);
 			ValueLabel.Text = _TextPickerCell.SelectedItem?.ToString();
 		}
 
-		private void UpdateItems()
+		protected void UpdateItems()
 		{
 			IList<string> items = _TextPickerCell.Items ?? new List<string>();
-			_model.SetItems(items);
+			_Model.SetItems(items);
 			// Force picker view to reload data from model after change
 			// Otherwise it might access the model based on old view data
 			// causing "Index was out of range" errors and the like.
-			_picker.ReloadAllComponents();
+			_Picker.ReloadAllComponents();
 			Select(_TextPickerCell.SelectedItem);
 		}
 
-		private void UpdateTitle()
+		protected void UpdateTitle()
 		{
-			_Title.Text = _TextPickerCell.Title;
-			_Title.SizeToFit();
-			_Title.Frame = new CGRect(0, 0, 160, 44);
+			_PopupTitle.Text = _TextPickerCell.Title;
+			_PopupTitle.SizeToFit();
+			_PopupTitle.Frame = new CGRect(0, 0, 160, 44);
 		}
 
-		private void UpdateCommand() { _command = _TextPickerCell.SelectedCommand; }
+		protected void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
-		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
+		protected void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
-			_TextPickerCell.SelectedItem = _model.SelectedItem;
-			ValueLabel.Text = _model.SelectedItem?.ToString();
+			_TextPickerCell.SelectedItem = _Model.SelectedItem;
+			ValueLabel.Text = _Model.SelectedItem?.ToString();
 		}
 
 		public override void LayoutSubviews()
 		{
 			base.LayoutSubviews();
 
-			DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
+			_DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
 		}
 
-		private void Select( string item )
+		protected void Select( string? item )
 		{
-			int idx = _model.Items.IndexOf(item);
+			int idx = _Model.Items.IndexOf(item);
 			if ( idx == -1 )
 			{
-				item = _model.Items.Count == 0
+				item = _Model.Items.Count == 0
 						   ? null
-						   : _model.Items[0];
+						   : _Model.Items[0];
 				idx = 0;
 			}
 
-			_picker.Select(idx, 0, false);
-			_model.SelectedItem = item;
-			_model.SelectedIndex = idx;
-			_model.PreSelectedItem = item;
+			_Picker.Select(idx, 0, false);
+			_Model.SelectedItem = item;
+			_Model.SelectedIndex = idx;
+			_Model.PreSelectedItem = item;
 		}
 	}
 }

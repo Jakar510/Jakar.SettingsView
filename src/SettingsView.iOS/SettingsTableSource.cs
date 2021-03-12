@@ -71,7 +71,7 @@ namespace Jakar.SettingsView.iOS
 			Cell cell = _SettingsView.Model.GetCell(indexPath.Section, indexPath.Row);
 			double h = cell.Height;
 
-			if ( h == -1 )
+			if ( h.Equals(-1) )
 			{
 				//automatic height
 				return tableView.RowHeight;
@@ -88,6 +88,7 @@ namespace Jakar.SettingsView.iOS
 			return !section.IsVisible
 					   ? nfloat.Epsilon
 					   : UITableView.AutomaticDimension;
+
 			// if ( !section.IsVisible ) { return nfloat.Epsilon; }
 			//
 			// return UITableView.AutomaticDimension; // automatic height
@@ -106,8 +107,7 @@ namespace Jakar.SettingsView.iOS
 			if ( formsView != null ) { return GetNativeSectionHeaderFooterView(formsView, tableView, true); }
 
 
-			var headerView = tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextHeaderId) as TextHeaderView;
-			if ( headerView is null )
+			if ( tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.TextHeaderId) is not TextHeaderView headerView )
 			{
 				// for HotReload
 				return new UIView();
@@ -222,7 +222,7 @@ namespace Jakar.SettingsView.iOS
 									}
 								   );
 
-			return ret;
+			return true;
 		}
 
 		// TODO: what is this? what it do?

@@ -143,7 +143,7 @@ namespace Jakar.SettingsView.Shared.Config
 
 			public static class Title
 			{
-				public static readonly Color ITEM_COLOR = Color.Black;
+				public static readonly Color COLOR = Color.Black;
 				public const double FONT_SIZE = 15;
 			}
 
@@ -160,7 +160,7 @@ namespace Jakar.SettingsView.Shared.Config
 
 				public static class Description
 				{
-					public static readonly Color Color = Color.Black;
+					public static readonly Color Color = Color.SlateGray;
 					public const double FontSize = 10;
 				}
 			}
@@ -207,6 +207,41 @@ namespace Jakar.SettingsView.Shared.Config
 				public static readonly Thickness PADDING = new(8, 4);
 				public const double MinRowHeight = 20;
 				public const bool Visible = true;
+			}
+		}
+
+	#endregion
+
+	#region LAYOUT
+
+		public static class Layout
+		{
+			public static class ColumnFactors
+			{
+				public const float Icon = 0.05f;
+				public const float TitleStack = 0.4f;
+				public const float ValueStack = 0.5f;
+				public const float Accessory = 0.05f;
+			}
+
+			public static class Factor // iOS only
+			{
+				public const float Zero = 0;
+				public const float One = 1;
+			}
+
+			public static class Priority // iOS only
+			{
+				public const float Zero = 0;                        // 0
+				public const float LOW = 1;                         // 1
+				public const float FittingSizeLevel = 50;           // (float) UILayoutPriority.FittingSizeLevel;                   
+				public const float DefaultLow = 250;                // (float) UILayoutPriority.DefaultLow;                              
+				public const float DragThatCannotResizeScene = 490; // (float) UILayoutPriority.DragThatCannotResizeScene; 
+				public const float SceneSizeStayPut = 500;          // (float) UILayoutPriority.SceneSizeStayPut;        
+				public const float DragThatCanResizeScene = 510;    // (float) UILayoutPriority.DragThatCanResizeScene;
+				public const float DefaultHigh = 750;               // (float) UILayoutPriority.DefaultHigh;                           
+				public const float HIGH = 999;                      // 999
+				public const float Required = 1000;                 //  (float) UILayoutPriority.Required; 
 			}
 		}
 
