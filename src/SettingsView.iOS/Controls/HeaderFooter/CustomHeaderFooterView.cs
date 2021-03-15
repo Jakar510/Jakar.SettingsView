@@ -11,7 +11,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS
+namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 {
 	public class CustomHeaderView : CustomHeaderFooterView
 	{
@@ -25,11 +25,12 @@ namespace Jakar.SettingsView.iOS
 
 	public class CustomHeaderFooterView : UITableViewHeaderFooterView
 	{
-		private ISectionFooterHeader? _content;
 		protected WeakReference<IVisualElementRenderer>? _RendererRef { get; set; }
 		protected bool _Disposed { get; set; }
 		protected UITableView? _TableView { get; set; }
 		protected NSLayoutConstraint? _HeightConstraint { get; set; }
+
+		private ISectionFooterHeader? _content;
 
 		protected ISectionFooterHeader? _Content
 		{
@@ -38,7 +39,7 @@ namespace Jakar.SettingsView.iOS
 			{
 				if ( _content == value ) { return; }
 
-				if ( _content != null ) { _content.PropertyChanged -= CellPropertyChanged; }
+				if ( _content is not null ) { _content.PropertyChanged -= CellPropertyChanged; }
 
 				_content = value;
 				if ( _content is null ) return;
@@ -46,7 +47,7 @@ namespace Jakar.SettingsView.iOS
 
 				_content.PropertyChanged += CellPropertyChanged;
 
-				if ( _RendererRef == null ||
+				if ( _RendererRef is null ||
 					 !_RendererRef.TryGetTarget(out IVisualElementRenderer renderer) )
 				{
 					renderer = GetNewRenderer(_content, ContentView);
@@ -54,7 +55,7 @@ namespace Jakar.SettingsView.iOS
 				}
 				else
 				{
-					if ( renderer.Element != null &&
+					if ( renderer.Element is not null &&
 						 renderer == Platform.GetRenderer(renderer.Element) )
 						renderer.Element.ClearValue(FormsInternals.RendererProperty);
 
@@ -64,11 +65,10 @@ namespace Jakar.SettingsView.iOS
 											? reflectableType.GetTypeInfo().AsType()
 											: renderer.GetType();
 					if ( rendererType == type ||
-						 ( renderer.GetType() == FormsInternals.DefaultRenderer ) && type == null )
-						renderer.SetElement(_content.View);
+						 renderer.GetType() == FormsInternals.DefaultRenderer && type is null ) { renderer.SetElement(_content.View); }
 					else
 					{
-						//when cells are getting reused the element could be already set to another cell so we should dispose based on the renderer and not the renderer.Element
+						// when cells are getting reused the element could be already set to another cell so we should dispose based on the renderer and not the renderer.Element
 						FormsInternals.DisposeRendererAndChildren(renderer);
 						renderer = GetNewRenderer(_content, ContentView);
 						_RendererRef = new WeakReference<IVisualElementRenderer>(renderer);
@@ -77,8 +77,7 @@ namespace Jakar.SettingsView.iOS
 
 				Platform.SetRenderer(_content.View, renderer);
 
-
-				if ( renderer.Element != null )
+				if ( renderer.Element is not null )
 				{
 					SizeRequest result = renderer.Element.Measure(_TableView.Frame.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
 					double finalW = result.Request.Width;
@@ -86,9 +85,7 @@ namespace Jakar.SettingsView.iOS
 
 					var finalH = (float) result.Request.Height;
 
-					UpdateNativeCell();
-
-					if ( _HeightConstraint != null )
+					if ( _HeightConstraint is not null )
 					{
 						_HeightConstraint.Active = false;
 						_HeightConstraint?.Dispose();
@@ -100,14 +97,15 @@ namespace Jakar.SettingsView.iOS
 					renderer.NativeView.AddConstraint(_HeightConstraint);
 
 					Layout.LayoutChildIntoBoundingRegion(_content.View, new Rectangle(0, 0, finalW, finalH));
+
+					foreach ( var element in _content.View.Descendants() )
+					{
+						if ( element is VisualElement v ) { v.DisableLayout = false; }
+					}
 				}
 
-				foreach ( var element in _content.View.Descendants() )
-				{
-					if ( element is VisualElement v )
-						v.DisableLayout = false;
-				}
 
+				Update();
 				renderer.NativeView.UpdateConstraintsIfNeeded();
 				renderer.NativeView.SetNeedsDisplay();
 			}
@@ -115,15 +113,15 @@ namespace Jakar.SettingsView.iOS
 
 		protected ISectionHeader? _Header => _content as ISectionHeader;
 
-		public CustomHeaderFooterView( IntPtr handle ) : base(handle) { }
 
+		public CustomHeaderFooterView( IntPtr handle ) : base(handle) { }
 		protected override void Dispose( bool disposing )
 		{
 			if ( _Disposed ) { return; }
 
 			if ( disposing )
 			{
-				if ( _Content != null ) { _Content.PropertyChanged -= CellPropertyChanged; }
+				if ( _Content is not null ) { _Content.PropertyChanged -= CellPropertyChanged; }
 
 				_TableView?.Dispose();
 				_TableView = null;
@@ -131,9 +129,9 @@ namespace Jakar.SettingsView.iOS
 				_HeightConstraint?.Dispose();
 				_HeightConstraint = null;
 
-				if ( _RendererRef != null &&
+				if ( _RendererRef is not null &&
 					 _RendererRef.TryGetTarget(out IVisualElementRenderer renderer) &&
-					 renderer.Element != null )
+					 renderer.Element is not null )
 				{
 					FormsInternals.DisposeModelAndChildrenRenderers(renderer.Element);
 					_RendererRef = null;
@@ -148,19 +146,6 @@ namespace Jakar.SettingsView.iOS
 			base.Dispose(disposing);
 		}
 
-		public virtual void UpdateNativeCell() { UpdateIsEnabled(); }
-
-		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			if ( e.IsEqual(Cell.IsEnabledProperty) ) { UpdateIsEnabled(); }
-			else if ( e.IsEqual(Section.TitleProperty) ) { UpdateTitle(); }
-			else if ( e.IsEqual(Section.TextColorProperty) ) { UpdateTextColor(); }
-			else if ( e.IsEqual(VisualElement.IsEnabledProperty) ) { UpdateIsEnabled(); }
-			else if ( e.IsEqual(HeaderView.IsCollapsedProperty) ) { ShowHideSection(); }
-			else if ( e.IsEqual(HeaderView.IsCollapsibleProperty) ) { UpdateIsCollapsible(); }
-		}
-
-		protected virtual void UpdateIsEnabled() { UserInteractionEnabled = _Content?.IsEnabled ?? false; }
 
 		public void SetContent( ISectionHeader content, Section section, UITableView table ) => SetContent(content, section, table, SVConstants.Section.Header.MinRowHeight);
 		public void SetContent( ISectionFooter content, Section section, UITableView table ) => SetContent(content, section, table, SVConstants.Section.Footer.MinRowHeight);
@@ -194,6 +179,15 @@ namespace Jakar.SettingsView.iOS
 		}
 
 
+		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		{
+			if ( e.IsEqual(Cell.IsEnabledProperty) ) { UpdateIsEnabled(); }
+			else if ( e.IsEqual(Section.TitleProperty) ) { UpdateTitle(); }
+			else if ( e.IsEqual(Section.TextColorProperty) ) { UpdateTextColor(); }
+			else if ( e.IsEqual(VisualElement.IsEnabledProperty) ) { UpdateIsEnabled(); }
+			else if ( e.IsEqual(HeaderView.IsCollapsedProperty) ) { ShowHideSection(); }
+			else if ( e.IsEqual(HeaderView.IsCollapsibleProperty) ) { UpdateIsCollapsible(); }
+		}
 		public virtual void Update()
 		{
 			UpdateIsEnabled();
@@ -202,6 +196,7 @@ namespace Jakar.SettingsView.iOS
 			UpdateTextColor();
 		}
 
+		protected virtual void UpdateIsEnabled() { UserInteractionEnabled = _Content?.IsEnabled ?? false; }
 		protected void UpdateIsCollapsible() { UserInteractionEnabled = _Header?.IsCollapsible ?? false; }
 		protected void ShowHideSection() { _Content?.Section?.ShowHideSection(); }
 		protected void UpdateTitle()

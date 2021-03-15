@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UIKit;
 
-namespace Jakar.SettingsView.iOS
+namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 {
 	public class TextFooterView : UITableViewHeaderFooterView
 	{
 		public PaddingLabel Label { get; set; }
-		private List<NSLayoutConstraint> _constraints = new List<NSLayoutConstraint>();
+		private readonly List<NSLayoutConstraint> _constraints = new List<NSLayoutConstraint>();
 
 		public TextFooterView( IntPtr handle ) : base(handle)
 		{
-			Label = new PaddingLabel();
-			Label.Lines = 0;
-			Label.LineBreakMode = UILineBreakMode.CharacterWrap;
-			Label.TranslatesAutoresizingMaskIntoConstraints = false;
+			Label = new PaddingLabel
+					{
+						Lines = 0,
+						LineBreakMode = UILineBreakMode.CharacterWrap,
+						TranslatesAutoresizingMaskIntoConstraints = false
+					};
 
 			ContentView.AddSubview(Label);
 
@@ -35,7 +37,6 @@ namespace Jakar.SettingsView.iOS
 
 		protected override void Dispose( bool disposing )
 		{
-			base.Dispose(disposing);
 			if ( disposing )
 			{
 				_constraints.ForEach(c => c.Dispose());
@@ -44,6 +45,8 @@ namespace Jakar.SettingsView.iOS
 				BackgroundView?.Dispose();
 				BackgroundView = null;
 			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

@@ -275,10 +275,10 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			if ( disposing )
 			{
-				if ( _Content != null )
+				if ( _content is not null )
 				{
-					_Content.PropertyChanged -= CellPropertyChanged;
-					_Content = null;
+					_content.PropertyChanged -= CellPropertyChanged;
+					_content = null;
 				}
 
 				ViewHolder = null;

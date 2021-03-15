@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Controls.HeaderFooter;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.sv;
 using ObjCRuntime;
@@ -38,7 +41,6 @@ namespace Jakar.SettingsView.iOS
 
 		public override UITableViewCell GetCell( UITableView tableView, NSIndexPath indexPath )
 		{
-			//get forms cell
 			Cell cell = _SettingsView.Model.GetCell(indexPath.Section, indexPath.Row);
 
 			string id = cell.GetType().FullName;
@@ -48,39 +50,37 @@ namespace Jakar.SettingsView.iOS
 			UITableViewCell reusableCell = tableView.DequeueReusableCell(id);             // get recycle cell
 			UITableViewCell nativeCell = renderer.GetCell(cell, reusableCell, tableView); // get native cell
 
-			// Sometimes iOS for returns a dequeued cell whose Layer is hidden. This prevents it from showing up, so lets turn it back on!
+			// Sometimes iOS returns a dequeued cell whose Layer is hidden. This prevents it from showing up, so lets turn it back on!
 			if ( nativeCell.Layer.Hidden ) { nativeCell.Layer.Hidden = false; }
 
-			// Because the layer was hidden we need to layout the cell by hand
-			nativeCell.LayoutSubviews();
+			nativeCell.LayoutSubviews(); // Because the layer was hidden we need to layout the cell by hand
 
-			//selected background
-			if ( nativeCell is not BaseCellView ) { nativeCell.SelectionStyle = UITableViewCellSelectionStyle.None; }
+			if ( nativeCell is not BaseCellView ) { nativeCell.SelectionStyle = UITableViewCellSelectionStyle.None; } // no selected background for third party cells.
 
 			return nativeCell;
 		}
 		public override nfloat GetHeightForRow( UITableView tableView, NSIndexPath indexPath ) // TODO: fix this
 		{
-			if ( !_SettingsView.HasUnevenRows ) { return tableView.EstimatedRowHeight; }
+			if ( !_SettingsView.HasUnevenRows ) { return Math.Max(tableView.EstimatedRowHeight.ToDouble(), SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat(); }
 
 			Cell cell = _SettingsView.Model.GetCell(indexPath.Section, indexPath.Row);
-			double h = cell.Height;
+			double height = cell.Height;
 
-			if ( h.Equals(-1) )
-			{
-				// automatic height
-				return tableView.RowHeight;
-			}
+			return height.Equals(-1)
+					   ? Math.Max(tableView.RowHeight.ToDouble(), SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat() // automatic height
+					   : height.ToNFloat();                                                                       // individual height
 
-			//individual height
-			return (nfloat) h;
+			// return h.Equals(-1)
+			// 		   ? tableView.RowHeight // automatic height
+			// 		   : h.ToNFloat();       // individual height
 		}
+
 
 		public override nfloat GetHeightForHeader( UITableView tableView, nint sectionID )
 		{
 			Section? section = _SettingsView.Model.GetSection((int) sectionID);
-
-			return ( section?.IsVisible ?? false )
+			if ( section is null ) throw new NullReferenceException(nameof(section));
+			return section.IsVisible
 					   ? UITableView.AutomaticDimension
 					   : nfloat.Epsilon;
 
@@ -96,7 +96,7 @@ namespace Jakar.SettingsView.iOS
 			//
 			// return (nfloat) _settingsView.HeaderHeight;
 		}
-		public override UIView GetViewForHeader( UITableView tableView, nint sectionId ) // TODO: fix this
+		public override UIView GetViewForHeader( UITableView tableView, nint sectionId )
 		{
 			Section? section = _SettingsView.Model.GetSection((int) sectionId);
 			if ( section is null ) throw new NullReferenceException(nameof(section));
@@ -122,16 +122,15 @@ namespace Jakar.SettingsView.iOS
 			// return headerView;
 		}
 
+
 		public override nfloat GetHeightForFooter( UITableView tableView, nint sectionId )
 		{
 			Section? section = _SettingsView.Model.GetSection((int) sectionId);
 			if ( section is null ) throw new NullReferenceException(nameof(section));
 
-			if ( !section.IsVisible ) { return nfloat.Epsilon; }
-
-			if ( !section.FooterVisible ) { return nfloat.Epsilon; }
-
-			return UITableView.AutomaticDimension; // automatic height
+			return section.IsVisible && section.FooterVisible
+					   ? UITableView.AutomaticDimension
+					   : nfloat.Epsilon;
 		}
 		public override UIView GetViewForFooter( UITableView tableView, nint sectionId )
 		{
@@ -158,16 +157,16 @@ namespace Jakar.SettingsView.iOS
 			// return footerView;
 		}
 
-		protected UIView GetNativeSectionHeaderFooterView( ISectionHeader header, UITableView tableView, Section section )
+		protected CustomHeaderView GetNativeSectionHeaderFooterView( ISectionHeader header, UITableView tableView, Section section )
 		{
-			var nativeView = (CustomHeaderFooterView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomHeaderId);
+			var nativeView = (CustomHeaderView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomHeaderId);
 			nativeView.SetContent(header, section, tableView);
 
 			return nativeView;
 		}
-		protected UIView GetNativeSectionHeaderFooterView( ISectionFooter footer, UITableView tableView, Section section )
+		protected CustomFooterView GetNativeSectionHeaderFooterView( ISectionFooter footer, UITableView tableView, Section section )
 		{
-			var nativeView = (CustomHeaderFooterView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomFooterId);
+			var nativeView = (CustomFooterView) tableView.DequeueReusableHeaderFooterView(SettingsViewRenderer.CustomFooterId);
 			nativeView.SetContent(footer, section, tableView);
 
 			return nativeView;
@@ -210,14 +209,14 @@ namespace Jakar.SettingsView.iOS
 		public override bool CanPerformAction( UITableView tableView,
 											   Selector action,
 											   NSIndexPath indexPath,
-											   NSObject sender ) =>
+											   NSObject? sender ) =>
 			false;
 
 		// TODO: what is this? what it do?
 		public override void PerformAction( UITableView tableView,
 											Selector action,
 											NSIndexPath indexPath,
-											NSObject sender ) { }
+											NSObject? sender ) { }
 
 		public override string[] SectionIndexTitles( UITableView tableView ) => _SettingsView.Model.GetSectionIndexTitles();
 

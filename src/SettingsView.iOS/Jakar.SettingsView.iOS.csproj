@@ -51,9 +51,6 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="CellLayout.storyboard" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BaseCell\BaseAiAccessoryCell.cs" />
     <Compile Include="BaseCell\BaseAiDescriptionCell.cs" />
     <Compile Include="BaseCell\BaseAiTitledCell.cs" />
@@ -75,7 +72,7 @@
     <Compile Include="Cells\Pickers\PickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\TextPickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
-    <Compile Include="Controls\AiEditText.cs" />
+    <Compile Include="Controls\Core\AiEditText.cs" />
     <Compile Include="Controls\Core\BaseTextView.cs" />
     <Compile Include="Controls\Core\DescriptionView.cs" />
     <Compile Include="Controls\Core\HintView.cs" />
@@ -103,12 +100,12 @@
     <Compile Include="Extensions\TextAlignmentExtensions.cs" />
     <Compile Include="SettingsLagacyTableSource.cs" />
     <Compile Include="Cells\Pickers\Sources\TextPickerSource.cs" />
-    <Compile Include="TextHeaderView.cs" />
-    <Compile Include="CustomHeaderFooterView.cs" />
-    <Compile Include="TextFooterView.cs" />
+    <Compile Include="Controls\HeaderFooter\TextHeaderView.cs" />
+    <Compile Include="Controls\HeaderFooter\CustomHeaderFooterView.cs" />
+    <Compile Include="Controls\HeaderFooter\TextFooterView.cs" />
     <Compile Include="FormsInternals.cs" />
     <Compile Include="Controls\CustomCellContent.cs" />
-    <Compile Include="PaddingLabel.cs" />
+    <Compile Include="Controls\PaddingLabel.cs" />
     <Compile Include="FontUtility.cs" />
   </ItemGroup>
   <ItemGroup>

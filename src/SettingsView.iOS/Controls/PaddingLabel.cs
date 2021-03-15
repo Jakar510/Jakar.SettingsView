@@ -1,7 +1,7 @@
 ﻿using CoreGraphics;
 using UIKit;
 
-namespace Jakar.SettingsView.iOS
+namespace Jakar.SettingsView.iOS.Controls
 {
 	public class PaddingLabel : UILabel
 	{

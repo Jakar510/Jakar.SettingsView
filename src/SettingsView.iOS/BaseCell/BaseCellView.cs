@@ -25,7 +25,17 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			get => _rootView ?? throw new NullReferenceException(nameof(_rootView));
 			set
 			{
-				_rootView?.RemoveFromSuperview();
+				if ( _rootView is not null )
+				{
+					foreach ( NSLayoutConstraint constraint in _rootView.Constraints )
+					{
+						constraint.Active = false;
+						constraint.Dispose();
+					}
+
+					_rootView.RemoveFromSuperview();
+				}
+				
 				_rootView = value;
 				ContentView.AddSubview(_rootView);
 
@@ -48,7 +58,6 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				NSLayoutConstraint height = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
 				height.Active = true;
 				height.Priority = SVConstants.Layout.Priority.HIGH;
-
 			}
 		}
 
@@ -57,6 +66,17 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			get => _contentView ?? throw new NullReferenceException(nameof(_contentView));
 			set
 			{
+				if ( _contentView is not null )
+				{
+					foreach ( NSLayoutConstraint constraint in _contentView.Constraints )
+					{
+						constraint.Active = false;
+						constraint.Dispose();
+					}
+
+					_contentView.RemoveFromSuperview();
+				}
+
 				_contentView = value;
 				_RootView.AddArrangedSubview(_contentView);
 				_contentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;

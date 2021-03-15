@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UIKit;
 using Xamarin.Forms;
 
-namespace Jakar.SettingsView.iOS
+namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 {
 	public class TextHeaderView : UITableViewHeaderFooterView
 	{
 		public PaddingLabel Label { get; set; }
-		private List<NSLayoutConstraint> _constraints = new List<NSLayoutConstraint>();
+		private readonly List<NSLayoutConstraint> _constraints = new();
 		private LayoutAlignment _curAlignment;
 		private bool _isInitialized;
 
@@ -53,9 +53,22 @@ namespace Jakar.SettingsView.iOS
 			_constraints.Add(Label.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor, 0));
 			_constraints.Add(Label.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor, 0));
 
-			if ( align == LayoutAlignment.Start ) { _constraints.Add(Label.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 0)); }
-			else if ( align == LayoutAlignment.End ) { _constraints.Add(Label.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, 0)); }
-			else { _constraints.Add(Label.CenterYAnchor.ConstraintEqualTo(ContentView.CenterYAnchor, 0)); }
+			switch (align)
+			{
+				case LayoutAlignment.Start:
+					_constraints.Add(Label.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 0));
+					break;
+
+				case LayoutAlignment.End:
+					_constraints.Add(Label.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, 0));
+					break;
+
+				// case LayoutAlignment.Center: 
+				// case LayoutAlignment.Fill: 
+				default:
+					_constraints.Add(Label.CenterYAnchor.ConstraintEqualTo(ContentView.CenterYAnchor, 0));
+					break;
+			}
 
 			_constraints.ForEach(c =>
 								 {
@@ -70,7 +83,6 @@ namespace Jakar.SettingsView.iOS
 
 		protected override void Dispose( bool disposing )
 		{
-			base.Dispose(disposing);
 			if ( disposing )
 			{
 				_constraints.ForEach(c => c.Dispose());
@@ -79,6 +91,8 @@ namespace Jakar.SettingsView.iOS
 				BackgroundView?.Dispose();
 				BackgroundView = null;
 			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

@@ -7,7 +7,7 @@ using Xamarin.Forms.Internals;
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
+	[Preserve(true, false)]
 	public class SettingsModel : TableModel
 	{
 		protected static readonly BindableProperty PathProperty = BindableProperty.Create("Path", typeof(Tuple<int, int>), typeof(Cell));

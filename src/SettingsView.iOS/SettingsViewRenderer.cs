@@ -6,6 +6,9 @@ using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView;
 using Jakar.SettingsView.iOS;
+using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Controls.HeaderFooter;
+using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
@@ -36,7 +39,7 @@ namespace Jakar.SettingsView.iOS
 		protected IDisposable? _ContentSizeObserver { get; set; }
 
 		protected bool _disposed;
-		protected float _topInset;
+		protected const float _topInset = 36;
 
 		protected override void OnElementChanged( ElementChangedEventArgs<Shared.sv.SettingsView> e )
 		{
@@ -64,9 +67,8 @@ namespace Jakar.SettingsView.iOS
 			{
 				_TableView.Editing = true;
 				_TableView.AllowsSelectionDuringEditing = true;
-				// When Editing is true, for some reason, UITableView top margin is displayed.
-				// force removing the margin by the following code.
-				_topInset = 36;
+
+				// When Editing is true, for some reason, UITableView top margin is displayed. force removing the margin by the following code.
 				_TableView.ContentInset = new UIEdgeInsets(-_topInset, 0, 0, 0);
 
 				_TableView.Source = new SettingsLegacyTableSource(Element);
@@ -137,40 +139,62 @@ namespace Jakar.SettingsView.iOS
 
 		protected void OnSectionPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Section.IsVisibleProperty) ) { UpdateSectionVisible((Section) sender); }
+			if ( sender is not Section section ) throw new InvalidOperationException(nameof(sender));
+
+			if ( e.IsEqual(Section.IsVisibleProperty) ) { UpdateSectionVisible(section); }
 			else if ( e.IsOneOf(Section.TitleProperty,
 								Section.TextColorProperty,
 								Section.HeaderViewProperty,
 								Section.FooterTextProperty,
 								Section.FooterViewProperty
-							   ) ) { UpdateSectionNoAnimation((Section) sender); }
-			else if ( e.IsEqual(Section.FooterVisibleProperty) ) { UpdateSectionFade((Section) sender); }
+							   ) ) { UpdateSectionNoAnimation(section); }
+			else if ( e.IsEqual(Section.FooterVisibleProperty) ) { UpdateSectionFade(section); }
 		}
 
 		protected void UpdateSectionVisible( Section section )
 		{
-			int secIndex = Element.Model.GetSectionIndex(section);
-			Control.BeginUpdates();
-			Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.Automatic);
-			Control.EndUpdates();
+			// int secIndex = Element.Model.GetSectionIndex(section);
+			// Control.BeginUpdates();
+			// Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.Automatic);
+			// section.ShowVisibleCells();
+			// Control.EndUpdates();
+			Reload(section, UITableViewRowAnimation.Automatic);
 		}
-
 		protected void UpdateSectionNoAnimation( Section section )
 		{
-			int secIndex = Element.Model.GetSectionIndex(section);
-			Control.BeginUpdates();
-			Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.None);
-			Control.EndUpdates();
+			// int secIndex = Element.Model.GetSectionIndex(section);
+			// Control.BeginUpdates();
+			// Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.None);
+			// section.ShowVisibleCells();
+			// Control.EndUpdates();
+			Reload(section, UITableViewRowAnimation.None);
 		}
-
 		protected void UpdateSectionFade( Section section )
 		{
-			int secIndex = Element.Model.GetSectionIndex(section);
-			Control.BeginUpdates();
-			Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.Fade);
-			Control.EndUpdates();
+			// int secIndex = Element.Model.GetSectionIndex(section);
+			// Control.BeginUpdates();
+			// Control.ReloadSections(NSIndexSet.FromIndex(secIndex), UITableViewRowAnimation.Fade);
+			// section.ShowVisibleCells();
+			// Control.EndUpdates();
+			Reload(section, UITableViewRowAnimation.Fade);
 		}
 
+		protected void Reload( Section section, UITableViewRowAnimation animation ) => Reload(section, NSIndexSet.FromIndex(Element.Model.GetSectionIndex(section)), animation);
+		protected void Reload( Section section, NSIndexSet index, UITableViewRowAnimation animation )
+		{
+			Control.BeginUpdates();
+			Control.ReloadSections(index, animation);
+			section.ShowVisibleCells();
+			Control.EndUpdates();
+		}
+		protected void Reload( NSIndexSet index, UITableViewRowAnimation animation )
+		{
+			Section? section = Element.Model.GetSection(index.FirstIndex.ToInt());
+			if ( section is null ) throw new NullReferenceException(nameof(section));
+			Reload(section, index, animation);
+		}
+		protected void Reload( int index, UITableViewRowAnimation animation ) => Reload(NSIndexSet.FromIndex(index), animation);
+		protected void Reload( int index ) => Reload(NSIndexSet.FromIndex(index), UITableViewRowAnimation.Automatic);
 
 		protected void UpdateSections( NotifyCollectionChangedEventArgs e )
 		{
@@ -179,24 +203,27 @@ namespace Jakar.SettingsView.iOS
 				case NotifyCollectionChangedAction.Add:
 					if ( e.NewStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
-					Control.BeginUpdates();
-					Control.InsertSections(NSIndexSet.FromIndex(e.NewStartingIndex), UITableViewRowAnimation.Automatic);
-					Control.EndUpdates();
+					// Control.BeginUpdates();
+					// Control.InsertSections(NSIndexSet.FromIndex(e.NewStartingIndex), UITableViewRowAnimation.Automatic);
+					// Control.EndUpdates();
+					Reload(e.NewStartingIndex);
 					break;
 				case NotifyCollectionChangedAction.Remove:
 					if ( e.OldStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
-					Control.BeginUpdates();
-					Control.DeleteSections(NSIndexSet.FromIndex(e.OldStartingIndex), UITableViewRowAnimation.Automatic);
-					Control.EndUpdates();
+					// Control.BeginUpdates();
+					// Control.DeleteSections(NSIndexSet.FromIndex(e.OldStartingIndex), UITableViewRowAnimation.Automatic);
+					// Control.EndUpdates();
+					Reload(e.OldStartingIndex);
 					break;
 
 				case NotifyCollectionChangedAction.Replace:
 					if ( e.OldStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
-					Control.BeginUpdates();
-					Control.ReloadSections(NSIndexSet.FromIndex(e.OldStartingIndex), UITableViewRowAnimation.Automatic);
-					Control.EndUpdates();
+					// Control.BeginUpdates();
+					// Control.ReloadSections(NSIndexSet.FromIndex(e.OldStartingIndex), UITableViewRowAnimation.Automatic);
+					// Control.EndUpdates();
+					Reload(e.OldStartingIndex);
 					break;
 
 				case NotifyCollectionChangedAction.Move:
@@ -204,6 +231,8 @@ namespace Jakar.SettingsView.iOS
 
 					Control.ReloadData();
 					return;
+
+				default: throw new ArgumentOutOfRangeException(nameof(e.Action));
 			}
 		}
 
@@ -242,16 +271,16 @@ namespace Jakar.SettingsView.iOS
 					Control.BeginUpdates();
 					for ( var i = 0; i < e.OldItems.Count; i++ )
 					{
-						int oldi = e.OldStartingIndex;
-						int newi = e.NewStartingIndex;
+						int oldIndex = e.OldStartingIndex;
+						int newIndex = e.NewStartingIndex;
 
 						if ( e.NewStartingIndex < e.OldStartingIndex )
 						{
-							oldi += i;
-							newi += i;
+							oldIndex += i;
+							newIndex += i;
 						}
 
-						Control.MoveRow(NSIndexPath.FromRowSection(oldi, section), NSIndexPath.FromRowSection(newi, section));
+						Control.MoveRow(NSIndexPath.FromRowSection(oldIndex, section), NSIndexPath.FromRowSection(newIndex, section));
 					}
 
 					Control.EndUpdates();
@@ -319,21 +348,12 @@ namespace Jakar.SettingsView.iOS
 		{
 			if ( _TableView is null ) throw new NullReferenceException(nameof(_TableView));
 
-			_TableView.EstimatedRowHeight = (nfloat) Math.Max(Element.RowHeight, SVConstants.Defaults.MIN_ROW_HEIGHT);
+			_TableView.EstimatedRowHeight = Math.Max(Element.RowHeight, SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat();
 			_TableView.ReloadData();
 		}
 
-		protected void UpdateBackgroundColor()
-		{
-			Color color = Element.BackgroundColor;
-			if ( color != Color.Default ) { Control.BackgroundColor = color.ToUIColor(); }
-		}
-
-		protected void UpdateSeparator()
-		{
-			Color color = Element.SeparatorColor;
-			Control.SeparatorColor = color.ToUIColor();
-		}
+		protected void UpdateBackgroundColor() { Control.BackgroundColor = Element.BackgroundColor.ToUIColor(); }
+		protected void UpdateSeparator() { Control.SeparatorColor = Element.SeparatorColor.ToUIColor(); }
 
 		protected void UpdateScrollToTop()
 		{
