@@ -27,6 +27,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
 
 		protected UIButton _Button { get; set; }
+		protected UILongPressGestureRecognizer _Recognizer { get; set; }
 		protected ICommand? _Command { get; set; }
 		protected ICommand? _LockClickCommand { get; set; }
 
@@ -35,20 +36,34 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Button = new UIButton()
 					  {
 						  HorizontalAlignment = UIControlContentHorizontalAlignment.Fill,
-						  VerticalAlignment = UIControlContentVerticalAlignment.Fill
+						  VerticalAlignment = UIControlContentVerticalAlignment.Fill,
+						  Layer =
+						  {
+							  Hidden = false
+						  }
 					  };
+
+			_Recognizer = new UILongPressGestureRecognizer(RunLong);
+			_Button.AddTarget(OnClick, UIControlEvent.TouchUpInside); // https://stackoverflow.com/a/51593238/9530917
+			_Button.AddGestureRecognizer(_Recognizer);                // https://stackoverflow.com/a/6179591/9530917
 
 			DefaultFontSize = _Button.TitleLabel.ContentScaleFactor;
 			DefaultTextColor = _Button.TitleLabel.TextColor;
-			ContentView.AddSubview(_Button);
+			_RootView.AddArrangedSubview(_Button);
 
-			_Button.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
-			_Button.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
-			_Button.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
-			_Button.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+			_Button.LeftAnchor.ConstraintEqualTo(_RootView.LeftAnchor).Active = true;
+			_Button.RightAnchor.ConstraintEqualTo(_RootView.RightAnchor).Active = true;
+			_Button.TopAnchor.ConstraintEqualTo(_RootView.TopAnchor).Active = true;
+			_Button.BottomAnchor.ConstraintEqualTo(_RootView.BottomAnchor).Active = true;
+			
+			UpdateConstraintsIfNeeded();
+			LayoutIfNeeded(); //https://stackoverflow.com/a/49148733/9530917
+			// SetNeedsDisplay();
 		}
+		protected void OnClick( object sender, EventArgs e ) { Run(); }
 
-
+		
+		// public override void ViewDidLoad() { base.ViewDidLoad(); }
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
@@ -139,12 +154,12 @@ namespace Jakar.SettingsView.iOS.Cells
 			UpdateTitleAlignment();
 			base.UpdateCell();
 		}
-		protected void UpdateTitle() { _Button.TitleLabel.Text = _ButtonCell.Title; }
-		protected void UpdateFontSize()
+		protected void UpdateTitle()
 		{
-			_Button.TitleLabel.MinimumFontSize = (nfloat) _ButtonCell.TitleConfig.FontSize;
-			// _Button.SetTextSize(ComplexUnitType.Sp, DefaultFontSize); 
+			_Button.TitleLabel.AttributedText = new NSMutableAttributedString(_ButtonCell.Title ?? string.Empty);
+			// _Button.TitleLabel.Text = _ButtonCell.Title;
 		}
+		protected void UpdateFontSize() { _Button.TitleLabel.MinimumScaleFactor = _ButtonCell.TitleConfig.FontSize.ToNFloat(); }
 		protected void UpdateFont()
 		{
 			string? family = _ButtonCell.TitleConfig.FontFamily;
@@ -155,34 +170,26 @@ namespace Jakar.SettingsView.iOS.Cells
 		protected internal bool UpdateColor()
 		{
 			_Button.TitleLabel.TextColor = _ButtonCell.TitleConfig.Color.ToUIColor();
-			// _Button.SetTextColor(DefaultTextColor); 
 
 			return true;
 		}
 		protected internal bool UpdateButtonColor()
 		{
 			_Button.TitleLabel.BackgroundColor = _ButtonCell.GetButtonColor().ToUIColor();
-			// AColor color = _ButtonCell.GetButtonColor().ToAndroid();
-			// BackgroundColor.Color = color;
-			// _Button.Background = CreateRippleDrawable(color);
+
 			return true;
 		}
 		protected void UpdateTitleAlignment() { _Button.TitleLabel.TextAlignment = _ButtonCell.TitleConfig.TextAlignment.ToUITextAlignment(); }
 
 
-		protected override void UpdateIsEnabled()
-		{
-			if ( _Command != null &&
-				 !_Command.CanExecute(_ButtonCell.CommandParameter) ) { return; }
-
-			base.UpdateIsEnabled();
-		}
+		protected bool ShouldBeEnabled() => _Command != null && !_Command.CanExecute(_ButtonCell.CommandParameter) || _LockClickCommand != null && !_LockClickCommand.CanExecute(_ButtonCell.LongClickCommandParameter);
+		protected override void UpdateIsEnabled() { SetEnabledAppearance(ShouldBeEnabled()); }
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
 			if ( !Cell.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_Command?.CanExecute(_ButtonCell.CommandParameter) ?? true);
+			SetEnabledAppearance(ShouldBeEnabled());
 		}
 		private void LockClickCommand_CanExecuteChanged( object sender, EventArgs e )
 		{
@@ -200,7 +207,12 @@ namespace Jakar.SettingsView.iOS.Cells
 				_Command = null;
 				_LockClickCommand = null;
 
+				_Button.RemoveTarget(OnClick, UIControlEvent.TouchUpInside);
+				_Button.RemoveGestureRecognizer(_Recognizer);
+				_Button.RemoveFromSuperview();
 				_Button.Dispose();
+
+				_Recognizer.Dispose();
 			}
 
 			base.Dispose(disposing);

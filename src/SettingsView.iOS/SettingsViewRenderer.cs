@@ -497,8 +497,12 @@ namespace Jakar.SettingsView.iOS
 														  int rowIdx = path[1];
 
 
-														  Section section = Element.Model.GetSection(secIdx);
-														  Section destSection = Element.Model.GetSection(destinationIndexPath.Section);
+														  Section? section = Element.Model.GetSection(secIdx);
+														  Section? destSection = Element.Model.GetSection(destinationIndexPath.Section);
+														  if ( section is null ) { return; }
+
+														  if ( destSection is null ) { return; }
+
 														  if ( !destSection.UseDragSort ) { return; }
 
 														  // save scroll position

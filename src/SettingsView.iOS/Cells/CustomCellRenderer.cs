@@ -17,8 +17,7 @@ using Xamarin.Forms;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
+	[Preserve(AllMembers = true)] public class CustomCellRenderer : CellBaseRenderer<CustomCellView> { }
 
 
 	[Preserve(AllMembers = true)]
@@ -36,9 +35,8 @@ namespace Jakar.SettingsView.iOS.Cells
 			{
 				Accessory = UITableViewCellAccessory.DisclosureIndicator;
 				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
-
-				SetRightMarginZero();
 			}
+			else { SetSideMarginsZero(); }
 
 			// StackV.RemoveArrangedSubview(ContentStack);
 			// StackV.RemoveArrangedSubview(DescriptionLabel);
@@ -86,6 +84,15 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected virtual void UpdateContent( UITableView? tableView ) { _CoreView.UpdateCell(_CustomCell.Content, tableView); }
 
+		protected void SetSideMarginsZero()
+		{
+			if ( !UIDevice.CurrentDevice.CheckSystemVersion(11, 0) ) { return; }
+
+			UIEdgeInsets margins = _RootView.LayoutMargins;
+			margins.Right = 0;
+			margins.Left = 0;
+			_RootView.LayoutMargins = margins;
+		}
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
@@ -144,8 +151,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected void BackupSubviewsColor( UIView view, Dictionary<UIView, UIColor> colors )
 		{
-			if ( view.BackgroundColor is null )  return;
-			
+			if ( view.BackgroundColor is null ) return;
+
 			colors[view] = view.BackgroundColor;
 
 			foreach ( UIView subView in view.Subviews ) { BackupSubviewsColor(subView, colors); }
@@ -176,7 +183,7 @@ namespace Jakar.SettingsView.iOS.Cells
 				_Command.CanExecuteChanged += Command_CanExecuteChanged;
 				Command_CanExecuteChanged(_Command, EventArgs.Empty);
 			}
-			
+
 			Execute();
 		}
 		protected void Execute()
@@ -207,7 +214,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( disposing )
 			{
 				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
-				
+
 				_Command = null;
 
 				_ColorCache.Clear();

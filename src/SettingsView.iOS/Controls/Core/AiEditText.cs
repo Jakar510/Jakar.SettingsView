@@ -73,6 +73,9 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 		public void Initialize()
 		{
+			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+
 			BorderStyle = UITextBorderStyle.None;
 			AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 			ReturnKeyType = UIReturnKeyType.Done;
@@ -181,7 +184,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 		public bool UpdateFontSize()
 		{
-			ContentScaleFactor = (nfloat) _CurrentCell.ValueTextConfig.FontSize;
+			ContentScaleFactor = _CurrentCell.ValueTextConfig.FontSize.ToNFloat();
 
 			return true;
 		}

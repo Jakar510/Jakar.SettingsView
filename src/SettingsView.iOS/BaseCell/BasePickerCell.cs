@@ -17,6 +17,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 		protected BasePickerCell( Cell cell ) : base(cell)
 		{
+			// InputView
 			_DummyField = new NoCaretField();
 			_ContentView.AddSubview(_DummyField);
 			_ContentView.SendSubviewToBack(_DummyField);

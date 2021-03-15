@@ -13,7 +13,24 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	{
 		protected TitleView _Title { get; }
 
-		protected BaseAiTitledCell( Cell cell ) : base(cell) => _Title = new TitleView(this);
+		// protected new UIStackView _RootView
+		// {
+		// 	get => base._RootView ?? throw new NullReferenceException(nameof(_RootView));
+		// 	set => base._RootView = value;
+		// }
+
+		protected new UIStackView _ContentView
+		{
+			get => base._ContentView ?? throw new NullReferenceException(nameof(_ContentView));
+			set => base._ContentView = value;
+		}
+
+
+		protected BaseAiTitledCell( Cell cell ) : base(cell)
+		{
+			_ContentView = CreateStackView(UILayoutConstraintAxis.Horizontal);
+			_Title = new TitleView(this);
+		}
 
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )

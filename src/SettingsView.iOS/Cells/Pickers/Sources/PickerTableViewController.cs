@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Foundation;
+using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using ObjCRuntime;
 using UIKit;
@@ -23,10 +24,10 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		protected string _Title => _PickerCell.Prompt.Properties.Title;
 		protected UIColor _TitleColor => _PickerCell.Prompt.Properties.TitleColor.ToUIColor();
-		protected nfloat _TitleFontSize => (nfloat) _PickerCell.Prompt.Properties.TitleFontSize;
+		protected nfloat _TitleFontSize => _PickerCell.Prompt.Properties.TitleFontSize.ToNFloat();
 
 		protected UIColor _DetailColor => _PickerCell.Prompt.Properties.ItemDescriptionColor.ToUIColor();
-		protected nfloat _DetailFontSize => (nfloat) _PickerCell.Prompt.Properties.ItemDescriptionFontSize;
+		protected nfloat _DetailFontSize => _PickerCell.Prompt.Properties.ItemDescriptionFontSize.ToNFloat();
 
 
 		protected Dictionary<int, object> _SelectedCache { get; } = new();

@@ -68,7 +68,7 @@ namespace Jakar.SettingsView.Droid
 					return false;
 				}
 
-				System.Diagnostics.Debug.WriteLine($"Set ToInfo Section:{_SettingsView.Root.IndexOf(toInfo.Section)} Cell:{toInfo.Section.IndexOf(toInfo.Cell)}");
+				if ( toInfo.Cell != null ) System.Diagnostics.Debug.WriteLine($"Set ToInfo Section:{_SettingsView.Root.IndexOf(toInfo.Section)} Cell:{toInfo.Section.IndexOf(toInfo.Cell)}");
 
 				// save moved changes 
 				if ( _FromInfo != null &&

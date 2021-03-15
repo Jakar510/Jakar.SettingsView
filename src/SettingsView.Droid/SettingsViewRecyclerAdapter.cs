@@ -10,6 +10,7 @@ using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
+using Jakar.SettingsView.Shared.Misc;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -55,13 +56,13 @@ namespace Jakar.SettingsView.Droid
 		{
 			if ( sender is not Section section ) throw new InvalidOperationException(nameof(sender));
 
-			if ( e.PropertyName == Section.IsVisibleProperty.PropertyName ) { UpdateSectionVisible(section); }
-			else if ( e.PropertyName == TableSectionBase.TitleProperty.PropertyName ||
-					  e.PropertyName == TableSectionBase.TextColorProperty.PropertyName ) { section.UpdateHeader(); }
-			else if ( e.PropertyName == Section.HeaderViewProperty.PropertyName ) { UpdateSectionHeader(section); } //  || e.PropertyName == Section.HeaderHeightProperty.PropertyName 
-			else if ( e.PropertyName == Section.FooterTextProperty.PropertyName ||
-					  e.PropertyName == Section.FooterViewProperty.PropertyName ||
-					  e.PropertyName == Section.FooterVisibleProperty.PropertyName ) { UpdateSectionFooter(section); }
+			if ( e.IsEqual(Section.IsVisibleProperty) ) { UpdateSectionVisible(section); }
+
+			else if ( e.IsEqual(Section.HeaderViewProperty) ) { UpdateSectionHeader(section); }
+			else if ( e.IsOneOf(TableSectionBase.TitleProperty, TableSectionBase.TextColorProperty) ) { section.UpdateHeader(); }
+
+			else if ( e.IsEqual(Section.FooterViewProperty) ) { UpdateSectionFooter(section); }
+			else if ( e.IsOneOf(Section.FooterTextProperty, Section.FooterVisibleProperty) ) { UpdateSectionFooter(section); }
 		}
 		protected void UpdateSectionVisible( Section section )
 		{

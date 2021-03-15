@@ -25,20 +25,12 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Icon = new IconView(this);
 			_ContentView.AddArrangedSubview(_Icon);
 
-			// var iconWidth = NSLayoutConstraint.Create(_Icon,
-			// 										  NSLayoutAttribute.Width,
-			// 										  NSLayoutRelation.Equal,
-			// 										  _ContentView,
-			// 										  NSLayoutAttribute.Width,
-			// 										  SVConstants.Layout.ColumnFactors.Icon,
-			// 										  SVConstants.Layout.Factor.Zero
-			// 										 );
-			// _Icon.AddConstraint(iconWidth);
 			_Icon.WidthAnchor.ConstraintEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.Icon).Active = true;
 
 			_Icon.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
 			_Icon.LeadingAnchor.ConstraintEqualTo(_ContentView.LeadingAnchor).Active = true;
-			_Icon.TrailingAnchor.ConstraintEqualTo(_Icon.TrailingAnchor, 0).Active = true;
+
+			_Icon.CenterYAnchor.ConstraintEqualTo(_ContentView.CenterYAnchor).Active = true;
 
 			// -----------------------------------------------------------------------------------
 
@@ -46,18 +38,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_ContentView.AddArrangedSubview(_TitleStack);
 
 			_TitleStack.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
-			// var titleWidth = NSLayoutConstraint.Create(_TitleStack,
-			// 										   NSLayoutAttribute.Width,
-			// 										   NSLayoutRelation.Equal,
-			// 										   _ContentView,
-			// 										   NSLayoutAttribute.Width,
-			// 										   SVConstants.Layout.ColumnFactors.TitleStack,
-			// 										   SVConstants.Layout.Factor.Zero
-			// 										  );
-			// _TitleStack.AddConstraint(titleWidth);
+
 			NSLayoutConstraint width = _TitleStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.TitleStack);
 			width.Active = true;
 			width.Priority = SVConstants.Layout.Priority.HIGH;
+			_ContentView.AddConstraint(width);
 
 			_TitleStack.AddArrangedSubview(_Title);
 			_Title.WidthAnchor.ConstraintEqualTo(_TitleStack.WidthAnchor).Active = true;

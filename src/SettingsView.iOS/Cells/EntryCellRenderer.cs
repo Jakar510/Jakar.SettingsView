@@ -28,8 +28,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		public EntryCellView( Cell cell ) : base(cell)
 		{
 			_EntryCell.Focused += EntryCell_Focused;
-			_Value.Init(_EntryCell, this);
 
+			_Value.Init(_EntryCell, this);
 			_Value.TouchUpInside += ValueFieldOnTouchUpInside;
 			_Value.EditingChanged += TextField_EditingChanged;
 			_Value.EditingDidBegin += ValueField_EditingDidBegin;

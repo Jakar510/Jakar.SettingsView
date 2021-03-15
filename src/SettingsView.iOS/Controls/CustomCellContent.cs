@@ -127,7 +127,7 @@ namespace Jakar.SettingsView.iOS.Controls
 					_HeightConstraint?.Dispose();
 				}
 
-				_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo((nfloat) _lastMeasureHeight);
+				_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(_lastMeasureHeight.ToNFloat());
 				_HeightConstraint.Priority = 999f;
 				_HeightConstraint.Active = true;
 

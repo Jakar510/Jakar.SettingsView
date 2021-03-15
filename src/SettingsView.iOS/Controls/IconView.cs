@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreFoundation;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
@@ -25,13 +28,25 @@ namespace Jakar.SettingsView.iOS.Controls
 		protected Size _iconSize;
 		internal NSLayoutConstraint HeightConstraint { get; set; } = new();
 		internal NSLayoutConstraint WidthConstraint { get; set; } = new();
-		internal NSLayoutConstraint MinHeightConstraint { get; set; } = new();
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
 		protected float _IconRadius { get; set; }
 		protected BaseAiDescriptionCell _Renderer { get; private set; }
 
 
-		public IconView( BaseAiDescriptionCell renderer ) : base() => _Renderer = renderer;
+		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+		public IconView( BaseAiDescriptionCell renderer ) : base()
+		{
+			_Renderer = renderer;
+
+			ClipsToBounds = true;
+			BackgroundColor = UIColor.Clear;
+
+			SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+
+			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+		}
 		public void SetCell( BaseAiDescriptionCell renderer ) { _Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
 
 		// public static IconView Create( View view, BaseCellView cell, int id )
@@ -55,17 +70,18 @@ namespace Jakar.SettingsView.iOS.Controls
 			{
 				//remove previous constraint
 				HeightConstraint.Active = false;
-				WidthConstraint.Active = false;
 				HeightConstraint?.Dispose();
+
+				WidthConstraint.Active = false;
 				WidthConstraint?.Dispose();
 			}
 
-			HeightConstraint = HeightAnchor.ConstraintEqualTo((nfloat) size.Height);
-			WidthConstraint = WidthAnchor.ConstraintEqualTo((nfloat) size.Width);
-
-			HeightConstraint.Priority = 999f; // fix warning-log:Unable to simultaneously satisfy constraints.
-			HeightConstraint.Active = true;
+			WidthConstraint = WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
 			WidthConstraint.Active = true;
+
+			HeightConstraint = HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
+			HeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // fix warning-log:Unable to simultaneously satisfy constraints.
+			HeightConstraint.Active = true;
 
 			UpdateConstraints();
 

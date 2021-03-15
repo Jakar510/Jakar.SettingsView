@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
@@ -17,14 +18,28 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : CellTableViewCell
 	{
+		// hide unused native controls
+#pragma warning disable IDE1006 // Naming Styles
+		private new UIImageView ImageView => base.ImageView;
+		private new UILabel TextLabel => base.TextLabel;
+#pragma warning restore IDE1006 // Naming Styles
+
+
+		private NSLayoutConstraint? _minHeightConstraint;
 		private UIStackView? _rootView;
-		private UIStackView? _contentView;
 
 		protected UIStackView _RootView
 		{
 			get => _rootView ?? throw new NullReferenceException(nameof(_rootView));
 			set
 			{
+				if ( _minHeightConstraint is not null )
+				{
+					_minHeightConstraint.Active = false;
+					_minHeightConstraint.Dispose();
+					_minHeightConstraint = null;
+				}
+
 				if ( _rootView is not null )
 				{
 					foreach ( NSLayoutConstraint constraint in _rootView.Constraints )
@@ -35,35 +50,51 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 					_rootView.RemoveFromSuperview();
 				}
-				
+
 				_rootView = value;
+				if ( _rootView is null ) return;
 				ContentView.AddSubview(_rootView);
+
+				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+
+				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
+
+				_rootView.TranslatesAutoresizingMaskIntoConstraints = false;
+				_rootView.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
+				_rootView.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
+				_rootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
+				_rootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+
+				double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
+				_minHeightConstraint = _rootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
+				_minHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // this is superior to any other view.
+				_minHeightConstraint.Active = true;
+
 
 				// _rootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
 				// _rootView.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor).Active = true;
 				// _rootView.TrailingAnchor.ConstraintEqualTo(ContentView.TrailingAnchor).Active = true;
 
-				_rootView.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
-				_rootView.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
 
-				_rootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
-				_rootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+				// NSLayoutConstraint height = _rootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
+				// height.Active = true;
+				// height.Priority = SVConstants.Layout.Priority.HIGH;
+				// ContentView.AddConstraint(height);
 
-				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
 
-				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-
-				NSLayoutConstraint height = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
-				height.Active = true;
-				height.Priority = SVConstants.Layout.Priority.HIGH;
+				// foreach ( NSLayoutConstraint constraint in _rootView.Constraints ) { Console.WriteLine(constraint); }
+				// foreach ( NSLayoutConstraint constraint in ContentView.Constraints ) { Console.WriteLine(constraint); }
 			}
 		}
 
-		protected UIStackView _ContentView
+
+		private UIStackView? _contentView;
+
+		protected UIStackView? _ContentView
 		{
-			get => _contentView ?? throw new NullReferenceException(nameof(_contentView));
+			get => _contentView;
 			set
 			{
 				if ( _contentView is not null )
@@ -78,13 +109,39 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				}
 
 				_contentView = value;
+				if ( _contentView is null ) return;
+				if ( _RootView is null ) throw new NullReferenceException(nameof(_RootView));
+
 				_RootView.AddArrangedSubview(_contentView);
 				_contentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
 			}
 		}
 
+
 		protected internal CellBase? CellBase => Cell as CellBase;                                      // ?? throw new NullReferenceException(nameof(CellBase));
 		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
+
+
+		protected BaseCellView( Cell cell ) : base(UITableViewCellStyle.Default, cell.GetType().FullName)
+		{
+			// remove existing native controls/views 
+			ImageView.RemoveFromSuperview();
+			TextLabel.RemoveFromSuperview();
+			ImageView.Hidden = true;
+			TextLabel.Hidden = true;
+
+			// this.ContentView
+			// this.BackgroundView
+			// this.AccessoryView
+			// this.ImageView
+
+			// this.InputView
+			// this.InputViewController
+
+			Cell = cell;
+			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
+		}
+
 
 		protected internal static UIStackView CreateStackView( UILayoutConstraintAxis orientation ) =>
 			new()
@@ -92,19 +149,17 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				Alignment = orientation == UILayoutConstraintAxis.Vertical
 								? UIStackViewAlignment.Center
 								: UIStackViewAlignment.Fill,
-				Distribution = UIStackViewDistribution.Fill,
+				Distribution = orientation == UILayoutConstraintAxis.Vertical
+								   ? UIStackViewDistribution.Fill
+								   : UIStackViewDistribution.FillProportionally,
 				Axis = orientation,
-				Spacing = (nfloat) ( orientation == UILayoutConstraintAxis.Vertical
-										 ? SVConstants.Cell.PADDING.Top
-										 : SVConstants.Cell.PADDING.Left ),
-				BackgroundColor = Color.Transparent.ToUIColor()
+				Spacing = ( orientation == UILayoutConstraintAxis.Vertical
+								? SVConstants.Cell.PADDING.Top
+								: SVConstants.Cell.PADDING.Left ).ToNFloat(),
+				BackgroundColor = Color.Transparent.ToUIColor(),
+				LayoutMargins = SVConstants.Cell.PADDING.ToUIEdgeInsets(),
+				LayoutMarginsRelativeArrangement = true
 			};
-		protected BaseCellView( Cell cell ) : base(UITableViewCellStyle.Default, cell.GetType().FullName)
-		{
-			Cell = cell;
-			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
-			_ContentView = CreateStackView(UILayoutConstraintAxis.Horizontal);
-		}
 		private void UpdateSelectedColor()
 		{
 			if ( CellParent is null ||
@@ -180,15 +235,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		}
 
 
-		protected void SetRightMarginZero()
-		{
-			if ( !UIDevice.CurrentDevice.CheckSystemVersion(11, 0) ) return;
-			//StackH.LayoutMargins = new UIEdgeInsets(6, 16, 6, 0);
-			UIEdgeInsets margins = _RootView.LayoutMargins;
-			margins.Left = 0;
-			_RootView.LayoutMargins = margins;
-		}
-		protected virtual void UpdateBackgroundColor() { BackgroundColor = ( CellBase?.BackgroundColor ?? SVConstants.Cell.COLOR ).ToUIColor(); }
+		protected virtual void UpdateBackgroundColor() { BackgroundColor = ( CellBase?.GetBackground() ?? SVConstants.Cell.COLOR ).ToUIColor(); }
 
 
 		protected override void Dispose( bool disposing )
@@ -206,9 +253,65 @@ namespace Jakar.SettingsView.iOS.BaseCell
 						CellBase.Section = null;
 					}
 				}
+
+				_RootView.Dispose();
+				_rootView = null;
+
+				_ContentView?.Dispose();
+				_ContentView = null;
+
+				if ( _minHeightConstraint is not null )
+				{
+					_minHeightConstraint.Active = false;
+					_minHeightConstraint.Dispose();
+					_minHeightConstraint = null;
+				}
 			}
 
 			base.Dispose(disposing);
 		}
 	}
+
+
+	// public class CustomVegeCell : UITableViewCell
+	// {
+	// 	// https://docs.microsoft.com/en-us/xamarin/ios/user-interface/controls/tables/customizing-table-appearance
+	// 	private readonly UILabel headingLabel;
+	// 	private readonly UILabel subheadingLabel;
+	// 	private readonly UIImageView imageView;
+	// 	public CustomVegeCell( NSString cellId ) : base(UITableViewCellStyle.Default, cellId)
+	// 	{
+	// 		SelectionStyle = UITableViewCellSelectionStyle.Gray;
+	// 		ContentView.BackgroundColor = UIColor.FromRGB(218, 255, 127);
+	// 		imageView = new UIImageView();
+	// 		headingLabel = new UILabel()
+	// 					   {
+	// 						   Font = UIFont.FromName("Cochin-BoldItalic", 22f),
+	// 						   TextColor = UIColor.FromRGB(127, 51, 0),
+	// 						   BackgroundColor = UIColor.Clear
+	// 					   };
+	// 		subheadingLabel = new UILabel()
+	// 						  {
+	// 							  Font = UIFont.FromName("AmericanTypewriter", 12f),
+	// 							  TextColor = UIColor.FromRGB(38, 127, 0),
+	// 							  TextAlignment = UITextAlignment.Center,
+	// 							  BackgroundColor = UIColor.Clear
+	// 						  };
+	// 		ContentView.AddSubviews(headingLabel, subheadingLabel, imageView);
+	// 	}
+	// 	public void UpdateCell( string caption, string subtitle, UIImage image )
+	// 	{
+	// 		imageView.Image = image;
+	// 		headingLabel.Text = caption;
+	// 		subheadingLabel.Text = subtitle;
+	// 	}
+	// 	public override void LayoutSubviews()
+	// 	{
+	// 		// Rectangle rect = ContentView.Bounds.ToRectangle();
+	// 		base.LayoutSubviews();
+	// 		imageView.Frame = new CGRect(ContentView.Bounds.Width - 63, 5, 33, 33);
+	// 		headingLabel.Frame = new CGRect(5, 4, ContentView.Bounds.Width - 63, 25);
+	// 		subheadingLabel.Frame = new CGRect(100, 18, 100, 20);
+	// 	}
+	// }
 }

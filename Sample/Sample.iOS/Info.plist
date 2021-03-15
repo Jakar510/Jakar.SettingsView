@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>SettingsView</string>
+	<string>SettingsViewSample</string>
 	<key>CFBundleIdentifier</key>
 	<string>Jakar.SettingsView.Sample</string>
 	<key>CFBundleShortVersionString</key>

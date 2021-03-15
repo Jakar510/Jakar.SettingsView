@@ -33,6 +33,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			NSLayoutConstraint width = _ValueStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.ValueStack);
 			width.Active = true;
 			width.Priority = SVConstants.Layout.Priority.HIGH;
+			_ContentView.AddConstraint(width);
+
 
 			// -----------------------------------------------------------------------------------
 

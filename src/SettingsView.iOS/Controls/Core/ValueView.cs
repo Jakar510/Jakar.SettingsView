@@ -30,7 +30,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public override bool UpdateFontSize()
 		{
-			ContentScaleFactor = (nfloat) _CurrentCell.ValueTextConfig.FontSize;
+			ContentScaleFactor = _CurrentCell.ValueTextConfig.FontSize.ToNFloat();
 
 			return true;
 		}

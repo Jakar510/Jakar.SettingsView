@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
@@ -10,25 +11,19 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
-	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 	[Foundation.Preserve(AllMembers = true)]
 	public abstract class BaseTextView<TCell> : UILabel, IUpdateCell<Color, TCell>
 	{
-		internal NSLayoutConstraint HeightConstraint { get; set; } = new();
-		internal NSLayoutConstraint WidthConstraint { get; set; } = new();
-		internal NSLayoutConstraint MinHeightConstraint { get; set; } = new();
-
 		public Color DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
 		protected TCell _Renderer { get; set; }
 
 
+		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 		protected BaseTextView( TCell renderer ) : base()
 		{
 			DefaultTextColor = TextColor.ToColor();
-			DefaultFontSize = (float) ContentScaleFactor;
-
-
+			DefaultFontSize = ContentScaleFactor.ToFloat();
 			_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
 			Initialize();
 		}
@@ -51,6 +46,9 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public virtual void Initialize()
 		{
+			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+
 			LineBreakMode = UILineBreakMode.WordWrap;
 			Lines = 10;
 			BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
@@ -58,8 +56,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			AdjustsFontSizeToFitWidth = true;
 			TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
 
-
-			BackgroundColor = Color.Transparent.ToUIColor();
+			BackgroundColor = UIColor.Clear;
 		}
 
 

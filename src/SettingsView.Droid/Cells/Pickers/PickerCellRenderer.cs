@@ -30,7 +30,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected AlertDialog? _Dialog { get; set; }
 		protected AListView? _ListView { get; set; }
 		protected PickerAdapter? _Adapter { get; set; }
-		protected TextView _TitleLabel { get; set; }
+		protected TextView? _TitleLabel { get; set; }
 		
 		protected string _ValueTextCache { get; set; } = string.Empty;
 
@@ -122,8 +122,10 @@ namespace Jakar.SettingsView.Droid.Cells
 		internal void ShowDialog() { CreateDialog(); }
 		protected void CreateDialog()
 		{
+			_TitleLabel?.Dispose();
 			_ListView?.Dispose();
 			_Adapter?.Dispose();
+
 			_ListView = new AListView(AndroidContext)
 						{
 							Focusable = false,
@@ -229,6 +231,9 @@ namespace Jakar.SettingsView.Droid.Cells
 
 				_Adapter?.Dispose();
 				_Adapter = null;
+
+				_TitleLabel?.Dispose();
+				_TitleLabel = null;
 
 				if ( _NotifyCollection != null )
 				{

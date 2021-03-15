@@ -33,7 +33,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		private Size _iconSize;
 		private NSLayoutConstraint _iconConstraintHeight;
 		private NSLayoutConstraint _iconConstraintWidth;
-		private NSLayoutConstraint _minheightConstraint;
+		private NSLayoutConstraint _minHeightConstraint;
 		private CancellationTokenSource _iconTokenSource;
 
 		public CellBaseView( Cell formsCell ) : base(UITableViewCellStyle.Default, formsCell.GetType().FullName)
@@ -342,18 +342,18 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		private void UpdateMinRowHeight()
 		{
-			if ( _minheightConstraint != null )
+			if ( _minHeightConstraint != null )
 			{
-				_minheightConstraint.Active = false;
-				_minheightConstraint.Dispose();
-				_minheightConstraint = null;
+				_minHeightConstraint.Active = false;
+				_minHeightConstraint.Dispose();
+				_minHeightConstraint = null;
 			}
 
 			if ( CellParent.HasUnevenRows )
 			{
-				_minheightConstraint = StackH.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
-				_minheightConstraint.Priority = 999f;
-				_minheightConstraint.Active = true;
+				_minHeightConstraint = StackH.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
+				_minHeightConstraint.Priority = 999f;
+				_minHeightConstraint.Active = true;
 			}
 
 			StackH.UpdateConstraints();
@@ -486,14 +486,13 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 						 LayoutMargins = new UIEdgeInsets(6, 16, 6, 16),
 						 LayoutMarginsRelativeArrangement = true
 					 };
-			//set margin
 
 			IconView = new UIImageView
 					   {
-						   ClipsToBounds = true
+						   ClipsToBounds = true // round corners
 					   };
 
-			//round corners
+			
 			StackH.AddArrangedSubview(IconView);
 
 			UpdateIconSize();
@@ -531,14 +530,14 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 			StackH.AddArrangedSubview(StackV);
 
-			IconView.SetContentHuggingPriority(999f, UILayoutConstraintAxis.Horizontal); //if possible, not to expand. 
+			IconView.SetContentHuggingPriority(999f, UILayoutConstraintAxis.Horizontal); // if possible, not to expand. 
 			StackV.SetContentHuggingPriority(1f, UILayoutConstraintAxis.Horizontal);
 			ContentStack.SetContentHuggingPriority(1f, UILayoutConstraintAxis.Horizontal);
 			TitleLabel.SetContentHuggingPriority(1f, UILayoutConstraintAxis.Horizontal);
 			DescriptionLabel.SetContentHuggingPriority(1f, UILayoutConstraintAxis.Horizontal);
 
 
-			IconView.SetContentCompressionResistancePriority(999f, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
+			IconView.SetContentCompressionResistancePriority(999f, UILayoutConstraintAxis.Horizontal); // if possible, not to shrink. 
 			StackV.SetContentCompressionResistancePriority(999f, UILayoutConstraintAxis.Horizontal);
 			ContentStack.SetContentCompressionResistancePriority(999f, UILayoutConstraintAxis.Horizontal);
 			TitleLabel.SetContentCompressionResistancePriority(999f, UILayoutConstraintAxis.Horizontal);
@@ -558,11 +557,11 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			StackH.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
 
 
-			float minHeight = Math.Max(CellParent?.RowHeight ?? 44, SettingsViewRenderer.MinRowHeight);
-			_minheightConstraint = StackH.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight);
+			float minHeight = Math.Max(CellParent?.RowHeight ?? -1, SettingsViewRenderer.MinRowHeight);
+			_minHeightConstraint = StackH.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight);
 			// fix warning-log:Unable to simultaneously satisfy constraints.
-			_minheightConstraint.Priority = 999f; // this is superior to any other view.
-			_minheightConstraint.Active = true;
+			_minHeightConstraint.Priority = 999f; // this is superior to any other view.
+			_minHeightConstraint.Active = true;
 		}
 	}
 }
