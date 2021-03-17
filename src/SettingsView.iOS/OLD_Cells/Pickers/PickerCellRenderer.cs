@@ -161,7 +161,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		protected void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !_CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
 		}

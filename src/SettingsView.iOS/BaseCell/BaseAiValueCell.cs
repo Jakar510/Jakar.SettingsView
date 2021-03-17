@@ -28,7 +28,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// protected void UpdateUseDescriptionAsValue()
 		// {
 		// 	if ( !_LabelCell.IgnoreUseDescriptionAsValue &&
-		// 		 CellParent != null &&
+		// 		 CellParent is not null &&
 		// 		 CellParent.UseDescriptionAsValue )
 		// 	{
 		// 		// _Value = DescriptionLabel;

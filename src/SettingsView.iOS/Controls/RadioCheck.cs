@@ -1,6 +1,4 @@
-﻿// unset
-
-using CoreGraphics;
+﻿using CoreGraphics;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.Shared.Config;
 using UIKit;

@@ -16,7 +16,7 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Preserve(AllMembers = true)]
-	public abstract class BaseCellView : CellTableViewCell
+	public abstract class TempBaseCellView : CellTableViewCell
 	{
 		// hide unused native controls
 #pragma warning disable IDE1006 // Naming Styles
@@ -25,7 +25,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 #pragma warning restore IDE1006 // Naming Styles
 
 
-		private NSLayoutConstraint? _minHeightConstraint;
+		protected NSLayoutConstraint? _MinHeightConstraint { get; set; }
 		private UIStackView? _rootView;
 
 		protected UIStackView _RootView
@@ -33,11 +33,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			get => _rootView ?? throw new NullReferenceException(nameof(_rootView));
 			set
 			{
-				if ( _minHeightConstraint is not null )
+				if ( _MinHeightConstraint is not null )
 				{
-					_minHeightConstraint.Active = false;
-					_minHeightConstraint.Dispose();
-					_minHeightConstraint = null;
+					_MinHeightConstraint.Active = false;
+					_MinHeightConstraint.Dispose();
+					_MinHeightConstraint = null;
 				}
 
 				if ( _rootView is not null )
@@ -52,83 +52,25 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				}
 
 				_rootView = value;
-				if ( _rootView is null ) return;
-				ContentView.AddSubview(_rootView);
-
-				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-				_rootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-
-				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-				_rootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
-
-				_rootView.TranslatesAutoresizingMaskIntoConstraints = false;
-				_rootView.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
-				_rootView.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
-				_rootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
-				_rootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
-
-				double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
-				_minHeightConstraint = _rootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-				_minHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // this is superior to any other view.
-				_minHeightConstraint.Active = true;
-
-
-				// _rootView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
-				// _rootView.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor).Active = true;
-				// _rootView.TrailingAnchor.ConstraintEqualTo(ContentView.TrailingAnchor).Active = true;
-
-
-				// NSLayoutConstraint height = _rootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(SVConstants.Defaults.MIN_ROW_HEIGHT.ToNFloat());
-				// height.Active = true;
-				// height.Priority = SVConstants.Layout.Priority.HIGH;
-				// ContentView.AddConstraint(height);
-
-
-				// foreach ( NSLayoutConstraint constraint in _rootView.Constraints ) { Console.WriteLine(constraint); }
-				// foreach ( NSLayoutConstraint constraint in ContentView.Constraints ) { Console.WriteLine(constraint); }
 			}
 		}
 
 
-		private UIStackView? _contentView;
-
-		protected UIStackView? _ContentView
-		{
-			get => _contentView;
-			set
-			{
-				if ( _contentView is not null )
-				{
-					foreach ( NSLayoutConstraint constraint in _contentView.Constraints )
-					{
-						constraint.Active = false;
-						constraint.Dispose();
-					}
-
-					_contentView.RemoveFromSuperview();
-				}
-
-				_contentView = value;
-				if ( _contentView is null ) return;
-				if ( _RootView is null ) throw new NullReferenceException(nameof(_RootView));
-
-				_RootView.AddArrangedSubview(_contentView);
-				_contentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
-			}
-		}
+		protected internal CellBase? CellBase => Cell as CellBase;
+		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView;
 
 
-		protected internal CellBase? CellBase => Cell as CellBase;                                      // ?? throw new NullReferenceException(nameof(CellBase));
-		protected internal Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView; // ?? throw new NullReferenceException(nameof(CellParent));
-
-
-		protected BaseCellView( Cell cell ) : base(UITableViewCellStyle.Default, cell.GetType().FullName)
+		protected TempBaseCellView( Cell cell ) : base(UITableViewCellStyle.Default, cell.GetType().FullName)
 		{
 			// remove existing native controls/views 
 			ImageView.RemoveFromSuperview();
 			TextLabel.RemoveFromSuperview();
 			ImageView.Hidden = true;
 			TextLabel.Hidden = true;
+
+			Cell = cell;
+			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
+			Accessory = UITableViewCellAccessory.None;
 
 			// this.ContentView
 			// this.BackgroundView
@@ -137,11 +79,33 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			// this.InputView
 			// this.InputViewController
-
-			Cell = cell;
-			_RootView = CreateStackView(UILayoutConstraintAxis.Vertical);
 		}
+		protected abstract void InitializeView();
+		protected void InitRoot()
+		{
+			ContentView.AddSubview(_RootView);
 
+			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			_RootView.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+
+			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			_RootView.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
+
+			_RootView.TranslatesAutoresizingMaskIntoConstraints = false;
+			_RootView.LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
+			_RootView.RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
+			_RootView.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
+			_RootView.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+
+			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
+			_MinHeightConstraint = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
+			_MinHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // this is superior to any other view.
+			_MinHeightConstraint.Active = true;
+
+			// UpdateConstraintsIfNeeded();
+			LayoutIfNeeded(); //https://stackoverflow.com/a/49148733/9530917
+			SetNeedsDisplay();
+		}
 
 		protected internal static UIStackView CreateStackView( UILayoutConstraintAxis orientation ) =>
 			new()
@@ -184,6 +148,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected internal virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.IsEqual(Shared.sv.SettingsView.SelectedColorProperty) ) { UpdateSelectedColor(); }
+			else if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.SelectedColorProperty) ) { UpdateSelectedColor(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.CellBackgroundColorProperty) ) { UpdateBackgroundColor(); }
 		}
 		protected internal virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
@@ -234,6 +201,25 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			UserInteractionEnabled = true;
 		}
 
+		protected void UpdateMinRowHeight()
+		{
+			if ( _MinHeightConstraint is not null )
+			{
+				_MinHeightConstraint.Active = false;
+				_MinHeightConstraint.Dispose();
+				_MinHeightConstraint = null;
+			}
+
+			if ( CellParent is not null &&
+				 CellParent.HasUnevenRows )
+			{
+				_MinHeightConstraint = _RootView.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
+				_MinHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH;
+				_MinHeightConstraint.Active = true;
+			}
+
+			_RootView.UpdateConstraints();
+		}
 
 		protected virtual void UpdateBackgroundColor() { BackgroundColor = ( CellBase?.GetBackground() ?? SVConstants.Cell.COLOR ).ToUIColor(); }
 
@@ -242,29 +228,27 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			if ( disposing )
 			{
-				if ( CellBase != null )
+				if ( CellBase is not null )
 				{
 					CellBase.PropertyChanged -= CellPropertyChanged;
-					if ( CellParent != null ) CellParent.PropertyChanged -= ParentPropertyChanged;
+					if ( CellParent is not null ) CellParent.PropertyChanged -= ParentPropertyChanged;
 
-					if ( CellBase.Section != null )
+					if ( CellBase.Section is not null )
 					{
 						CellBase.Section.PropertyChanged -= SectionPropertyChanged;
 						CellBase.Section = null;
 					}
 				}
 
+				_RootView.RemoveFromSuperview();
 				_RootView.Dispose();
 				_rootView = null;
 
-				_ContentView?.Dispose();
-				_ContentView = null;
-
-				if ( _minHeightConstraint is not null )
+				if ( _MinHeightConstraint is not null )
 				{
-					_minHeightConstraint.Active = false;
-					_minHeightConstraint.Dispose();
-					_minHeightConstraint = null;
+					_MinHeightConstraint.Active = false;
+					_MinHeightConstraint.Dispose();
+					_MinHeightConstraint = null;
 				}
 			}
 

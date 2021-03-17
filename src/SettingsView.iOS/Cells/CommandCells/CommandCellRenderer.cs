@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Input;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
@@ -10,114 +9,95 @@ using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
 	[Preserve(AllMembers = true)]
 	public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
 
-
 	[Preserve(AllMembers = true)]
-	public class CommandCellView : BaseAiDescriptionCell
+	public class CommandCellView : LabelCellView
 	{
-		protected ICommand? _Command { get; set; }
-		protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
+		internal Action Execute { get; set; }
+		private CommandCell _CommandCell => Cell as CommandCell;
+		private ICommand _command;
 
-		protected UIImageView _Accessory { get; set; }
-
-
-		public CommandCellView( Cell cell ) : base(cell)
+		public CommandCellView( Cell formsCell ) : base(formsCell)
 		{
-			_Accessory = new UIImageView();
+			SelectionStyle = UITableViewCellSelectionStyle.Default;
 
-			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
-				 _CommandCell.HideArrowIndicator ) { return; }
-
-			_Accessory.RemoveFromSuperview();
+			if ( !_CommandCell.HideArrowIndicator )
+			{
+				Accessory = UITableViewCellAccessory.DisclosureIndicator;
+				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
+				SetRightMarginZero();
+			}
 		}
 
-		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-
 			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
 				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
 		}
 
-		protected internal override bool RowLongPressed( UITableView tableView, NSIndexPath indexPath )
+		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			Run();
-			return _CommandCell.KeepSelectedUntilBack;
+			Execute?.Invoke();
+			if ( !_CommandCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 
-		protected override void EnableCell()
+		public override void UpdateCell( UITableView tableView )
 		{
-			base.EnableCell();
-			_Title.Enable();
-			_Description.Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Title.Disable();
-			_Description.Disable();
-		}
-
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
+			base.UpdateCell(tableView);
 			UpdateCommand();
 		}
-		protected void UpdateCommand()
-		{
-			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
-
-			_Command = _CommandCell.Command;
-
-			if ( _Command is null ) return;
-			_Command.CanExecuteChanged += Command_CanExecuteChanged;
-			Command_CanExecuteChanged(_Command, EventArgs.Empty);
-		}
-		protected virtual void Run()
-		{
-			if ( _Command == null ) { return; }
-
-			if ( _Command.CanExecute(_CommandCell.CommandParameter) ) { _Command.Execute(_CommandCell.CommandParameter); }
-		}
-		protected override void UpdateIsEnabled()
-		{
-			if ( _Command != null &&
-				 !_Command.CanExecute(_CommandCell.CommandParameter) ) { return; }
-
-			base.UpdateIsEnabled();
-		}
-
-
-		protected void Command_CanExecuteChanged( object sender, EventArgs e )
-		{
-			if ( !Cell.IsEnabled ) { return; }
-
-			SetEnabledAppearance(_Command?.CanExecute(_CommandCell.CommandParameter) ?? true);
-		}
-
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+				if ( _command is not null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				_Command = null;
-
-				_Title.Dispose();
-
-				_Description.Dispose();
-
-				_Accessory.RemoveFromSuperview();
-				_Accessory.Dispose();
+				Execute = null;
+				_command = null;
 			}
 
 			base.Dispose(disposing);
+		}
+
+		private void UpdateCommand()
+		{
+			if ( _command is not null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
+
+			_command = _CommandCell.Command;
+
+			if ( _command is not null )
+			{
+				_command.CanExecuteChanged += Command_CanExecuteChanged;
+				Command_CanExecuteChanged(_command, EventArgs.Empty);
+			}
+
+			Execute = () =>
+					  {
+						  if ( _command is null ) { return; }
+
+						  if ( _command.CanExecute(_CommandCell.CommandParameter) ) { _command.Execute(_CommandCell.CommandParameter); }
+					  };
+		}
+
+		protected override void UpdateIsEnabled()
+		{
+			if ( _command is not null &&
+				 !_command.CanExecute(_CommandCell.CommandParameter) ) { return; }
+
+			base.UpdateIsEnabled();
+		}
+
+		private void Command_CanExecuteChanged( object sender, EventArgs e )
+		{
+			if ( !_CellBase.IsEnabled ) { return; }
+
+			SetEnabledAppearance(_command.CanExecute(_CommandCell.CommandParameter));
 		}
 	}
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Cells.Sources;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Enumerations;
-using Jakar.SettingsView.Shared.Misc;
 using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
@@ -16,243 +12,205 @@ using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
-
+	[Preserve(AllMembers = true)]
+	public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class PickerCellView : BasePickerCell
+	public class PickerCellView : LabelCellView
 	{
-		protected PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
+		private PickerCell _PickerCell => Cell as PickerCell;
+		private PickerTableViewController _pickerVC;
+		private INotifyCollectionChanged _notifyCollection;
+		private INotifyCollectionChanged _selectedCollection;
 
-		protected string _ValueTextCache { get; set; } = string.Empty;
-		protected PickerTableViewController? _PickerVC { get; set; }
-
-		protected INotifyCollectionChanged? _NotifyCollection { get; set; }
-		protected INotifyCollectionChanged? _SelectedCollection { get; set; }
-
-
-		public PickerCellView( Cell cell ) : base(cell)
+		public PickerCellView( Cell formsCell ) : base(formsCell)
 		{
-			// if ( !CellParent.ShowArrowIndicatorForAndroid ) { return; }
-			// _IndicatorView = new ImageView(context);
-			// _IndicatorView.SetImageResource(Resource.Drawable.ic_navigate_next);
-			// AddAccessory(_IndicatorView);
+			Accessory = UITableViewCellAccessory.DisclosureIndicator;
+			EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
+			SelectionStyle = UITableViewCellSelectionStyle.Default;
+			SetRightMarginZero();
 		}
 
-		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
-			if ( e.IsOneOf(PickerCell.SelectedItemsProperty,
-						   PickerCell.SelectedItemProperty,
-						   PickerCell.DisplayMemberProperty,
-						   PickerCell.UseNaturalSortProperty,
-						   PickerCell.SelectedItemsOrderKeyProperty
-						  ) ) { UpdateSelectedItems(); }
+			base.CellPropertyChanged(sender, e);
+			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
+				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
+				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
+				 e.PropertyName == PickerCell.UseNaturalSortProperty.PropertyName ||
+				 e.PropertyName == PickerCell.SelectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(); }
 
-			//else if ( e.PropertyName == PickerCell.UseAutoValueTextProperty.PropertyName )
-			// {
-			// 	if ( _PickerCell.UseAutoValueText ) { UpdateSelectedItems(); }
-			// 	else { UpdateValueText(); }
-			// }
-
-			else if ( e.IsEqual(PickerCell.ItemsSourceProperty.PropertyName) )
+			if ( e.PropertyName == PickerCell.ItemsSourceProperty.PropertyName )
 			{
 				UpdateCollectionChanged();
 				UpdateSelectedItems();
 			}
-			else { base.CellPropertyChanged(sender, e); }
 		}
 
-		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )
+		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( _PickerCell.ItemsSource == null )
+			if ( _PickerCell.ItemsSource is null )
 			{
 				tableView.DeselectRow(indexPath, true);
 				return;
 			}
 
-			SetUp(tableView, indexPath);
-		}
-		protected override void SetUp( UITableView tableView, NSIndexPath indexPath )
-		{
-			_PickerVC?.Dispose();
+			_pickerVC?.Dispose();
 
-			UINavigationController? navigationController = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
-			if ( navigationController is ShellSectionRenderer shell )
+			var naviCtrl = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
+			if ( naviCtrl is ShellSectionRenderer shell )
 			{
 				// When use Shell, the NativeView is wrapped in a Forms.ContentPage.
-				_PickerVC = new PickerTableViewController(_PickerCell, tableView, shell.ShellSection.Navigation)
-							{
-								TableView =
-								{
-									ContentInset = new UIEdgeInsets(44, 0, 44, 0)
-								}
-							};
+				_pickerVC = new PickerTableViewController(this, tableView, shell.ShellSection.Navigation);
 				// Fix height broken. For some reason, TableView ContentSize is broken.
-				var page = new ContentPage
-						   {
-							   Content = _PickerVC.TableView.ToView()
-						   };
+				_pickerVC.TableView.ContentInset = new UIEdgeInsets(44, 0, 44, 0);
+				var page = new ContentPage();
+				page.Content = _pickerVC.TableView.ToView();
 				;
-				page.Title = _PickerCell.Prompt.Title;
+				page.Title = _PickerCell.Prompt.Properties.Title;
 
 				// Fire manually because INavigation.PushAsync does not work ViewDidAppear and ViewWillAppear.
-				_PickerVC.ViewDidAppear(false);
+				_pickerVC.ViewDidAppear(false);
+				_pickerVC.InitializeView();
 				BeginInvokeOnMainThread(async () =>
 										{
 											await shell.ShellSection.Navigation.PushAsync(page, true);
-											_PickerVC.Initialize();
+											_pickerVC.InitializeScroll();
 										}
 									   );
 			}
 			else
 			{
 				// When use traditional navigation.
-				_PickerVC = new PickerTableViewController(_PickerCell, tableView);
-				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVC, true));
+				_pickerVC = new PickerTableViewController(this, tableView);
+				BeginInvokeOnMainThread(() => naviCtrl.PushViewController(_pickerVC, true));
 			}
+
 
 			if ( !_PickerCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
-		protected UINavigationController? GetUINavigationController( UIViewController? controller )
+
+		private class NavDelegate : UINavigationControllerDelegate
 		{
-			// Refer to https://forums.xamarin.com/discussion/comment/294088/#Comment_294088
-			switch ( controller )
-			{
-				case null:
-					return null;
+			private readonly ShellSectionRenderer _self;
 
-				case UINavigationController navigation:
-					return navigation;
+			public NavDelegate( ShellSectionRenderer renderer ) { _self = renderer; }
 
-				case UITabBarController tabBarController:
-				{
-					//in case Root->Tab->Navi->Page
-					return GetUINavigationController(tabBarController.SelectedViewController);
-				}
+			public override void DidShowViewController( UINavigationController navigationController, [Transient] UIViewController viewController, bool animated ) { }
 
-				default:
-				{
-					if ( controller.PresentedViewController is UINavigationController navigationCtl )
-					{
-						// on modal page
-						return GetUINavigationController(navigationCtl);
-					}
-
-					break;
-				}
-			}
-
-			return controller.ChildViewControllers.Any()
-					   ? controller.ChildViewControllers.Select(GetUINavigationController).FirstOrDefault(child => child is not null)
-					   : null;
+			public override void WillShowViewController( UINavigationController navigationController, [Transient] UIViewController viewController, bool animated ) { navigationController.SetNavigationBarHidden(false, true); }
 		}
 
+		public override void UpdateCell( UITableView tableView )
+		{
+			base.UpdateCell(tableView);
+			UpdateSelectedItems();
+			UpdateCollectionChanged();
+		}
 
 		public void UpdateSelectedItems()
 		{
-			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
+			if ( _selectedCollection is not null ) { _selectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
-			_SelectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
+			_selectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
 
-			if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
+			if ( _selectedCollection is not null ) { _selectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 
-			_Value.Text = _PickerCell.GetSelectedItemsText();
+			ValueLabel.Text = _PickerCell.GetSelectedItemsText();
 		}
 
+		private void UpdateCollectionChanged()
+		{
+			if ( _notifyCollection is not null ) { _notifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
+
+			_notifyCollection = _PickerCell.ItemsSource as INotifyCollectionChanged;
+
+			if ( _notifyCollection is not null )
+			{
+				_notifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
+				ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+			}
+		}
+
+		protected override void UpdateIsEnabled()
+		{
+			if ( _PickerCell.ItemsSource is not null &&
+				 _PickerCell.ItemsSource.Count == 0 ) { return; }
+
+			base.UpdateIsEnabled();
+		}
 
 		private void ItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !_CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
 		}
 
 		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(); }
 
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			UpdateSelectedItems(false);
-			UpdateCollectionChanged();
-		}
-		public void UpdateSelectedItems( bool force )
-		{
-			if ( force || string.IsNullOrWhiteSpace(_ValueTextCache) )
-			{
-				if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
-
-				if ( _PickerCell.SelectedItems is INotifyCollectionChanged collection ) { _SelectedCollection = collection; }
-
-				_ValueTextCache = _PickerCell.GetSelectedItemsText();
-
-				if ( _SelectedCollection != null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
-			}
-
-			_Value.UpdateText(_ValueTextCache);
-		}
-		private void UpdateCollectionChanged()
-		{
-			if ( _NotifyCollection is not null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
-
-			if ( _PickerCell.ItemsSource is not INotifyCollectionChanged collection ) return;
-			_NotifyCollection = collection;
-			_NotifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
-			ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-		}
-		protected override void UpdateIsEnabled()
-		{
-			if ( _PickerCell.ItemsSource != null &&
-				 _PickerCell.ItemsSource.Count == 0 ) { return; }
-
-			base.UpdateIsEnabled();
-		}
-
-
-		protected internal override void UpdateCell( UITableView? tableView )
-		{
-			base.UpdateCell(tableView);
-			UpdateSelectedItems();
-			UpdateCollectionChanged();
-		}
-		protected override void EnableCell()
-		{
-			base.EnableCell();
-			_Title.Enable();
-			_Description.Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Title.Disable();
-			_Description.Disable();
-		}
-
-
-
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_PickerVC?.Dispose();
-				_PickerVC = null;
+				_pickerVC?.Dispose();
+				_pickerVC = null;
 
-				if ( _NotifyCollection is not null )
+				if ( _notifyCollection is not null )
 				{
-					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
-					_NotifyCollection = null;
+					_notifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
+					_notifyCollection = null;
 				}
 
-				if ( _SelectedCollection is not null )
+				if ( _selectedCollection is not null )
 				{
-					_SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
-					_SelectedCollection = null;
+					_selectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
+					_selectedCollection = null;
 				}
 			}
 
 			base.Dispose(disposing);
+		}
+
+		// Refer to https://forums.xamarin.com/discussion/comment/294088/#Comment_294088
+		private UINavigationController GetUINavigationController( UIViewController controller )
+		{
+			if ( controller is not null )
+			{
+				if ( controller.PresentedViewController is not null )
+				{
+					// on modal page
+					return GetUINavigationController(controller.PresentedViewController);
+				}
+
+				if ( controller is UINavigationController ) { return ( controller as UINavigationController ); }
+
+				if ( controller is UITabBarController )
+				{
+					//in case Root->Tab->Navi->Page
+					var tabCtrl = controller as UITabBarController;
+					return GetUINavigationController(tabCtrl.SelectedViewController);
+				}
+
+				if ( controller.ChildViewControllers.Count() != 0 )
+				{
+					var count = controller.ChildViewControllers.Count();
+
+					for ( int c = 0; c < count; c++ )
+					{
+						var child = GetUINavigationController(controller.ChildViewControllers[c]);
+						if ( child is null )
+						{
+							//TODO: Analytics...
+						}
+						else if ( child is UINavigationController ) { return ( child as UINavigationController ); }
+					}
+				}
+			}
+
+			return null;
 		}
 	}
 }

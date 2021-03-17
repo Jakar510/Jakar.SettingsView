@@ -15,16 +15,22 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 
 		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-		protected BasePickerCell( Cell cell ) : base(cell)
+		protected BasePickerCell( Cell cell ) : base(cell) { InitializeView(); }
+		protected override void InitializeView()
 		{
-			// InputView
-			_DummyField = new NoCaretField();
+			base.InitializeView();
+
+			// ----------------------------------------------------------------------------------------------
+			
+			_DummyField = new NoCaretField(); // InputAccessoryView
 			_ContentView.AddSubview(_DummyField);
 			_ContentView.SendSubviewToBack(_DummyField);
 
 			SelectionStyle = UITableViewCellSelectionStyle.Default;
 
 			SetUp();
+
+			InitRoot();
 		}
 
 		protected internal override void RowSelected( UITableView tableView, NSIndexPath indexPath )

@@ -189,7 +189,7 @@ namespace Jakar.SettingsView.iOS
 			if ( _SettingsView.Model.GetSection(rowAtIndexPath.Section)?.UseDragSort ?? false ) { return false; }
 
 			var ret = false;
-			if ( tableView.CellAt(rowAtIndexPath) is BaseCellView cell )
+			if ( tableView.CellAt(rowAtIndexPath) is BaseCellView  cell )
 			{
 				System.Diagnostics.Debug.WriteLine("LongTap");
 				ret = cell.RowLongPressed(tableView, rowAtIndexPath);
@@ -224,7 +224,7 @@ namespace Jakar.SettingsView.iOS
 		{
 			_SettingsView.Model.RowSelected(indexPath.Section, indexPath.Row);
 
-			if ( tableView.CellAt(indexPath) is BaseCellView cell ) { cell.RowSelected(tableView, indexPath); }
+			if ( tableView.CellAt(indexPath) is BaseCellView  cell ) { cell.RowSelected(tableView, indexPath); }
 		}
 
 		protected override void Dispose( bool disposing )

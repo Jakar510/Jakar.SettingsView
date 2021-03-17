@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.sv;
 using UIKit;
@@ -28,7 +29,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			return nativeCell;
 		}
 
-		protected void SetUpPropertyChanged( BaseCellView nativeCell )
+		protected void SetUpPropertyChanged( BaseCellView  nativeCell )
 		{
 			if ( nativeCell.Cell is not CellBase formsCell ) return;
 			Shared.sv.SettingsView parentElement = formsCell.Parent;
@@ -44,7 +45,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			formsCell.Section = section;
 			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
 		}
-		protected void ClearPropertyChanged( BaseCellView nativeCell )
+		protected void ClearPropertyChanged( BaseCellView  nativeCell )
 		{
 			if ( nativeCell.Cell is not CellBase formsCell ) return;
 			Shared.sv.SettingsView parentElement = formsCell.Parent;

@@ -14,6 +14,8 @@
 			<Style TargetType="cells:ButtonCell">
 				<Setter Property="TitleFontSize"
 						Value="30" />
+				<Setter Property="TitleAlignment"
+						Value="Center" />
 				<Setter Property="TitleColor"
 						Value="Black" />
 				<Setter Property="BackgroundColor"

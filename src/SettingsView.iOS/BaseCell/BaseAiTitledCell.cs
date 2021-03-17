@@ -9,20 +9,31 @@ using Xamarin.Forms;
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseAiTitledCell : BaseCellView
+	public abstract class BaseAiTitledCell : TempBaseCellView
 	{
 		protected TitleView _Title { get; }
+		
 
-		// protected new UIStackView _RootView
-		// {
-		// 	get => base._RootView ?? throw new NullReferenceException(nameof(_RootView));
-		// 	set => base._RootView = value;
-		// }
+		private UIStackView? _contentView;
 
-		protected new UIStackView _ContentView
+		protected UIStackView _ContentView
 		{
-			get => base._ContentView ?? throw new NullReferenceException(nameof(_ContentView));
-			set => base._ContentView = value;
+			get => _contentView ?? throw new NullReferenceException(nameof(_ContentView));
+			set
+			{
+				if ( _contentView is not null )
+				{
+					foreach ( NSLayoutConstraint constraint in _contentView.Constraints )
+					{
+						constraint.Active = false;
+						constraint.Dispose();
+					}
+
+					_contentView.RemoveFromSuperview();
+				}
+
+				_contentView = value;
+			}
 		}
 
 
@@ -65,8 +76,10 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			if ( disposing )
 			{
-				_Title.RemoveFromSuperview();
 				_Title.Dispose();
+
+				_ContentView.RemoveFromSuperview();
+				_ContentView.Dispose();
 			}
 
 			base.Dispose(disposing);

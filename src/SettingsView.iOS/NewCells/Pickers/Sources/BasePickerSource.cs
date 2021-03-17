@@ -6,7 +6,7 @@ using System.Linq;
 using UIKit;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Cells.Sources
+namespace Jakar.SettingsView.iOS.NewCells.Sources
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class BasePickerSource<TValue> : UIPickerViewModel

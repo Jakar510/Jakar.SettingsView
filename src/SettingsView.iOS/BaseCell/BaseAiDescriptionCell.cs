@@ -19,40 +19,37 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected BaseAiDescriptionCell( Cell cell ) : base(cell)
 		{
 			// https://stackoverflow.com/a/60832786/9530917
-			// _________________________________________________________________________________
 
-
+			_TitleStack = CreateStackView(UILayoutConstraintAxis.Vertical);
 			_Icon = new IconView(this);
+			_Description = new DescriptionView(this);
+		}
+
+		protected override void InitializeView()
+		{
 			_ContentView.AddArrangedSubview(_Icon);
 
 			_Icon.WidthAnchor.ConstraintEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.Icon).Active = true;
-
 			_Icon.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
 			_Icon.LeadingAnchor.ConstraintEqualTo(_ContentView.LeadingAnchor).Active = true;
-
 			_Icon.CenterYAnchor.ConstraintEqualTo(_ContentView.CenterYAnchor).Active = true;
 
-			// -----------------------------------------------------------------------------------
 
-			_TitleStack = CreateStackView(UILayoutConstraintAxis.Vertical);
 			_ContentView.AddArrangedSubview(_TitleStack);
-
 			_TitleStack.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
-
 			NSLayoutConstraint width = _TitleStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.TitleStack);
 			width.Active = true;
 			width.Priority = SVConstants.Layout.Priority.HIGH;
 			_ContentView.AddConstraint(width);
-
 			_TitleStack.AddArrangedSubview(_Title);
+			
 			_Title.WidthAnchor.ConstraintEqualTo(_TitleStack.WidthAnchor).Active = true;
 
-			// -----------------------------------------------------------------------------------
-			_Description = new DescriptionView(this);
 			_TitleStack.AddArrangedSubview(_Description);
 			_Description.WidthAnchor.ConstraintEqualTo(_TitleStack.WidthAnchor).Active = true;
 
-			// -----------------------------------------------------------------------------------
+			_RootView.AddArrangedSubview(_ContentView);
+			_ContentView.WidthAnchor.ConstraintEqualTo(_RootView.WidthAnchor).Active = true;
 		}
 
 		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
@@ -90,10 +87,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			if ( disposing )
 			{
-				_Icon.RemoveFromSuperview();
 				_Icon.Dispose();
 
-				_Description.RemoveFromSuperview();
 				_Description.Dispose();
 
 				_TitleStack.RemoveFromSuperview();

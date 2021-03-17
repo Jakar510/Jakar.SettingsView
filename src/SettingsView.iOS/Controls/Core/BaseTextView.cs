@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
@@ -12,38 +13,29 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseTextView<TCell> : UILabel, IUpdateCell<Color, TCell>
+	public abstract class BaseTextView : UILabel, IUpdateCell<Color, BaseCellView> 
 	{
 		public Color DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
-		protected TCell _Renderer { get; set; }
+		protected BaseCellView _Renderer { get; set; }
+		protected bool _IsAvailable { get; private set; } = true;
 
 
 		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-		protected BaseTextView( TCell renderer ) : base()
+		protected BaseTextView( BaseCellView renderer ) : base()
 		{
 			DefaultTextColor = TextColor.ToColor();
 			DefaultFontSize = ContentScaleFactor.ToFloat();
 			_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
 			Initialize();
+			SetUsed(renderer.Cell);
 		}
-		// protected BaseTextView( BaseCellView cell, AContext context ) : this(context) => SetCell(cell);
-		// protected BaseTextView( AContext context, IAttributeSet attributes ) : base(context, attributes)
-		// {
-		// 	DefaultFontSize = TextSize;
-		// 	DefaultTextColor = new AColor(CurrentTextColor);
-		// 	Init();
-		// }
+		
 
-
-		public void SetCell( TCell cell ) { _Renderer = cell ?? throw new NullReferenceException(nameof(cell)); }
-		// public static TCell Create<TCell>( View view, BaseCellView cell, int id ) where TCell : BaseTextView
-		// {
-		// 	TCell result = view.FindViewById<TCell>(id) ?? throw new NullReferenceException(nameof(id));
-		// 	result.SetCell(cell);
-		// 	return result;
-		// }
-
+		public void SetUsed( bool used ) { _IsAvailable = used; }
+		public abstract void SetUsed( Cell cell );
+		public void SetCell( BaseCellView cell ) { _Renderer = cell ?? throw new NullReferenceException(nameof(cell)); }
+		
 		public virtual void Initialize()
 		{
 			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
@@ -58,7 +50,6 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 			BackgroundColor = UIColor.Clear;
 		}
-
 
 		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
 		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
@@ -87,6 +78,12 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			UpdateTextAlignment();
 		}
 
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing ) { RemoveFromSuperview(); }
+
+			base.Dispose(disposing);
+		}
 
 		[SuppressMessage("ReSharper", "InvertIf")]
 		public virtual bool Update( object sender, PropertyChangedEventArgs e )

@@ -11,13 +11,13 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class TitleView : BaseTextView<BaseAiTitledCell>
+	public class TitleView : BaseTextView
 	{
-		public BaseAiTitledCell Renderer { get; }
 		private TitleCellBase _CurrentCell => _Renderer.Cell as TitleCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
-		public TitleView( BaseAiTitledCell renderer ) : base(renderer) => Renderer = renderer;
+		public TitleView( BaseCellView renderer ) : base(renderer) { }
 
 
+		public override void SetUsed( Cell cell ) { SetUsed(cell.IsDescriptiveTitleCell()); }
 		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Title;
@@ -58,6 +58,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
+			if ( !_IsAvailable ) return false;
+
 			if ( e.IsEqual(TitleCellBase.TitleProperty) ) { return UpdateText(); }
 
 			if ( e.IsEqual(TitleCellBase.TitleColorProperty) ) { return UpdateTextColor(); }
@@ -72,6 +74,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
+			if ( !_IsAvailable ) return false;
+
 			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleColorProperty) ) { return UpdateTextColor(); }
 
 			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleFontSizeProperty) ) { return UpdateFontSize(); }

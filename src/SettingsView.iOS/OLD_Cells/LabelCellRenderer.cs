@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 							 TextAlignment = UITextAlignment.Right
 						 };
 
-			ContentStack.AddArrangedSubview(ValueLabel);
+			_ContentStack.AddArrangedSubview(ValueLabel);
 			ValueLabel.SetContentHuggingPriority(100f, UILayoutConstraintAxis.Horizontal);
 			ValueLabel.SetContentCompressionResistancePriority(100f, UILayoutConstraintAxis.Horizontal);
 		}
@@ -99,7 +99,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 		{
 			if ( disposing )
 			{
-				ContentStack.RemoveArrangedSubview(ValueLabel);
+				_ContentStack.RemoveArrangedSubview(ValueLabel);
 				ValueLabel.Dispose();
 			}
 

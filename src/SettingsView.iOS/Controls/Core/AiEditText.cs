@@ -10,13 +10,11 @@ using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using Xamarin.Forms.PlatformConfiguration;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Preserve(AllMembers = true)]
 	public class AiEditText : UITextField, IUpdateEntryCell<IEntryCellRenderer, Color, AiEntryCell>

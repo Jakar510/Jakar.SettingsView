@@ -1,75 +1,103 @@
 ﻿using System;
-using System.Runtime.Remoting.Contexts;
 using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using Xamarin.Forms.PlatformConfiguration;
 
 [assembly: ExportRenderer(typeof(TimePickerCell), typeof(TimePickerCellRenderer))]
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
 	[Preserve(AllMembers = true)]
 	public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class TimePickerCellView : BasePickerCell
+	public class TimePickerCellView : LabelCellView
 	{
-		protected TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));
-		protected UIDatePicker? _Dialog { get; set; }
-		protected UIDatePicker? _Picker { get; set; }
-		protected UILabel? _PickerTitle { get; set; }
-		protected NSDate? _PreSelectedDate { get; set; }
+		private TimePickerCell _TimePickerCell => Cell as TimePickerCell;
+		private UIDatePicker _picker;
 
-		public TimePickerCellView( Cell cell ) : base(cell) { }
+		public UITextField DummyField { get; set; }
 
+		private UILabel _titleLabel;
+		private NSDate _preSelectedDate;
 
-		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public TimePickerCellView( Cell formsCell ) : base(formsCell)
 		{
-			if ( e.IsOneOf(TimePickerCell.TimeProperty, TimePickerCell.FormatProperty) ) { UpdateTime(); }
-			else if ( e.IsEqual(PopupConfig.TitleProperty.PropertyName) ) { UpdatePopupTitle(); }
-			else { base.CellPropertyChanged(sender, e); }
+			DummyField = new NoCaretField();
+			DummyField.BorderStyle = UITextBorderStyle.None;
+			DummyField.BackgroundColor = UIColor.Clear;
+			ContentView.AddSubview(DummyField);
+			ContentView.SendSubviewToBack(DummyField);
+
+			SelectionStyle = UITableViewCellSelectionStyle.Default;
+
+			SetUpTimePicker();
 		}
 
-		protected override void ShowPopup()
+		public override void UpdateCell( UITableView tableView )
 		{
-			UpdatePopupTitle();
-			base.ShowPopup();
+			base.UpdateCell(tableView);
+			UpdatePickerTitle();
+			UpdateTime();
 		}
+
+		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		{
+			base.CellPropertyChanged(sender, e);
+			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
+				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
+			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePickerTitle(); }
+		}
+
+		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
+		{
+			tableView.DeselectRow(indexPath, true);
+			DummyField.BecomeFirstResponder();
+		}
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				DummyField.RemoveFromSuperview();
+				DummyField?.Dispose();
+				DummyField = null;
+				_picker.Dispose();
+				_picker = null;
+				_titleLabel?.Dispose();
+				_titleLabel = null;
+			}
+
+			base.Dispose(disposing);
+		}
+
 		public override void LayoutSubviews()
 		{
 			base.LayoutSubviews();
 
-			_DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
+			DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
 		}
-		protected override void SetUp()
-		{
-			_DummyField.InputView = null;
-			_DummyField.InputAccessoryView = null;
-			_Dialog?.Dispose();
-			_Dialog = null;
 
-			_Picker = new UIDatePicker
+		private void SetUpTimePicker()
+		{
+			_picker = new UIDatePicker
 					  {
 						  Mode = UIDatePickerMode.Time,
 						  TimeZone = new NSTimeZone("UTC")
 					  };
-			if ( UIDevice.CurrentDevice.CheckSystemVersion(13, 4) ) { _Picker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels; }
+			if ( UIDevice.CurrentDevice.CheckSystemVersion(13, 4) ) { _picker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels; }
 
-			_PickerTitle = new UILabel
-						   {
-							   TextAlignment = UITextAlignment.Center
-						   };
+			_titleLabel = new UILabel();
+			_titleLabel.TextAlignment = UITextAlignment.Center;
 
-			nfloat width = UIScreen.MainScreen.Bounds.Width;
+			var width = UIScreen.MainScreen.Bounds.Width;
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
 						  {
 							  BarStyle = UIBarStyle.Default,
@@ -78,17 +106,17 @@ namespace Jakar.SettingsView.iOS.Cells
 			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
 												   ( o, e ) =>
 												   {
-													   _DummyField.ResignFirstResponder();
+													   DummyField.ResignFirstResponder();
 													   Canceled();
 												   }
 												  );
 
-			var labelButton = new UIBarButtonItem(_PickerTitle);
+			var labelButton = new UIBarButtonItem(_titleLabel);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
 												 ( o, a ) =>
 												 {
-													 _DummyField.ResignFirstResponder();
+													 DummyField.ResignFirstResponder();
 													 Done();
 												 }
 												);
@@ -104,57 +132,31 @@ namespace Jakar.SettingsView.iOS.Cells
 							 false
 							);
 
-			_DummyField.InputView = _Picker;
-			_DummyField.InputAccessoryView = toolbar;
+			DummyField.InputView = _picker;
+			DummyField.InputAccessoryView = toolbar;
 		}
 
-		protected void Canceled()
+		private void Canceled() { _picker.Date = _preSelectedDate; }
+
+		private void Done()
 		{
-			if ( _PreSelectedDate is null ||
-				 _Picker is null ) return;
-			_Picker.Date = _PreSelectedDate;
+			_TimePickerCell.Time = _picker.Date.ToDateTime() - new DateTime(1, 1, 1);
+			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			_preSelectedDate = _picker.Date;
 		}
 
-		protected void Done()
+		private void UpdateTime()
 		{
-			if ( _Picker is null ) return;
-			_TimePickerCell.Time = _Picker.Date.ToDateTime() - new DateTime(1, 1, 1);
-			_Value.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
-			_PreSelectedDate = _Picker.Date;
+			_picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
+			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			_preSelectedDate = _picker.Date;
 		}
 
-		protected void UpdateTime()
+		private void UpdatePickerTitle()
 		{
-			if ( _Picker is null ) return;
-			_Picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
-			_Value.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
-			_PreSelectedDate = _Picker.Date;
-		}
-
-		protected void UpdatePopupTitle()
-		{
-			if ( _PickerTitle is null ) return;
-			_PickerTitle.Text = _TimePickerCell.Prompt.Title;
-			_PickerTitle.SizeToFit();
-			_PickerTitle.Frame = new CGRect(0, 0, 160, 44);
-		}
-
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			UpdateTime();
-			UpdatePopupTitle();
-		}
-
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_Dialog?.Dispose();
-				_Dialog = null;
-			}
-
-			base.Dispose(disposing);
+			_titleLabel.Text = _TimePickerCell.Prompt.Properties.Title;
+			_titleLabel.SizeToFit();
+			_titleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}
 	}
 }

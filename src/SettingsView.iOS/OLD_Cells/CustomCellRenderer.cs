@@ -47,23 +47,23 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				SetRightMarginZero();
 			}
 
-			StackV.RemoveArrangedSubview(ContentStack);
-			StackV.RemoveArrangedSubview(DescriptionLabel);
-			ContentStack.RemoveFromSuperview();
+			_StackV.RemoveArrangedSubview(_ContentStack);
+			_StackV.RemoveArrangedSubview(DescriptionLabel);
+			_ContentStack.RemoveFromSuperview();
 			DescriptionLabel.RemoveFromSuperview();
 
 			_CoreView = new CustomCellContent(_CustomCell);
 
 			if ( _CustomCell.UseFullSize )
 			{
-				StackH.RemoveArrangedSubview(IconView);
+				_StackH.RemoveArrangedSubview(IconView);
 				IconView.RemoveFromSuperview();
 
-				StackH.LayoutMargins = new UIEdgeInsets(0, 0, 0, 0);
-				StackH.Spacing = 0;
+				_StackH.LayoutMargins = new UIEdgeInsets(0, 0, 0, 0);
+				_StackH.Spacing = 0;
 			}
 
-			StackV.AddArrangedSubview(_CoreView);
+			_StackV.AddArrangedSubview(_CoreView);
 		}
 
 		protected virtual void UpdateContent( UITableView tableView ) { _CoreView.UpdateCell(_CustomCell.Content, tableView); }
@@ -194,7 +194,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		protected virtual void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !_CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_Command.CanExecute(_CustomCell.CommandParameter));
 		}

@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Runtime.Remoting.Contexts;
 using System.Windows.Input;
 using CoreGraphics;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Cells.Sources;
+using Jakar.SettingsView.iOS.NewCells;
+using Jakar.SettingsView.iOS.NewCells.Sources;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 
 [assembly: ExportRenderer(typeof(NumberPickerCell), typeof(NumberPickerCellRenderer))]
 
 #nullable enable
-namespace Jakar.SettingsView.iOS.Cells
+namespace Jakar.SettingsView.iOS.NewCells
 {
-	[Preserve(AllMembers = true)]
-	public class NumberPickerCellRenderer : CellBaseRenderer<NumberPickerCellView> { }
+	[Preserve(AllMembers = true)] public class NumberPickerCellRenderer : CellBaseRenderer<NumberPickerCellView> { }
 
 
 	[Preserve(AllMembers = true)]

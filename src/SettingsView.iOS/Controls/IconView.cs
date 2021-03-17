@@ -14,27 +14,26 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms.PlatformConfiguration;
-using BaseCellView = Jakar.SettingsView.iOS.BaseCell.BaseCellView;
 using Size = Xamarin.Forms.Size;
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class IconView : UIImageView, IUpdateIcon<BaseAiDescriptionCell, UIImage, IImageSourceHandler>
+	public class IconView : UIImageView, IUpdateIcon<BaseCellView, UIImage, IImageSourceHandler>
 	{
-		private IconCellBase _CurrentCell => _Renderer.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		protected IconCellBase _CurrentCell => _Renderer.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
 		protected Size _iconSize;
 		internal NSLayoutConstraint HeightConstraint { get; set; } = new();
 		internal NSLayoutConstraint WidthConstraint { get; set; } = new();
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
 		protected float _IconRadius { get; set; }
-		protected BaseAiDescriptionCell _Renderer { get; private set; }
+		protected BaseCellView _Renderer { get; private set; }
 
 
 		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-		public IconView( BaseAiDescriptionCell renderer ) : base()
+		public IconView( BaseCellView renderer ) : base()
 		{
 			_Renderer = renderer;
 
@@ -47,7 +46,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
 			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
 		}
-		public void SetCell( BaseAiDescriptionCell renderer ) { _Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
+		public void SetCell( BaseCellView renderer ) { _Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
 
 		// public static IconView Create( View view, BaseCellView cell, int id )
 		// {
@@ -86,16 +85,18 @@ namespace Jakar.SettingsView.iOS.Controls
 			UpdateConstraints();
 
 			_iconSize = size;
+			_Renderer.SetNeedsLayout();
 			return true;
 		}
 
 		public bool UpdateIconRadius()
 		{
 			Layer.CornerRadius = (float) _CurrentCell.GetIconRadius();
+			_Renderer.SetNeedsLayout();
 			return true;
 		}
 
-		private void UpdateIcon()
+		protected void UpdateIcon()
 		{
 			if ( _IconTokenSource is not null &&
 				 !_IconTokenSource.IsCancellationRequested ) { _IconTokenSource.Cancel(); }
@@ -120,9 +121,11 @@ namespace Jakar.SettingsView.iOS.Controls
 				LoadIconImage(handler, _CurrentCell.IconSource);
 			}
 			else { Hidden = true; }
+
+			_Renderer.SetNeedsLayout();
 		}
 
-		private void LoadIconImage( IImageSourceHandler handler, ImageSource source )
+		protected void LoadIconImage( IImageSourceHandler handler, ImageSource source )
 		{
 			_IconTokenSource?.Cancel();
 			_IconTokenSource?.Dispose();
@@ -190,6 +193,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			}
 			else { Hidden = true; }
 
+			_Renderer.SetNeedsLayout();
 			return true;
 		}
 		public void LoadIconImage( IImageSourceHandler handler, ImageSource source, CancellationToken token ) { Task.Run(async () => { await LoadImage(handler, source, token).ConfigureAwait(true); }, token); }
@@ -269,9 +273,14 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected override void Dispose( bool disposing )
 		{
+			if ( disposing )
+			{
+				RemoveFromSuperview();
+				_IconTokenSource?.Dispose();
+				_IconTokenSource = null;
+			}
+
 			base.Dispose(disposing);
-			_IconTokenSource?.Dispose();
-			_IconTokenSource = null;
 		}
 	}
 }

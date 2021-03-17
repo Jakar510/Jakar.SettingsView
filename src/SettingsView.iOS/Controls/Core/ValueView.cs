@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using TextAlignment = Xamarin.Forms.TextAlignment;
@@ -11,15 +12,16 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class ValueView : BaseTextView<BaseAiValueCell>
+	public class ValueView : BaseTextView
 	{
 		private ValueCellBase _CurrentCell => _Renderer.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 		private ValueTextCellBase? _CurrentTextCell => _CurrentCell as ValueTextCellBase;
 
 
-		public ValueView( BaseAiValueCell renderer ) : base(renderer) => Initialize();
+		public ValueView( BaseCellView renderer ) : base(renderer) => Initialize();
 
 
+		public override void SetUsed( Cell cell ) { SetUsed(cell.IsValueCell()); }
 		public override bool UpdateText() => _CurrentTextCell is not null && UpdateText(_CurrentTextCell.ValueText);
 		public bool UpdateText( string? text )
 		{
@@ -60,6 +62,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
+			if ( !_IsAvailable ) return false;
+
 			if ( e.PropertyName == ValueTextCellBase.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
 			if ( e.PropertyName == ValueCellBase.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
@@ -77,7 +81,9 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			// if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateBackgroundColor(); }
+			if ( !_IsAvailable ) return false;
+
+			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 

@@ -19,50 +19,41 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected BaseValueCell( Cell cell ) : base(cell)
 		{
 			_ValueStack = CreateStackView(UILayoutConstraintAxis.Vertical);
+			_Hint = new HintView<TCell>(this);
+			_Value = InstanceCreator.Create<TCell>(this);
+			InitializeView();
+		}
+
+		protected override void InitializeView()
+		{
+			base.InitializeView();
+
+			// ----------------------------------------------------------------------------------------------
+
 			_ContentView.AddArrangedSubview(_ValueStack);
 			_ValueStack.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
-			// var valueStackWidth = NSLayoutConstraint.Create(_ValueStack,
-			// 										   NSLayoutAttribute.Width,
-			// 										   NSLayoutRelation.Equal,
-			// 										   _ContentView,
-			// 										   NSLayoutAttribute.Width,
-			// 										   SVConstants.Layout.ColumnFactors.ValueStack,
-			// 										   SVConstants.Layout.Factor.Zero
-			// 										  );
-			// _ValueStack.AddConstraint(valueStackWidth);
 			NSLayoutConstraint width = _ValueStack.WidthAnchor.ConstraintGreaterThanOrEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.ValueStack);
 			width.Active = true;
 			width.Priority = SVConstants.Layout.Priority.HIGH;
 			_ContentView.AddConstraint(width);
 
-
-			// -----------------------------------------------------------------------------------
-
-			_Hint = new HintView<TCell>(this);
 			_ValueStack.AddArrangedSubview(_Hint);
 			_Hint.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
 
-			// -----------------------------------------------------------------------------------
-
-			_Value = InstanceCreator.Create<TCell>(this);
 			_ValueStack.AddArrangedSubview(_Value);
 			_Value.WidthAnchor.ConstraintEqualTo(_ValueStack.WidthAnchor).Active = true;
 
-			// -----------------------------------------------------------------------------------
+			InitRoot();
 		}
-
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				_Hint.RemoveFromSuperview();
 				_Hint.Dispose();
 
-				_Value.RemoveFromSuperview();
 				_Value.Dispose();
 
-				_ValueStack.RemoveFromSuperview();
 				_ValueStack.Dispose();
 			}
 

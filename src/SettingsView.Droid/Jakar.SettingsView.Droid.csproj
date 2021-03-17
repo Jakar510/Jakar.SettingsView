@@ -74,7 +74,7 @@
     <Compile Include="Cells\CommandCells\CommandCellRenderer.cs" />
     <Compile Include="Cells\LabelCellRenderer.cs" />
     <Compile Include="Cells\Pickers\NumberPickerCell.cs" />
-    <Compile Include="Cells\Pickers\PickerAdapter.cs" />
+    <Compile Include="Cells\Pickers\Sources\PickerAdapter.cs" />
     <Compile Include="Cells\Pickers\PickerCellRenderer.cs" />
     <Compile Include="Extensions\LayoutAlignmentExtensions.cs" />
     <Compile Include="Cells\AccessoryCells\SwitchCellRenderer.cs" />

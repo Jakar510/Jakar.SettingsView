@@ -3,12 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using UIKit;
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Cells.Sources
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class NumberPickerSource : BasePickerSource<int>
+	internal class NumberPickerSource : UIPickerViewModel
 	{
+		internal IList<int> Items { get; private set; }
+
+		internal event EventHandler UpdatePickerFromModel;
+
+		internal int SelectedIndex { get; set; }
+
+		internal int SelectedItem { get; set; }
+
+		internal int PreSelectedItem { get; set; }
+
+		public override nint GetComponentCount( UIPickerView picker ) => 1;
+
+		public override nint GetRowsInComponent( UIPickerView pickerView, nint component ) => Items?.Count ?? 0;
+
+		public override string GetTitle( UIPickerView picker, nint row, nint component ) => Items[(int) row].ToString();
+
+		public override void Selected( UIPickerView picker, nint row, nint component )
+		{
+			if ( Items.Count == 0 )
+			{
+				SelectedItem = 0;
+				SelectedIndex = -1;
+			}
+			else
+			{
+				SelectedItem = Items[(int) row];
+				SelectedIndex = (int) row;
+			}
+		}
+
 		public void SetNumbers( int min, int max )
 		{
 			if ( min < 0 ) min = 0;
@@ -19,7 +48,13 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 				min = 0;
 			}
 
-			SetItems(Enumerable.Range(min, max - min + 1).ToList());
+			Items = Enumerable.Range(min, max - min + 1).ToList();
+		}
+
+		public void OnUpdatePickerFormModel()
+		{
+			PreSelectedItem = SelectedItem;
+			UpdatePickerFromModel?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

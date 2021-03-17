@@ -132,7 +132,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !CellBase.IsEnabled ) { return; }
+			if ( !_CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_command.CanExecute(_ButtonCell.CommandParameter));
 		}

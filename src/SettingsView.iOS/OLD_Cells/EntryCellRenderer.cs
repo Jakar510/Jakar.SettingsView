@@ -50,7 +50,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 			_FieldWrapper.SetContentCompressionResistancePriority(100f, UILayoutConstraintAxis.Horizontal);
 
 			_FieldWrapper.AddSubview(_Value);
-			ContentStack.AddArrangedSubview(_FieldWrapper);
+			_ContentStack.AddArrangedSubview(_FieldWrapper);
 		}
 
 		public override void UpdateCell( UITableView tableView = null )
@@ -242,7 +242,7 @@ namespace Jakar.SettingsView.iOS.OLD_Cells
 				_Value.Dispose();
 				_Value = null;
 
-				ContentStack.RemoveArrangedSubview(_FieldWrapper);
+				_ContentStack.RemoveArrangedSubview(_FieldWrapper);
 				_FieldWrapper.Dispose();
 				_FieldWrapper = null;
 			}

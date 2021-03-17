@@ -14,16 +14,21 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected BaseAiAccessoryCell( Cell cell ) : base(cell)
 		{
+			// AccessoryView
 			_Accessory = InstanceCreator.Create<TAccessory>(this);
+			
+			InitializeView();
+		}
+		protected override void InitializeView()
+		{
+			base.InitializeView();
 			_ContentView.AddArrangedSubview(_Accessory);
 			_Accessory.HeightAnchor.ConstraintEqualTo(_ContentView.HeightAnchor).Active = true;
 			NSLayoutConstraint width = _Accessory.WidthAnchor.ConstraintEqualTo(_ContentView.WidthAnchor, SVConstants.Layout.ColumnFactors.Accessory);
 			width.Active = true;
 			width.Priority = SVConstants.Layout.Priority.DefaultHigh;
 			_ContentView.AddConstraint(width);
-			// AccessoryView
 		}
-
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )

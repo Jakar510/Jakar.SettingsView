@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -12,13 +13,14 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 		[Foundation.Preserve(AllMembers = true)]
-	public class HintView<TCell> : BaseTextView<BaseValueCell<TCell>> where TCell : UIView
+	public class HintView : BaseTextView 
 	{
 		private HintTextCellBase _CurrentCell => _Renderer.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
-		public HintView( BaseValueCell<TCell> renderer ) : base(renderer) { }
+		public HintView( BaseCellView renderer ) : base(renderer) { }
 
 
+		public override void SetUsed( Cell cell ) { SetUsed(cell.IsValueCell()); }
 		public override bool UpdateText()
 		{
 			Text = _CurrentCell.Hint;
@@ -59,6 +61,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
+			if ( !_IsAvailable ) return false;
+
 			if ( e.PropertyName == HintTextCellBase.HintProperty.PropertyName ) { return UpdateText(); }
 
 			if ( e.PropertyName == HintTextCellBase.HintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
@@ -74,6 +78,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
+			if ( !_IsAvailable ) return false;
+
 			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
