@@ -1,5 +1,6 @@
 ﻿// unset
 
+using System;
 using Xamarin.Forms.Internals;
 
 namespace Jakar.SettingsView.Shared.Misc
@@ -9,7 +10,6 @@ namespace Jakar.SettingsView.Shared.Misc
 	{
 		public static float ToFloat( this double value ) => (float) value;
 		public static int ToInt( this double value ) => (int) value;
-
-
+		
 	}
 }

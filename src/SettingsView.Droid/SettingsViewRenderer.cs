@@ -38,7 +38,7 @@ namespace Jakar.SettingsView.Droid
 			Shared.sv.SettingsView? settingsView = e.NewElement;
 			if ( settingsView is null ) { return; }
 
-
+			
 			// Fix scrollbar visibility and flash. https://github.com/xamarin/Xamarin.Forms/pull/10893
 			var recyclerView = new RecyclerView(new ContextThemeWrapper(Context, Resource.Style.settingsViewTheme), null, Resource.Attribute.settingsViewStyle);
 

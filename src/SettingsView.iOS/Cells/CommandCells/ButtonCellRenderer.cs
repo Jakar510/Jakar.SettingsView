@@ -104,7 +104,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			if ( _LockClickCommand.CanExecute(_ButtonCell.LongClickCommandParameter) ) { _LockClickCommand.Execute(_ButtonCell.LongClickCommandParameter); }
 		}
-		private void UpdateCommand()
+		protected void UpdateCommand()
 		{
 			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
@@ -114,7 +114,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Command.CanExecuteChanged += Command_CanExecuteChanged;
 			Command_CanExecuteChanged(_Command, EventArgs.Empty);
 		}
-		private void UpdateLockClickCommand()
+		protected void UpdateLockClickCommand()
 		{
 			if ( _LockClickCommand != null ) { _LockClickCommand.CanExecuteChanged -= LockClickCommand_CanExecuteChanged; }
 
@@ -186,30 +186,30 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Button.TintColor = color;
 		}
 
-		// internal bool UpdateText() => UpdateText(_ButtonCell.Title);
-		// internal bool UpdateText( string? s )
-		// {
-		// 	if ( _Button is null ) return false;
-		//
-		// 	_Button.SetTitle(s, UIControlState.Normal);
-		// 	_Button.SetTitle(s, UIControlState.Highlighted);
-		// 	_Button.SetTitle(s, UIControlState.Selected);
-		// 	_Button.SetTitle(s, UIControlState.Disabled);
-		// 	TitleCellBase.TitleConfiguration cfg = _ButtonCell.TitleConfig;
-		//
-		// 	UIFont font = string.IsNullOrWhiteSpace(cfg.FontFamily)
-		// 					  ? UIFont.SystemFontOfSize(_ButtonCell.TitleConfig.FontSize.ToFloat())
-		// 					  : FontUtility.CreateNativeFont(cfg.FontFamily, _ButtonCell.TitleConfig.FontSize.ToFloat(), cfg.FontAttributes);
-		// 	_Button.TitleLabel.Font = font;
-		//
-		// 	var color = cfg.Color.ToUIColor();
-		// 	_Button.SetTitleColor(color, UIControlState.Normal);
-		// 	_Button.SetTitleColor(color, UIControlState.Highlighted);
-		// 	_Button.SetTitleColor(color, UIControlState.Selected);
-		// 	_Button.SetTitleColor(color, UIControlState.Disabled);
-		//
-		// 	return true;
-		// }
+		internal bool UpdateText() => UpdateText(_ButtonCell.Title);
+		internal bool UpdateText( string? s )
+		{
+			if ( _Button is null ) return false;
+		
+			_Button.SetTitle(s, UIControlState.Normal);
+			_Button.SetTitle(s, UIControlState.Highlighted);
+			_Button.SetTitle(s, UIControlState.Selected);
+			_Button.SetTitle(s, UIControlState.Disabled);
+			TitleCellBase.TitleConfiguration cfg = _ButtonCell.TitleConfig;
+		
+			UIFont font = string.IsNullOrWhiteSpace(cfg.FontFamily)
+							  ? UIFont.SystemFontOfSize(_ButtonCell.TitleConfig.FontSize.ToFloat())
+							  : FontUtility.CreateNativeFont(cfg.FontFamily, _ButtonCell.TitleConfig.FontSize.ToFloat(), cfg.FontAttributes);
+			_Button.TitleLabel.Font = font;
+		
+			var color = cfg.Color.ToUIColor();
+			_Button.SetTitleColor(color, UIControlState.Normal);
+			_Button.SetTitleColor(color, UIControlState.Highlighted);
+			_Button.SetTitleColor(color, UIControlState.Selected);
+			_Button.SetTitleColor(color, UIControlState.Disabled);
+			
+			return true;
+		}
 
 		protected internal bool UpdateButtonColor()
 		{
