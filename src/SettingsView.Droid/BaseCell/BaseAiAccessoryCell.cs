@@ -2,12 +2,12 @@
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Misc;
+using Jakar.Api.Droid.Extensions;
+using Jakar.Api.Extensions;
 using Xamarin.Forms;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
+using AExtensions = Jakar.Api.Droid.Extensions;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
@@ -26,7 +26,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 			_AccessoryStack = AccessoryStack();
 			_Accessory = InstanceCreator<AContext, TAccessory>.Create(AndroidContext);
-			_AccessoryStack.Add(_Accessory, Extensions.Layout.Wrap, Extensions.Layout.Wrap, GravityFlags.Center);
+			_AccessoryStack.Add(_Accessory, AExtensions.Layout.Wrap, AExtensions.Layout.Wrap, GravityFlags.Center);
 		}
 		protected BaseAiAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using Android.Util;
 using Android.Views;
-using Jakar.SettingsView.Droid.Extensions;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;

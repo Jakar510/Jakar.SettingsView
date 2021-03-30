@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;

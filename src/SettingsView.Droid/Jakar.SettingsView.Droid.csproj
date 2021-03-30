@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCell\BaseValueCell.cs" />
-    <Compile Include="Extensions\JavaObjectExtensions.cs" />
     <Compile Include="Controls\AiEditText.cs" />
     <Compile Include="BaseCell\BaseAiAccessoryCell.cs" />
     <Compile Include="BaseCell\BaseAiDescriptionCell.cs" />
@@ -60,8 +59,6 @@
     <Compile Include="Controls\RadioCheck.cs" />
     <Compile Include="Controls\Core\TitleView.cs" />
     <Compile Include="Controls\Core\ValueView.cs" />
-    <Compile Include="Extensions\LayoutExtensions.cs" />
-    <Compile Include="GetIcons.cs" />
     <Compile Include="Interfaces\ICellRender.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,13 +73,11 @@
     <Compile Include="Cells\Pickers\NumberPickerCell.cs" />
     <Compile Include="Cells\Pickers\Sources\PickerAdapter.cs" />
     <Compile Include="Cells\Pickers\PickerCellRenderer.cs" />
-    <Compile Include="Extensions\LayoutAlignmentExtensions.cs" />
     <Compile Include="Cells\AccessoryCells\SwitchCellRenderer.cs" />
     <Compile Include="Cells\AccessoryCells\CheckboxCellRenderer.cs" />
     <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
     <Compile Include="Cells\Pickers\DatePickerCellRenderer.cs" />
     <Compile Include="Cells\EntryCellRenderer.cs" />
-    <Compile Include="Extensions\TextAlignmentExtensions.cs" />
     <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />
     <Compile Include="SettingsViewRecyclerAdapter.cs" />
     <Compile Include="Cells\Pickers\TextPickerCellRenderer.cs" />
@@ -146,6 +141,9 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
+      <Version>2.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Screenshot">
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />

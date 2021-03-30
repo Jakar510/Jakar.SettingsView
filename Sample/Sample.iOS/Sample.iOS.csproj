@@ -203,6 +203,9 @@
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
     <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
     <PackageReference Include="Unity" Version="5.11.10" />
+    <PackageReference Include="Xam.Plugin.Screenshot">
+      <Version>2.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
     <PackageReference Include="Xamarin.Forms.Svg" Version="1.0.3" />
     <PackageReference Include="Xamarin.Forms.Visual.Material">

@@ -9,7 +9,7 @@ namespace Jakar.SettingsView.Shared.Misc
 	public class SVValueChangedEventArgs<TValue> : EventArgs
 	{
 		public TValue Value { get; }
-		public SVValueChangedEventArgs( TValue value ) { Value = value; }
+		public SVValueChangedEventArgs( TValue value ) => Value = value;
 	}
 
 	[Xamarin.Forms.Internals.Preserve(true, false)]

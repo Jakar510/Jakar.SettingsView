@@ -1,5 +1,6 @@
 ﻿// unset
 
+using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
 using Xamarin.Forms;
@@ -15,7 +16,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?), typeof(IconCellBase), SVConstants.Cell.ICON_SIZE);
 
 
-		[TypeConverter(typeof(SVImageSourceConverter))]
+		[TypeConverter(typeof(NullableImageSourceConverter))]
 		public ImageSource? IconSource
 		{
 			get => (ImageSource?) GetValue(IconSourceProperty);

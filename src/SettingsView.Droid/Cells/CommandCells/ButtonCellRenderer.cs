@@ -10,9 +10,9 @@ using Android.Runtime;
 using Android.Text;
 using Android.Util;
 using Android.Views;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
@@ -23,6 +23,7 @@ using AButton = Android.Widget.Button;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
 using Color = Xamarin.Forms.Color;
+using AExtensions = Jakar.Api.Droid.Extensions;
 
 
 #nullable enable
@@ -68,8 +69,8 @@ namespace Jakar.SettingsView.Droid.Cells
 					 0,
 					 GridSpec.Fill,
 					 GridSpec.Fill,
-					 Extensions.Layout.Match,
-					 Extensions.Layout.Match
+					 AExtensions.Layout.Match,
+					 AExtensions.Layout.Match
 					);
 		}
 		public ButtonCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }

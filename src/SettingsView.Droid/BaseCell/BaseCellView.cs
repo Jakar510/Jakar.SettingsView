@@ -6,7 +6,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Views.InputMethods;
-using Jakar.SettingsView.Droid.Extensions;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;

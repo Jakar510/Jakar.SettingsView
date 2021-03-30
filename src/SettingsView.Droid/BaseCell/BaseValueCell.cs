@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Reflection;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Jakar.SettingsView.Droid.Controls;
+using Jakar.Api.Droid.Extensions;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.Droid.Controls.Core;
-using Jakar.SettingsView.Droid.Extensions;
-using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
+using AExtensions = Jakar.Api.Droid.Extensions;
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell
@@ -31,7 +29,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 			_Value = InstanceCreator.Create<TCell>(this, AndroidContext);
 			// _Value = InstanceCreator<BaseCellView, AContext, TCell>.Create(this, AndroidContext);
-			_CellValueStack.Add(_Value, Extensions.Layout.Match, Extensions.Layout.Wrap, GravityFlags.Fill | GravityFlags.Center);
+			_CellValueStack.Add(_Value, AExtensions.Layout.Match, AExtensions.Layout.Wrap, GravityFlags.Fill | GravityFlags.Center);
 		}
 		protected BaseValueCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 	}

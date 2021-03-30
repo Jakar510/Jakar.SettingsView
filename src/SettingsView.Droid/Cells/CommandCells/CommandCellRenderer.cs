@@ -4,12 +4,13 @@ using System.Windows.Input;
 using Android.Content;
 using Android.Runtime;
 using Android.Widget;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using AExtensions = Jakar.Api.Droid.Extensions;
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
@@ -33,7 +34,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			_Accessory = new ImageView(AndroidContext);
 			_AccessoryStack = AccessoryStack();
-			_AccessoryStack.Add(_Accessory, Extensions.Layout.Wrap, Extensions.Layout.Wrap);
+			_AccessoryStack.Add(_Accessory, AExtensions.Layout.Wrap, AExtensions.Layout.Wrap);
 
 			RemoveHint();
 			RemoveCellValueStack();

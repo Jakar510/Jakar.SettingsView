@@ -26,7 +26,7 @@
 													  android:paddingLeft="5dp"
 													  android:scaleType="fitXY" />
 
-	<Jakar.SettingsView.Droid.Controls.TitleView android:id="@+id/CellTitle"
+	<Jakar.SettingsView.Droid.Controls.Core.TitleView android:id="@+id/CellTitle"
 													   android:layout_row="0"
 													   android:layout_rowSpan="1"
 													   android:layout_column="1"
@@ -43,7 +43,7 @@
 													   android:scrollHorizontally="false"
 													   android:text="Title" />
 
-	<Jakar.SettingsView.Droid.Controls.DescriptionView android:id="@+id/CellDescription"
+	<Jakar.SettingsView.Droid.Controls.Core.DescriptionView android:id="@+id/CellDescription"
 															 android:layout_row="1"
 															 android:layout_rowSpan="1"
 															 android:layout_column="1"
@@ -60,7 +60,7 @@
 															 android:scrollHorizontally="false"
 															 android:text="Description" />
 
-	<Jakar.SettingsView.Droid.Controls.HintView android:id="@+id/CellHint"
+	<Jakar.SettingsView.Droid.Controls.Core.HintView android:id="@+id/CellHint"
 													  android:layout_row="0"
 													  android:layout_rowSpan="1"
 													  android:layout_column="2"

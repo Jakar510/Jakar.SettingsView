@@ -4,12 +4,13 @@ using System.Windows.Input;
 using Android.Content;
 using Android.Runtime;
 using Android.Widget;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using AExtensions = Jakar.Api.Droid.Extensions;
 
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
@@ -42,9 +43,9 @@ namespace Jakar.SettingsView.Droid.Cells
 			this.Add(Container,
 					 2,
 					 0,
-					 GridSpec.Fill,
-					 GridSpec.Fill,
-					 Extensions.Layout.Match
+					 AExtensions.GridSpec.Fill,
+					 AExtensions.GridSpec.Fill,
+					 AExtensions.Layout.Match
 					);
 			if ( !_CustomCell.ShowArrowIndicator )
 			{

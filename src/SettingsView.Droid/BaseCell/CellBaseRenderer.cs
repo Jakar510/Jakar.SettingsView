@@ -1,8 +1,6 @@
-﻿using System;
-using Android.Content;
-using Jakar.SettingsView.Shared;
+﻿using Android.Content;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Misc;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms.Platform.Android;
 
@@ -31,6 +29,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 
 			nativeCell.UpdateCell();
 
+			// base.GetCellCore()
 			return nativeCell;
 		}
 		// protected override void OnCellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnCellPropertyChanged(sender, e); }

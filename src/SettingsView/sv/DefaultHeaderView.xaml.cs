@@ -43,8 +43,8 @@ namespace Jakar.SettingsView.Shared.sv
 		public DefaultHeaderView() : base()
 		{
 			InitializeComponent();
-			CollapsedIcon = Icons.CollapseSolidWhite;
-			ExpandedIcon = Icons.ExpandSolidWhite;
+			// CollapsedIcon = Icons.CollapseSolidWhite;
+			// ExpandedIcon = Icons.ExpandSolidWhite;
 			Source = ExpandedIcon;
 
 			Padding = SVConstants.Section.Header.PADDING;

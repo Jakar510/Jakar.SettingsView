@@ -8,7 +8,7 @@ using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
-using Jakar.SettingsView.Droid.Extensions;
+using Jakar.Api.Droid.Extensions;
 using Jakar.SettingsView.Droid.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;

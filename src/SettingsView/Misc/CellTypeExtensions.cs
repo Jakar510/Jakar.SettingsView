@@ -1,5 +1,6 @@
 ﻿// unset
 
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Enumerations;
 
