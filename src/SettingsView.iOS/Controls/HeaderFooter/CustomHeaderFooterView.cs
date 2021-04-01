@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;

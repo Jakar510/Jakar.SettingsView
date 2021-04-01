@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		android.png = android.png
 		README.md = README.md
+		nuget\SettingsView.nuspec = nuget\SettingsView.nuspec
 	EndProjectSection
 EndProject
 Global

@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.HeaderFooter;
-using Jakar.SettingsView.iOS.Extensions;
+
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;

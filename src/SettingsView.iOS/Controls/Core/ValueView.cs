@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Misc;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using TextAlignment = Xamarin.Forms.TextAlignment;
@@ -12,14 +14,18 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class ValueView : BaseTextView
+	public class ValueView : BaseTextView, IRenderValue
 	{
 		private ValueCellBase _CurrentCell => _Renderer.Cell as ValueCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+
 		private ValueTextCellBase? _CurrentTextCell => _CurrentCell as ValueTextCellBase;
+		
+		public ValueView( BaseValueCell<ValueView> renderer ) : base(renderer) => Initialize();
 
-
-		public ValueView( BaseCellView renderer ) : base(renderer) => Initialize();
-
+		public override void Initialize( Stack parent )
+		{
+			base.Initialize(parent);
+		}
 
 		public override void SetUsed( Cell cell ) { SetUsed(cell.IsValueCell()); }
 		public override bool UpdateText() => _CurrentTextCell is not null && UpdateText(_CurrentTextCell.ValueText);

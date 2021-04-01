@@ -2,6 +2,7 @@
 using Android.Graphics;
 using Android.Util;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	/// <summary>
@@ -22,6 +23,6 @@ namespace Jakar.SettingsView.Droid
 		/// <returns>The of.</returns>
 		/// <param name="key">Key.</param>
 		/// <param name="value">Value.</param>
-		protected override int SizeOf( Java.Lang.Object key, Java.Lang.Object value ) => ( ( value as Bitmap )?.ByteCount ?? throw new NullReferenceException(nameof(value)) ) / 1024;
+		protected override int SizeOf( Java.Lang.Object? key, Java.Lang.Object? value ) => ( ( value as Bitmap )?.ByteCount ?? throw new NullReferenceException(nameof(value)) ) / 1024;
 	}
 }

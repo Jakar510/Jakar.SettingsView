@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using TextAlignment = Xamarin.Forms.TextAlignment;
@@ -16,8 +18,13 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 	{
 		private DescriptionCellBase _CurrentCell => _Renderer.Cell as DescriptionCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
-		public DescriptionView( BaseCellView renderer ) : base(renderer) { }
+		public DescriptionView( BaseCellView renderer ) : base(renderer)
+		{
+			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+		}
 
+		public override void Initialize( Stack parent ) { base.Initialize(parent); }
 
 		public override void SetUsed( Cell cell ) { SetUsed(cell.IsDescriptiveTitleCell()); }
 		public override bool UpdateText()

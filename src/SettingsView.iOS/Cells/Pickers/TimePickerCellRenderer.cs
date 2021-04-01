@@ -10,23 +10,24 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 [assembly: ExportRenderer(typeof(TimePickerCell), typeof(TimePickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
+	[Preserve(AllMembers = true)] public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
 	[Preserve(AllMembers = true)]
 	public class TimePickerCellView : LabelCellView
 	{
-		private TimePickerCell _TimePickerCell => Cell as TimePickerCell;
-		private UIDatePicker _picker;
+		private TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));
+		private UIDatePicker? _Picker { get; set; }
 
 		public UITextField DummyField { get; set; }
 
-		private UILabel _titleLabel;
-		private NSDate _preSelectedDate;
+		private UILabel? _TitleLabel { get; set; }
+		private NSDate? _PreSelectedDate { get; set; }
+
 
 		public TimePickerCellView( Cell formsCell ) : base(formsCell)
 		{
@@ -40,6 +41,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			SetUpTimePicker();
 		}
+
 
 		public override void UpdateCell( UITableView tableView )
 		{
@@ -67,12 +69,13 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( disposing )
 			{
 				DummyField.RemoveFromSuperview();
-				DummyField?.Dispose();
-				DummyField = null;
-				_picker.Dispose();
-				_picker = null;
-				_titleLabel?.Dispose();
-				_titleLabel = null;
+				DummyField.Dispose();
+
+				_Picker?.Dispose();
+				_Picker = null;
+
+				_TitleLabel?.Dispose();
+				_TitleLabel = null;
 			}
 
 			base.Dispose(disposing);
@@ -87,15 +90,15 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void SetUpTimePicker()
 		{
-			_picker = new UIDatePicker
+			_Picker = new UIDatePicker
 					  {
 						  Mode = UIDatePickerMode.Time,
 						  TimeZone = new NSTimeZone("UTC")
 					  };
-			if ( UIDevice.CurrentDevice.CheckSystemVersion(13, 4) ) { _picker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels; }
+			if ( UIDevice.CurrentDevice.CheckSystemVersion(13, 4) ) { _Picker.PreferredDatePickerStyle = UIDatePickerStyle.Wheels; }
 
-			_titleLabel = new UILabel();
-			_titleLabel.TextAlignment = UITextAlignment.Center;
+			_TitleLabel = new UILabel();
+			_TitleLabel.TextAlignment = UITextAlignment.Center;
 
 			var width = UIScreen.MainScreen.Bounds.Width;
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
@@ -111,7 +114,7 @@ namespace Jakar.SettingsView.iOS.Cells
 												   }
 												  );
 
-			var labelButton = new UIBarButtonItem(_titleLabel);
+			var labelButton = new UIBarButtonItem(_TitleLabel);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
 												 ( o, a ) =>
@@ -132,31 +135,41 @@ namespace Jakar.SettingsView.iOS.Cells
 							 false
 							);
 
-			DummyField.InputView = _picker;
+			DummyField.InputView = _Picker;
 			DummyField.InputAccessoryView = toolbar;
 		}
 
-		private void Canceled() { _picker.Date = _preSelectedDate; }
+		private void Canceled()
+		{
+			if ( _Picker is null ) return;
+			if ( _PreSelectedDate != null ) { _Picker.Date = _PreSelectedDate; }
+		}
 
 		private void Done()
 		{
-			_TimePickerCell.Time = _picker.Date.ToDateTime() - new DateTime(1, 1, 1);
+			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
+
+			_TimePickerCell.Time = _Picker.Date.ToDateTime() - new DateTime(1, 1, 1);
 			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
-			_preSelectedDate = _picker.Date;
+			_PreSelectedDate = _Picker.Date;
 		}
 
 		private void UpdateTime()
 		{
-			_picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
+			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
+
+			_Picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
 			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
-			_preSelectedDate = _picker.Date;
+			_PreSelectedDate = _Picker.Date;
 		}
 
 		private void UpdatePickerTitle()
 		{
-			_titleLabel.Text = _TimePickerCell.Prompt.Properties.Title;
-			_titleLabel.SizeToFit();
-			_titleLabel.Frame = new CGRect(0, 0, 160, 44);
+			if ( _TitleLabel is null ) { return; }
+
+			_TitleLabel.Text = _TimePickerCell.Prompt.Properties.Title;
+			_TitleLabel.SizeToFit();
+			_TitleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}
 	}
 }

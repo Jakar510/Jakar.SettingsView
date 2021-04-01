@@ -1,8 +1,10 @@
 ﻿using CoreGraphics;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;
+using Xamarin.Forms.Platform.iOS;
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
@@ -30,7 +32,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 
 	[Foundation.Preserve(AllMembers = true)]
-	public class RadioCheck : BaseUIView
+	public class RadioCheck : BaseUIView, IInitializeControl
 	{
 		public RadioCellView Renderer { get; }
 		protected CircleView _CircleView { get; set; }
@@ -42,13 +44,13 @@ namespace Jakar.SettingsView.iOS.Controls
 			set => _CircleView.IsChecked = value;
 		}
 
-		public CGColor OnColor
+		public CGColor? OnColor
 		{
 			get => _CircleView.OnColor;
 			set => _CircleView.OnColor = value;
 		}
 
-		public CGColor OffColor
+		public CGColor? OffColor
 		{
 			get => _CircleView.OffColor;
 			set => _CircleView.OffColor = value;
@@ -70,6 +72,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			_CircleView = new CircleView();
 			AddSubview(_CircleView);
 		}
+
 		public void Init( CGPoint pt )
 		{
 			Frame = new CGRect(pt, new CGSize(150, 30));
@@ -84,6 +87,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( !Enabled ) return;
 			IsChecked = !IsChecked;
 		}
+		public void Initialize( Stack parent ) {  }
 	}
 
 
@@ -102,8 +106,8 @@ namespace Jakar.SettingsView.iOS.Controls
 			}
 		}
 
-		public CGColor OnColor { get; set; }
-		public CGColor OffColor { get; set; }
+		public CGColor? OnColor { get; set; }
+		public CGColor? OffColor { get; set; }
 
 
 		public CircleView() => BackgroundColor = UIColor.Clear;
@@ -112,9 +116,9 @@ namespace Jakar.SettingsView.iOS.Controls
 		protected void DrawCircle( CGRect rect,
 								   CGContext con,
 								   float padding,
-								   CGColor color )
+								   CGColor? color )
 		{
-			con.SetStrokeColor(color);
+			con.SetStrokeColor(color ?? Color.Accent.ToCGColor());
 			con.AddEllipseInRect(new CGRect(padding, padding, rect.Width - 2 * padding, rect.Height - 2 * padding));
 		}
 		public override void Draw( CGRect rect )

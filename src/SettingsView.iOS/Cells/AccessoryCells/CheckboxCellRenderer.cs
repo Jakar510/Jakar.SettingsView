@@ -1,51 +1,42 @@
 ﻿using System;
+using System.ComponentModel;
 using CoreGraphics;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Interfaces;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 [assembly: ExportRenderer(typeof(CheckboxCell), typeof(CheckboxCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	/// <summary>
-	/// Checkbox cell renderer.
-	/// </summary>
 	[Foundation.Preserve(AllMembers = true)]
 	public class CheckboxCellRenderer : CellBaseRenderer<CheckboxCellView> { }
 
-	/// <summary>
-	/// Checkbox cell view.
-	/// </summary>
 	[Foundation.Preserve(AllMembers = true)]
-	public class CheckboxCellView : BaseCellView 
+	public class CheckboxCellView : BaseAccessoryCell<CheckBox>
 	{
-		private CheckBox _checkbox;
-		private CheckboxCell _CheckboxCell => Cell as CheckboxCell;
+		private CheckboxCell _CheckboxCell => Cell as CheckboxCell ?? throw new NullReferenceException(nameof(_CheckboxCell));
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.iOS.Cells.CheckboxCellView"/> class.
-		/// </summary>
-		/// <param name="formsCell">Forms cell.</param>
 		public CheckboxCellView( Cell formsCell ) : base(formsCell)
 		{
-			_checkbox = new CheckBox(new CGRect(0, 0, 20, 20));
-			_checkbox.Layer.BorderWidth = 2;
-			_checkbox.Layer.CornerRadius = 3;
-			_checkbox.Inset = new UIEdgeInsets(10, 10, 10, 10);
+			_Accessory = new CheckBox(this);
+			_Accessory.Layer.BorderWidth = 2;
+			_Accessory.Layer.CornerRadius = 3;
+			_Accessory.Inset = new UIEdgeInsets(10, 10, 10, 10);
 
-			_checkbox.CheckChanged = CheckChanged;
+			_Accessory.CheckChanged = CheckChanged;
 
-			AccessoryView = _checkbox;
-			EditingAccessoryView = _checkbox;
+			AccessoryView = _Accessory;
+			EditingAccessoryView = _Accessory;
 		}
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
 		public override void UpdateCell( UITableView tableView )
 		{
 			UpdateAccentColor();
@@ -53,62 +44,35 @@ namespace Jakar.SettingsView.iOS.Cells
 			base.UpdateCell(tableView);
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == CheckboxCell.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
-			if ( e.PropertyName == CheckboxCell.CheckedProperty.PropertyName ) { UpdateChecked(); }
+			if ( e.PropertyName == CheckableCellBase.CheckedProperty.PropertyName ) { UpdateChecked(); }
 		}
 
-		/// <summary>
-		/// Parents the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 		}
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				_checkbox.CheckChanged = null;
-				_checkbox?.Dispose();
-				_checkbox = null;
-			}
-
-			base.Dispose(disposing);
-		}
-
-		/// <summary>
-		/// Sets the enabled appearance.
-		/// </summary>
-		/// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
 		protected override void SetEnabledAppearance( bool isEnabled )
 		{
-			if ( isEnabled ) { _checkbox.Alpha = 1.0f; }
-			else { _checkbox.Alpha = 0.3f; }
+			if ( isEnabled ) { _Accessory.Alpha = 1.0f; }
+			else { _Accessory.Alpha = 0.3f; }
 
 			base.SetEnabledAppearance(isEnabled);
 		}
 
-		private void CheckChanged( UIButton button ) { _CheckboxCell.Checked = button.Selected; }
+		public void CheckChanged( UIButton button )
+		{
+			_CheckboxCell.Checked = button.Selected;
+			_CheckboxCell.ValueChangedHandler.SendValueChanged(button.Selected);
+		}
 
-		private void UpdateChecked() { _checkbox.Selected = _CheckboxCell.Checked; }
+		private void UpdateChecked() { _Accessory.Selected = _CheckboxCell.Checked; }
 
 		private void UpdateAccentColor()
 		{
@@ -119,55 +83,49 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void ChangeCheckColor( CGColor accent )
 		{
-			_checkbox.Layer.BorderColor = accent;
-			_checkbox.FillColor = accent;
-			_checkbox.SetNeedsDisplay(); //update inner rect
+			_Accessory.Layer.BorderColor = accent;
+			_Accessory.FillColor = accent;
+			_Accessory.SetNeedsDisplay(); //update inner rect
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				_Accessory.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 
-	/// <summary>
-	/// Check box.
-	/// </summary>
-	public class CheckBox : UIButton
+	public class CheckBox : UIButton, IRenderAccessory
 	{
-		/// <summary>
-		/// Gets or sets the inset.
-		/// </summary>
-		/// <value>The inset.</value>
-		public UIEdgeInsets Inset { get; set; } = new UIEdgeInsets(20, 20, 20, 20);
+		public BaseAccessoryCell<CheckBox> Renderer { get; }
 
-		/// <summary>
-		/// Gets or sets the color of the fill.
-		/// </summary>
-		/// <value>The color of the fill.</value>
-		public CGColor FillColor { get; set; }
+		public UIEdgeInsets Inset { get; set; } = new(20, 20, 20, 20);
 
-		/// <summary>
-		/// Gets or sets the check changed.
-		/// </summary>
-		/// <value>The check changed.</value>
-		public Action<UIButton> CheckChanged { get; set; }
+		public CGColor? FillColor { get; set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.iOS.Cells.CheckBox"/> class.
-		/// </summary>
-		/// <param name="rect">Rect.</param>
-		public CheckBox( CGRect rect ) : base(rect)
+		public Action<UIButton>? CheckChanged { get; set; }
+
+		public UITapGestureRecognizer Recognizer { get; set; }
+
+		public CheckBox( BaseAccessoryCell<CheckBox> renderer ) : base()
 		{
-			AddGestureRecognizer(new UITapGestureRecognizer(( obj ) =>
-																 {
-																	 Selected = !Selected;
-																	 CheckChanged?.Invoke(this);
-																 }
-																)
-									 );
+			Renderer = renderer;
+			Recognizer = new UITapGestureRecognizer(OnClick);
+			AddGestureRecognizer(Recognizer);
 		}
 
-		/// <summary>
-		/// Draw the specified rect.
-		/// </summary>
-		/// <returns>The draw.</returns>
-		/// <param name="rect">Rect.</param>
+
+		private void OnClick( UITapGestureRecognizer obj )
+		{
+			Selected = !Selected;
+			CheckChanged?.Invoke(this);
+		}
+
 		public override void Draw( CGRect rect )
 		{
 			base.Draw(rect);
@@ -179,36 +137,48 @@ namespace Jakar.SettingsView.iOS.Cells
 			{
 				Layer.BackgroundColor = FillColor;
 
-
-				var checkmark = new UIBezierPath();
+				var checkMark = new UIBezierPath();
 				var size = rect.Size;
-				checkmark.MoveTo(new CGPoint(x: 22f / 100f * size.Width, y: 52f / 100f * size.Height));
-				checkmark.AddLineTo(new CGPoint(x: 38f / 100f * size.Width, y: 68f / 100f * size.Height));
-				checkmark.AddLineTo(new CGPoint(x: 76f / 100f * size.Width, y: 30f / 100f * size.Height));
+				checkMark.MoveTo(new CGPoint(x: 22f / 100f * size.Width, y: 52f / 100f * size.Height));
+				checkMark.AddLineTo(new CGPoint(x: 38f / 100f * size.Width, y: 68f / 100f * size.Height));
+				checkMark.AddLineTo(new CGPoint(x: 76f / 100f * size.Width, y: 30f / 100f * size.Height));
 
-				checkmark.LineWidth = lineWidth;
+				checkMark.LineWidth = lineWidth;
 				UIColor.White.SetStroke();
-				checkmark.Stroke();
+				checkMark.Stroke();
 			}
 
 			else { Layer.BackgroundColor = new CGColor(0, 0, 0, 0); }
 		}
 
-		/// <summary>
-		/// Points the inside.
-		/// </summary>
-		/// <returns><c>true</c>, if inside was pointed, <c>false</c> otherwise.</returns>
-		/// <param name="point">Point.</param>
-		/// <param name="uievent">Uievent.</param>
-		public override bool PointInside( CGPoint point, UIEvent uievent )
+		public override bool PointInside( CGPoint point, UIEvent? uiEvent )
 		{
-			var rect = Bounds;
+			CGRect rect = Bounds;
 			rect.X -= Inset.Left;
 			rect.Y -= Inset.Top;
 			rect.Width += Inset.Left + Inset.Right;
 			rect.Height += Inset.Top + Inset.Bottom;
 
 			return rect.Contains(point);
+		}
+
+		public void Initialize( Stack parent ) { }
+		public void Update() { }
+		public bool Update( object sender, PropertyChangedEventArgs e ) => throw new NotImplementedException();
+		public bool UpdateParent( object sender, PropertyChangedEventArgs e ) => throw new NotImplementedException();
+		public void Enable() { }
+		public void Disable() { }
+
+		protected override void Dispose( bool disposing )
+		{
+			if ( disposing )
+			{
+				RemoveGestureRecognizer(Recognizer);
+				Recognizer.Dispose();
+				CheckChanged = null;
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

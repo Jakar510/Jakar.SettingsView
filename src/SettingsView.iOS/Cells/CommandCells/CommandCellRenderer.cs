@@ -9,28 +9,28 @@ using Xamarin.Forms;
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
+	[Preserve(AllMembers = true)] public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class CommandCellView : LabelCellView
+	public class CommandCellView : BaseDescriptiveTitleCell
 	{
-		internal Action Execute { get; set; }
-		private CommandCell _CommandCell => Cell as CommandCell;
-		private ICommand _command;
+		private CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
+		private ICommand? _command;
 
 		public CommandCellView( Cell formsCell ) : base(formsCell)
 		{
 			SelectionStyle = UITableViewCellSelectionStyle.Default;
+			Accessory = UITableViewCellAccessory.DisclosureIndicator;
+			EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
 
-			if ( !_CommandCell.HideArrowIndicator )
-			{
-				Accessory = UITableViewCellAccessory.DisclosureIndicator;
-				EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
-				SetRightMarginZero();
-			}
+			if ( _CommandCell.HideArrowIndicator ) { return; }
+
+			Accessory = UITableViewCellAccessory.None;
+			EditingAccessory = UITableViewCellAccessory.None;
+			SetRightMarginZero(_MainStack);
 		}
 
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -42,7 +42,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			Execute?.Invoke();
+			Run();
 			if ( !_CommandCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 
@@ -58,7 +58,6 @@ namespace Jakar.SettingsView.iOS.Cells
 			{
 				if ( _command is not null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Execute = null;
 				_command = null;
 			}
 
@@ -71,18 +70,16 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			_command = _CommandCell.Command;
 
-			if ( _command is not null )
-			{
-				_command.CanExecuteChanged += Command_CanExecuteChanged;
-				Command_CanExecuteChanged(_command, EventArgs.Empty);
-			}
+			if ( _command is null ) return;
+			_command.CanExecuteChanged += Command_CanExecuteChanged;
+			Command_CanExecuteChanged(_command, EventArgs.Empty);
+		}
 
-			Execute = () =>
-					  {
-						  if ( _command is null ) { return; }
+		private void Run()
+		{
+			if ( _command is null ) { return; }
 
-						  if ( _command.CanExecute(_CommandCell.CommandParameter) ) { _command.Execute(_CommandCell.CommandParameter); }
-					  };
+			if ( _command.CanExecute(_CommandCell.CommandParameter) ) { _command.Execute(_CommandCell.CommandParameter); }
 		}
 
 		protected override void UpdateIsEnabled()
@@ -95,7 +92,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void Command_CanExecuteChanged( object sender, EventArgs e )
 		{
-			if ( !_CellBase.IsEnabled ) { return; }
+			if ( _command is null ||
+				 _CellBase != null && !_CellBase.IsEnabled ) { return; }
 
 			SetEnabledAppearance(_command.CanExecute(_CommandCell.CommandParameter));
 		}

@@ -23,9 +23,9 @@ namespace Jakar.SettingsView.Shared.Cells
 																					 );
 
 
-		public IList<string> Items
+		public IList<string>? Items
 		{
-			get => (IList<string>) GetValue(ItemsProperty);
+			get => (IList<string>?) GetValue(ItemsProperty);
 			set => SetValue(ItemsProperty, value);
 		}
 
@@ -36,15 +36,15 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(AccentColorProperty, value);
 		}
 
-		public string SelectedItem
+		public string? SelectedItem
 		{
-			get => (string) GetValue(SelectedItemProperty);
+			get => (string?) GetValue(SelectedItemProperty);
 			set => SetValue(SelectedItemProperty, value);
 		}
 
-		public ICommand SelectedCommand
+		public ICommand? SelectedCommand
 		{
-			get => (ICommand) GetValue(SelectedCommandProperty);
+			get => (ICommand?) GetValue(SelectedCommandProperty);
 			set => SetValue(SelectedCommandProperty, value);
 		}
 	}

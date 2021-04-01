@@ -40,8 +40,7 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 			if ( disposing )
 			{
 				_constraints.ForEach(c => c.Dispose());
-				Label?.Dispose();
-				Label = null;
+				Label.Dispose();
 				BackgroundView?.Dispose();
 				BackgroundView = null;
 			}

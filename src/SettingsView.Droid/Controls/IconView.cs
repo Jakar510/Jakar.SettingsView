@@ -7,6 +7,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -18,7 +19,7 @@ using Size = Xamarin.Forms.Size;
 namespace Jakar.SettingsView.Droid.Controls
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public class IconView : ImageView, IUpdateIcon<BaseCell.BaseCellView, Bitmap, IImageSourceHandler>
+	public class IconView : ImageView, IUpdateIcon<BaseCellView, Bitmap, IImageSourceHandler>
 	{
 		private IconCellBase _CurrentCell => _Cell.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
@@ -41,6 +42,9 @@ namespace Jakar.SettingsView.Droid.Controls
 			result.SetCell(cell);
 			return result;
 		}
+
+		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
+		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
 
 		public bool UpdateIconRadius()
 		{
@@ -208,6 +212,5 @@ namespace Jakar.SettingsView.Droid.Controls
 			SetImageDrawable(null);
 			SetImageBitmap(null);
 		}
-
 	}
 }

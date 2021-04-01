@@ -4,20 +4,18 @@ using System;
 using CoreGraphics;
 using UIKit;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	public class CheckBox : UIButton
 	{
 		public UIEdgeInsets Inset { get; set; } = new(20, 20, 20, 20);
 
-		public CGColor FillColor { get; set; }
+		public CGColor? FillColor { get; set; }
 
-		public Action<UIButton> CheckChanged { get; set; }
+		public Action<CheckBox>? CheckChanged { get; set; }
 
-		public CheckBox( CGRect rect ) : base(rect)
-		{
-			AddGestureRecognizer(new UITapGestureRecognizer(OnTap));
-		}
+		public CheckBox( CGRect rect ) : base(rect) { AddGestureRecognizer(new UITapGestureRecognizer(OnTap)); }
 		private void OnTap( UITapGestureRecognizer recognizer )
 		{
 			Selected = !Selected;
@@ -50,7 +48,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			else { Layer.BackgroundColor = new CGColor(0, 0, 0, 0); }
 		}
 
-		public override bool PointInside( CGPoint point, UIEvent uiEvent )
+		public override bool PointInside( CGPoint point, UIEvent? uiEvent )
 		{
 			CGRect rect = Bounds;
 			rect.X -= Inset.Left;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
@@ -12,12 +12,35 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
-		[Foundation.Preserve(AllMembers = true)]
-	public class HintView : BaseTextView 
+	[Foundation.Preserve(AllMembers = true)]
+	public class HintView : BaseTextView
 	{
 		private HintTextCellBase _CurrentCell => _Renderer.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
 
-		public HintView( BaseCellView renderer ) : base(renderer) { }
+		public HintView( BaseCellView renderer ) : base(renderer)
+		{
+			LineBreakMode = UILineBreakMode.Clip;
+			Lines = 0;
+			TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
+			AdjustsFontSizeToFitWidth = true;
+			BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
+			TextAlignment = UITextAlignment.Right;
+			AdjustsLetterSpacingToFitWidth = true;
+		}
+
+		public override void Initialize( Stack parent )
+		{
+			parent.AddSubview(this);
+
+			TranslatesAutoresizingMaskIntoConstraints = false;
+			TopAnchor.ConstraintEqualTo(parent.TopAnchor, 2).Active = true;
+			LeftAnchor.ConstraintEqualTo(parent.LeftAnchor, 16).Active = true;
+			RightAnchor.ConstraintEqualTo(parent.RightAnchor, -10).Active = true;
+			// RightAnchor.ConstraintEqualTo(parent.ContentView.RightAnchor, -10).Active = true;
+			BottomAnchor.ConstraintLessThanOrEqualTo(parent.BottomAnchor, -12).Active = true;
+			
+			base.Initialize(parent);
+		}
 
 
 		public override void SetUsed( Cell cell ) { SetUsed(cell.IsValueCell()); }

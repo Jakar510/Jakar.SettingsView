@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Enumerations;
 using Xamarin.Forms;
@@ -23,8 +24,8 @@ namespace Jakar.SettingsView.Shared.Cells
 		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(PickerCell), true);
 		public static readonly BindableProperty SelectedItemsOrderKeyProperty = BindableProperty.Create(nameof(SelectedItemsOrderKey), typeof(string), typeof(PickerCell), default(string));
 		public static readonly BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(PickerCell), default(ICommand));
-		public static readonly BindableProperty DisplayMemberProperty = BindableProperty.Create(nameof(DisplayMember), typeof(string), typeof(PickerCell), default(string));
-		public static readonly BindableProperty SubDisplayMemberProperty = BindableProperty.Create(nameof(SubDisplayMember), typeof(string), typeof(PickerCell), default(string));
+		public static readonly BindableProperty DisplayMemberProperty = BindableProperty.Create(nameof(DisplayMember), typeof(string), typeof(PickerCell), default(string?));
+		public static readonly BindableProperty SubDisplayMemberProperty = BindableProperty.Create(nameof(SubDisplayMember), typeof(string), typeof(PickerCell), default(string?));
 
 
 		public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
@@ -92,31 +93,31 @@ namespace Jakar.SettingsView.Shared.Cells
 																								   );
 
 
-		public IList ItemsSource
+		public IList? ItemsSource
 		{
-			get => (IList) GetValue(ItemsSourceProperty);
+			get => (IList?) GetValue(ItemsSourceProperty);
 			set => SetValue(ItemsSourceProperty, value);
 		}
 
-		public string DisplayMember
+		public string? DisplayMember
 		{
-			get => (string) GetValue(DisplayMemberProperty);
+			get => (string?) GetValue(DisplayMemberProperty);
 			set => SetValue(DisplayMemberProperty, value);
 		}
 
-		public string SubDisplayMember
+		public string? SubDisplayMember
 		{
-			get => (string) GetValue(SubDisplayMemberProperty);
+			get => (string?) GetValue(SubDisplayMemberProperty);
 			set => SetValue(SubDisplayMemberProperty, value);
 		}
 
-		public IList SelectedItems
+		public IList? SelectedItems
 		{
-			get => (IList) GetValue(SelectedItemsProperty);
+			get => (IList?) GetValue(SelectedItemsProperty);
 			set => SetValue(SelectedItemsProperty, value);
 		}
 
-		public object SelectedItem
+		public object? SelectedItem
 		{
 			get => GetValue(SelectedItemProperty);
 			set => SetValue(SelectedItemProperty, value);
@@ -144,7 +145,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			}
 		}
 
-		internal IList MergedSelectedList
+		internal IList? MergedSelectedList
 		{
 			get
 			{
@@ -170,7 +171,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		internal bool IsSingleMode => SelectionMode == SelectMode.Single;
 		internal bool IsValidMode => SelectionMode != SelectMode.NotSet;
 		internal void InvokeSelectedEvent() { SelectedEvent?.Invoke(this, new ItemChanged(MergedSelectedList, SelectionMode)); }
-		public EventHandler<ItemChanged> SelectedEvent;
+		public EventHandler<ItemChanged>? SelectedEvent;
 
 		public bool KeepSelectedUntilBack
 		{
@@ -179,15 +180,15 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public string SelectedItemsOrderKey
+		public string? SelectedItemsOrderKey
 		{
-			get => (string) GetValue(SelectedItemsOrderKeyProperty);
+			get => (string?) GetValue(SelectedItemsOrderKeyProperty);
 			set => SetValue(SelectedItemsOrderKeyProperty, value);
 		}
 
-		public ICommand SelectedCommand
+		public ICommand? SelectedCommand
 		{
-			get => (ICommand) GetValue(SelectedCommandProperty);
+			get => (ICommand?) GetValue(SelectedCommandProperty);
 			set => SetValue(SelectedCommandProperty, value);
 		}
 
@@ -212,10 +213,10 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 		//getters cache
-		private static readonly ConcurrentDictionary<Type, Dictionary<string, Func<object, object>>> DisplayValueCache = new();
+		private static readonly ConcurrentDictionary<Type, Dictionary<string, Func<object, object?>>> DisplayValueCache = new();
 
 		//Row.Title getter
-		internal Func<object, object> DisplayValue
+		internal Func<object, object?> DisplayValue
 		{
 			get
 			{
@@ -224,12 +225,14 @@ namespace Jakar.SettingsView.Shared.Cells
 
 				return _getters.ContainsKey(DisplayMember)
 						   ? _getters[DisplayMember]
-						   : ( obj ) => obj;
+						   : DefaultDisplayValue;
 			}
 		}
 
+		private object DefaultDisplayValue( object obj ) => obj;
+
 		//Row.Description getter
-		internal Func<object, object> SubDisplayValue
+		internal Func<object, object?> SubDisplayValue
 		{
 			get
 			{
@@ -238,12 +241,14 @@ namespace Jakar.SettingsView.Shared.Cells
 
 				return _getters.ContainsKey(SubDisplayMember)
 						   ? _getters[SubDisplayMember]
-						   : ( obj ) => null;
+						   : DefaultSubValueGetter;
 			}
 		}
 
+		private static object? DefaultSubValueGetter( object obj ) => null;
+
 		//OrderKey getter
-		internal Func<object, object> KeyValue
+		internal Func<object, object?>? KeyValue
 		{
 			get
 			{
@@ -255,7 +260,8 @@ namespace Jakar.SettingsView.Shared.Cells
 				return null;
 			}
 		}
-		private Dictionary<string, Func<object, object>> _getters;
+
+		private Dictionary<string, Func<object, object?>>? _getters;
 
 		internal string GetSelectedItemsText()
 		{
@@ -268,8 +274,11 @@ namespace Jakar.SettingsView.Shared.Cells
 				var dict = new Dictionary<object, string>();
 				foreach ( object item in ITEMS )
 				{
-					object key = KeyValue(item);
-					var value = DisplayValue(item).ToString();
+					object? key = KeyValue?.Invoke(item);
+					var value = DisplayValue?.Invoke(item)?.ToString();
+					if ( key is null ||
+						 string.IsNullOrWhiteSpace(value) ) continue;
+
 					dict.Add(key, value);
 				}
 
@@ -279,11 +288,11 @@ namespace Jakar.SettingsView.Shared.Cells
 			}
 			else
 			{
-				List<string> strList = ( from object item in ITEMS select DisplayValue(item).ToString() ).ToList();
+				List<string> strList = ( from object item in ITEMS select DisplayValue?.Invoke(item)?.ToString() ).ToList();
 
-				NaturalComparer comparer = UseNaturalSort
-											   ? new NaturalComparer()
-											   : null;
+				NaturalComparer? comparer = UseNaturalSort
+												? new NaturalComparer()
+												: null;
 				sortedList = strList.OrderBy(x => x, comparer).ToList();
 			}
 
@@ -297,28 +306,28 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		internal static void ItemsSourceChanging( BindableObject bindable, object oldValue, object newValue )
+		internal static void ItemsSourceChanging( BindableObject bindable, object? oldValue, object? newValue )
 		{
-			var control = bindable as PickerCell;
+			if ( bindable is not PickerCell control ) return;
 			if ( newValue is null ) { return; }
 
-			control?.SetUpPropertyCache(newValue as IList);
+			control.SetUpPropertyCache(newValue as IList);
 		}
 
 		// Create all property getters
-		private static Dictionary<string, Func<object, object>> CreateGetProperty( Type t )
+		private static Dictionary<string, Func<object, object?>> CreateGetProperty( Type t )
 		{
 			IEnumerable<PropertyInfo> prop = t.GetRuntimeProperties().Where(x => x.DeclaringType == t && !x.Name.StartsWith("_", StringComparison.Ordinal));
 
 			ParameterExpression target = Expression.Parameter(typeof(object), "target");
 
-			var dictGetter = new Dictionary<string, Func<object, object>>();
+			var dictGetter = new Dictionary<string, Func<object, object?>>();
 
 			foreach ( PropertyInfo p in prop )
 			{
 				MemberExpression body = Expression.PropertyOrField(Expression.Convert(target, t), p.Name);
 
-				Expression<Func<object, object>> lambda = Expression.Lambda<Func<object, object>>(Expression.Convert(body, typeof(object)), target);
+				Expression<Func<object, object?>> lambda = Expression.Lambda<Func<object, object?>>(Expression.Convert(body, typeof(object)), target);
 
 				dictGetter[p.Name] = lambda.Compile();
 			}
@@ -326,8 +335,9 @@ namespace Jakar.SettingsView.Shared.Cells
 			return dictGetter;
 		}
 
-		private void SetUpPropertyCache( IEnumerable itemsSource )
+		private void SetUpPropertyCache( IEnumerable? itemsSource )
 		{
+			if ( itemsSource is null ) return;
 			Type[] typeArg = itemsSource.GetType().GenericTypeArguments;
 
 			if ( !typeArg.Any() ) { throw new ArgumentException("ItemsSource must be GenericType."); }
@@ -369,10 +379,10 @@ namespace Jakar.SettingsView.Shared.Cells
 
 		public class ItemChanged : EventArgs
 		{
-			public IEnumerable Items { get; }
+			public IEnumerable? Items { get; }
 			public SelectMode Mode { get; }
 
-			public ItemChanged( IEnumerable items, SelectMode mode )
+			public ItemChanged( IEnumerable? items, SelectMode mode )
 			{
 				Items = items;
 				Mode = mode;

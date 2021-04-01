@@ -1,9 +1,10 @@
-﻿using Foundation;
-using Jakar.SettingsView.Shared;
+﻿using System;
+using Foundation;
 using Jakar.SettingsView.Shared.sv;
 using UIKit;
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]
@@ -13,7 +14,9 @@ namespace Jakar.SettingsView.iOS
 
 		public override bool CanMoveRow( UITableView tableView, NSIndexPath indexPath )
 		{
-			Section section = _SettingsView.Model.GetSection(indexPath.Section);
+			Section? section = _SettingsView.Model.GetSection(indexPath.Section);
+			if ( section is null ) { throw new NullReferenceException(nameof(section)); }
+
 			return section.UseDragSort;
 		}
 
@@ -25,7 +28,9 @@ namespace Jakar.SettingsView.iOS
 				return;
 			}
 
-			Section section = _SettingsView.Model.GetSection(sourceIndexPath.Section);
+			Section? section = _SettingsView.Model.GetSection(sourceIndexPath.Section);
+
+			if ( section is null ) { throw new NullReferenceException(nameof(section)); }
 
 			if ( section.ItemsSource == null )
 			{

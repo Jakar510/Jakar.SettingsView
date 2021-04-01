@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using Xamarin.Forms;
 
+#nullable enable
 namespace Jakar.SettingsView.Shared.Cells
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
@@ -23,9 +24,9 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public View Content
+		public View? Content
 		{
-			get => (View) GetValue(ContentProperty);
+			get => (View?) GetValue(ContentProperty);
 			set => SetValue(ContentProperty, value);
 		}
 
@@ -58,9 +59,9 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 
-		public ICommand LongCommand
+		public ICommand? LongCommand
 		{
-			get => (ICommand) GetValue(LongCommandProperty);
+			get => (ICommand?) GetValue(LongCommandProperty);
 			set => SetValue(LongCommandProperty, value);
 		}
 

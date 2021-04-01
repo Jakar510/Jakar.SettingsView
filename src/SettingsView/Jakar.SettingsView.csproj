@@ -5,22 +5,26 @@
 		<RootNamespace>Jakar.SettingsView.Shared</RootNamespace>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>pdbonly</DebugType>
 		<DocumentationFile>bin\Release\netstandard2.0\SettingsView.xml</DocumentationFile>
-		<LangVersion>9.0</LangVersion>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<LangVersion>9.0</LangVersion>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
 	  <DefineConstants>DEBUG;TRACE</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Jakar.Api" Version="1.0.1" />
+		<PackageReference Include="AiForms.Effects" Version="1.6.10" />
+		<PackageReference Include="Jakar.Api" Version="1.0.6" />
 		<PackageReference Include="Xam.Plugin.Screenshot" Version="2.0.3" />
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
 		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />

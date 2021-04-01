@@ -1,4 +1,5 @@
-﻿using UIKit;
+﻿using Jakar.SettingsView.iOS.Interfaces;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -6,9 +7,11 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class SimpleCheck : FormsCheckBox // AView
+	public class SimpleCheck : FormsCheckBox, IInitializeControl // AView
 	{
 		public SimpleCheck() : base() { }
+
+		public void Initialize( Stack parent ) {  }
 
 		// from CheckBoxRenderer 
 		// 

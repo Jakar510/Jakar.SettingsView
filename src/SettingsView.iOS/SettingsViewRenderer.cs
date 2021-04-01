@@ -4,11 +4,13 @@ using System.Collections.Specialized;
 using System.Linq;
 using CoreGraphics;
 using Foundation;
+using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView;
 using Jakar.SettingsView.iOS;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.HeaderFooter;
-using Jakar.SettingsView.iOS.Extensions;
+
 using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;

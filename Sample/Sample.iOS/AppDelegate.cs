@@ -1,43 +1,30 @@
 ﻿using Foundation;
 using Jakar.SettingsView.iOS;
+using Jakar.Api.iOS;
 using Prism;
 using Prism.Ioc;
 using UIKit;
 
 namespace Sample.iOS
 {
-    // The UIApplicationDelegate for the application. This class is responsible for launching the 
-    // User Interface of the application, as well as listening (and optionally responding) to 
-    // application events from iOS.
-    [Register("AppDelegate")]
-	public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+	[Register(nameof(AppDelegate))]
+	public class AppDelegate : BaseApplication
 	{
-		//
-		// This method is invoked when the application has loaded and is ready to run. In this 
-		// method you should instantiate the window, load the UI into it and then make the window
-		// visible.
-		//
-		// You have 17 seconds to return from this method, or iOS will terminate your application.
-		//
-		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+		public override bool FinishedLaunching( UIApplication app, NSDictionary options )
 		{
+			Init("MediaElement_Experimental");
 
-			Xamarin.Forms.Forms.Init();
+			SettingsViewInit.Init();
+			AiForms.Effects.iOS.Effects.Init();
+			Xamarin.Forms.Svg.iOS.SvgImage.Init();
 
-            AiForms.Effects.iOS.Effects.Init();
-            SettingsViewInit.Init();
-            Xamarin.Forms.Svg.iOS.SvgImage.Init();
-
-			LoadApplication(new App(new iOSInitializer()));
-
+			LoadApplication(new App(new IOSInitializer()));
 			return base.FinishedLaunching(app, options);
 		}
 	}
 
-    public class iOSInitializer : IPlatformInitializer
-    {
-        public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-        }
-    }
+	public class IOSInitializer : IPlatformInitializer
+	{
+		public void RegisterTypes( IContainerRegistry containerRegistry ) { }
+	}
 }

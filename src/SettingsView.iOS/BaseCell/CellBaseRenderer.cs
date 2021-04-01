@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.sv;
@@ -16,7 +17,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	{
 		public override UITableViewCell GetCell( Cell item, UITableViewCell reusableCell, UITableView table )
 		{
-			if ( reusableCell is not TnativeCell nativeCell ) { nativeCell = Shared.Misc.InstanceCreator.Create<TnativeCell>(item); }
+			if ( reusableCell is not TnativeCell nativeCell ) { nativeCell = InstanceCreator.Create<TnativeCell>(item); }
 
 			ClearPropertyChanged(nativeCell);
 

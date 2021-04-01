@@ -1,11 +1,15 @@
 ﻿using System;
 using Foundation;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]
 	public static class ImageCacheController
 	{
+		public static readonly nuint CacheCountLimit = 30;
+		private static NSCache? _CacheInstance { get; set; }
+
 		public static NSCache Instance
 		{
 			get
@@ -25,11 +29,8 @@ namespace Jakar.SettingsView.iOS
 		{
 			_CacheInstance?.RemoveAllObjects();
 			_CacheInstance?.Dispose();
-			_CacheInstance = null;
+
 			Shared.sv.SettingsView._clearCache = null;
 		}
-
-		private static readonly nuint CacheCountLimit = 30;
-		private static NSCache _CacheInstance;
 	}
 }

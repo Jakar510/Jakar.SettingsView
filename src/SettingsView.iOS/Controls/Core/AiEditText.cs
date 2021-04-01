@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using CoreGraphics;
 using Foundation;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.Api.iOS.Extensions;
+using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
@@ -17,22 +19,22 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Preserve(AllMembers = true)]
-	public class AiEditText : UITextField, IUpdateEntryCell<IEntryCellRenderer, Color, AiEntryCell>
+	public class AiEditText : UITextField, IUpdateEntryCell<IEntryCellRenderer, Color>, IUpdateCell<Color, AiEntryCell>, IInitializeControl, IRenderValue
 	{
 		protected bool _HasFocus { get; set; }
 
 		public Color DefaultTextColor { get; }
 		public float DefaultFontSize { get; }
-		protected IEntryCellRenderer _CellRenderer { get; private set; }
-		protected AiEntryCell _CurrentCell { get; private set; }
-		public Shared.sv.SettingsView CellParent => _CurrentCell.Parent;
+		protected IEntryCellRenderer? _CellRenderer { get; private set; }
+		protected AiEntryCell? _CurrentCell { get; private set; }
+		public Shared.sv.SettingsView? CellParent => _CurrentCell?.Parent;
 
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-		public AiEditText() : base()
+		public AiEditText()
 		{
-			// DefaultFontSize = TextSize;
-			// DefaultTextColor = new AColor(CurrentTextColor);
+			DefaultTextColor = TextColor.ToColor();
+			DefaultFontSize = ContentScaleFactor.ToFloat();
+
 			Initialize();
 			TouchUpInside += ValueFieldOnTouchUpInside;
 			EditingChanged += TextField_EditingChanged;
@@ -40,18 +42,14 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			EditingDidEnd += ValueField_EditingDidEnd;
 			ShouldReturn = OnShouldReturn;
 		}
-		public AiEditText( AiEntryCell cell ) : this()
+
+
+		public void Initialize( Stack parent )
 		{
-			_CurrentCell = cell;
-			_CurrentCell.Focused += EntryCell_Focused;
+			parent.BringSubviewToFront(this);
+			UpdateConstraintsIfNeeded();
+			LayoutIfNeeded();
 		}
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-		// public static AiEditText Create( View view, AiEntryCell cell, int id )
-		// {
-		// 	AiEditText result = view.FindViewById<AiEditText>(id) ?? throw new NullReferenceException(nameof(id));
-		// 	result.SetCell(cell);
-		// 	return result;
-		// }
 		protected override void Dispose( bool disposing )
 		{
 			base.Dispose(disposing);
@@ -59,9 +57,10 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			EditingChanged -= TextField_EditingChanged;
 			EditingDidBegin -= ValueField_EditingDidBegin;
 			EditingDidEnd -= ValueField_EditingDidEnd;
-			_CurrentCell.Focused -= EntryCell_Focused;
+			if ( _CurrentCell is not null ) _CurrentCell.Focused -= EntryCell_Focused;
 			ShouldReturn = null;
 		}
+
 
 		public void SetEnabledAppearance( bool isEnabled )
 		{
@@ -77,6 +76,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			BorderStyle = UITextBorderStyle.None;
 			AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 			ReturnKeyType = UIReturnKeyType.Done;
+
+			BackgroundColor = UIColor.Clear;
 
 			// SetSingleLine(false);
 			// Ellipsize = null; // TextUtils.TruncateAt.End;
@@ -99,6 +100,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public void SetCell( AiEntryCell cell )
 		{
 			_CurrentCell = cell;
+			_CurrentCell.Focused += EntryCell_Focused;
 			// InputType = _CurrentCell.Keyboard.ToInputType();
 		}
 
@@ -129,6 +131,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 			UITextPosition start = BeginningOfDocument;
 			UITextPosition end = EndOfDocument;
+			if ( _CurrentCell is null ) { return; }
+
 			switch ( _CurrentCell.OnSelectAction )
 			{
 				case SelectAction.None:
@@ -160,6 +164,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public bool UpdateSelectAction()
 		{
 			// https://stackoverflow.com/questions/34922331/getting-and-setting-cursor-position-of-uitextfield-and-uitextview-in-swift
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 
 			ClearsOnBeginEditing = _CurrentCell.OnSelectAction switch
 								   {
@@ -172,7 +177,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			return true;
 		}
 
-		public bool UpdateText() => UpdateText(_CurrentCell.ValueText);
+		public bool UpdateText() => UpdateText(_CurrentCell?.ValueText);
 		public bool UpdateText( string? text )
 		{
 			Text = text;
@@ -182,28 +187,36 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public bool UpdateFontSize()
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			ContentScaleFactor = _CurrentCell.ValueTextConfig.FontSize.ToNFloat();
 
 			return true;
 		}
 		public bool UpdateTextColor()
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			TextColor = _CurrentCell.ValueTextConfig.Color.ToUIColor();
 
 			return true;
 		}
 		public bool UpdateFont()
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			string? family = _CurrentCell.ValueTextConfig.FontFamily;
 			FontAttributes attr = _CurrentCell.ValueTextConfig.FontAttributes;
 			var size = (float) _CurrentCell.ValueTextConfig.FontSize;
 
 			Font = FontUtility.CreateNativeFont(family, size, attr);
-
+			
+			// make the view height fit font size
+			nfloat contentH = IntrinsicContentSize.Height;
+			CGRect bounds = Bounds;
+			Bounds = new CGRect(0, 0, bounds.Width, contentH);
 			return UpdatePlaceholder();
 		}
 		public bool UpdateTextAlignment()
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			TextAlignment alignment = _CurrentCell.ValueTextConfig.TextAlignment;
 			TextAlignment = alignment.ToUITextAlignment();
 
@@ -212,36 +225,46 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public bool UpdateKeyboard()
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			this.ApplyKeyboard(_CurrentCell.Keyboard);
 			return true;
 		}
 		public bool UpdateIsPassword()
 		{
 			// https://stackoverflow.com/a/6578848/9530917
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			SecureTextEntry = _CurrentCell.IsPassword;
 			return true;
 		}
 		public bool UpdatePlaceholder()
 		{
 			// https://stackoverflow.com/a/23610570/9530917
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			UIColor placeholderColor = _CurrentCell.GetPlaceholderColor().ToUIColor();
 			AttributedPlaceholder = new NSAttributedString(_CurrentCell.Placeholder, Font, placeholderColor);
 			return true;
 		}
-		public bool UpdateAccentColor() =>
-			ChangeTextViewBack(_CurrentCell.GetAccentColor());
+
+
+		public bool UpdateAccentColor() => ChangeTextViewBack(_CurrentCell?.GetAccentColor() ?? Color.Accent);
 		public bool ChangeTextViewBack( Color accent )
 		{
 			TintColor = accent.ToUIColor();
 			return true;
 		}
-		protected void ValueFieldOnTouchUpInside( object sender, EventArgs e ) { PerformSelectAction(); }
-		protected void TextField_EditingChanged( object sender, EventArgs e ) { _CurrentCell.ValueText = Text; }
-		protected void ValueField_EditingDidBegin( object sender, EventArgs e ) { _HasFocus = true; }
 
+
+		protected void ValueFieldOnTouchUpInside( object sender, EventArgs e ) { PerformSelectAction(); }
+		protected void TextField_EditingChanged( object sender, EventArgs e )
+		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
+			_CurrentCell.ValueText = Text;
+		}
+		protected void ValueField_EditingDidBegin( object sender, EventArgs e ) { _HasFocus = true; }
 		protected void ValueField_EditingDidEnd( object sender, EventArgs e )
 		{
 			if ( !_HasFocus ) { return; }
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 
 			ResignFirstResponder();
 			_CurrentCell.SendCompleted();
@@ -250,6 +273,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		protected void EntryCell_Focused( object sender, EventArgs e ) { BecomeFirstResponder(); }
 		protected bool OnShouldReturn( UITextField view )
 		{
+			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 			_HasFocus = false;
 			ResignFirstResponder();
 			_CurrentCell.SendCompleted();
@@ -261,6 +285,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
+			if ( _CellRenderer is null ) throw new NullReferenceException(nameof(_CellRenderer));
+
 			if ( e.PropertyName == ValueTextCellBase.ValueTextProperty.PropertyName ) { return UpdateText(); }
 
 			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
@@ -297,6 +323,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
+			if ( _CellRenderer is null ) throw new NullReferenceException(nameof(_CellRenderer));
+
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }

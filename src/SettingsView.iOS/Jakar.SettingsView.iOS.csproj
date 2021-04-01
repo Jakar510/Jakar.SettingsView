@@ -9,13 +9,15 @@
     <RootNamespace>Jakar.SettingsView.iOS</RootNamespace>
     <AssemblyName>SettingsView.iOS</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>TRACE;__IOS__;__MOBILE__;__UNIFIED__;DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -27,6 +29,7 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +46,7 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -51,6 +55,11 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseCell\BaseAccessoryCell.cs" />
+    <Compile Include="BaseCell\BaseDescriptiveTitleCell.cs" />
+    <Compile Include="BaseCell\BaseValueCell.cs" />
+    <Compile Include="Controls\Manager\BaseViewManager.cs" />
+    <Compile Include="Interfaces\IRenderAccessory.cs" />
     <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />
     <Compile Include="BaseCell\CellBaseView.cs" />
     <Compile Include="Cells\AccessoryCells\CheckboxCellRenderer.cs" />
@@ -71,6 +80,7 @@
     <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
     <Compile Include="Controls\Core\AiEditText.cs" />
     <Compile Include="Controls\Core\BaseTextView.cs" />
+    <Compile Include="Controls\ButtonView.cs" />
     <Compile Include="Controls\Core\DescriptionView.cs" />
     <Compile Include="Controls\Core\HintView.cs" />
     <Compile Include="Controls\IconView.cs" />
@@ -79,8 +89,11 @@
     <Compile Include="Controls\SimpleCheck.cs" />
     <Compile Include="Controls\Core\TitleView.cs" />
     <Compile Include="Controls\Core\ValueView.cs" />
+    <Compile Include="Controls\Stack.cs" />
+    <Compile Include="Interfaces\IControl.cs" />
     <Compile Include="Interfaces\IEntryCellRenderer.cs" />
     <Compile Include="Controls\CheckBox.cs" />
+    <Compile Include="Interfaces\IRenderValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeyboardInsetTracker.cs" />
     <Compile Include="SettingsTableSource.cs" />
@@ -104,8 +117,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AiForms.Effects">
+      <Version>1.6.10</Version>
+    </PackageReference>
     <PackageReference Include="Jakar.Api">
-      <Version>1.0.1</Version>
+      <Version>1.0.6</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>

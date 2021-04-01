@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Misc;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -14,7 +17,19 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 	public class TitleView : BaseTextView
 	{
 		private TitleCellBase _CurrentCell => _Renderer.Cell as TitleCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
-		public TitleView( BaseCellView renderer ) : base(renderer) { }
+
+		public TitleView( BaseCellView renderer ) : base(renderer)
+		{
+			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+		}
+
+		public override void Initialize( Stack parent )
+		{
+			parent.AddArrangedSubview(this);
+			
+			base.Initialize(parent);
+		}
 
 
 		public override void SetUsed( Cell cell ) { SetUsed(cell.IsDescriptiveTitleCell()); }

@@ -1,7 +1,10 @@
 ﻿using System;
+using CoreGraphics;
 using Foundation;
+using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.Shared.CellBase;
 using UIKit;
 using Xamarin.Forms;
@@ -9,6 +12,7 @@ using Xamarin.Forms.Platform.iOS;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using EntryCellRenderer = Jakar.SettingsView.iOS.Cells.EntryCellRenderer;
 
+#nullable enable
 [assembly: ExportRenderer(typeof(AiEntryCell), typeof(EntryCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
@@ -19,30 +23,25 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)]
 	public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
 
-	/// <summary>
-	/// Entry cell view.
-	/// </summary>
 	[Preserve(AllMembers = true)]
-	public class EntryCellView : BaseCellView
+	public class EntryCellView : BaseValueCell<AiEditText>
 	{
-		private AiEntryCell _EntryCell => Cell as AiEntryCell;
-		internal UITextField ValueField;
-		private UIView _FieldWrapper;
-		private bool _hasFocus = false;
+		private AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
+		internal UITextField ValueField { get; set; }
+		private UIView _FieldWrapper { get; set; }
+		private bool _hasFocus;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Jakar.SettingsView.iOS.Cells.EntryCellView"/> class.
-		/// </summary>
-		/// <param name="formsCell">Forms cell.</param>
+
 		public EntryCellView( Cell formsCell ) : base(formsCell)
 		{
-			ValueField = new UITextField()
+			ValueField = new UITextField
 						 {
-							 BorderStyle = UITextBorderStyle.None
+							 BorderStyle = UITextBorderStyle.None,
+							 AutoresizingMask = UIViewAutoresizing.FlexibleDimensions,
+							 ReturnKeyType = UIReturnKeyType.Done
 						 };
-			ValueField.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
-			ValueField.ReturnKeyType = UIReturnKeyType.Done;
-			ValueField.EditingChanged += _textField_EditingChanged;
+
+			ValueField.EditingChanged += TextField_EditingChanged;
 			ValueField.EditingDidBegin += ValueField_EditingDidBegin;
 			ValueField.EditingDidEnd += ValueField_EditingDidEnd;
 			ValueField.ShouldReturn = OnShouldReturn;
@@ -50,24 +49,21 @@ namespace Jakar.SettingsView.iOS.Cells
 			_EntryCell.Focused += EntryCell_Focused;
 
 
-			_FieldWrapper = new UIView();
-			_FieldWrapper.AutosizesSubviews = true;
+			_FieldWrapper = new UIView
+							{
+								AutosizesSubviews = true
+							};
 			_FieldWrapper.SetContentHuggingPriority(100f, UILayoutConstraintAxis.Horizontal);
 			_FieldWrapper.SetContentCompressionResistancePriority(100f, UILayoutConstraintAxis.Horizontal);
 
 			_FieldWrapper.AddSubview(ValueField);
-			_ContentStack.AddArrangedSubview(_FieldWrapper);
+			_ValueStack.AddArrangedSubview(_FieldWrapper);
 		}
 
-		/// <summary>
-		/// Updates the cell.
-		/// </summary>
+
 		public override void UpdateCell( UITableView tableView )
 		{
 			base.UpdateCell(tableView);
-
-			if ( ValueField is null )
-				return; // For HotReload
 
 			UpdateValueText();
 			UpdateValueTextColor();
@@ -78,11 +74,6 @@ namespace Jakar.SettingsView.iOS.Cells
 			UpdateTextAlignment();
 		}
 
-		/// <summary>
-		/// Cells the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
@@ -101,11 +92,6 @@ namespace Jakar.SettingsView.iOS.Cells
 			else if ( e.PropertyName == AiEntryCell.IsPasswordProperty.PropertyName ) { UpdateIsPassword(); }
 		}
 
-		/// <summary>
-		/// Parents the property changed.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
 		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.ParentPropertyChanged(sender, e);
@@ -119,44 +105,27 @@ namespace Jakar.SettingsView.iOS.Cells
 					  e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { UpdateWithForceLayout(UpdateValueTextFont); }
 		}
 
-		/// <summary>
-		/// Rows the selected.
-		/// </summary>
-		/// <param name="tableView">Table view.</param>
-		/// <param name="indexPath">Index path.</param>
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath ) { ValueField.BecomeFirstResponder(); }
 
-		/// <summary>
-		/// Dispose the specified disposing.
-		/// </summary>
-		/// <returns>The dispose.</returns>
-		/// <param name="disposing">If set to <c>true</c> disposing.</param>
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
-				ValueField.EditingChanged -= _textField_EditingChanged;
+				ValueField.EditingChanged -= TextField_EditingChanged;
 				ValueField.EditingDidBegin -= ValueField_EditingDidBegin;
 				ValueField.EditingDidEnd -= ValueField_EditingDidEnd;
 				_EntryCell.Focused -= EntryCell_Focused;
 				ValueField.ShouldReturn = null;
 				ValueField.RemoveFromSuperview();
 				ValueField.Dispose();
-				ValueField = null;
 
-				_ContentStack?.RemoveArrangedSubview(_FieldWrapper);
+				_ValueStack.RemoveArrangedSubview(_FieldWrapper);
 				_FieldWrapper.Dispose();
-
-				_FieldWrapper = null;
 			}
 
 			base.Dispose(disposing);
 		}
 
-		/// <summary>
-		/// Sets the enabled appearance.
-		/// </summary>
-		/// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
 		protected override void SetEnabledAppearance( bool isEnabled )
 		{
 			if ( isEnabled ) { ValueField.Alpha = 1.0f; }
@@ -173,17 +142,17 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateValueTextFont()
 		{
-			var family = _EntryCell.ValueTextFontFamily ?? CellParent.CellValueTextFontFamily;
-			var attr = _EntryCell.ValueTextFontAttributes ?? CellParent.CellValueTextFontAttributes;
+			ValueCellBase.ValueTextConfiguration config = _EntryCell.ValueTextConfig;
+			string? family = config.FontFamily;
+			FontAttributes attr = config.FontAttributes;
 
-			if ( _EntryCell.ValueTextFontSize > 0 ) { ValueField.Font = FontUtility.CreateNativeFont(family, (float) _EntryCell.ValueTextFontSize, attr); }
-			else if ( CellParent is not null ) { ValueField.Font = FontUtility.CreateNativeFont(family, (float) CellParent.CellValueTextFontSize, attr); }
+			ValueField.Font = FontUtility.CreateNativeFont(family, config.FontSize.ToFloat(), attr);
 
 			//make the view height fit font size
-			var contentH = ValueField.IntrinsicContentSize.Height;
-			var bounds = ValueField.Bounds;
-			ValueField.Bounds = new CoreGraphics.CGRect(0, 0, bounds.Width, contentH);
-			_FieldWrapper.Bounds = new CoreGraphics.CGRect(0, 0, _FieldWrapper.Bounds.Width, contentH);
+			nfloat contentH = ValueField.IntrinsicContentSize.Height;
+			CGRect bounds = ValueField.Bounds;
+			ValueField.Bounds = new CGRect(0, 0, bounds.Width, contentH);
+			_FieldWrapper.Bounds = new CGRect(0, 0, _FieldWrapper.Bounds.Width, contentH);
 		}
 
 		private void UpdateValueTextColor()
@@ -220,12 +189,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private void UpdateIsPassword() { ValueField.SecureTextEntry = _EntryCell.IsPassword; }
 
 
-		private void _textField_EditingChanged( object sender, EventArgs e ) { _EntryCell.ValueText = ValueField.Text; }
-
-
+		private void TextField_EditingChanged( object sender, EventArgs e ) { _EntryCell.ValueText = ValueField.Text; }
 		private void ValueField_EditingDidBegin( object sender, EventArgs e ) { _hasFocus = true; }
-
-
 		private void ValueField_EditingDidEnd( object sender, EventArgs e )
 		{
 			if ( !_hasFocus ) { return; }
@@ -234,7 +199,6 @@ namespace Jakar.SettingsView.iOS.Cells
 			_EntryCell.SendCompleted();
 			_hasFocus = false;
 		}
-
 		private void EntryCell_Focused( object sender, EventArgs e ) { ValueField.BecomeFirstResponder(); }
 
 

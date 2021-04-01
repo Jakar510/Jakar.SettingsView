@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using Foundation;
-using UIKit;
 
 namespace Jakar.SettingsView.iOS.Interfaces
 {

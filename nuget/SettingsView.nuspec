@@ -4,7 +4,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
 	<metadata>
 		<id>Jakar.SettingsView</id>
-		<version>1.0.6</version>
+		<version>2.0.0-beta</version>
 		<title>SettingsView for Xamarin.Forms</title>
 		<authors>Tyler Stegmaier, kamu</authors>
 		<owners>Jakar510/Jakar</owners>
@@ -12,14 +12,36 @@
 		<iconUrl>https://github.com/Jakar510/Jakar.SettingsView/blob/master/images/icon.png</iconUrl>
 		<license type="file">LICENSE.txt</license>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<copyright>Copyright (c) 2017 kamu</copyright>
+		<copyright>
+Copyright (c) 2017 kamu 
+Copyright (c) 2021 Tyler Stegmaier
+		</copyright>
 		<icon>icon.png</icon>
 		<description>
 			This is a flexible TableView specialized in settings for Android / iOS.
-			There are various cells such as (LabelCell, ButtonCell, CommandCell, SwitchCell, CheckboxCell, RadioCell, PickerCell, EntryCell, NumberPickerCell, TimePickerCell, DatePickerCell)
+			There are various cells such as (EntryCell, LabelCell, ButtonCell, CommandCell, SwitchCell, CheckboxCell, RadioCell, PickerCell, TextPickerCell, NumberPickerCell, TimePickerCell, DatePickerCell)
 		</description>
 		<releaseNotes>
-fix muak/AiForms.SettingsView#115
+			Complete revamp of API and structure.
+
+			All supported cells now align correctly.
+
+			Some event handlers added, with more coming.
+			Removed unnecessary code and attributes for all cells.
+
+			Popup Cells ( PickerCell, TextPickerCell, NumberPickerCell, TimePickerCell, DatePickerCell ) support styling for the popups where applicable and value change event added.
+
+			Accessory Cells ( SwitchCell, CheckboxCell, RadioCell ) value change event added.
+
+			Checkable Cells ( SwitchCell, CheckboxCell ) now use a single consolidated Checked attribute. Previously it was On and Checked. Also, value change event added.
+
+			EntryCell has a value change event added.
+
+			Command Cells ( ButtonCell, CommandCell ) now support short and long press clicks. 
+			
+			ButtonCell is now a native Button on each platform, instead of a clone of the CommandCell.
+
+			And lastly, now uses AndroidX libraries natively.
 		</releaseNotes>
 		<tags>Xamarin.Forms TableView Cell Setting Configuration Option ListView UITableView RecyclerView ReOrder DragDrop</tags>
 		<language>en-US</language>
@@ -35,23 +57,37 @@ fix muak/AiForms.SettingsView#115
 			-->
 			<group targetFramework="netstandard2.1">
 				<dependency id="Xamarin.Forms"
-							version="4.7.0.1351" />
+							version="4.8.0.1821" />
+				<dependency id="Jakar.Api"
+							version="1.0.6" />				
 			</group>
+			
 			<group targetFramework="portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10">
 				<dependency id="Xamarin.Forms"
-							version="4.7.0.1351" />
+							version="4.8.0.1821" />
+				<dependency id="Jakar.Api"
+							version="1.0.6" />
 			</group>
+			
 			<group targetFramework="MonoAndroid">
 				<dependency id="Xamarin.Forms"
-							version="4.7.0.1351" />
+							version="4.8.0.1821" />
+				<dependency id="Jakar.Api"
+							version="1.0.6" />
 			</group>
+			
 			<group targetFramework="MonoTouch">
 				<dependency id="Xamarin.Forms"
-							version="4.7.0.1351" />
+							version="4.8.0.1821" />
+				<dependency id="Jakar.Api"
+							version="1.0.6" />
 			</group>
+			
 			<group targetFramework="Xamarin.iOS1.0">
 				<dependency id="Xamarin.Forms"
-							version="4.7.0.1351" />
+							version="4.8.0.1821" />
+				<dependency id="Jakar.Api"
+							version="1.0.6" />
 			</group>
 		</dependencies>
 	</metadata>

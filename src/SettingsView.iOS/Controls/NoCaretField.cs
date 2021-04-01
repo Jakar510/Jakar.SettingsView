@@ -1,6 +1,7 @@
 ﻿using CoreGraphics;
 using UIKit;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
@@ -11,6 +12,6 @@ namespace Jakar.SettingsView.iOS.Controls
 			BorderStyle = UITextBorderStyle.None;
 			BackgroundColor = UIColor.Clear;
 		}
-		public override CGRect GetCaretRectForPosition( UITextPosition position ) => new();
+		public override CGRect GetCaretRectForPosition( UITextPosition? position ) => new();
 	}
 }

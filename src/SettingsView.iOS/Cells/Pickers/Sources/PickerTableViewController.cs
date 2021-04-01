@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Foundation;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 namespace Jakar.SettingsView.iOS.Cells.Sources
 {
 	[Preserve(AllMembers = true)]
@@ -18,7 +19,7 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 		protected PickerCellView _PickerCellNative { get; set; }
 		protected Dictionary<int, object> _SelectedCache { get; } = new();
 		protected Shared.sv.SettingsView _Parent => _PickerCell.Parent;
-		protected IList _Source => _PickerCell.ItemsSource;
+		protected IList _Source => _PickerCell.ItemsSource ?? throw new NullReferenceException(nameof(_PickerCell.ItemsSource));
 		protected UIColor _AccentColor => _PickerCell.Prompt.Properties.AccentColor.ToUIColor();
 		protected UIColor _SeparatorColor => _PickerCell.Prompt.Properties.SeparatorColor.ToUIColor();
 		protected UIColor _BackgroundColor => _PickerCell.Prompt.Properties.BackgroundColor.ToUIColor();
@@ -29,10 +30,10 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		protected UIColor _DetailColor => _PickerCell.Prompt.Properties.ItemDescriptionColor.ToUIColor();
 		protected nfloat _DetailFontSize => _PickerCell.Prompt.Properties.ItemDescriptionFontSize.ToNFloat();
-		private UITableView _tableView;
+		private readonly UITableView _tableView;
 		protected INavigation? _ShellNavigation { get; set; }
 
-		internal PickerTableViewController( PickerCellView pickerCellView, UITableView tableView, INavigation shellNavigation = null ) : base(UITableViewStyle.Grouped)
+		internal PickerTableViewController( PickerCellView pickerCellView, UITableView tableView, INavigation? shellNavigation = null ) : base(UITableViewStyle.Grouped)
 		{
 			_PickerCell = pickerCellView.Cell as PickerCell ?? throw new NullReferenceException(nameof(pickerCellView.Cell));
 			_PickerCellNative = pickerCellView;
@@ -45,10 +46,11 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		public override UITableViewCell GetCell( UITableView tableView, NSIndexPath indexPath )
 		{
-			var reusableCell = tableView.DequeueReusableCell("pikcercell");
+			UITableViewCell? reusableCell = tableView.DequeueReusableCell(nameof(PickerCell));
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if ( reusableCell is null )
 			{
-				reusableCell = new UITableViewCell(UITableViewCellStyle.Subtitle, "pickercell");
+				reusableCell = new UITableViewCell(UITableViewCellStyle.Subtitle, nameof(PickerCell));
 
 				reusableCell.TextLabel.TextColor = _TitleColor;
 				reusableCell.TextLabel.Font = reusableCell.TextLabel.Font.WithSize(_TitleFontSize);
@@ -58,9 +60,9 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 				reusableCell.TintColor = _AccentColor;
 			}
 
-			var text = _PickerCell.DisplayValue(_Source[indexPath.Row]);
+			object? text = _PickerCell.DisplayValue(_Source[indexPath.Row]);
 			reusableCell.TextLabel.Text = $"{text}";
-			var detail = _PickerCell.SubDisplayValue(_Source[indexPath.Row]);
+			object? detail = _PickerCell.SubDisplayValue(_Source[indexPath.Row]);
 			reusableCell.DetailTextLabel.Text = $"{detail}";
 
 			reusableCell.Accessory = _SelectedCache.ContainsKey(indexPath.Row)
@@ -78,7 +80,7 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			var cell = tableView.CellAt(indexPath);
+			UITableViewCell cell = tableView.CellAt(indexPath);
 
 			if ( _PickerCell.MaxSelectedNumber == 1 )
 			{
@@ -147,11 +149,12 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		public void InitializeScroll()
 		{
-			IList selectedList = _PickerCell.MergedSelectedList;
+			IList? selectedList = _PickerCell.MergedSelectedList;
 
+			if ( selectedList is null ) return;
 			foreach ( var item in selectedList )
 			{
-				var idx = _Source.IndexOf(item);
+				int idx = _Source.IndexOf(item);
 				if ( idx < 0 ) { continue; }
 
 				_SelectedCache[idx] = _Source[idx];
@@ -159,32 +162,31 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 					 _SelectedCache.Count >= _PickerCell.MaxSelectedNumber ) { break; }
 			}
 
-			if ( selectedList.Count > 0 )
-			{
-				var idx = _Source.IndexOf(selectedList[0]);
-				if ( idx < 0 ) { return; }
+			if ( selectedList.Count <= 0 ) return;
+			int index = _Source.IndexOf(selectedList[0]);
+			if ( index < 0 ) { return; }
 
-				BeginInvokeOnMainThread(() =>
-										{
-											TableView.ScrollToRow(NSIndexPath.Create(new nint[]
-																					 {
-																						 0,
-																						 idx
-																					 }
-																					),
-																  UITableViewScrollPosition.Middle,
-																  false
-																 );
-										}
-									   );
-			}
+			BeginInvokeOnMainThread(() =>
+									{
+										TableView.ScrollToRow(NSIndexPath.Create(new nint[]
+																				 {
+																					 0,
+																					 index
+																				 }
+																				),
+															  UITableViewScrollPosition.Middle,
+															  false
+															 );
+									}
+								   );
 		}
 
 		public override void ViewWillDisappear( bool animated )
 		{
+			_PickerCell.SelectedItems ??= new List<object>();
 			_PickerCell.SelectedItems.Clear();
 
-			foreach ( var kv in _SelectedCache ) { _PickerCell.SelectedItems.Add(kv.Value); }
+			foreach ( KeyValuePair<int, object> kv in _SelectedCache ) { _PickerCell.SelectedItems.Add(kv.Value); }
 
 			_PickerCell.SelectedItem = _SelectedCache.Values.FirstOrDefault();
 
@@ -197,11 +199,7 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing )
-			{
-				_SelectedCache.Clear();
-				_tableView = null;
-			}
+			if ( disposing ) { _SelectedCache.Clear(); }
 
 			base.Dispose(disposing);
 		}

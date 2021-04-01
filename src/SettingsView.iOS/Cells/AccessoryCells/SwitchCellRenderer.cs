@@ -1,6 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls;
+using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -15,39 +19,29 @@ namespace Jakar.SettingsView.iOS.Cells
 	public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
 	[Foundation.Preserve(AllMembers = true)]
-	public class SwitchCellView : BaseCellView 
+	public class SwitchCellView : BaseAccessoryCell<AiSwitch>
 	{
-		private AiSwitchCell _SwitchCell => Cell as AiSwitchCell;
-		private UISwitch _switch;
+		private AiSwitchCell _SwitchCell => Cell as AiSwitchCell ?? throw new NullReferenceException(nameof(_SwitchCell));
 
-		public SwitchCellView( Cell formsCell ) : base(formsCell)
+		public SwitchCellView( Cell formsCell ) : base(formsCell) => _Accessory.ValueChanged += Switch_ValueChanged;
+
+		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			_switch = new UISwitch();
-			_switch.ValueChanged += _switch_ValueChanged;
-
-			AccessoryView = _switch;
-			EditingAccessoryView = _switch;
-		}
-
-		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 
-			if ( e.PropertyName == CheckableCellBase.CheckedProperty.PropertyName ) { UpdateOn(); }
+			else if ( e.PropertyName == CheckableCellBase.CheckedProperty.PropertyName ) { UpdateOn(); }
+			else { base.CellPropertyChanged(sender, e); }
 		}
 
-		public override void ParentPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			else { base.ParentPropertyChanged(sender, e); }
 		}
 
 		public override void UpdateCell( UITableView tableView )
 		{
 			base.UpdateCell(tableView);
-			if ( _switch is null )
-				return; // for HotReload
 
 			UpdateAccentColor();
 			UpdateOn();
@@ -55,37 +49,41 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing )
-			{
-				_switch.ValueChanged -= _switch_ValueChanged;
-				AccessoryView = null;
-				_switch?.Dispose();
-				_switch = null;
-			}
+			if ( disposing ) { _Accessory.ValueChanged -= Switch_ValueChanged; }
 
 			base.Dispose(disposing);
 		}
 
 		protected override void SetEnabledAppearance( bool isEnabled )
 		{
-			if ( isEnabled ) { _switch.Alpha = 1.0f; }
-			else { _switch.Alpha = 0.3f; }
+			_Accessory.Alpha = isEnabled
+								   ? SVConstants.Cell.ENABLED_ALPHA
+								   : SVConstants.Cell.DISABLED_ALPHA;
 
 			base.SetEnabledAppearance(isEnabled);
 		}
 
-		private void _switch_ValueChanged( object sender, EventArgs e ) { _SwitchCell.Checked = _switch.On; }
+		private void Switch_ValueChanged( object sender, EventArgs e )
+		{
+			_SwitchCell.Checked = _Accessory.On;
+			_SwitchCell.ValueChangedHandler.SendValueChanged(_Accessory.On);
+		}
 
 		private void UpdateOn()
 		{
-			if ( _switch.On != _SwitchCell.Checked ) { _switch.On = _SwitchCell.Checked; }
+			if ( _Accessory.On != _SwitchCell.Checked ) { _Accessory.On = _SwitchCell.Checked; }
 		}
 
-		private void UpdateAccentColor()
-		{
-			if ( _SwitchCell.AccentColor != Color.Default ) { _switch.OnTintColor = _SwitchCell.AccentColor.ToUIColor(); }
-			else if ( CellParent is not null &&
-					  CellParent.CellAccentColor != Color.Default ) { _switch.OnTintColor = CellParent.CellAccentColor.ToUIColor(); }
-		}
+		private void UpdateAccentColor() { _Accessory.OnTintColor = _SwitchCell.GetAccentColor().ToUIColor(); }
+	}
+
+	public class AiSwitch : UISwitch, IRenderAccessory
+	{
+		public void Initialize( Stack parent ) { throw new NotImplementedException(); }
+		public void Update() { throw new NotImplementedException(); }
+		public bool Update( object sender, PropertyChangedEventArgs e ) => throw new NotImplementedException();
+		public bool UpdateParent( object sender, PropertyChangedEventArgs e ) => throw new NotImplementedException();
+		public void Enable() { throw new NotImplementedException(); }
+		public void Disable() { throw new NotImplementedException(); }
 	}
 }

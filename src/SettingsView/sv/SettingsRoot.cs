@@ -11,9 +11,9 @@ namespace Jakar.SettingsView.Shared.sv
 		public SettingsRoot() => CollectionChanged += OnCollectionChanged;
 		~SettingsRoot() { CollectionChanged -= OnCollectionChanged; }
 		
-		public event EventHandler<NotifyCollectionChangedEventArgs> SectionCollectionChanged;
+		public event EventHandler<NotifyCollectionChangedEventArgs>? SectionCollectionChanged;
 		
-		public event PropertyChangedEventHandler SectionPropertyChanged;
+		public event PropertyChangedEventHandler? SectionPropertyChanged;
 
 		protected void ChildCollectionChanged( object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs ) { SectionCollectionChanged?.Invoke(sender, notifyCollectionChangedEventArgs); }
 

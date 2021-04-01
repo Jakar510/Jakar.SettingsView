@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using Jakar.SettingsView.iOS.Extensions;
+using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;

@@ -28,7 +28,7 @@ using TextChangedEventArgs = Android.Text.TextChangedEventArgs;
 namespace Jakar.SettingsView.Droid.Controls
 {
 	[Preserve(AllMembers = true)]
-	public class AiEditText : EditText, IUpdateEntryCell<IEntryCellRenderer, AColor, AiEntryCell>
+	public class AiEditText : EditText, IUpdateEntryCell<IEntryCellRenderer, AColor>, IUpdateCell<AColor, AiEntryCell>
 	{
 		public AColor DefaultTextColor { get; }
 		public float DefaultFontSize { get; }

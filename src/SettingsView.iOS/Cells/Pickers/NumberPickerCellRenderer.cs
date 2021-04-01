@@ -11,6 +11,7 @@ using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;
 
+#nullable enable
 [assembly: ExportRenderer(typeof(NumberPickerCell), typeof(NumberPickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
@@ -23,18 +24,20 @@ namespace Jakar.SettingsView.iOS.Cells
 	{
 		public UITextField DummyField { get; set; }
 
-		private NumberPickerSource _model;
-		private UILabel _titleLabel;
-		private UIPickerView _picker;
-		private ICommand _command;
+		private NumberPickerSource? _Model { get; set; }
+		private UILabel? _TitleLabel { get; set; }
+		private UIPickerView? _Picker { get; set; }
+		private ICommand? _Command { get; set; }
 
-		private NumberPickerCell _NumberPikcerCell => Cell as NumberPickerCell;
+		private NumberPickerCell _NumberPickerCell => Cell as NumberPickerCell ?? throw new NullReferenceException(nameof(_NumberPickerCell));
 
 		public NumberPickerCellView( Cell formsCell ) : base(formsCell)
 		{
-			DummyField = new NoCaretField();
-			DummyField.BorderStyle = UITextBorderStyle.None;
-			DummyField.BackgroundColor = UIColor.Clear;
+			DummyField = new NoCaretField
+						 {
+							 BorderStyle = UITextBorderStyle.None,
+							 BackgroundColor = UIColor.Clear
+						 };
 			ContentView.AddSubview(DummyField);
 			ContentView.SendSubviewToBack(DummyField);
 
@@ -62,8 +65,6 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void UpdateCell( UITableView tableView )
 		{
 			base.UpdateCell(tableView);
-			if ( DummyField is null )
-				return; // For HotReload
 
 			UpdateNumberList();
 			UpdateNumber();
@@ -75,17 +76,20 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( disposing )
 			{
-				_model.UpdatePickerFromModel -= Model_UpdatePickerFromModel;
-				DummyField.RemoveFromSuperview();
-				DummyField?.Dispose();
-				DummyField = null;
-				_titleLabel?.Dispose();
-				_titleLabel = null;
-				_model?.Dispose();
-				_model = null;
-				_picker?.Dispose();
-				_picker = null;
-				_command = null;
+				if ( _Model != null )
+				{
+					_Model.UpdatePickerFromModel -= Model_UpdatePickerFromModel;
+					DummyField.RemoveFromSuperview();
+					DummyField.Dispose();
+					_TitleLabel?.Dispose();
+					_TitleLabel = null;
+					_Model?.Dispose();
+				}
+
+				_Model = null;
+				_Picker?.Dispose();
+				_Picker = null;
+				_Command = null;
 			}
 
 			base.Dispose(disposing);
@@ -93,12 +97,14 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void SetUpPicker()
 		{
-			_picker = new UIPickerView();
+			_Picker = new UIPickerView();
 
-			var width = UIScreen.MainScreen.Bounds.Width;
+			nfloat width = UIScreen.MainScreen.Bounds.Width;
 
-			_titleLabel = new UILabel();
-			_titleLabel.TextAlignment = UITextAlignment.Center;
+			_TitleLabel = new UILabel
+						  {
+							  TextAlignment = UITextAlignment.Center
+						  };
 
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
 						  {
@@ -106,22 +112,13 @@ namespace Jakar.SettingsView.iOS.Cells
 							  Translucent = true
 						  };
 			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
-												   ( o, e ) =>
-												   {
-													   DummyField.ResignFirstResponder();
-													   Select(_model.PreSelectedItem);
-												   }
+												   CancelHandler
 												  );
 
-			var labelButton = new UIBarButtonItem(_titleLabel);
+			var labelButton = new UIBarButtonItem(_TitleLabel);
 			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
-												 ( o, a ) =>
-												 {
-													 _model.OnUpdatePickerFormModel();
-													 DummyField.ResignFirstResponder();
-													 _command?.Execute(_model.SelectedItem);
-												 }
+												 DoneHandler
 												);
 
 			toolbar.SetItems(new[]
@@ -135,64 +132,77 @@ namespace Jakar.SettingsView.iOS.Cells
 							 false
 							);
 
-			DummyField.InputView = _picker;
+			DummyField.InputView = _Picker;
 			DummyField.InputAccessoryView = toolbar;
 
-			_model = new NumberPickerSource();
-			_picker.Model = _model;
+			_Model = new NumberPickerSource();
+			_Picker.Model = _Model;
 
-			_model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
+			_Model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
+		}
+		private void CancelHandler( object o, EventArgs e )
+		{
+			DummyField.ResignFirstResponder();
+			Select(_Model?.PreSelectedItem ?? -1);
+		}
+		private void DoneHandler( object o, EventArgs a )
+		{
+			if ( _Model is null ) return;
+			_Model.OnUpdatePickerFormModel();
+			DummyField.ResignFirstResponder();
+			_Command?.Execute(_Model.SelectedItem);
 		}
 
 		private void UpdateNumber()
 		{
-			Select(_NumberPikcerCell.Number);
-			ValueLabel.Text = _NumberPikcerCell.Number.ToString();
+			Select(_NumberPickerCell.Number);
+			ValueLabel.Text = _NumberPickerCell.Number.ToString();
 		}
 
 		private void UpdateNumberList()
 		{
-			_model.SetNumbers(_NumberPikcerCell.Min, _NumberPikcerCell.Max);
-			Select(_NumberPikcerCell.Number);
+			_Model?.SetNumbers(_NumberPickerCell.Min, _NumberPickerCell.Max);
+			Select(_NumberPickerCell.Number);
 		}
 
 		private void UpdateTitle()
 		{
-			_titleLabel.Text = _NumberPikcerCell.Prompt.Properties.Title;
-			_titleLabel.SizeToFit();
-			_titleLabel.Frame = new CGRect(0, 0, 160, 44);
+			if ( _TitleLabel is null ) return;
+			_TitleLabel.Text = _NumberPickerCell.Prompt.Properties.Title;
+			_TitleLabel.SizeToFit();
+			_TitleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}
 
-		private void UpdateCommand() { _command = _NumberPikcerCell.SelectedCommand; }
+		private void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
 
 		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
-			_NumberPikcerCell.Number = _model.SelectedItem;
-			ValueLabel.Text = _model.SelectedItem.ToString();
+			if ( _Model is null ) return;
+			_NumberPickerCell.Number = _Model.SelectedItem;
+			ValueLabel.Text = _Model.SelectedItem.ToString();
 		}
 
 		public override void LayoutSubviews()
 		{
 			base.LayoutSubviews();
-			if ( DummyField is null )
-				return; // For HotReload
 
 			DummyField.Frame = new CGRect(0, 0, Frame.Width, Frame.Height);
 		}
 
 		private void Select( int number )
 		{
-			var idx = _model.Items.IndexOf(number);
+			if ( _Model is null ) return;
+			int idx = _Model.Items.IndexOf(number);
 			if ( idx == -1 )
 			{
-				number = _model.Items[0];
+				number = _Model.Items[0];
 				idx = 0;
 			}
 
-			_picker.Select(idx, 0, false);
-			_model.SelectedItem = number;
-			_model.SelectedIndex = idx;
-			_model.PreSelectedItem = number;
+			_Picker?.Select(idx, 0, false);
+			_Model.SelectedItem = number;
+			_Model.SelectedIndex = idx;
+			_Model.PreSelectedItem = number;
 		}
 	}
 }

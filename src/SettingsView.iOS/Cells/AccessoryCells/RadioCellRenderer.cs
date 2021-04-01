@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
@@ -8,21 +9,21 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+#nullable enable
 [assembly: ExportRenderer(typeof(RadioCell), typeof(RadioCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)]
-	public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
+	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class RadioCellView : BaseCellView
+	public class RadioCellView : BaseDescriptiveTitleCell
 	{
-		protected RadioCell _RadioCell => Cell as RadioCell;
+		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
-		protected object _SelectedValue
+		protected object? _SelectedValue
 		{
-			get { return RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent); }
+			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
 			set
 			{
 				if ( RadioCell.GetSelectedValue(_RadioCell.Section) is not null ) { RadioCell.SetSelectedValue(_RadioCell.Section, value); }
@@ -30,7 +31,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			}
 		}
 
-		public RadioCellView( Cell formsCell ) : base(formsCell) { SelectionStyle = UITableViewCellSelectionStyle.Default; }
+		public RadioCellView( Cell formsCell ) : base(formsCell) => SelectionStyle = UITableViewCellSelectionStyle.Default;
 
 		protected override void Dispose( bool disposing ) { base.Dispose(disposing); }
 
@@ -43,21 +44,21 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.CellPropertyChanged(sender, e);
 			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.ParentPropertyChanged(sender, e);
 			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
 			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
+			else { base.ParentPropertyChanged(sender, e); }
 		}
 
 		public override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			base.SectionPropertyChanged(sender, e);
 			if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
+			else { base.SectionPropertyChanged(sender, e); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
@@ -69,12 +70,11 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected void UpdateSelectedValue()
 		{
-			if ( _RadioCell.Value is null )
-				return; // for HotReload
+			if ( _RadioCell.Value is null ) return; // for HotReload
 
-			bool result;
-			if ( _RadioCell.Value.GetType().IsValueType ) { result = Equals(_RadioCell.Value, _SelectedValue); }
-			else { result = ReferenceEquals(_RadioCell.Value, _SelectedValue); }
+			bool result = _RadioCell.Value.GetType().IsValueType
+							  ? Equals(_RadioCell.Value, _SelectedValue)
+							  : ReferenceEquals(_RadioCell.Value, _SelectedValue);
 
 			Accessory = result
 							? UITableViewCellAccessory.Checkmark

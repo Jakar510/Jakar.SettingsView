@@ -1,27 +1,19 @@
-﻿// unset
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
-	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseValueCell<TValue> : BaseCellView where TValue : UIView, IRenderValue
+	public abstract class BaseAccessoryCell<TAccessory> : BaseCellView where TAccessory : UIView, IRenderAccessory
 	{
-		public ValueCellBase? ValueCell => Cell as ValueCellBase;
-		public ValueTextCellBase? ValueTextCell => Cell as ValueTextCellBase;
-
 		protected IconView _Icon { get; set; }
 
 		/// <summary>
@@ -37,19 +29,14 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		protected TitleView _Title { get; set; }
 		protected DescriptionView _Description { get; set; }
 
-		/// <summary>
-		/// Vertical StackView that is arranged at left of the _TitleStack.( put Hint and ValueText)
-		/// </summary>
-		protected Stack _ValueStack { get; set; }
-
-		protected HintView _Hint { get; set; }
-
-		protected TValue _Value { get; }
-		// protected ValueView _ValueView { get; set; }
-		// protected AiEditText _EntryView { get; set; }
+		protected TAccessory _Accessory
+		{
+			get => (TAccessory) ( AccessoryView ?? throw new NullReferenceException(nameof(AccessoryView)) );
+			set => AccessoryView = EditingAccessoryView = value;
+		}
 
 
-		protected BaseValueCell( Cell formsCell ) : base(formsCell)
+		protected BaseAccessoryCell( Cell formsCell ) : base(formsCell)
 		{
 			_Icon = new IconView(this);
 
@@ -58,9 +45,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Title = new TitleView(this);
 			_Description = new DescriptionView(this);
 
-			_ValueStack = Stack.ValueStack();
-			_Hint = new HintView(this);
-			_Value = InstanceCreator.Create<TValue>(this);
+			_Accessory = InstanceCreator.Create<TAccessory>(this);
 
 			_Icon.Initialize(_MainStack);
 			_Title.Initialize(_ContentStack);
@@ -72,10 +57,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
 			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
 
-			_Hint.Initialize(_ValueStack);
-			_Value.Initialize(_ValueStack);
-
-
+			
 			_MainStack.Root(this);
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
@@ -84,7 +66,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_MinHeightConstraint.Active = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
-
+			
 			SetNeedsLayout();
 		}
 
@@ -97,9 +79,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			if ( _Description.Update(sender, e) ) { return; }
 
-			if ( _Hint.Update(sender, e) ) { return; }
-
-			if ( _Value.Update(sender, e) ) { return; }
+			if ( _Accessory.Update(sender, e) ) { return; }
 
 			base.CellPropertyChanged(sender, e);
 		}
@@ -111,9 +91,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			if ( _Description.UpdateParent(sender, e) ) { return; }
 
-			if ( _Hint.UpdateParent(sender, e) ) { return; }
-
-			if ( _Value.UpdateParent(sender, e) ) { return; }
+			if ( _Accessory.UpdateParent(sender, e) ) { return; }
 
 			if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(_MainStack); }
 
@@ -126,8 +104,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Icon.Update();
 			_Title.Update();
 			_Description.Update();
-			_Hint.Update();
-			_Value.Update();
+			_Accessory.Update();
 
 			base.UpdateCell(tableView);
 		}
@@ -141,30 +118,28 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				_Icon.Enable();
 				_Title.Enable();
 				_Description.Enable();
-				_Hint.Enable();
-				_Value.Enable();
+				_Accessory.Enable();
 			}
 			else
 			{
 				_Icon.Disable();
 				_Title.Disable();
 				_Description.Disable();
-				_Hint.Disable();
-				_Value.Disable();
+				_Accessory.Disable();
 			}
 		}
 
 
 		protected override void RunDispose()
 		{
-			_Hint.Dispose();
-			_Value.Dispose();
-			_ValueStack.Dispose();
+			AccessoryView?.Dispose();
+			EditingAccessoryView?.Dispose();
+
 			_Title.Dispose();
 			_Description.Dispose();
 			_Icon.Dispose();
 			_TitleStack.Dispose();
-
+			_MainStack.Dispose();
 			base.RunDispose();
 		}
 	}

@@ -9,7 +9,7 @@ namespace Jakar.SettingsView.Shared.Converters
 {
 	/// <summary>ソートの方向。</summary>
 	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public enum NaturalSortOrder : int
+	public enum NaturalSortOrder
 	{
 	#region Enum
 
@@ -81,6 +81,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	#region Enum
 
 		/// <summary>数字表現文字の種類。</summary>
+		[Flags]
 		private enum CharTypes : uint
 		{
 			/// <summary>なし。</summary>
@@ -116,7 +117,7 @@ namespace Jakar.SettingsView.Shared.Converters
 		private readonly char[] _ignoreCharacter;
 
 		/// <summary>比較オプションを組み合わせた除外文字を表す char[]。</summary>
-		private char[] _ignoreTable;
+		private char[]? _ignoreTable;
 
 	#endregion
 
@@ -188,7 +189,7 @@ namespace Jakar.SettingsView.Shared.Converters
 			set
 			{
 				_options = value;
-				if ( IgnoreSpace )
+				if ( _IgnoreSpace )
 				{
 					_ignoreTable = new char[_ignoreCharacter.Length + 3];
 					_ignoreCharacter.CopyTo(_ignoreTable, 0);
@@ -201,19 +202,19 @@ namespace Jakar.SettingsView.Shared.Converters
 		}
 
 		/// <summary>空白文字の存在を無視するかどうかを取得します。</summary>
-		protected virtual bool IgnoreSpace => ( ( _options & NaturalComparerOptions.IgnoreSpace ) == NaturalComparerOptions.IgnoreSpace );
+		protected virtual bool _IgnoreSpace => ( ( _options & NaturalComparerOptions.IgnoreSpace ) == NaturalComparerOptions.IgnoreSpace );
 
 		/// <summary>数字表現の違いを無視するかどうかを取得します。</summary>
-		protected virtual bool IgnoreNumber => ( ( _options & NaturalComparerOptions.IgnoreNumber ) == NaturalComparerOptions.IgnoreNumber );
+		protected virtual bool _IgnoreNumber => ( ( _options & NaturalComparerOptions.IgnoreNumber ) == NaturalComparerOptions.IgnoreNumber );
 
 		/// <summary>全角半角の違いを無視するかどうかを取得します。</summary>
-		protected virtual bool IgnoreWide => ( ( _options & NaturalComparerOptions.IgnoreWide ) == NaturalComparerOptions.IgnoreWide );
+		protected virtual bool _IgnoreWide => ( ( _options & NaturalComparerOptions.IgnoreWide ) == NaturalComparerOptions.IgnoreWide );
 
 		/// <summary>大文字小文字の違いを無視するかどうかを取得します。</summary>
-		protected virtual bool IgnoreCase => ( ( _options & NaturalComparerOptions.IgnoreCase ) == NaturalComparerOptions.IgnoreCase );
+		protected virtual bool _IgnoreCase => ( ( _options & NaturalComparerOptions.IgnoreCase ) == NaturalComparerOptions.IgnoreCase );
 
 		/// <summary>カタカナひらがなの違いを無視するかどうかを取得します。</summary>
-		protected virtual bool IgnoreKana => ( ( _options & NaturalComparerOptions.IgnoreKana ) == NaturalComparerOptions.IgnoreKana );
+		protected virtual bool _IgnoreKana => ( ( _options & NaturalComparerOptions.IgnoreKana ) == NaturalComparerOptions.IgnoreKana );
 
 	#endregion
 
@@ -253,7 +254,7 @@ namespace Jakar.SettingsView.Shared.Converters
 		///   <item><term>0 より大きい</term><description><paramref name="s1"/> が <paramref name="s2"/> より大きい。</description></item>
 		/// </list>
 		/// </returns>
-		protected virtual int LocalCompare( string s1, string s2 )
+		protected virtual int LocalCompare( string? s1, string? s2 )
 		{
 			// いずれかが null もしくは空文字であれば比較終了
 			if ( string.IsNullOrEmpty(s1) ) { return string.IsNullOrEmpty(s2) ? 0 : -1; }
@@ -271,7 +272,7 @@ namespace Jakar.SettingsView.Shared.Converters
 			s2 = ConvertChar(s2);
 
 			// 除外文字を読み飛ばす
-			if ( _ignoreTable.Length > 0 )
+			if ( _ignoreTable != null && _ignoreTable.Length > 0 )
 			{
 				SkipIgnoreCharacter(s1, ref p1);
 				SkipIgnoreCharacter(s2, ref p2);
@@ -285,16 +286,15 @@ namespace Jakar.SettingsView.Shared.Converters
 				c2 = s2[p2];
 
 				// 両方とも何らかの数字の場合
-				if ( ( IgnoreNumber || ( IgnoreNumber == false && t1 == t2 ) ) &&
+				if ( ( _IgnoreNumber || ( _IgnoreNumber == false && t1 == t2 ) ) &&
 					 t1 != CharTypes.None &&
 					 t2 != CharTypes.None )
 				{
 					int i1 = p1;
 					int i2 = p2;
-					long v1 = 0;
 					long v2 = 0;
 
-					bool success = GetNumber(s1, t1, ref i1, out v1) && GetNumber(s2, t2, ref i2, out v2);
+					bool success = GetNumber(s1, t1, ref i1, out long v1) && GetNumber(s2, t2, ref i2, out v2);
 					if ( success )
 					{
 						if ( v1 < v2 ) { return -1; }
@@ -327,7 +327,7 @@ namespace Jakar.SettingsView.Shared.Converters
 				}
 
 				// 除外文字を読み飛ばす
-				if ( _ignoreTable.Length > 0 )
+				if ( _ignoreTable != null && _ignoreTable.Length > 0 )
 				{
 					SkipIgnoreCharacter(s1, ref p1);
 					SkipIgnoreCharacter(s2, ref p2);
@@ -346,7 +346,7 @@ namespace Jakar.SettingsView.Shared.Converters
 		{
 			for ( ; pos < source.Length; pos++ )
 			{
-				if ( Array.IndexOf<char>(_ignoreTable, source[pos]) == -1 ) { break; }
+				if ( Array.IndexOf(_ignoreTable ?? throw new NullReferenceException(nameof(_ignoreTable)), source[pos]) == -1 ) { break; }
 			}
 		}
 
@@ -520,13 +520,13 @@ namespace Jakar.SettingsView.Shared.Converters
 			var buffer = new StringBuilder(source);
 
 			// 全角半角の違いを無視する
-			if ( IgnoreWide ) { ConvertHalf(buffer); }
+			if ( _IgnoreWide ) { ConvertHalf(buffer); }
 
 			// 大文字小文字の違いを無視する
-			if ( IgnoreCase ) { ConvertUpperCase(buffer); }
+			if ( _IgnoreCase ) { ConvertUpperCase(buffer); }
 
 			// カタカナひらがなの違いを無視する
-			if ( IgnoreKana ) { ConvertKatakana(buffer); }
+			if ( _IgnoreKana ) { ConvertKatakana(buffer); }
 
 			return buffer.ToString();
 		}
@@ -919,25 +919,20 @@ namespace Jakar.SettingsView.Shared.Converters
 								ref int pos,
 								out long value )
 		{
-			INumberComverter number = null;
+			INumberConverter? number = type switch
+									   {
+										   CharTypes.Number => new NumberConverter(source[pos]),
+										   CharTypes.RomanNumber => new RomanNumberConverter(source[pos]),
+										   CharTypes.JpRomanNumber => new JpRomanNumberConverter(source[pos]),
+										   CharTypes.CircleNumber => new CircleNumberConverter(source[pos]),
+										   CharTypes.KanjiNumber => new KanjiNumberConverter(source[pos]),
+										   _ => null
+									   };
 
-			switch ( type )
+			if ( number is null )
 			{
-				case CharTypes.Number:
-					number = new NumberConverter(source[pos]);
-					break;
-				case CharTypes.RomanNumber:
-					number = new RomanNumberConverter(source[pos]);
-					break;
-				case CharTypes.JpRomanNumber:
-					number = new JpRomanNumberConverter(source[pos]);
-					break;
-				case CharTypes.CircleNumber:
-					number = new CircleNumberConverter(source[pos]);
-					break;
-				case CharTypes.KanjiNumber:
-					number = new KanjiNumberConverter(source[pos]);
-					break;
+				value = -1;
+				return false;
 			}
 
 			for ( int i = pos + 1; i < source.Length; i++ )
@@ -977,7 +972,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	#region INumberComverter
 
 		/// <summary>数字を数値へ変換する機能を提供します。</summary>
-		private interface INumberComverter
+		private interface INumberConverter
 		{
 		#region Property
 
@@ -1008,7 +1003,7 @@ namespace Jakar.SettingsView.Shared.Converters
 
 		/// <summary>アラビア数字を数値へ変換する機能を提供します。</summary>
 		/// <remarks>ASCIIと日本語の混在は許しません。</remarks>
-		private class NumberConverter : INumberComverter
+		private class NumberConverter : INumberConverter
 		{
 		#region Field
 
@@ -1121,7 +1116,7 @@ namespace Jakar.SettingsView.Shared.Converters
 
 		/// <summary>英字表現のローマ数字を数値へ変換する機能を提供します。</summary>
 		/// <remarks>大文字と小文字、ASCIIと日本語の混在は許しません。</remarks>
-		private class RomanNumberConverter : INumberComverter
+		private class RomanNumberConverter : INumberConverter
 		{
 		#region Field
 
@@ -1258,7 +1253,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	#region JpRomanNumberConverter
 
 		/// <summary>全角ローマ数字を数値へ変換する機能を提供します。</summary>
-		private class JpRomanNumberConverter : INumberComverter
+		private class JpRomanNumberConverter : INumberConverter
 		{
 		#region Field
 
@@ -1393,7 +1388,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	#region CircleNumberConverter
 
 		/// <summary>丸数字を数値へ変換する機能を提供します。</summary>
-		private class CircleNumberConverter : INumberComverter
+		private class CircleNumberConverter : INumberConverter
 		{
 		#region Field
 
@@ -1458,7 +1453,7 @@ namespace Jakar.SettingsView.Shared.Converters
 	#region KanjiNumberConverter
 
 		/// <summary>漢数字を数値へ変換する機能を提供します。</summary>
-		private class KanjiNumberConverter : INumberComverter
+		private class KanjiNumberConverter : INumberConverter
 		{
 		#region Field
 
