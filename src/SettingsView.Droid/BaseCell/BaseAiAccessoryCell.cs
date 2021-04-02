@@ -28,7 +28,9 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			_Accessory = InstanceCreator<AContext, TAccessory>.Create(AndroidContext);
 			_AccessoryStack.Add(_Accessory, AExtensions.Layout.Wrap, AExtensions.Layout.Wrap, GravityFlags.Center);
 		}
+#pragma warning disable 8618
 		protected BaseAiAccessoryCell( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+#pragma warning restore 8618
 
 
 		protected override void Dispose( bool disposing )

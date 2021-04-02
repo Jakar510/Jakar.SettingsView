@@ -122,7 +122,7 @@ namespace Jakar.SettingsView.Droid
 		private void AddSection( NotifyCollectionChangedEventArgs e )
 		{
 			// regard as coming only one item.
-			if ( e.NewItems[0] is not Section section  ) return;
+			if ( e.NewItems[0] is not Section section ) return;
 			int startIndex = RowIndexFromParentCollection(e.NewStartingIndex);
 			Insert(startIndex, new RowInfo(section, ViewType.CustomHeader));
 			// Insert(startIndex, new RowInfo(section, section.HeaderView == null ? ViewType.TextHeader : ViewType.CustomHeader));
@@ -147,7 +147,7 @@ namespace Jakar.SettingsView.Droid
 		{
 			// regard as coming only one item.
 			if ( e is null ) throw new NullReferenceException(nameof(e));
-			if ( e.OldItems[0] is not Section section  ) throw new ArgumentException("Sender must be of type(Section)", nameof(e.OldItems));
+			if ( e.OldItems[0] is not Section section ) throw new ArgumentException("Sender must be of type(Section)", nameof(e.OldItems));
 
 			int startIndex = RowIndexFromParentCollection(e.OldStartingIndex);
 
@@ -203,7 +203,9 @@ namespace Jakar.SettingsView.Droid
 									  {
 										  // Restart animation.
 										  if ( _RecyclerView.GetItemAnimator() is DefaultItemAnimator _animator ) { _animator.SupportsChangeAnimations = false; }
-									  }, 100);
+									  },
+									  100
+									 );
 		}
 
 		private int RowIndexFromChildCollection( Section section, int index )
@@ -223,7 +225,8 @@ namespace Jakar.SettingsView.Droid
 												   {
 													   index = idx,
 													   x.Section
-												   })
+												   }
+									)
 							 .GroupBy(x => x.Section);
 			int? match = groups.ElementAtOrDefault(index)?.Min(x => x.index);
 
@@ -233,7 +236,9 @@ namespace Jakar.SettingsView.Droid
 		private int GetNextTypeIndex()
 		{
 			int idx = ViewTypes.Values.LastOrDefault();
-			return idx == 0 ? Enum.GetNames(typeof(ViewType)).Length : idx + 1;
+			return idx == 0
+					   ? Enum.GetNames(typeof(ViewType)).Length
+					   : idx + 1;
 		}
 
 		public void FillProxy() { ViewTypes = UpdateTypes(); }
@@ -248,7 +253,8 @@ namespace Jakar.SettingsView.Droid
 																			{
 																				type,
 																				index = idx
-																			})
+																			}
+														  )
 												   .ToDictionary(key => key.type, val => val.index + Enum.GetNames(typeof(ViewType)).Length);
 
 			int sectionCount = _Model.GetSectionCount();
@@ -256,9 +262,11 @@ namespace Jakar.SettingsView.Droid
 			for ( var sectionIndex = 0; sectionIndex < sectionCount; sectionIndex++ )
 			{
 				int sectionRowCount = _Model.GetRowCount(sectionIndex);
-				Section curSection = _Model.GetSection(sectionIndex);
+				Section? curSection = _Model.GetSection(sectionIndex);
 				// bool isTextHeader = _Model.GetSectionHeaderView(sectionIndex) is null;
 				// Add(new RowInfo(curSection, isTextHeader ? ViewType.TextHeader : ViewType.CustomHeader));
+				if ( curSection is null ) { continue; }
+
 				Add(new RowInfo(curSection, ViewType.CustomHeader));
 
 				for ( var i = 0; i < sectionRowCount; i++ )
@@ -280,7 +288,7 @@ namespace Jakar.SettingsView.Droid
 			_Root.SectionCollectionChanged -= OnRootSectionCollectionChanged;
 			_Root.CollectionChanged -= OnRootCollectionChanged;
 			Clear();
-			ViewTypes?.Clear();
+			ViewTypes.Clear();
 		}
 	}
 }

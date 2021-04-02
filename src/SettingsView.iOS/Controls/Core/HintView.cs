@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
@@ -13,74 +14,29 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class HintView : BaseTextView
+	public class HintView : BaseTextView<HintTextCellBase, BaseCellView>
 	{
-		private HintTextCellBase _CurrentCell => _Renderer.Cell as HintTextCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		protected override IUseConfiguration _Config => _Cell.HintConfig;
 
-		public HintView( BaseCellView renderer ) : base(renderer)
-		{
-			LineBreakMode = UILineBreakMode.Clip;
-			Lines = 0;
-			TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
-			AdjustsFontSizeToFitWidth = true;
-			BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
-			TextAlignment = UITextAlignment.Right;
-			AdjustsLetterSpacingToFitWidth = true;
-		}
+
+		public HintView( BaseCellView renderer ) : base(renderer) { }
 
 		public override void Initialize( Stack parent )
 		{
-			parent.AddSubview(this);
+			parent.AddSubview(Control);
 
-			TranslatesAutoresizingMaskIntoConstraints = false;
-			TopAnchor.ConstraintEqualTo(parent.TopAnchor, 2).Active = true;
-			LeftAnchor.ConstraintEqualTo(parent.LeftAnchor, 16).Active = true;
-			RightAnchor.ConstraintEqualTo(parent.RightAnchor, -10).Active = true;
+			Control.TranslatesAutoresizingMaskIntoConstraints = false;
+			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor, 2).Active = true;
+			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor, 16).Active = true;
+			Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor, -10).Active = true;
 			// RightAnchor.ConstraintEqualTo(parent.ContentView.RightAnchor, -10).Active = true;
-			BottomAnchor.ConstraintLessThanOrEqualTo(parent.BottomAnchor, -12).Active = true;
-			
+			Control.BottomAnchor.ConstraintLessThanOrEqualTo(parent.BottomAnchor, -12).Active = true;
+
 			base.Initialize(parent);
 		}
 
 
-		public override void SetUsed( Cell cell ) { SetUsed(cell.IsValueCell()); }
-		public override bool UpdateText()
-		{
-			Text = _CurrentCell.Hint;
-			Hidden = string.IsNullOrEmpty(Text);
-
-			return true;
-		}
-		public override bool UpdateFontSize()
-		{
-			ContentScaleFactor = _CurrentCell.HintConfig.FontSize.ToNFloat();
-			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
-
-			return true;
-		}
-		public override bool UpdateTextColor()
-		{
-			TextColor = _CurrentCell.HintConfig.Color.ToUIColor();
-
-			return true;
-		}
-		public override bool UpdateFont()
-		{
-			string? family = _CurrentCell.HintConfig.FontFamily;
-			FontAttributes attr = _CurrentCell.HintConfig.FontAttributes;
-			var size = (float) _CurrentCell.HintConfig.FontSize;
-
-			Font = FontUtility.CreateNativeFont(family, size, attr);
-
-			return true;
-		}
-		public override bool UpdateTextAlignment()
-		{
-			TextAlignment alignment = _CurrentCell.DescriptionConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
-
-			return true;
-		}
+		public override bool UpdateText() => UpdateText(_Cell.Title);
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{

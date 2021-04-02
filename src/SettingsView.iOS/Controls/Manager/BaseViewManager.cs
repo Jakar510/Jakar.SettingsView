@@ -11,14 +11,15 @@ using UIKit;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Manager
 {
-	public abstract class BaseViewManager<TView, TCell> : IUpdateCell<UIColor?, TCell>, IInitializeControl, IDisposable where TCell : CellBase
-																													   where TView : UIView
+	public abstract class BaseViewManager<TView, TCell> : IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable where TCell : CellBase
+																																		where TView : UIView
 	{
 		public float DefaultFontSize { get; }
 		public UIColor? DefaultTextColor { get; }
 		public UIColor? DefaultBackgroundColor { get; }
 
 
+		protected abstract IUseConfiguration _Config { get; }
 		protected TCell _Cell { get; private set; }
 		public TView Control { get; protected set; }
 
@@ -45,7 +46,7 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 		{
 			UpdateText();
 			UpdateTextColor();
-			UpdateAlignment();
+			UpdateTextAlignment();
 			UpdateFont();
 			UpdateFontSize();
 			UpdateIsEnabled();
@@ -57,7 +58,7 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 		public abstract bool UpdateFont();
 		public abstract bool UpdateTextColor();
 		public abstract bool UpdateFontSize();
-		protected abstract bool UpdateAlignment();
+		public abstract bool UpdateTextAlignment();
 
 
 		public abstract bool UpdateText();
@@ -83,35 +84,6 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 
 			DefaultTextColor?.Dispose();
 			DefaultBackgroundColor?.Dispose();
-		}
-	}
-
-	public static class LayoutExtensions
-	{
-		
-		public static void AddFull( this UIView Control, UIStackView parent )
-		{
-			parent.AddArrangedSubview(Control);
-
-			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active = true;
-			Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor).Active = true;
-
-			Control.BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = true;
-			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active = true;
-
-			Control.UpdateConstraintsIfNeeded();
-		}
-		public static void AddFull( this UIView Control, UIView parent )
-		{
-			parent.AddSubview(Control);
-
-			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active = true;
-			Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor).Active = true;
-
-			Control.BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = true;
-			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active = true;
-
-			Control.UpdateConstraintsIfNeeded();
 		}
 	}
 }

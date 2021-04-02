@@ -58,6 +58,7 @@
     <Compile Include="BaseCell\BaseAccessoryCell.cs" />
     <Compile Include="BaseCell\BaseDescriptiveTitleCell.cs" />
     <Compile Include="BaseCell\BaseValueCell.cs" />
+    <Compile Include="BaseCell\BaseLabelCellView.cs" />
     <Compile Include="Controls\Manager\BaseViewManager.cs" />
     <Compile Include="Interfaces\IRenderAccessory.cs" />
     <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />

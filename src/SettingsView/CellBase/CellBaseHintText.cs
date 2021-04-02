@@ -3,6 +3,7 @@
 using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable
@@ -67,7 +68,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 		private HintConfiguration? _config;
 
-		internal HintConfiguration HintConfig
+		protected internal HintConfiguration HintConfig
 		{
 			get
 			{
@@ -76,21 +77,22 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		internal class HintConfiguration
+		public class HintConfiguration : IUseConfiguration
 		{
 			private readonly HintTextCellBase _cell;
 			public HintConfiguration( HintTextCellBase cell ) => _cell = cell;
 
-			internal string? FontFamily => _cell.HintFontFamily ?? _cell.Parent.CellHintFontFamily;
-			internal FontAttributes FontAttributes => _cell.HintFontAttributes ?? _cell.Parent.CellHintFontAttributes;
-			internal TextAlignment TextAlignment => _cell.HintAlignment ?? _cell.Parent.CellHintAlignment;
+			public string? FontFamily => _cell.HintFontFamily ?? _cell.Parent.CellHintFontFamily;
+			public FontAttributes FontAttributes => _cell.HintFontAttributes ?? _cell.Parent.CellHintFontAttributes;
+			public TextAlignment TextAlignment => _cell.HintAlignment ?? _cell.Parent.CellHintAlignment;
 
-			internal Color Color =>
+			public Color Color =>
 				_cell.HintColor == SVConstants.Cell.COLOR
 					? _cell.Parent.CellHintTextColor
 					: _cell.HintColor;
 
-			internal double FontSize => _cell.HintFontSize ?? _cell.Parent.CellHintFontSize;
+			public double FontSize => _cell.HintFontSize ?? _cell.Parent.CellHintFontSize;
+			public string? Text => _cell.Hint;
 		}
 	}
 }

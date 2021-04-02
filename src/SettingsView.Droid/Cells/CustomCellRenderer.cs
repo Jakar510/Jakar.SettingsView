@@ -11,6 +11,7 @@ using Jakar.SettingsView.Droid.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AExtensions = Jakar.Api.Droid.Extensions;
+#pragma warning disable 8618
 
 
 [assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
@@ -100,7 +101,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			Container.CustomCell = _CustomCell;
 			Container.FormsView = _CustomCell.Content;
-			double height = Container.FormsView.Height;
+			double height = Container.FormsView?.Height ?? 0; 
 			double cellHeight = Height;
 			System.Diagnostics.Debug.WriteLine($"_______CustomHeight_______  content.height {height}      cell.height{cellHeight}");
 		}

@@ -4,6 +4,7 @@ using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
@@ -14,56 +15,16 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class DescriptionView : BaseTextView
+	public class DescriptionView : BaseTextView<DescriptionCellBase, BaseCellView>
 	{
-		private DescriptionCellBase _CurrentCell => _Renderer.Cell as DescriptionCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		protected override IUseConfiguration _Config => _Cell.DescriptionConfig;
 
-		public DescriptionView( BaseCellView renderer ) : base(renderer)
-		{
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-		}
+
+		public DescriptionView( BaseCellView renderer ) : base(renderer) { }
 
 		public override void Initialize( Stack parent ) { base.Initialize(parent); }
 
-		public override void SetUsed( Cell cell ) { SetUsed(cell.IsDescriptiveTitleCell()); }
-		public override bool UpdateText()
-		{
-			Text = _CurrentCell.Description;
-			Hidden = string.IsNullOrEmpty(Text);
-
-			return true;
-		}
-		public override bool UpdateFontSize()
-		{
-			ContentScaleFactor = _CurrentCell.DescriptionConfig.FontSize.ToNFloat();
-			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
-
-			return true;
-		}
-		public override bool UpdateTextColor()
-		{
-			TextColor = _CurrentCell.DescriptionConfig.Color.ToUIColor();
-
-			return true;
-		}
-		public override bool UpdateFont()
-		{
-			string? family = _CurrentCell.DescriptionConfig.FontFamily;
-			FontAttributes attr = _CurrentCell.DescriptionConfig.FontAttributes;
-			var size = (float) _CurrentCell.DescriptionConfig.FontSize;
-
-			Font = FontUtility.CreateNativeFont(family, size, attr);
-
-			return true;
-		}
-		public override bool UpdateTextAlignment()
-		{
-			TextAlignment alignment = _CurrentCell.DescriptionConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
-
-			return true;
-		}
+		public override bool UpdateText() => UpdateText(_Cell.Description);
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{

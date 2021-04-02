@@ -20,7 +20,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class TextPickerCellRenderer : CellBaseRenderer<TextPickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class TextPickerCellView : LabelCellView
+	public class TextPickerCellView : BaseLabelCellView<LabelCell>
 	{
 		public UITextField DummyField { get; set; }
 
@@ -147,7 +147,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private void UpdateSelectedItem()
 		{
 			Select(_TextPickerCell.SelectedItem);
-			ValueLabel.Text = _TextPickerCell.SelectedItem;
+			string? text = _TextPickerCell.SelectedItem;
+			_Value.UpdateText(text);
 		}
 
 		private void UpdateItems()
@@ -177,7 +178,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
 			_TextPickerCell.SelectedItem = _Model?.SelectedItem;
-			ValueLabel.Text = _Model?.SelectedItem;
+			string? text = _Model?.SelectedItem;
+			_Value.UpdateText(text);
 		}
 
 		public override void LayoutSubviews()

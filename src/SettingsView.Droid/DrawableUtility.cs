@@ -1,6 +1,7 @@
 ﻿using Android.Content.Res;
 using Android.Graphics.Drawables;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	/// <summary>
@@ -15,15 +16,12 @@ namespace Jakar.SettingsView.Droid
 		/// <returns>The ripple.</returns>
 		/// <param name="color">Color.</param>
 		/// <param name="background">Background.</param>
-		public static RippleDrawable CreateRipple( Android.Graphics.Color color, Drawable background = null )
+		public static RippleDrawable CreateRipple( Android.Graphics.Color color, Drawable? background = null )
 		{
-			if ( background == null )
-			{
-				var mask = new ColorDrawable(Android.Graphics.Color.White);
-				return new RippleDrawable(GetPressedColorSelector(color), null, mask);
-			}
+			if ( background != null ) return new RippleDrawable(GetPressedColorSelector(color), background, null);
+			var mask = new ColorDrawable(Android.Graphics.Color.White);
+			return new RippleDrawable(GetPressedColorSelector(color), null, mask);
 
-			return new RippleDrawable(GetPressedColorSelector(color), background, null);
 		}
 
 		/// <summary>
@@ -33,14 +31,14 @@ namespace Jakar.SettingsView.Droid
 		/// <param name="pressedColor">Pressed color.</param>
 		public static ColorStateList GetPressedColorSelector( int pressedColor )
 		{
-			return new ColorStateList(new int[][]
-									  {
-										  new int[]
-										  { }
-									  }, new int[]
-										 {
-											 pressedColor,
-										 });
+			return new(new[]
+					   {
+						   new int[]
+						   { }
+					   }, new[]
+						  {
+							  pressedColor,
+						  });
 		}
 	}
 }

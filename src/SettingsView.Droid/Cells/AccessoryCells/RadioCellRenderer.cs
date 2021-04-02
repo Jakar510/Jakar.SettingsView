@@ -24,7 +24,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
 
 
-		private object _SelectedValue
+		private object? _SelectedValue
 		{
 			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
 			set
@@ -85,7 +85,18 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateSelectedValue();
 			base.UpdateCell();
 		}
-		private void UpdateSelectedValue() { _Accessory.Checked = _RadioCell.Value.GetType().IsValueType ? Equals(_RadioCell.Value, _SelectedValue) : ReferenceEquals(_RadioCell.Value, _SelectedValue); }
+		private void UpdateSelectedValue()
+		{
+			if ( _RadioCell.Value is null )
+			{
+				_Accessory.Checked = false;
+				return;
+			}
+
+			_Accessory.Checked = _RadioCell.Value.GetType().IsValueType
+									 ? Equals(_RadioCell.Value, _SelectedValue)
+									 : ReferenceEquals(_RadioCell.Value, _SelectedValue);
+		}
 		private void UpdateAccentColor()
 		{
 			if ( !_RadioCell.AccentColor.IsDefault ) { _Accessory.Color = _RadioCell.AccentColor.ToAndroid(); }

@@ -1,13 +1,9 @@
 ﻿// unset
 
-using Jakar.SettingsView.Shared.Cells;
-
 namespace Jakar.SettingsView.Shared.Interfaces
 {
-	public interface IUpdateEntryCell<in TRenderer, in TColor>
+	public interface IUpdateEntryCell<in TColor>
 	{
-		public void Init( EntryCell cell, TRenderer renderer );
-
 		public void PerformSelectAction();
 		public bool UpdateSelectAction();
 		public bool UpdateKeyboard();

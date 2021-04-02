@@ -18,7 +18,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class TimePickerCellView : LabelCellView
+	public class TimePickerCellView : BaseLabelCellView<LabelCell>
 	{
 		private TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));
 		private UIDatePicker? _Picker { get; set; }
@@ -150,7 +150,8 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
 			_TimePickerCell.Time = _Picker.Date.ToDateTime() - new DateTime(1, 1, 1);
-			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			var text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
 
@@ -159,7 +160,8 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
 			_Picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
-			ValueLabel.Text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			var text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
 

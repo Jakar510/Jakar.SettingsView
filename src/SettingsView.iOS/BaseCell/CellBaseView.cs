@@ -71,12 +71,12 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		public virtual bool RowLongPressed( UITableView tableView, NSIndexPath indexPath ) => false;
 
 
-		protected void UpdateWithForceLayout( Action updateAction )
+		public void UpdateWithForceLayout( Action updateAction )
 		{
 			updateAction();
 			SetNeedsLayout();
 		}
-		protected bool UpdateWithForceLayout( Func<bool> updateAction )
+		public bool UpdateWithForceLayout( Func<bool> updateAction )
 		{
 			bool result = updateAction();
 			SetNeedsLayout();

@@ -28,9 +28,10 @@ using TextChangedEventArgs = Android.Text.TextChangedEventArgs;
 namespace Jakar.SettingsView.Droid.Controls
 {
 	[Preserve(AllMembers = true)]
-	public class AiEditText : EditText, IUpdateEntryCell<IEntryCellRenderer, AColor>, IUpdateCell<AColor, AiEntryCell>
+	public class AiEditText : EditText, IUpdateEntryCell<AColor>, IUpdateCell<AiEntryCell>, IDefaultColors<AColor>, ISetEntryCell<IEntryCellRenderer>
 	{
 		public AColor DefaultTextColor { get; }
+		public AColor DefaultBackgroundColor { get; }
 		public float DefaultFontSize { get; }
 		protected IEntryCellRenderer _CellRenderer { get; private set; }
 		protected AiEntryCell _CurrentCell { get; private set; }
@@ -42,6 +43,7 @@ namespace Jakar.SettingsView.Droid.Controls
 		{
 			DefaultFontSize = TextSize;
 			DefaultTextColor = new AColor(CurrentTextColor);
+			DefaultBackgroundColor = Color.Default.ToAndroid();
 			Initialize();
 			TextChanged += OnTextChanged;
 		}

@@ -24,6 +24,7 @@ using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
 using Color = Xamarin.Forms.Color;
 using AExtensions = Jakar.Api.Droid.Extensions;
+#pragma warning disable 8618
 
 
 #nullable enable

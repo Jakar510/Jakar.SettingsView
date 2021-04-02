@@ -3,6 +3,7 @@
 using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable
@@ -67,7 +68,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 		private DescriptionConfiguration? _config;
 
-		internal DescriptionConfiguration DescriptionConfig
+		protected internal DescriptionConfiguration DescriptionConfig
 		{
 			get
 			{
@@ -76,21 +77,21 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		internal class DescriptionConfiguration
+		public class DescriptionConfiguration : IUseConfiguration
 		{
 			private readonly DescriptionCellBase _cell;
 			public DescriptionConfiguration( DescriptionCellBase cell ) => _cell = cell;
 
-			internal string? FontFamily => _cell.DescriptionFontFamily ?? _cell.Parent.CellDescriptionFontFamily;
-			internal FontAttributes FontAttributes => _cell.DescriptionFontAttributes ?? _cell.Parent.CellDescriptionFontAttributes;
-			internal TextAlignment TextAlignment => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
+			public string? FontFamily => _cell.DescriptionFontFamily ?? _cell.Parent.CellDescriptionFontFamily;
+			public FontAttributes FontAttributes => _cell.DescriptionFontAttributes ?? _cell.Parent.CellDescriptionFontAttributes;
+			public TextAlignment TextAlignment => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
 
-			internal Color Color =>
+			public Color Color =>
 				_cell.DescriptionColor == SVConstants.Cell.COLOR
 					? _cell.Parent.CellDescriptionColor
 					: _cell.DescriptionColor;
 
-			internal double FontSize => _cell.DescriptionFontSize ?? _cell.Parent.CellDescriptionFontSize;
+			public double FontSize => _cell.DescriptionFontSize ?? _cell.Parent.CellDescriptionFontSize;
 		}
 	}
 }

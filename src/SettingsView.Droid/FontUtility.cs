@@ -5,36 +5,37 @@ using Android.Graphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+#nullable enable
 namespace Jakar.SettingsView.Droid
 {
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public static class FontUtility
 	{
-		private static readonly ConcurrentDictionary<Tuple<string, FontAttributes>, Typeface> Typefaces = new ConcurrentDictionary<Tuple<string, FontAttributes>, Typeface>();
+		private static readonly ConcurrentDictionary<Tuple<string, FontAttributes>, Typeface?> Typefaces = new();
 
-		private static Typeface s_defaultTypeface;
+		private static Typeface? s_defaultTypeface;
 
-		public static Typeface CreateTypeface( string fontFamily, FontAttributes fontAttributes = FontAttributes.None )
+		public static Typeface? CreateTypeface( string? fontFamily, FontAttributes fontAttributes = FontAttributes.None )
 		{
 			if ( fontAttributes == FontAttributes.None &&
-				 string.IsNullOrEmpty(fontFamily) ) { return s_defaultTypeface ?? ( s_defaultTypeface = Typeface.Default ); }
+				 string.IsNullOrEmpty(fontFamily) ) { return s_defaultTypeface ??= Typeface.Default; }
 
 			return ToTypeface(fontFamily, fontAttributes);
 		}
 
-		private static Typeface ToTypeface( string fontFamily, FontAttributes fontAttributes )
+		private static Typeface? ToTypeface( string? fontFamily, FontAttributes fontAttributes )
 		{
-			fontFamily ??= String.Empty;
+			fontFamily ??= string.Empty;
 			return Typefaces.GetOrAdd(new Tuple<string, FontAttributes>(fontFamily, fontAttributes), CreateTypeface);
 		}
 
-		private static Typeface CreateTypeface( Tuple<string, FontAttributes> key )
+		private static Typeface? CreateTypeface( Tuple<string, FontAttributes> key )
 		{
-			Typeface result;
+			Typeface? result;
 			string fontFamily = key.Item1;
 			FontAttributes fontAttribute = key.Item2;
 
-			if ( String.IsNullOrWhiteSpace(fontFamily) )
+			if ( string.IsNullOrWhiteSpace(fontFamily) )
 			{
 				TypefaceStyle style = ToTypefaceStyle(fontAttribute);
 				result = Typeface.Create(Typeface.Default, style);
@@ -45,22 +46,19 @@ namespace Jakar.SettingsView.Droid
 			return result;
 		}
 
-		private static Typeface ToTypeFace( this string fontfamily, FontAttributes attr = FontAttributes.None )
+		private static Typeface? ToTypeFace( this string fontFamily, FontAttributes attr = FontAttributes.None )
 		{
-			fontfamily ??= String.Empty;
-			(bool success, Typeface typeface) result = fontfamily.TryGetFromAssets();
-			if ( result.success ) { return result.typeface; }
-			else
-			{
-				TypefaceStyle style = ToTypefaceStyle(attr);
-				return Typeface.Create(fontfamily, style);
-			}
+			( bool success, Typeface? typeface ) = fontFamily.TryGetFromAssets();
+			if ( success ) { return typeface; }
+
+			TypefaceStyle style = ToTypefaceStyle(attr);
+			return Typeface.Create(fontFamily, style);
 		}
 
-		private static (bool success, Typeface typeface) TryGetFromAssets( this string fontName )
+		private static (bool success, Typeface? typeface) TryGetFromAssets( this string fontName )
 		{
 			//First check Alias
-			(bool hasFontAlias, string fontPostScriptName) = FontRegistrar.HasFont(fontName);
+			( bool hasFontAlias, string fontPostScriptName ) = FontRegistrar.HasFont(fontName);
 			if ( hasFontAlias )
 				return ( true, Typeface.CreateFromFile(fontPostScriptName) );
 
@@ -80,23 +78,22 @@ namespace Jakar.SettingsView.Droid
 
 			if ( !string.IsNullOrWhiteSpace(fontFile.Extension) )
 			{
-				(bool hasFont, string fontPath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
+				( bool hasFont, string fontPath ) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
 				if ( hasFont ) { return ( true, Typeface.CreateFromFile(fontPath) ); }
 			}
 			else
 			{
 				foreach ( string ext in FontFile.Extensions )
 				{
-					string formated = fontFile.FileNameWithExtension(ext);
-					(bool hasFont, string fontPath) = FontRegistrar.HasFont(formated);
+					string formatted = fontFile.FileNameWithExtension(ext);
+					( bool hasFont, string fontPath ) = FontRegistrar.HasFont(formatted);
 					if ( hasFont ) { return ( true, Typeface.CreateFromFile(fontPath) ); }
 
 					foreach ( string folder in folders )
 					{
-						formated = $"{folder}{fontFile.FileNameWithExtension()}#{fontFile.PostScriptName}";
-						(bool success, Typeface typeface) result = LoadTypefaceFromAsset(formated);
-						if ( result.success )
-							return result;
+						formatted = $"{folder}{fontFile.FileNameWithExtension()}#{fontFile.PostScriptName}";
+						(bool success, Typeface? typeface) result = LoadTypefaceFromAsset(formatted);
+						if ( result.success ) return result;
 					}
 				}
 			}
@@ -104,11 +101,11 @@ namespace Jakar.SettingsView.Droid
 			return ( false, null );
 		}
 
-		private static (bool success, Typeface typeface) LoadTypefaceFromAsset( string fontfamily )
+		private static (bool success, Typeface? typeface) LoadTypefaceFromAsset( string fontFamily )
 		{
 			try
 			{
-				var result = Typeface.CreateFromAsset(Android.App.Application.Context.Assets, FontNameToFontFile(fontfamily));
+				var result = Typeface.CreateFromAsset(Android.App.Application.Context.Assets, FontNameToFontFile(fontFamily));
 				return ( true, result );
 			}
 			catch ( Exception ex )
@@ -118,26 +115,24 @@ namespace Jakar.SettingsView.Droid
 			}
 		}
 
-		private static bool IsAssetFontFamily( string name ) => name != null && ( name.Contains(".ttf#") || name.Contains(".otf#") );
+		private static bool IsAssetFontFamily( string? name ) => name != null && ( name.Contains(".ttf#") || name.Contains(".otf#") );
 
 		private static TypefaceStyle ToTypefaceStyle( FontAttributes attrs )
 		{
 			var style = TypefaceStyle.Normal;
-			if ( ( attrs & ( FontAttributes.Bold | FontAttributes.Italic ) ) == ( FontAttributes.Bold | FontAttributes.Italic ) )
-				style = TypefaceStyle.BoldItalic;
-			else if ( ( attrs & FontAttributes.Bold ) != 0 )
-				style = TypefaceStyle.Bold;
-			else if ( ( attrs & FontAttributes.Italic ) != 0 )
-				style = TypefaceStyle.Italic;
+			if ( ( attrs & ( FontAttributes.Bold | FontAttributes.Italic ) ) == ( FontAttributes.Bold | FontAttributes.Italic ) ) { style = TypefaceStyle.BoldItalic; }
+			else if ( ( attrs & FontAttributes.Bold ) != 0 ) { style = TypefaceStyle.Bold; }
+			else if ( ( attrs & FontAttributes.Italic ) != 0 ) { style = TypefaceStyle.Italic; }
+
 			return style;
 		}
 
-		private static string FontNameToFontFile( string fontFamily )
+		private static string FontNameToFontFile( string? fontFamily )
 		{
-			fontFamily ??= String.Empty;
-			int hashtagIndex = fontFamily.IndexOf('#');
-			if ( hashtagIndex >= 0 )
-				return fontFamily.Substring(0, hashtagIndex);
+			fontFamily ??= string.Empty;
+			int hashTagIndex = fontFamily.IndexOf('#');
+			if ( hashTagIndex >= 0 )
+				return fontFamily.Substring(0, hashTagIndex);
 
 			throw new InvalidOperationException($"Can't parse the {nameof(fontFamily)} {fontFamily}");
 		}

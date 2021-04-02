@@ -12,6 +12,7 @@ namespace Jakar.SettingsView.iOS.Interfaces
 	{
 		public void UpdateWithForceLayout( Action updateAction );
 		public bool UpdateWithForceLayout( Func<bool> updateAction );
+
 		public void DoneEdit();
 	}
 }

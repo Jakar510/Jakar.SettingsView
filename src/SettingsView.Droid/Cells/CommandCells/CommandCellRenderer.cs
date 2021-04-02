@@ -11,6 +11,7 @@ using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AExtensions = Jakar.Api.Droid.Extensions;
+#pragma warning disable 8618
 
 [assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 

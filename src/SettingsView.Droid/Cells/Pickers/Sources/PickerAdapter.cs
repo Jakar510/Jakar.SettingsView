@@ -122,6 +122,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		internal void DoneSelect()
 		{
+			if ( _PickerCell.SelectedItems is null ) { return; }
+
 			_PickerCell.SelectedItems.Clear();
 			SparseBooleanArray? positions = _ListView.CheckedItemPositions;
 
@@ -136,12 +138,14 @@ namespace Jakar.SettingsView.Droid.Cells
 				}
 			}
 
-			_PickerCell.SelectedItem = _PickerCell.IsSingleMode && _PickerCell.MergedSelectedList.Count > 0
+			_PickerCell.SelectedItem = _PickerCell.IsSingleMode && _PickerCell.MergedSelectedList?.Count > 0
 										   ? _PickerCell.SelectedItems[0]
 										   : null;
 		}
 		internal void RestoreSelect()
 		{
+			if ( _PickerCell.SelectedItems is null ) { return; }
+
 			if ( _PickerCell.SelectedItems.Count == 0 ) { return; }
 
 			for ( var i = 0; i < _PickerCell.SelectedItems.Count; i++ )
@@ -179,18 +183,13 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			if ( convertView is not PickerInnerView view ) return convertView;
 
-			view.UpdateCell(_PickerCell.DisplayValue(_Source[position]), _PickerCell.SubDisplayValue(_Source[position]));
+			if ( _Source != null ) view.UpdateCell(_PickerCell.DisplayValue(_Source[position]), _PickerCell.SubDisplayValue(_Source[position]));
 			return view;
 		}
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing )
-			{
-				_Parent = null;
-				_Renderer = null;
-				// _TitleLabel.Dispose();
-			}
+			if ( disposing ) { _Renderer = null; }
 
 			base.Dispose(disposing);
 		}
@@ -283,7 +282,7 @@ namespace Jakar.SettingsView.Droid.Cells
 
 		public void Toggle() { Checked = !Checked; }
 
-		public void UpdateCell( object displayValue, object subDisplayValue )
+		public void UpdateCell( object? displayValue, object? subDisplayValue )
 		{
 			_Title.Text = $"{displayValue}";
 

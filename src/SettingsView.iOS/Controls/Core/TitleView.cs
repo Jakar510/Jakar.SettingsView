@@ -5,6 +5,7 @@ using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using UIKit;
 using Xamarin.Forms;
@@ -14,62 +15,21 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class TitleView : BaseTextView
+	public class TitleView : BaseTextView<TitleCellBase, BaseCellView>
 	{
-		private TitleCellBase _CurrentCell => _Renderer.Cell as TitleCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		protected override IUseConfiguration _Config => _Cell.TitleConfig;
 
-		public TitleView( BaseCellView renderer ) : base(renderer)
-		{
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-		}
+		public TitleView( BaseCellView renderer ) : base(renderer) { }
 
 		public override void Initialize( Stack parent )
 		{
-			parent.AddArrangedSubview(this);
-			
+			parent.AddArrangedSubview(Control);
+
 			base.Initialize(parent);
 		}
 
+		public override bool UpdateText() => UpdateText(_Cell.Title);
 
-		public override void SetUsed( Cell cell ) { SetUsed(cell.IsDescriptiveTitleCell()); }
-		public override bool UpdateText()
-		{
-			Text = _CurrentCell.Title;
-			Hidden = string.IsNullOrEmpty(Text);
-
-			return true;
-		}
-		public override bool UpdateFontSize()
-		{
-			ContentScaleFactor = _CurrentCell.TitleConfig.FontSize.ToNFloat();
-			// SetTextSize(ComplexUnitType.Sp, DefaultFontSize);
-
-			return true;
-		}
-		public override bool UpdateTextColor()
-		{
-			TextColor = _CurrentCell.TitleConfig.Color.ToUIColor();
-
-			return true;
-		}
-		public override bool UpdateFont()
-		{
-			string? family = _CurrentCell.TitleConfig.FontFamily;
-			FontAttributes attr = _CurrentCell.TitleConfig.FontAttributes;
-			var size = (float) _CurrentCell.TitleConfig.FontSize;
-
-			Font = FontUtility.CreateNativeFont(family, size, attr);
-
-			return true;
-		}
-		public override bool UpdateTextAlignment()
-		{
-			TextAlignment alignment = _CurrentCell.TitleConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
-
-			return true;
-		}
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{

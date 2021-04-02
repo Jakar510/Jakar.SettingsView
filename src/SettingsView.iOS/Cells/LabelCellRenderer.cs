@@ -4,9 +4,7 @@ using Jakar.Api.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
-using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -17,18 +15,14 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Foundation.Preserve(AllMembers = true)]
 	public class LabelCellRenderer : CellBaseRenderer<LabelCellView> { }
 
-	[Foundation.Preserve(AllMembers = true)]
-	public class LabelCellView : BaseValueCell<ValueView>
+	public class LabelCellView : BaseLabelCellView<LabelCell>
 	{
-		public ValueView ValueLabel => _Value ?? throw new NullReferenceException(nameof(_Value));
-
-
 		public LabelCellView( Cell formsCell ) : base(formsCell)
 		{
 			// ValueLabel.SetContentHuggingPriority(100f, UILayoutConstraintAxis.Horizontal);
 			// ValueLabel.SetContentCompressionResistancePriority(100f, UILayoutConstraintAxis.Horizontal);
 		}
-		
+
 		// public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		// {
 		// 	base.CellPropertyChanged(sender, e);

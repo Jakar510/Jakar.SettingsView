@@ -8,6 +8,7 @@ using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 
@@ -22,6 +23,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			UIControlState.Highlighted,
 			UIControlState.Disabled
 		};
+		protected override IUseConfiguration _Config => _Cell.TitleConfig;
 
 		public ICommand? Command { get; set; }
 		public ICommand? LongClickCommand { get; set; }
@@ -78,7 +80,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			if ( e.IsEqual(TitleCellBase.TitleColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleAlignmentProperty) ) { return UpdateAlignment(); }
+			if ( e.IsEqual(TitleCellBase.TitleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 			return false;
 		}
@@ -92,7 +94,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleFontSizeProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleAlignmentProperty) ) { return UpdateAlignment(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 			if ( e.IsOneOf(Shared.sv.SettingsView.CellTitleFontFamilyProperty, Shared.sv.SettingsView.CellTitleFontAttributesProperty) ) { return UpdateFont(); }
 
@@ -159,7 +161,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public override bool UpdateFont()
 		{
-			TitleCellBase.TitleConfiguration cfg = _Cell.TitleConfig;
+			IUseConfiguration cfg = _Config;
 			UIFont font = string.IsNullOrWhiteSpace(cfg.FontFamily)
 							  ? UIFont.SystemFontOfSize(cfg.FontSize.ToFloat())
 							  : FontUtility.CreateNativeFont(cfg.FontFamily, cfg.FontSize.ToFloat(), cfg.FontAttributes);
@@ -170,7 +172,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 		public override bool UpdateFontSize()
 		{
-			Control.TitleLabel.MinimumFontSize = _Cell.TitleConfig.FontSize.ToNFloat();
+			Control.TitleLabel.MinimumFontSize = _Config.FontSize.ToNFloat();
 
 			return true;
 		}
@@ -183,16 +185,16 @@ namespace Jakar.SettingsView.iOS.Controls
 			return true;
 		}
 
-		protected override bool UpdateAlignment()
+		public override bool UpdateTextAlignment()
 		{
-			Control.TitleLabel.TextAlignment = _Cell.TitleConfig.TextAlignment.ToUITextAlignment();
+			Control.TitleLabel.TextAlignment = _Config.TextAlignment.ToUITextAlignment();
 
 			return true;
 		}
 
 		public override bool UpdateTextColor()
 		{
-			var color = _Cell.TitleConfig.Color.ToUIColor();
+			var color = _Config.Color.ToUIColor();
 			foreach ( UIControlState state in _controlStates ) { Control.SetTitleColor(color, state); }
 
 			foreach ( UIControlState state in _controlStates ) { Control.SetTitleShadowColor(color, state); }

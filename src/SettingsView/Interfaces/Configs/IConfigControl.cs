@@ -16,6 +16,7 @@ namespace Jakar.SettingsView.Shared.Interfaces
 		public string? FontFamily { get; set; }
 		public string? Text { get; set; }
 
+		[TypeConverter(typeof(FontAttributesConverter))]
 		public FontAttributes FontAttributes { get; set; }
 
 		public TextAlignment Alignment { get; set; }

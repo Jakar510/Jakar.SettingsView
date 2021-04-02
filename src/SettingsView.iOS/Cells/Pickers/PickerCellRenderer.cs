@@ -19,7 +19,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class PickerCellView : LabelCellView
+	public class PickerCellView : BaseLabelCellView<LabelCell>
 	{
 		private PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
 		private PickerTableViewController? _PickerVC { get; set; }
@@ -129,7 +129,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			if ( _SelectedCollection is not null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 
-			ValueLabel.Text = _PickerCell.GetSelectedItemsText();
+			string text = _PickerCell.GetSelectedItemsText();
+			_Value.UpdateText(text);
 		}
 
 		private void UpdateCollectionChanged()

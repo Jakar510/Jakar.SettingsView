@@ -3,6 +3,7 @@
 using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable
@@ -67,7 +68,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 		private TitleConfiguration? _config;
 
-		internal TitleConfiguration TitleConfig
+		protected internal TitleConfiguration TitleConfig
 		{
 			get
 			{
@@ -76,21 +77,21 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		internal class TitleConfiguration
+		public class TitleConfiguration : IUseConfiguration
 		{
 			private readonly TitleCellBase _cell;
 			public TitleConfiguration( TitleCellBase cell ) => _cell = cell;
 
-			internal string? FontFamily => _cell.TitleFontFamily ?? _cell.Parent.CellTitleFontFamily;
-			internal FontAttributes FontAttributes => _cell.TitleFontAttributes ?? _cell.Parent.CellTitleFontAttributes;
-			internal TextAlignment TextAlignment => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
+			public string? FontFamily => _cell.TitleFontFamily ?? _cell.Parent.CellTitleFontFamily;
+			public FontAttributes FontAttributes => _cell.TitleFontAttributes ?? _cell.Parent.CellTitleFontAttributes;
+			public TextAlignment TextAlignment => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
 
-			internal Color Color =>
+			public Color Color =>
 				_cell.TitleColor == SVConstants.Cell.COLOR
 					? _cell.Parent.CellTitleColor
 					: _cell.TitleColor;
 
-			internal double FontSize => _cell.TitleFontSize ?? _cell.Parent.CellTitleFontSize;
+			public double FontSize => _cell.TitleFontSize ?? _cell.Parent.CellTitleFontSize;
 		}
 	}
 }

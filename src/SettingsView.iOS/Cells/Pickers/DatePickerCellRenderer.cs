@@ -24,7 +24,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	/// Date picker cell view.
 	/// </summary>
 	[Preserve(AllMembers = true)]
-	public class DatePickerCellView : LabelCellView
+	public class DatePickerCellView : BaseLabelCellView<LabelCell>
 	{
 		private DatePickerCell _DatePickerCell => Cell as DatePickerCell ?? throw new NullReferenceException(nameof(_DatePickerCell));
 
@@ -163,7 +163,8 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
 			_DatePickerCell.Date = _Picker.Date.ToDateTime().Date;
-			ValueLabel.Text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			var text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
 
@@ -172,7 +173,8 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
 			_Picker.SetDate(_DatePickerCell.Date.ToNSDate(), false);
-			ValueLabel.Text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			var text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			_Value.UpdateText(text);
 			_PreSelectedDate = _DatePickerCell.Date.ToNSDate();
 		}
 

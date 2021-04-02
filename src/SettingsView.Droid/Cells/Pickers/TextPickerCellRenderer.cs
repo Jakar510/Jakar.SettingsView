@@ -54,7 +54,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateCommand();
 		}
 
-		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem?.ToString(); }
+		private void UpdateSelectedItem() { _Value.Text = _TextPickerCell.SelectedItem; }
 		private void UpdatePopupTitle() { _PopupTitle = _TextPickerCell.Prompt.Title; }
 		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
 
@@ -70,7 +70,7 @@ namespace Jakar.SettingsView.Droid.Cells
 						  MinValue = 0,
 						  MaxValue = _TextPickerCell.Items.Count - 1,
 						  WrapSelectorWheel = _TextPickerCell.IsCircularPicker,
-						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem), 0),
+						  Value = Math.Max(_TextPickerCell.Items.IndexOf(_TextPickerCell.SelectedItem ?? string.Empty), 0),
 					  };
 
 			_Picker.SetBackgroundColor(_TextPickerCell.Prompt.BackgroundColor.ToAndroid());
@@ -103,7 +103,8 @@ namespace Jakar.SettingsView.Droid.Cells
 		private void CancelAndClosePopup( object o, DialogClickEventArgs args ) { ClearFocus(); }
 		private void AcceptAndClosePopup( object o, DialogClickEventArgs args )
 		{
-			if ( _Picker != null )
+			if ( _Picker != null &&
+				 _TextPickerCell.Items != null )
 			{
 				_TextPickerCell.SelectedItem = _TextPickerCell.Items[_Picker.Value];
 				_Command?.Execute(_TextPickerCell.Items[_Picker.Value]);

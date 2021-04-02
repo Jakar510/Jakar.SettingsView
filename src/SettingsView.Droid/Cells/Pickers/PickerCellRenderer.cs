@@ -114,7 +114,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			if ( !Cell.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_PickerCell.ItemsSource.Count > 0);
+			SetEnabledAppearance(_PickerCell.ItemsSource?.Count > 0);
 		}
 		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(true); }
 

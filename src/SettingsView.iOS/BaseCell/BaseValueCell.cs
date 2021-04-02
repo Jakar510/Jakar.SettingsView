@@ -6,6 +6,7 @@ using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
@@ -17,7 +18,9 @@ using Xamarin.Forms;
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseValueCell<TValue> : BaseCellView where TValue : UIView, IRenderValue
+	public abstract class BaseValueCell<TValueView, TCell, TValueManager> : BaseCellView where TValueView : UIView, new()
+																						 where TCell : CellBase
+																						 where TValueManager : BaseViewManager<TValueView, TCell>
 	{
 		public ValueCellBase? ValueCell => Cell as ValueCellBase;
 		public ValueTextCellBase? ValueTextCell => Cell as ValueTextCellBase;
@@ -44,9 +47,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected HintView _Hint { get; set; }
 
-		protected TValue _Value { get; }
-		// protected ValueView _ValueView { get; set; }
-		// protected AiEditText _EntryView { get; set; }
+		// private UIView _FieldWrapper { get; set; }
+
+		protected TValueManager _Value { get; }
 
 
 		protected BaseValueCell( Cell formsCell ) : base(formsCell)
@@ -60,7 +63,18 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			_ValueStack = Stack.ValueStack();
 			_Hint = new HintView(this);
-			_Value = InstanceCreator.Create<TValue>(this);
+			_Value = InstanceCreator.Create<TValueManager>(this);
+
+
+			// _FieldWrapper = new UIView
+			// 				{
+			// 					AutosizesSubviews = true
+			// 				};
+			// _FieldWrapper.SetContentHuggingPriority(SVConstants.Layout.Priority.DefaultLow, UILayoutConstraintAxis.Horizontal);
+			// _FieldWrapper.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultLow, UILayoutConstraintAxis.Horizontal);
+			//
+			// _FieldWrapper.AddSubview(_Value);
+			// _ValueStack.AddArrangedSubview(_FieldWrapper);
 
 			_Icon.Initialize(_MainStack);
 			_Title.Initialize(_ContentStack);
@@ -68,12 +82,13 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_TitleStack.AddArrangedSubview(_ContentStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
 
+			_Hint.Initialize(_ValueStack);
+			_Value.Initialize(_ValueStack);
+			_MainStack.AddArrangedSubview(_ValueStack);
+
 			_ContentStack.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
 			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
 			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
-
-			_Hint.Initialize(_ValueStack);
-			_Value.Initialize(_ValueStack);
 
 
 			_MainStack.Root(this);
@@ -157,13 +172,15 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected override void RunDispose()
 		{
-			_Hint.Dispose();
-			_Value.Dispose();
-			_ValueStack.Dispose();
 			_Title.Dispose();
 			_Description.Dispose();
 			_Icon.Dispose();
 			_TitleStack.Dispose();
+			// _ValueStack.RemoveArrangedSubview(_FieldWrapper);
+			// _FieldWrapper.Dispose();
+			_ValueStack.Dispose();
+			_Value.Dispose();
+			_Hint.Dispose();
 
 			base.RunDispose();
 		}

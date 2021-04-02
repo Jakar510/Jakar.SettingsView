@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using AContext = Android.Content.Context;
 using AView = Android.Views.View;
+#pragma warning disable 8618
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.BaseCell

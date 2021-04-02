@@ -58,7 +58,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 		private ValueTextConfiguration? _config;
 
-		internal ValueTextConfiguration ValueTextConfig
+		protected internal ValueTextConfiguration ValueTextConfig
 		{
 			get
 			{
@@ -67,21 +67,21 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		internal class ValueTextConfiguration
+		public class ValueTextConfiguration : IUseConfiguration
 		{
 			private readonly ValueCellBase _cell;
 			public ValueTextConfiguration( ValueCellBase cell ) => _cell = cell;
 
-			internal string? FontFamily => _cell.ValueTextFontFamily ?? _cell.Parent.CellValueTextFontFamily;
-			internal FontAttributes FontAttributes => _cell.ValueTextFontAttributes ?? _cell.Parent.CellValueTextFontAttributes;
-			internal TextAlignment TextAlignment => _cell.ValueTextAlignment ?? _cell.Parent.CellValueTextAlignment;
+			public string? FontFamily => _cell.ValueTextFontFamily ?? _cell.Parent.CellValueTextFontFamily;
+			public FontAttributes FontAttributes => _cell.ValueTextFontAttributes ?? _cell.Parent.CellValueTextFontAttributes;
+			public TextAlignment TextAlignment => _cell.ValueTextAlignment ?? _cell.Parent.CellValueTextAlignment;
 
-			internal Color Color =>
+			public Color Color =>
 				_cell.ValueTextColor == SVConstants.Cell.COLOR
 					? _cell.Parent.CellValueTextColor
 					: _cell.ValueTextColor;
 
-			internal double FontSize => _cell.ValueTextFontSize ?? _cell.Parent.CellValueTextFontSize;
+			public double FontSize => _cell.ValueTextFontSize ?? _cell.Parent.CellValueTextFontSize;
 		}
 	}
 

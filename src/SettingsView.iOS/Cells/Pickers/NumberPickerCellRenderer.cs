@@ -20,7 +20,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	public class NumberPickerCellRenderer : CellBaseRenderer<NumberPickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class NumberPickerCellView : LabelCellView
+	public class NumberPickerCellView : BaseLabelCellView<LabelCell>
 	{
 		public UITextField DummyField { get; set; }
 
@@ -156,7 +156,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private void UpdateNumber()
 		{
 			Select(_NumberPickerCell.Number);
-			ValueLabel.Text = _NumberPickerCell.Number.ToString();
+			string text = _NumberPickerCell.Number.ToString();
+			_Value.UpdateText(text);
 		}
 
 		private void UpdateNumberList()
@@ -179,7 +180,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Model is null ) return;
 			_NumberPickerCell.Number = _Model.SelectedItem;
-			ValueLabel.Text = _Model.SelectedItem.ToString();
+			string text = _Model.SelectedItem.ToString();
+			_Value.UpdateText(text);
 		}
 
 		public override void LayoutSubviews()

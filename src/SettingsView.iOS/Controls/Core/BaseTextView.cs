@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using CoreGraphics;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.iOS.Interfaces;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
@@ -14,72 +17,111 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseTextView : UILabel, IUpdateCell<Color, BaseCellView>, IInitializeControl, IDisposable
+	public abstract class BaseTextView<TCell, TCellRenderer> : BaseViewManager<UITextView, TCell>, IRenderValue, IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable where TCell : TitleCellBase
+																																															   where TCellRenderer : BaseCellView
 	{
-		public Color DefaultTextColor { get; }
-		public Color DefaultBackgroundColor { get; }
-		public float DefaultFontSize { get; }
-		protected BaseCellView _Renderer { get; set; }
+		protected TCellRenderer _Renderer { get; set; }
 		protected bool _IsAvailable { get; private set; } = true;
 
 
-		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-		protected BaseTextView( BaseCellView renderer ) : base()
+		protected BaseTextView( TCellRenderer renderer ) : this(new UITextView(), renderer) { }
+		protected BaseTextView( UITextView control, TCellRenderer renderer ) : base(control,
+																					renderer.Cell as TCell ?? throw new NullReferenceException(nameof(renderer.Cell)),
+																					control.TextColor,
+																					control.BackgroundColor,
+																					control.MinimumZoomScale
+																				   )
 		{
-			DefaultBackgroundColor = BackgroundColor.ToColor();
-			DefaultTextColor = TextColor.ToColor();
-			DefaultFontSize = ContentScaleFactor.ToFloat();
-
-			_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
 			Initialize();
-			SetUsed(renderer.Cell);
+			_Renderer = renderer;
 		}
-		public virtual void Initialize( Stack parent )
+		// protected BaseTextView( BaseCellView renderer ) : base()
+		// {
+		// 	_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
+		// 	Initialize();
+		// 	SetUsed(renderer.Cell);
+		// }
+		public override void Initialize( Stack parent )
 		{
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
+			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
 
-			UpdateConstraintsIfNeeded();
+			Control.UpdateConstraintsIfNeeded();
 		}
 
 
 		public void SetUsed( bool used ) { _IsAvailable = used; }
-		public abstract void SetUsed( Cell cell );
-		public void SetCell( BaseCellView cell ) { _Renderer = cell ?? throw new NullReferenceException(nameof(cell)); }
 
-		public virtual void Initialize()
+		public override void Initialize()
 		{
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
 
-			LineBreakMode = UILineBreakMode.WordWrap;
-			Lines = 10;
-			BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
-			AdjustsLetterSpacingToFitWidth = true;
-			AdjustsFontSizeToFitWidth = true;
-			TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
+			// Control.LineBreakMode = UILineBreakMode.WordWrap;
+			// Control.Lines = 10;
+			// Control.BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
+			// Control.AdjustsLetterSpacingToFitWidth = true;
+			// Control.AdjustsFontSizeToFitWidth = true;
+			Control.TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
 
-			BackgroundColor = UIColor.Clear;
+			Control.BackgroundColor = UIColor.Clear;
 		}
 
-		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
+		public override void Enable() { Control.Alpha = SVConstants.Cell.ENABLED_ALPHA; }
+		public override void Disable() { Control.Alpha = SVConstants.Cell.DISABLED_ALPHA; }
 
+
+		public override bool UpdateText( string? text )
+		{
+			Control.Text = text;
+			Control.Hidden = string.IsNullOrEmpty(Control.Text);
+
+			return true;
+		}
+		public override bool UpdateFontSize()
+		{
+			Control.ContentScaleFactor = _Config.FontSize.ToNFloat();
+
+			return true;
+		}
+		public override bool UpdateTextColor()
+		{
+			Control.TextColor = _Config.Color.ToUIColor();
+
+			return true;
+		}
+		public override bool UpdateFont()
+		{
+			IUseConfiguration config = _Config;
+			string? family = config.FontFamily;
+			FontAttributes attr = config.FontAttributes;
+			var size = (float) config.FontSize;
+
+			Control.Font = FontUtility.CreateNativeFont(family, size, attr);
+
+			// make the view height fit font size
+			nfloat contentH = Control.IntrinsicContentSize.Height;
+			CGRect bounds = Control.Bounds;
+			Control.Bounds = new CGRect(0, 0, bounds.Width, contentH);
+
+			return true;
+		}
+		public override bool UpdateTextAlignment()
+		{
+			Control.TextAlignment = _Config.TextAlignment.ToUITextAlignment();
+
+			return true;
+		}
 
 		public void SetEnabledAppearance( bool isEnabled )
 		{
-			Alpha = isEnabled
-						? SVConstants.Cell.ENABLED_ALPHA
-						: SVConstants.Cell.DISABLED_ALPHA;
+			Control.Alpha = isEnabled
+								? SVConstants.Cell.ENABLED_ALPHA
+								: SVConstants.Cell.DISABLED_ALPHA;
 		}
-		public abstract bool UpdateText();
-		public abstract bool UpdateTextColor();
-		public abstract bool UpdateFontSize();
-		public abstract bool UpdateTextAlignment();
-		public abstract bool UpdateFont();
 
 
-		public virtual void Update()
+		public override void Update()
 		{
 			// UpdateBackgroundColor();
 			UpdateText();
@@ -90,7 +132,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		}
 
 
-		public virtual bool Update( object sender, PropertyChangedEventArgs e ) =>
+		public override bool Update( object sender, PropertyChangedEventArgs e ) =>
 			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName )
 			// {
 			// 	UpdateBackgroundColor();
@@ -98,7 +140,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			// }
 			false;
 
-		public virtual bool UpdateParent( object sender, PropertyChangedEventArgs e ) =>
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e ) =>
 			// if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName )
 			// {
 			// 	UpdateBackgroundColor();
@@ -108,7 +150,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing ) { RemoveFromSuperview(); }
+			if ( disposing ) { Control.RemoveFromSuperview(); }
 
 			base.Dispose(disposing);
 		}

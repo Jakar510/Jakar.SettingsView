@@ -2,8 +2,11 @@
 using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
+using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
@@ -19,94 +22,72 @@ using TextAlignment = Xamarin.Forms.TextAlignment;
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Preserve(AllMembers = true)]
-	public class AiEditText : UITextField, IUpdateEntryCell<IEntryCellRenderer, Color>, IUpdateCell<Color, AiEntryCell>, IInitializeControl, IRenderValue
+	public class AiEditText : BaseViewManager<UITextField, AiEntryCell>, IUpdateEntryCell<Color>, IInitializeControl, IRenderValue
 	{
 		protected bool _HasFocus { get; set; }
 
-		public Color DefaultTextColor { get; }
-		public float DefaultFontSize { get; }
-		protected IEntryCellRenderer? _CellRenderer { get; private set; }
-		protected AiEntryCell? _CurrentCell { get; private set; }
-		public Shared.sv.SettingsView? CellParent => _CurrentCell?.Parent;
+		private readonly EntryCellView _renderer;
+		protected IEntryCellRenderer _CellRenderer => _renderer;
+		protected override IUseConfiguration _Config => _Cell.ValueTextConfig;
 
 
-		public AiEditText()
+		public AiEditText( EntryCellView renderer ) : this(new UITextField(), renderer) { }
+		public AiEditText( UITextField control, EntryCellView renderer ) : base(control,
+																				renderer.EntryCell,
+																				control.TextColor,
+																				control.BackgroundColor,
+																				control.MinimumFontSize
+																			   )
 		{
-			DefaultTextColor = TextColor.ToColor();
-			DefaultFontSize = ContentScaleFactor.ToFloat();
+			_renderer = renderer;
+			_Cell.Focused += EntryCell_Focused;
 
 			Initialize();
-			TouchUpInside += ValueFieldOnTouchUpInside;
-			EditingChanged += TextField_EditingChanged;
-			EditingDidBegin += ValueField_EditingDidBegin;
-			EditingDidEnd += ValueField_EditingDidEnd;
-			ShouldReturn = OnShouldReturn;
+			Control.TouchUpInside += ValueFieldOnTouchUpInside;
+			Control.EditingChanged += TextField_EditingChanged;
+			Control.EditingDidBegin += ValueField_EditingDidBegin;
+			Control.EditingDidEnd += ValueField_EditingDidEnd;
+			Control.ShouldReturn = OnShouldReturn;
 		}
 
 
-		public void Initialize( Stack parent )
+		public override void Initialize( Stack parent )
 		{
-			parent.BringSubviewToFront(this);
-			UpdateConstraintsIfNeeded();
-			LayoutIfNeeded();
-		}
-		protected override void Dispose( bool disposing )
-		{
-			base.Dispose(disposing);
-			TouchUpInside -= ValueFieldOnTouchUpInside;
-			EditingChanged -= TextField_EditingChanged;
-			EditingDidBegin -= ValueField_EditingDidBegin;
-			EditingDidEnd -= ValueField_EditingDidEnd;
-			if ( _CurrentCell is not null ) _CurrentCell.Focused -= EntryCell_Focused;
-			ShouldReturn = null;
+			parent.BringSubviewToFront(Control);
+			Control.UpdateConstraintsIfNeeded();
+			Control.LayoutIfNeeded();
 		}
 
 
 		public void SetEnabledAppearance( bool isEnabled )
 		{
-			Alpha = isEnabled
-						? SVConstants.Cell.ENABLED_ALPHA
-						: SVConstants.Cell.DISABLED_ALPHA;
+			Control.Alpha = isEnabled
+							   ? SVConstants.Cell.ENABLED_ALPHA
+							   : SVConstants.Cell.DISABLED_ALPHA;
 		}
-		public void Initialize()
+		public override void Initialize()
 		{
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
 
-			BorderStyle = UITextBorderStyle.None;
-			AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
-			ReturnKeyType = UIReturnKeyType.Done;
+			Control.BorderStyle = UITextBorderStyle.None;
+			Control.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+			Control.ReturnKeyType = UIReturnKeyType.Done;
 
-			BackgroundColor = UIColor.Clear;
+			Control.BackgroundColor = UIColor.Clear;
 
-			// SetSingleLine(false);
-			// Ellipsize = null; // TextUtils.TruncateAt.End;
-			// SetMinLines(1);
-			// SetMaxLines(10);
-			// BreakStrategy = BreakStrategy.Balanced;
+			// Control.SetSingleLine(false);
+			// Control.Ellipsize = null; // TextUtils.TruncateAt.End;
+			// Control.SetMinLines(1);
+			// Control.SetMaxLines(10);
+			// Control.BreakStrategy = BreakStrategy.Balanced;
 			//
-			// Focusable = true;
-			// ImeOptions = ImeAction.Done;
-			// SetBackgroundColor(Color.Transparent.ToUIColor());
-			// if ( Background != null ) { Background.Alpha = 0; } // hide underline
-		}
-		public void Init( AiEntryCell cell, IEntryCellRenderer renderer )
-		{
-			SetCell(cell);
-			_CellRenderer = renderer;
-			// OnFocusChangeListener = _CellRenderer; 
-			// SetOnEditorActionListener(_CellRenderer);
-		}
-		public void SetCell( AiEntryCell cell )
-		{
-			_CurrentCell = cell;
-			_CurrentCell.Focused += EntryCell_Focused;
-			// InputType = _CurrentCell.Keyboard.ToInputType();
+			// Control.Focusable = true;
+			// Control.ImeOptions = ImeAction.Done;
+			// Control.SetBackgroundColor(Color.Transparent.ToUIColor());
+			// if ( Control.Background != null ) { Control.Background.Alpha = 0; } // hide underline
 		}
 
-
-		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
 
 		// protected override void OnFocusChanged( bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Android.Graphics.Rect? previouslyFocusedRect )
 		// {
@@ -129,30 +110,28 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			// https://stackoverflow.com/questions/34922331/getting-and-setting-cursor-position-of-uitextfield-and-uitextview-in-swift
 
-			UITextPosition start = BeginningOfDocument;
-			UITextPosition end = EndOfDocument;
-			if ( _CurrentCell is null ) { return; }
-
-			switch ( _CurrentCell.OnSelectAction )
+			UITextPosition start = Control.BeginningOfDocument;
+			UITextPosition end = Control.EndOfDocument;
+			switch ( _Cell.OnSelectAction )
 			{
 				case SelectAction.None:
 					break;
 
 				case SelectAction.Start:
-					SelectedTextRange = GetTextRange(start, start);
-					Select(this);
+					Control.SelectedTextRange = Control.GetTextRange(start, start);
+					Control.Select(Control);
 
 					break;
 
 				case SelectAction.End:
-					SelectedTextRange = GetTextRange(end, end);
-					Select(this);
+					Control.SelectedTextRange = Control.GetTextRange(end, end);
+					Control.Select(Control);
 
 					break;
 
 				case SelectAction.All:
-					SelectedTextRange = GetTextRange(start, end);
-					Select(this);
+					Control.SelectedTextRange = Control.GetTextRange(start, end);
+					Control.Select(Control);
 					//SelectAll(ValueField);
 
 					break;
@@ -164,188 +143,174 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public bool UpdateSelectAction()
 		{
 			// https://stackoverflow.com/questions/34922331/getting-and-setting-cursor-position-of-uitextfield-and-uitextview-in-swift
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
 
-			ClearsOnBeginEditing = _CurrentCell.OnSelectAction switch
-								   {
-									   SelectAction.None => false,
-									   SelectAction.Start => false,
-									   SelectAction.End => false,
-									   SelectAction.All => true,
-									   _ => throw new ArgumentOutOfRangeException()
-								   };
+			Control.ClearsOnBeginEditing = _Cell.OnSelectAction switch
+										   {
+											   SelectAction.None => false,
+											   SelectAction.Start => false,
+											   SelectAction.End => false,
+											   SelectAction.All => true,
+											   _ => throw new ArgumentOutOfRangeException()
+										   };
 			return true;
 		}
 
-		public bool UpdateText() => UpdateText(_CurrentCell?.ValueText);
-		public bool UpdateText( string? text )
+		public override bool UpdateText() => UpdateText(_Cell.ValueText);
+		public override bool UpdateText( string? text )
 		{
-			Text = text;
-			Hidden = string.IsNullOrEmpty(Text);
+			Control.Text = text;
+			Control.Hidden = string.IsNullOrEmpty(Control.Text);
 
 			return true;
 		}
-		public bool UpdateFontSize()
+		public override bool UpdateFontSize()
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			ContentScaleFactor = _CurrentCell.ValueTextConfig.FontSize.ToNFloat();
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			Control.ContentScaleFactor = _Cell.ValueTextConfig.FontSize.ToNFloat();
 
 			return true;
 		}
-		public bool UpdateTextColor()
+		public override bool UpdateTextColor()
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			TextColor = _CurrentCell.ValueTextConfig.Color.ToUIColor();
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			Control.TextColor = _Cell.ValueTextConfig.Color.ToUIColor();
 
 			return true;
 		}
-		public bool UpdateFont()
+		public override bool UpdateFont()
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			string? family = _CurrentCell.ValueTextConfig.FontFamily;
-			FontAttributes attr = _CurrentCell.ValueTextConfig.FontAttributes;
-			var size = (float) _CurrentCell.ValueTextConfig.FontSize;
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			string? family = _Cell.ValueTextConfig.FontFamily;
+			FontAttributes attr = _Cell.ValueTextConfig.FontAttributes;
+			var size = (float) _Cell.ValueTextConfig.FontSize;
 
-			Font = FontUtility.CreateNativeFont(family, size, attr);
-			
+			Control.Font = FontUtility.CreateNativeFont(family, size, attr);
+
 			// make the view height fit font size
-			nfloat contentH = IntrinsicContentSize.Height;
-			CGRect bounds = Bounds;
-			Bounds = new CGRect(0, 0, bounds.Width, contentH);
+			nfloat contentH = Control.IntrinsicContentSize.Height;
+			CGRect bounds = Control.Bounds;
+			Control.Bounds = new CGRect(0, 0, bounds.Width, contentH);
 			return UpdatePlaceholder();
 		}
-		public bool UpdateTextAlignment()
+		public override bool UpdateTextAlignment()
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			TextAlignment alignment = _CurrentCell.ValueTextConfig.TextAlignment;
-			TextAlignment = alignment.ToUITextAlignment();
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			TextAlignment alignment = _Cell.ValueTextConfig.TextAlignment;
+			Control.TextAlignment = alignment.ToUITextAlignment();
 
 			return true;
 		}
 
 		public bool UpdateKeyboard()
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			this.ApplyKeyboard(_CurrentCell.Keyboard);
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			Control.ApplyKeyboard(_Cell.Keyboard);
 			return true;
 		}
 		public bool UpdateIsPassword()
 		{
 			// https://stackoverflow.com/a/6578848/9530917
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			SecureTextEntry = _CurrentCell.IsPassword;
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			Control.SecureTextEntry = _Cell.IsPassword;
 			return true;
 		}
 		public bool UpdatePlaceholder()
 		{
 			// https://stackoverflow.com/a/23610570/9530917
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			UIColor placeholderColor = _CurrentCell.GetPlaceholderColor().ToUIColor();
-			AttributedPlaceholder = new NSAttributedString(_CurrentCell.Placeholder, Font, placeholderColor);
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+			UIColor placeholderColor = _Cell.GetPlaceholderColor().ToUIColor();
+			Control.AttributedPlaceholder = new NSAttributedString(_Cell.Placeholder ?? string.Empty, Control.Font, placeholderColor);
 			return true;
 		}
 
 
-		public bool UpdateAccentColor() => ChangeTextViewBack(_CurrentCell?.GetAccentColor() ?? Color.Accent);
+		public bool UpdateAccentColor() => ChangeTextViewBack(_Cell.GetAccentColor());
 		public bool ChangeTextViewBack( Color accent )
 		{
-			TintColor = accent.ToUIColor();
+			Control.TintColor = accent.ToUIColor();
 			return true;
 		}
 
 
 		protected void ValueFieldOnTouchUpInside( object sender, EventArgs e ) { PerformSelectAction(); }
-		protected void TextField_EditingChanged( object sender, EventArgs e )
-		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
-			_CurrentCell.ValueText = Text;
-		}
+		protected void TextField_EditingChanged( object sender, EventArgs e ) { _Cell.ValueText = Control.Text; }
 		protected void ValueField_EditingDidBegin( object sender, EventArgs e ) { _HasFocus = true; }
 		protected void ValueField_EditingDidEnd( object sender, EventArgs e )
 		{
 			if ( !_HasFocus ) { return; }
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
 
-			ResignFirstResponder();
-			_CurrentCell.SendCompleted();
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
+
+			Control.ResignFirstResponder();
+			_CellRenderer.DoneEdit();
 			_HasFocus = false;
 		}
-		protected void EntryCell_Focused( object sender, EventArgs e ) { BecomeFirstResponder(); }
+		protected void EntryCell_Focused( object sender, EventArgs e ) { Control.BecomeFirstResponder(); }
 		protected bool OnShouldReturn( UITextField view )
 		{
-			if ( _CurrentCell is null ) throw new NullReferenceException(nameof(_CurrentCell));
+			if ( _Cell is null ) throw new NullReferenceException(nameof(_Cell));
 			_HasFocus = false;
-			ResignFirstResponder();
-			_CurrentCell.SendCompleted();
+			Control.ResignFirstResponder();
+			_Cell.SendCompleted();
 
 			return true;
 		}
 
 		// protected void UpdateValueTextAlignment() { TextAlignment = CellBase.ValueTextTextAlignment; }
 
-		public bool Update( object sender, PropertyChangedEventArgs e )
+		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( _CellRenderer is null ) throw new NullReferenceException(nameof(_CellRenderer));
+			if ( e.IsEqual(ValueTextCellBase.ValueTextProperty) ) { return UpdateText(); }
 
-			if ( e.PropertyName == ValueTextCellBase.ValueTextProperty.PropertyName ) { return UpdateText(); }
+			if ( e.IsEqual(ValueCellBase.ValueTextFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.IsOneOf(ValueCellBase.ValueTextFontFamilyProperty, ValueCellBase.ValueTextFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.IsEqual(ValueCellBase.ValueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.IsOneOf(ValueCellBase.ValueTextFontFamilyProperty, ValueCellBase.ValueTextFontAttributesProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.IsEqual(ValueCellBase.ValueTextColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
 
-			if ( e.PropertyName == ValueCellBase.ValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == ValueCellBase.ValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
-
-			if ( e.PropertyName == ValueCellBase.ValueTextColorProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
-
-			if ( e.PropertyName == ValueCellBase.ValueTextAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(ValueCellBase.ValueTextAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 
-			if ( e.PropertyName == AiEntryCell.KeyboardProperty.PropertyName ) { return UpdateKeyboard(); }
+			if ( e.IsEqual(AiEntryCell.KeyboardProperty) ) { return UpdateKeyboard(); }
 
-			if ( e.PropertyName == AiEntryCell.PlaceholderProperty.PropertyName ||
-				 e.PropertyName == AiEntryCell.PlaceholderColorProperty.PropertyName ) { return UpdatePlaceholder(); }
+			if ( e.IsOneOf(AiEntryCell.PlaceholderProperty, AiEntryCell.PlaceholderColorProperty) ) { return UpdatePlaceholder(); }
 
-			if ( e.PropertyName == AiEntryCell.AccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(AiEntryCell.AccentColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateAccentColor); }
 
-			if ( e.PropertyName == AiEntryCell.IsPasswordProperty.PropertyName ) { return UpdateIsPassword(); }
+			if ( e.IsEqual(AiEntryCell.IsPasswordProperty) ) { return UpdateIsPassword(); }
 
-			if ( e.PropertyName == AiEntryCell.OnSelectActionProperty.PropertyName ) { return UpdateSelectAction(); }
+			if ( e.IsEqual(AiEntryCell.OnSelectActionProperty) ) { return UpdateSelectAction(); }
 
-			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			// if ( e.IsEqual(CellBase.BackgroundColorProperty) ) { UpdateBackgroundColor(); }
 
 			return false;
 		}
-		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( _CellRenderer is null ) throw new NullReferenceException(nameof(_CellRenderer));
+			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.CellValueTextFontFamilyProperty, Shared.sv.SettingsView.CellValueTextFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontSizeProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.CellValueTextFontFamilyProperty, Shared.sv.SettingsView.CellValueTextFontAttributesProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextFontFamilyProperty.PropertyName ||
-				 e.PropertyName == Shared.sv.SettingsView.CellValueTextFontAttributesProperty.PropertyName ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
-
-			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
 
 			// if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 
 			return false;
 		}
-		public void Update()
+		public override void Update()
 		{
 			UpdateText();
 			UpdateTextColor();
@@ -356,6 +321,19 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			UpdateAccentColor();
 			UpdateTextAlignment();
 			UpdateIsPassword();
+		}
+
+
+		protected override void Dispose( bool disposing )
+		{
+			base.Dispose(disposing);
+
+			Control.TouchUpInside -= ValueFieldOnTouchUpInside;
+			Control.EditingChanged -= TextField_EditingChanged;
+			Control.EditingDidBegin -= ValueField_EditingDidBegin;
+			Control.EditingDidEnd -= ValueField_EditingDidEnd;
+			_Cell.Focused -= EntryCell_Focused;
+			Control.ShouldReturn = null;
 		}
 	}
 }

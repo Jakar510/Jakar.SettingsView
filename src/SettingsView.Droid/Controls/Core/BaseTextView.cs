@@ -17,9 +17,10 @@ namespace Jakar.SettingsView.Droid.Controls.Core
 {
 	[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 	[Android.Runtime.Preserve(AllMembers = true)]
-	public abstract class BaseTextView : TextView, IUpdateCell<AColor, BaseCellView>
+	public abstract class BaseTextView : TextView, IUpdateCell<BaseCellView>, IDefaultColors<AColor>, IUpdateCell
 	{
 		public AColor DefaultTextColor { get; }
+		public AColor DefaultBackgroundColor { get; }
 		public float DefaultFontSize { get; }
 		protected BaseCellView _Cell { get; set; }
 
@@ -28,6 +29,7 @@ namespace Jakar.SettingsView.Droid.Controls.Core
 		protected BaseTextView( AContext context ) : base(context)
 		{
 			DefaultFontSize = TextSize;
+			DefaultBackgroundColor = Color.Default.ToAndroid();
 			DefaultTextColor = new AColor(CurrentTextColor);
 			Initialize();
 		}
