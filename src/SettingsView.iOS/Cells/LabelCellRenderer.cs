@@ -17,7 +17,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 	public class LabelCellView : BaseLabelCellView<LabelCell>
 	{
-		public LabelCellView( Cell formsCell ) : base(formsCell)
+		public LabelCellView( LabelCell formsCell ) : base(formsCell)
 		{
 			// ValueLabel.SetContentHuggingPriority(100f, UILayoutConstraintAxis.Horizontal);
 			// ValueLabel.SetContentCompressionResistancePriority(100f, UILayoutConstraintAxis.Horizontal);

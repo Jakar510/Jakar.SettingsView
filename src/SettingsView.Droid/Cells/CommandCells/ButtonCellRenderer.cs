@@ -148,13 +148,13 @@ namespace Jakar.SettingsView.Droid.Cells
 		{
 			base.EnableCell();
 			_Button.Enabled = true;
-			_Button.Alpha = SVConstants.Cell.ENABLED_ALPHA;
+			_Button.Alpha = SvConstants.Cell.ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
 			base.DisableCell();
 			_Button.Enabled = false;
-			_Button.Alpha = SVConstants.Cell.DISABLED_ALPHA;
+			_Button.Alpha = SvConstants.Cell.DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()

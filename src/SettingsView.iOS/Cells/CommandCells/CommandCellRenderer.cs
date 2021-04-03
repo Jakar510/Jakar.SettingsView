@@ -15,18 +15,17 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class CommandCellView : BaseDescriptiveTitleCell
+	public class CommandCellView : BaseDescriptiveTitleCell<CommandCell>
 	{
-		private CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
 		private ICommand? _command;
 
-		public CommandCellView( Cell formsCell ) : base(formsCell)
+		public CommandCellView( CommandCell formsCell ) : base(formsCell)
 		{
 			SelectionStyle = UITableViewCellSelectionStyle.Default;
 			Accessory = UITableViewCellAccessory.DisclosureIndicator;
 			EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
 
-			if ( _CommandCell.HideArrowIndicator ) { return; }
+			if ( Cell.HideArrowIndicator ) { return; }
 
 			Accessory = UITableViewCellAccessory.None;
 			EditingAccessory = UITableViewCellAccessory.None;
@@ -43,7 +42,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
 			Run();
-			if ( !_CommandCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
+			if ( !Cell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
 
 		public override void UpdateCell( UITableView tableView )
@@ -68,7 +67,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _command is not null ) { _command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-			_command = _CommandCell.Command;
+			_command = Cell.Command;
 
 			if ( _command is null ) return;
 			_command.CanExecuteChanged += Command_CanExecuteChanged;
@@ -79,13 +78,13 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _command is null ) { return; }
 
-			if ( _command.CanExecute(_CommandCell.CommandParameter) ) { _command.Execute(_CommandCell.CommandParameter); }
+			if ( _command.CanExecute(Cell.CommandParameter) ) { _command.Execute(Cell.CommandParameter); }
 		}
 
 		protected override void UpdateIsEnabled()
 		{
 			if ( _command is not null &&
-				 !_command.CanExecute(_CommandCell.CommandParameter) ) { return; }
+				 !_command.CanExecute(Cell.CommandParameter) ) { return; }
 
 			base.UpdateIsEnabled();
 		}
@@ -95,7 +94,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			if ( _command is null ||
 				 _CellBase != null && !_CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_command.CanExecute(_CommandCell.CommandParameter));
+			SetEnabledAppearance(_command.CanExecute(Cell.CommandParameter));
 		}
 	}
 }

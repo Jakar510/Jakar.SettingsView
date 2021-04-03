@@ -9,12 +9,12 @@ namespace Jakar.SettingsView.Shared.Config
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class ControlConfig : SVConfig, IConfigControl
 	{
-		public static BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(ControlConfig), SVConstants.Defaults.COLOR);
+		public static BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(ControlConfig), SvConstants.Defaults.color);
 
 		public static BindableProperty FontSizeProperty = BindableProperty.Create(nameof(FontSize),
 																				  typeof(double),
 																				  typeof(ControlConfig),
-																				  SVConstants.Defaults.FONT_SIZE,
+																				  SvConstants.Defaults.FONT_SIZE,
 																				  BindingMode.OneWay,
 																				  defaultValueCreator: bindable => Device.GetNamedSize(NamedSize.Default, typeof(ControlConfig))
 																				 );

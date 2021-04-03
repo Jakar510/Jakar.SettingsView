@@ -41,7 +41,7 @@ namespace Jakar.SettingsView.Shared.sv
 			HorizontalOptions = LayoutOptions.Fill;
 			VerticalOptions = LayoutOptions.Fill;
 
-			HeightRequest = SVConstants.Section.Footer.MinRowHeight; 
+			HeightRequest = SvConstants.Section.Footer.MIN_ROW_HEIGHT; 
 			Margin = new Thickness(0);
 		}
 	}

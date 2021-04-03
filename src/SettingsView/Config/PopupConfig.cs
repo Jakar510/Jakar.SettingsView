@@ -14,26 +14,26 @@ namespace Jakar.SettingsView.Shared.Config
 	{
 		public static BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(PopupConfig), default(string));
 		public static BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(PopupConfig), Color.Black);
-		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double?), typeof(PopupConfig), SVConstants.Prompt.Title.FONT_SIZE);
+		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double?), typeof(PopupConfig), SvConstants.Prompt.Title.FONT_SIZE);
 
 
 		public static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(PopupConfig), Color.White);
-		public static BindableProperty AcceptProperty = BindableProperty.Create(nameof(Accept), typeof(string), typeof(PopupConfig), SVConstants.Prompt.ACCEPT_TEXT);
-		public static BindableProperty CancelProperty = BindableProperty.Create(nameof(Cancel), typeof(string), typeof(PopupConfig), SVConstants.Prompt.CANCEL_TEXT);
+		public static BindableProperty AcceptProperty = BindableProperty.Create(nameof(Accept), typeof(string), typeof(PopupConfig), SvConstants.Prompt.ACCEPT_TEXT);
+		public static BindableProperty CancelProperty = BindableProperty.Create(nameof(Cancel), typeof(string), typeof(PopupConfig), SvConstants.Prompt.CANCEL_TEXT);
 
 
-		public static readonly BindableProperty SelectedFontSizeProperty = BindableProperty.Create(nameof(SelectedFontSize), typeof(double?), typeof(PopupConfig), SVConstants.Prompt.Selected.FONT_SIZE);
-		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(PopupConfig), SVConstants.Prompt.Selected.TEXT_COLOR);
-		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PopupConfig), SVConstants.Defaults.ACCENT);
-		public static readonly BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(PopupConfig), SVConstants.Prompt.SEPARATOR_COLOR);
+		public static readonly BindableProperty SelectedFontSizeProperty = BindableProperty.Create(nameof(SelectedFontSize), typeof(double?), typeof(PopupConfig), SvConstants.Prompt.Selected.FONT_SIZE);
+		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(PopupConfig), SvConstants.Prompt.Selected.text_Color);
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PopupConfig), SvConstants.Defaults.accent);
+		public static readonly BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(PopupConfig), SvConstants.Prompt.separator_Color);
 
 
-		public static readonly BindableProperty ItemFontSizeProperty = BindableProperty.Create(nameof(ItemFontSize), typeof(double?), typeof(PopupConfig), SVConstants.Prompt.Item.FONT_SIZE);
-		public static BindableProperty ItemColorProperty = BindableProperty.Create(nameof(ItemColor), typeof(Color), typeof(PopupConfig), SVConstants.Prompt.Item.COLOR);
+		public static readonly BindableProperty ItemFontSizeProperty = BindableProperty.Create(nameof(ItemFontSize), typeof(double?), typeof(PopupConfig), SvConstants.Prompt.Item.FONT_SIZE);
+		public static BindableProperty ItemColorProperty = BindableProperty.Create(nameof(ItemColor), typeof(Color), typeof(PopupConfig), SvConstants.Prompt.Item.color);
 
 
 		public static BindableProperty ItemDescriptionColorProperty = BindableProperty.Create(nameof(ItemDescriptionColor), typeof(Color), typeof(PopupConfig), Color.SlateGray);
-		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double?), typeof(PopupConfig), SVConstants.Prompt.Item.Description.FontSize);
+		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double?), typeof(PopupConfig), SvConstants.Prompt.Item.Description.FONT_SIZE);
 
 
 		[TypeConverter(typeof(ColorTypeConverter))]
@@ -169,48 +169,48 @@ namespace Jakar.SettingsView.Shared.Config
 			public PromptConfiguration( PopupConfig cell ) => _config = cell;
 
 			internal Color BackgroundColor =>
-				_config.BackgroundColor == SVConstants.Cell.COLOR
-					? _Sv?.BackgroundColor ?? SVConstants.Prompt.BACKGROUND_COLOR
+				_config.BackgroundColor == SvConstants.Cell.color
+					? _Sv?.BackgroundColor ?? SvConstants.Prompt.background_Color
 					: _config.BackgroundColor;
 
 
 			internal string Title => _config.Title;
 			internal Color TitleColor =>
-				_config.TitleColor == SVConstants.Prompt.Title.COLOR
-					? _Sv?.TitleColor ?? SVConstants.Prompt.Title.COLOR
+				_config.TitleColor == SvConstants.Prompt.Title.color
+					? _Sv?.TitleColor ?? SvConstants.Prompt.Title.color
 					: _config.TitleColor;
-			internal double TitleFontSize => _config.TitleFontSize ?? _Sv?.TitleFontSize ?? SVConstants.Prompt.Title.FONT_SIZE;
+			internal double TitleFontSize => _config.TitleFontSize ?? _Sv?.TitleFontSize ?? SvConstants.Prompt.Title.FONT_SIZE;
 
 
 			internal Color ItemColor =>
-				_config.ItemColor == SVConstants.Prompt.Item.COLOR
-					? _Sv?.ItemColor ?? SVConstants.Prompt.Item.COLOR
+				_config.ItemColor == SvConstants.Prompt.Item.color
+					? _Sv?.ItemColor ?? SvConstants.Prompt.Item.color
 					: _config.ItemColor;
-			internal double ItemFontSize => _config.ItemFontSize ?? _Sv?.ItemFontSize ?? SVConstants.Prompt.Item.FONT_SIZE;
+			internal double ItemFontSize => _config.ItemFontSize ?? _Sv?.ItemFontSize ?? SvConstants.Prompt.Item.FONT_SIZE;
 
 
 			internal Color ItemDescriptionColor =>
-				_config.ItemDescriptionColor == SVConstants.Prompt.Item.Description.Color
-					? _Sv?.ItemDescriptionColor ?? SVConstants.Prompt.Item.Description.Color
+				_config.ItemDescriptionColor == SvConstants.Prompt.Item.Description.color
+					? _Sv?.ItemDescriptionColor ?? SvConstants.Prompt.Item.Description.color
 					: _config.ItemDescriptionColor;
-			internal double ItemDescriptionFontSize => _config.ItemDescriptionFontSize ?? _Sv?.ItemDescriptionFontSize ?? SVConstants.Prompt.Item.Description.FontSize;
+			internal double ItemDescriptionFontSize => _config.ItemDescriptionFontSize ?? _Sv?.ItemDescriptionFontSize ?? SvConstants.Prompt.Item.Description.FONT_SIZE;
 			
 			
-			internal double SelectedFontSize => _config.SelectedFontSize ?? _Sv?.SelectedFontSize ?? SVConstants.Prompt.Selected.FONT_SIZE;
+			internal double SelectedFontSize => _config.SelectedFontSize ?? _Sv?.SelectedFontSize ?? SvConstants.Prompt.Selected.FONT_SIZE;
 
 			internal Color AccentColor =>
-				_config.AccentColor == SVConstants.Defaults.ACCENT
-					? _Sv?.AccentColor ?? SVConstants.Defaults.ACCENT
+				_config.AccentColor == SvConstants.Defaults.accent
+					? _Sv?.AccentColor ?? SvConstants.Defaults.accent
 					: _config.AccentColor;
 
 			internal Color SelectedColor =>
-				_config.SelectedColor == SVConstants.Prompt.Selected.TEXT_COLOR
-					? _Sv?.SelectedColor ?? SVConstants.Prompt.Selected.TEXT_COLOR
+				_config.SelectedColor == SvConstants.Prompt.Selected.text_Color
+					? _Sv?.SelectedColor ?? SvConstants.Prompt.Selected.text_Color
 					: _config.SelectedColor;
 
 			internal Color SeparatorColor =>
-				_config.SeparatorColor == SVConstants.Prompt.SEPARATOR_COLOR
-					? _Sv?.SeparatorColor ?? SVConstants.Prompt.SEPARATOR_COLOR
+				_config.SeparatorColor == SvConstants.Prompt.separator_Color
+					? _Sv?.SeparatorColor ?? SvConstants.Prompt.separator_Color
 					: _config.SeparatorColor;
 		}
 	}

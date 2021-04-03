@@ -121,7 +121,7 @@ namespace Jakar.SettingsView.Droid
 		protected void UpdateSeparatorColor() { _Divider?.SetTint(Element.SeparatorColor.ToAndroid()); }
 		protected void UpdateRowHeight()
 		{
-			if ( Element.RowHeight < 0 ) { Element.RowHeight = (int) SVConstants.Defaults.MIN_ROW_HEIGHT; }
+			if ( Element.RowHeight < 0 ) { Element.RowHeight = (int) SvConstants.Defaults.MIN_ROW_HEIGHT; }
 			else { _Adapter?.NotifyDataSetChanged(); }
 		}
 		protected void UpdateScrollToTop()

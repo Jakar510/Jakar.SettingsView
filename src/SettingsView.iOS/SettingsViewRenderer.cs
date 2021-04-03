@@ -317,7 +317,7 @@ namespace Jakar.SettingsView.iOS
 
 		protected void ParentPageAppearing( object sender, EventArgs e ) { _TableView?.DeselectRow(_TableView.IndexPathForSelectedRow, true); }
 
-		public override SizeRequest GetDesiredSize( double widthConstraint, double heightConstraint ) => Control.GetSizeRequest(widthConstraint, heightConstraint, SVConstants.Defaults.MIN_ROW_HEIGHT, SVConstants.Defaults.MIN_ROW_HEIGHT);
+		public override SizeRequest GetDesiredSize( double widthConstraint, double heightConstraint ) => Control.GetSizeRequest(widthConstraint, heightConstraint, SvConstants.Defaults.MIN_ROW_HEIGHT, SvConstants.Defaults.MIN_ROW_HEIGHT);
 
 		protected override void UpdateNativeWidget()
 		{
@@ -350,7 +350,7 @@ namespace Jakar.SettingsView.iOS
 		{
 			if ( _TableView is null ) throw new NullReferenceException(nameof(_TableView));
 
-			_TableView.EstimatedRowHeight = Math.Max(Element.RowHeight, SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat();
+			_TableView.EstimatedRowHeight = Math.Max(Element.RowHeight, SvConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat();
 			_TableView.ReloadData();
 		}
 

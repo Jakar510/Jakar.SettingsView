@@ -59,6 +59,7 @@
     <Compile Include="BaseCell\BaseDescriptiveTitleCell.cs" />
     <Compile Include="BaseCell\BaseValueCell.cs" />
     <Compile Include="BaseCell\BaseLabelCellView.cs" />
+    <Compile Include="Controls\AiSwitch.cs" />
     <Compile Include="Controls\Manager\BaseViewManager.cs" />
     <Compile Include="Interfaces\IRenderAccessory.cs" />
     <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />
@@ -80,8 +81,8 @@
     <Compile Include="Cells\Pickers\Sources\TextPickerSource.cs" />
     <Compile Include="Cells\Pickers\TimePickerCellRenderer.cs" />
     <Compile Include="Controls\Core\AiEditText.cs" />
-    <Compile Include="Controls\Core\BaseTextView.cs" />
-    <Compile Include="Controls\ButtonView.cs" />
+    <Compile Include="Controls\Manager\BaseTextView.cs" />
+    <Compile Include="Controls\Core\ButtonView.cs" />
     <Compile Include="Controls\Core\DescriptionView.cs" />
     <Compile Include="Controls\Core\HintView.cs" />
     <Compile Include="Controls\IconView.cs" />
@@ -122,7 +123,7 @@
       <Version>1.6.10</Version>
     </PackageReference>
     <PackageReference Include="Jakar.Api">
-      <Version>1.0.6</Version>
+      <Version>1.2.0</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>

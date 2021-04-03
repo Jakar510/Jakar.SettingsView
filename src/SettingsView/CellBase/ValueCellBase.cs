@@ -15,8 +15,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class ValueCellBase : HintTextCellBase
 	{
-		public static readonly BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color?), typeof(ValueTextCellBase), SVConstants.Cell.COLOR);
-		public static readonly BindableProperty ValueTextFontSizeProperty = BindableProperty.Create(nameof(ValueTextFontSize), typeof(double?), typeof(ValueTextCellBase), SVConstants.Cell.FONT_SIZE);
+		public static readonly BindableProperty ValueTextColorProperty = BindableProperty.Create(nameof(ValueTextColor), typeof(Color?), typeof(ValueTextCellBase), SvConstants.Cell.color);
+		public static readonly BindableProperty ValueTextFontSizeProperty = BindableProperty.Create(nameof(ValueTextFontSize), typeof(double?), typeof(ValueTextCellBase), SvConstants.Cell.font_Size);
 		public static readonly BindableProperty ValueTextFontFamilyProperty = BindableProperty.Create(nameof(ValueTextFontFamily), typeof(string), typeof(ValueTextCellBase), default(string));
 		public static readonly BindableProperty ValueTextFontAttributesProperty = BindableProperty.Create(nameof(ValueTextFontAttributes), typeof(FontAttributes?), typeof(ValueTextCellBase));
 		public static readonly BindableProperty ValueTextAlignmentProperty = BindableProperty.Create(nameof(ValueTextAlignment), typeof(TextAlignment?), typeof(ValueTextCellBase));
@@ -77,7 +77,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			public TextAlignment TextAlignment => _cell.ValueTextAlignment ?? _cell.Parent.CellValueTextAlignment;
 
 			public Color Color =>
-				_cell.ValueTextColor == SVConstants.Cell.COLOR
+				_cell.ValueTextColor == SvConstants.Cell.color
 					? _cell.Parent.CellValueTextColor
 					: _cell.ValueTextColor;
 

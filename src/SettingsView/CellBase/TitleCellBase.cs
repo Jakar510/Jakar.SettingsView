@@ -13,8 +13,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	public abstract class TitleCellBase : CellBase
 	{
 		public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(TitleCellBase), default(string));
-		public static readonly BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(TitleCellBase), SVConstants.Cell.COLOR);
-		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double?), typeof(TitleCellBase), SVConstants.Cell.FONT_SIZE);
+		public static readonly BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(TitleCellBase), SvConstants.Cell.color);
+		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double?), typeof(TitleCellBase), SvConstants.Cell.font_Size);
 		public static readonly BindableProperty TitleFontFamilyProperty = BindableProperty.Create(nameof(TitleFontFamily), typeof(string), typeof(TitleCellBase), default(string));
 		public static readonly BindableProperty TitleFontAttributesProperty = BindableProperty.Create(nameof(TitleFontAttributes), typeof(FontAttributes?), typeof(TitleCellBase));
 		public static readonly BindableProperty TitleAlignmentProperty = BindableProperty.Create(nameof(TitleAlignment), typeof(TextAlignment?), typeof(TitleCellBase));
@@ -87,7 +87,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			public TextAlignment TextAlignment => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
 
 			public Color Color =>
-				_cell.TitleColor == SVConstants.Cell.COLOR
+				_cell.TitleColor == SvConstants.Cell.color
 					? _cell.Parent.CellTitleColor
 					: _cell.TitleColor;
 

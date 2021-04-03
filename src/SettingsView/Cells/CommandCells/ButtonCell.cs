@@ -10,7 +10,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class ButtonCell : TitleCellBase // IBorderElement
 	{
-		public static readonly BindableProperty ButtonBackgroundColorProperty = BindableProperty.Create(nameof(ButtonBackgroundColor), typeof(Color), typeof(TitleCellBase), SVConstants.Cell.COLOR); public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ButtonCell), default(ICommand));
+		public static readonly BindableProperty ButtonBackgroundColorProperty = BindableProperty.Create(nameof(ButtonBackgroundColor), typeof(Color), typeof(TitleCellBase), SvConstants.Cell.color); public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ButtonCell), default(ICommand));
 		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ButtonCell));
 		public static BindableProperty LongClickCommandProperty = BindableProperty.Create(nameof(LongClickCommand), typeof(ICommand), typeof(ButtonCell), default(ICommand));
 		public static BindableProperty LongClickCommandParameterProperty = BindableProperty.Create(nameof(LongClickCommandParameter), typeof(object), typeof(ButtonCell));
@@ -61,7 +61,7 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 		internal Color GetButtonColor() =>
-			ButtonBackgroundColor == SVConstants.Cell.COLOR
+			ButtonBackgroundColor == SvConstants.Cell.color
 				? Parent.CellButtonBackgroundColor
 				: ButtonBackgroundColor;
 

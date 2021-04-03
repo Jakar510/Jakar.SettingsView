@@ -44,7 +44,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			Cell = cell;
 
 			BackgroundColor = new ColorDrawable();
-			SelectedColor = new ColorDrawable(SVConstants.Cell.Selected.ToAndroid());
+			SelectedColor = new ColorDrawable(SvConstants.Cell.selected.ToAndroid());
 
 			Background = Ripple = CreateRippleDrawable();
 
@@ -58,7 +58,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			AndroidContext = SettingsViewInit.Current;
 
 			BackgroundColor ??= new ColorDrawable();
-			SelectedColor ??= new ColorDrawable(SVConstants.Cell.Selected.ToAndroid());
+			SelectedColor ??= new ColorDrawable(SvConstants.Cell.selected.ToAndroid());
 
 			Ripple ??= CreateRippleDrawable();
 			Background ??= Ripple;
@@ -85,7 +85,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			sel.SetExitFadeDuration(250);
 			sel.SetEnterFadeDuration(250);
 
-			AColor rippleColor = color ?? CellParent?.SelectedColor.ToAndroid() ?? SVConstants.Cell.Ripple.ToAndroid();
+			AColor rippleColor = color ?? CellParent?.SelectedColor.ToAndroid() ?? SvConstants.Cell.ripple.ToAndroid();
 
 			return DrawableUtility.CreateRipple(rippleColor, sel);
 		}

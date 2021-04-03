@@ -62,13 +62,13 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public void SetEnabledAppearance( bool isEnabled )
 		{
 			Control.Alpha = isEnabled
-							   ? SVConstants.Cell.ENABLED_ALPHA
-							   : SVConstants.Cell.DISABLED_ALPHA;
+							   ? SvConstants.Cell.ENABLED_ALPHA
+							   : SvConstants.Cell.DISABLED_ALPHA;
 		}
 		public override void Initialize()
 		{
-			Control.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
 
 			Control.BorderStyle = UITextBorderStyle.None;
 			Control.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;

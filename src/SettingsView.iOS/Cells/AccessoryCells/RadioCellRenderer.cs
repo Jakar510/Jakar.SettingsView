@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using Foundation;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
+using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
@@ -17,21 +19,19 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class RadioCellRenderer : CellBaseRenderer<RadioCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class RadioCellView : BaseDescriptiveTitleCell
+	public class RadioCellView : BaseAccessoryCell<RadioCell, RadioCheck>
 	{
-		protected RadioCell _RadioCell => Cell as RadioCell ?? throw new NullReferenceException(nameof(_RadioCell));
-
-		protected object? _SelectedValue
+		protected internal object? SelectedValue
 		{
-			get => RadioCell.GetSelectedValue(_RadioCell.Section) ?? RadioCell.GetSelectedValue(CellParent);
+			get => RadioCell.GetSelectedValue(Cell.Section) ?? RadioCell.GetSelectedValue(CellParent);
 			set
 			{
-				if ( RadioCell.GetSelectedValue(_RadioCell.Section) is not null ) { RadioCell.SetSelectedValue(_RadioCell.Section, value); }
+				if ( RadioCell.GetSelectedValue(Cell.Section) is not null ) { RadioCell.SetSelectedValue(Cell.Section, value); }
 				else { RadioCell.SetSelectedValue(CellParent, value); }
 			}
 		}
 
-		public RadioCellView( Cell formsCell ) : base(formsCell) => SelectionStyle = UITableViewCellSelectionStyle.Default;
+		public RadioCellView( RadioCell formsCell ) : base(formsCell) { SelectionStyle = UITableViewCellSelectionStyle.Default; }
 
 		protected override void Dispose( bool disposing ) { base.Dispose(disposing); }
 
@@ -44,48 +44,47 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CheckableCellBase.AccentColorProperty.PropertyName ) { UpdateAccentColor(); }
+			if ( e.IsEqual(CheckableCellBase.AccentColorProperty) ) { UpdateAccentColor(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.sv.SettingsView.CellAccentColorProperty.PropertyName ) { UpdateAccentColor(); }
-			else if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { UpdateAccentColor(); }
+			else if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { UpdateSelectedValue(); }
 			else { base.ParentPropertyChanged(sender, e); }
 		}
 
 		public override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == RadioCell.SelectedValueProperty.PropertyName ) { UpdateSelectedValue(); }
+			if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { UpdateSelectedValue(); }
 			else { base.SectionPropertyChanged(sender, e); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( Accessory == UITableViewCellAccessory.None ) { _SelectedValue = _RadioCell.Value; }
+			if ( Accessory == UITableViewCellAccessory.None )
+			{
+				SelectedValue = Cell.Value;
+				_Accessory.Select();
+			}
 
 			tableView.DeselectRow(indexPath, true);
 		}
 
 		protected void UpdateSelectedValue()
 		{
-			if ( _RadioCell.Value is null ) return; // for HotReload
+			if ( Cell.Value is null ) return; // for HotReload
 
-			bool result = _RadioCell.Value.GetType().IsValueType
-							  ? Equals(_RadioCell.Value, _SelectedValue)
-							  : ReferenceEquals(_RadioCell.Value, _SelectedValue);
+			bool result = Cell.Value.GetType().IsValueType
+							  ? Equals(Cell.Value, SelectedValue)
+							  : ReferenceEquals(Cell.Value, SelectedValue);
 
 			Accessory = result
 							? UITableViewCellAccessory.Checkmark
 							: UITableViewCellAccessory.None;
 		}
 
-		protected void UpdateAccentColor()
-		{
-			if ( !_RadioCell.AccentColor.IsDefault ) { TintColor = _RadioCell.AccentColor.ToUIColor(); }
-			else if ( CellParent is not null &&
-					  !CellParent.CellAccentColor.IsDefault ) { TintColor = CellParent.CellAccentColor.ToUIColor(); }
-		}
+		protected void UpdateAccentColor() { TintColor = Cell.GetAccentColor().ToUIColor(); }
 	}
 }

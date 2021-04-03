@@ -24,10 +24,10 @@ namespace Jakar.SettingsView.Shared.sv
 		{
 			InitializeComponent();
 
-			Padding = SVConstants.Section.Footer.PADDING;
-			BackgroundColor = SVConstants.Section.Footer.BACKGROUND_COLOR;
-			TitleLabel.FontSize = SVConstants.Section.Footer.FONT_SIZE;
-			SetTextColor(SVConstants.Section.Footer.TEXT_COLOR);
+			Padding = SvConstants.Section.Footer.padding;
+			BackgroundColor = SvConstants.Section.Footer.background_Color;
+			TitleLabel.FontSize = SvConstants.Section.Footer.FONT_SIZE;
+			SetTextColor(SvConstants.Section.Footer.text_Color);
 		}
 	}
 }

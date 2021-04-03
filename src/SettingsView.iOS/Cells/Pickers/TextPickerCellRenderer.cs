@@ -20,7 +20,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class TextPickerCellRenderer : CellBaseRenderer<TextPickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class TextPickerCellView : BaseLabelCellView<LabelCell>
+	public class TextPickerCellView : BaseLabelCellView<TextPickerCell>
 	{
 		public UITextField DummyField { get; set; }
 
@@ -29,9 +29,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		private UIPickerView? _Picker { get; set; }
 		private ICommand? _Command { get; set; }
 
-		private TextPickerCell _TextPickerCell => Cell as TextPickerCell ?? throw new NullReferenceException(nameof(_TextPickerCell));
 
-		public TextPickerCellView( Cell formsCell ) : base(formsCell)
+		public TextPickerCellView( TextPickerCell formsCell ) : base(formsCell)
 		{
 			DummyField = new NoCaretField();
 			DummyField.BorderStyle = UITextBorderStyle.None;
@@ -146,8 +145,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateSelectedItem()
 		{
-			Select(_TextPickerCell.SelectedItem);
-			string? text = _TextPickerCell.SelectedItem;
+			Select(Cell.SelectedItem);
+			string? text = Cell.SelectedItem;
 			_Value.UpdateText(text);
 		}
 
@@ -155,29 +154,29 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Model is null ) { throw new NullReferenceException(nameof(_Model)); }
 
-			IList<string> items = _TextPickerCell.Items ?? new List<string>();
+			IList<string> items = Cell.Items ?? new List<string>();
 			_Model.SetItems(items);
 			// Force picker view to reload data from model after change
 			// Otherwise it might access the model based on old view data
 			// causing "Index was out of range" errors and the like.
 			_Picker?.ReloadAllComponents();
-			Select(_TextPickerCell.SelectedItem);
+			Select(Cell.SelectedItem);
 		}
 
 		private void UpdateTitle()
 		{
 			if ( _TitleLabel is null ) { return; }
 
-			_TitleLabel.Text = _TextPickerCell.Prompt.Properties.Title;
+			_TitleLabel.Text = Cell.Prompt.Properties.Title;
 			_TitleLabel.SizeToFit();
 			_TitleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}
 
-		private void UpdateCommand() { _Command = _TextPickerCell.SelectedCommand; }
+		private void UpdateCommand() { _Command = Cell.SelectedCommand; }
 
 		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
-			_TextPickerCell.SelectedItem = _Model?.SelectedItem;
+			Cell.SelectedItem = _Model?.SelectedItem;
 			string? text = _Model?.SelectedItem;
 			_Value.UpdateText(text);
 		}

@@ -14,8 +14,8 @@ namespace Jakar.SettingsView.Shared.Cells
 		public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(EntryCell), Keyboard.Default);
 		public static readonly BindableProperty CompletedCommandProperty = BindableProperty.Create(nameof(CompletedCommand), typeof(ICommand), typeof(EntryCell), default(ICommand?));
 		public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(EntryCell), default(string?));
-		public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(EntryCell),SVConstants.Defaults.COLOR);
-		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(EntryCell), SVConstants.Defaults.COLOR);
+		public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(EntryCell),SvConstants.Defaults.color);
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(EntryCell), SvConstants.Defaults.color);
 		public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(nameof(IsPassword), typeof(bool), typeof(EntryCell), default(bool));
 		public static readonly BindableProperty OnSelectActionProperty = BindableProperty.Create(nameof(IsPassword), typeof(SelectAction), typeof(EntryCell), default(SelectAction));
 
@@ -79,11 +79,11 @@ namespace Jakar.SettingsView.Shared.Cells
 
 
 		internal Color GetPlaceholderColor() =>
-			PlaceholderColor != SVConstants.SV.Value.PLACEHOLDER_COLOR
+			PlaceholderColor != SvConstants.Sv.Value.placeholder_Color
 				? PlaceholderColor
 				: Parent.CellPlaceholderColor;
 		internal Color GetAccentColor() =>
-			AccentColor != SVConstants.SV.ACCENT_COLOR
+			AccentColor != SvConstants.Sv.accent_Color
 				? AccentColor
 				: Parent.CellAccentColor;
 

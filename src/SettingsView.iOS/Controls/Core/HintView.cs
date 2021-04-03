@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
@@ -9,6 +10,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using TextAlignment = Xamarin.Forms.TextAlignment;
+
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
@@ -25,16 +27,21 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			parent.AddSubview(Control);
 
-			Control.TranslatesAutoresizingMaskIntoConstraints = false;
-			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor, 2).Active = true;
-			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor, 16).Active = true;
-			Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor, -10).Active = true;
-			// RightAnchor.ConstraintEqualTo(parent.ContentView.RightAnchor, -10).Active = true;
-			Control.BottomAnchor.ConstraintLessThanOrEqualTo(parent.BottomAnchor, -12).Active = true;
+			Control.AutoresizingMask = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
+			Control.TranslatesAutoresizingMaskIntoConstraints = true;
+
+			Control.WidthAnchor.ConstraintEqualTo(parent.WidthAnchor).Active = true;
+			
+			// Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor, 2).Active = true;
+			// Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor, 16).Active = true;
+			// Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor, -10).Active = true;
+			//
+			// // RightAnchor.ConstraintEqualTo(parent.ContentView.RightAnchor, -10).Active = true;
+			// Control.BottomAnchor.ConstraintLessThanOrEqualTo(parent.BottomAnchor, -12).Active = true;
 
 			base.Initialize(parent);
 		}
-
+		
 
 		public override bool UpdateText() => UpdateText(_Cell.Title);
 
@@ -55,6 +62,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 			return base.Update(sender, e);
 		}
+
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( !_IsAvailable ) return false;

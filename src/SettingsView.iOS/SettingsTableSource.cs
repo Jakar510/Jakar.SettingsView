@@ -62,13 +62,13 @@ namespace Jakar.SettingsView.iOS
 		}
 		public override nfloat GetHeightForRow( UITableView tableView, NSIndexPath indexPath ) // TODO: fix this
 		{
-			if ( !_SettingsView.HasUnevenRows ) { return Math.Max(tableView.EstimatedRowHeight.ToDouble(), SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat(); }
+			if ( !_SettingsView.HasUnevenRows ) { return Math.Max(tableView.EstimatedRowHeight.ToDouble(), SvConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat(); }
 
 			Cell cell = _SettingsView.Model.GetCell(indexPath.Section, indexPath.Row);
 			double height = cell.Height;
 
 			return height.Equals(-1)
-					   ? Math.Max(tableView.RowHeight.ToDouble(), SVConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat() // automatic height
+					   ? Math.Max(tableView.RowHeight.ToDouble(), SvConstants.Defaults.MIN_ROW_HEIGHT).ToNFloat() // automatic height
 					   : height.ToNFloat();                                                                       // individual height
 
 			// return h.Equals(-1)

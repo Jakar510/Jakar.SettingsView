@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
@@ -24,6 +25,11 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public override void Initialize( Stack parent )
 		{
 			parent.AddArrangedSubview(Control);
+
+			Control.AutoresizingMask = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
+			Control.TranslatesAutoresizingMaskIntoConstraints = true;
+
+			Control.WidthAnchor.ConstraintEqualTo(parent.WidthAnchor).Active = true;
 
 			base.Initialize(parent);
 		}

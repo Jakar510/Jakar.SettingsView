@@ -31,7 +31,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		// private bool _hasFocus;
 
 
-		public EntryCellView( Cell formsCell ) : base(formsCell)
+		public EntryCellView( AiEntryCell formsCell ) : base(formsCell)
 		{
 			// _Value.EditingChanged += TextField_EditingChanged;
 			// _Value.EditingDidBegin += Value_EditingDidBegin;

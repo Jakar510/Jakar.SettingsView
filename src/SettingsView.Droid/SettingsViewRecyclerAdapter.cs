@@ -383,9 +383,9 @@ namespace Jakar.SettingsView.Droid
 
 			double _MinHeight = holder.RowInfo?.ViewType switch
 								{
-									ViewType.CustomHeader => SVConstants.Section.Header.MinRowHeight,
-									ViewType.CustomFooter => SVConstants.Section.Footer.MinRowHeight,
-									_ => SVConstants.Defaults.MIN_ROW_HEIGHT
+									ViewType.CustomHeader => SvConstants.Section.Header.MIN_ROW_HEIGHT,
+									ViewType.CustomFooter => SvConstants.Section.Footer.MIN_ROW_HEIGHT,
+									_ => SvConstants.Defaults.MIN_ROW_HEIGHT
 								};
 
 			var minHeight = (int) AndroidContext.ToPixels(Math.Max(_MinHeight, _SettingsView.RowHeight));

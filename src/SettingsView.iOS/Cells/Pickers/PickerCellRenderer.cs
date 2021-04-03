@@ -11,27 +11,30 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+
 #nullable enable
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
-	[Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
+	[Preserve(AllMembers = true)]
+	public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
+
+
 
 	[Preserve(AllMembers = true)]
-	public class PickerCellView : BaseLabelCellView<LabelCell>
+	public class PickerCellView : BaseLabelCellView<PickerCell>
 	{
-		private PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
-		private PickerTableViewController? _PickerVC { get; set; }
+		private PickerTableViewController? _PickerVc { get; set; }
 		private INotifyCollectionChanged? _NotifyCollection { get; set; }
 		private INotifyCollectionChanged? _SelectedCollection { get; set; }
 
 
-		public PickerCellView( Cell formsCell ) : base(formsCell)
+		public PickerCellView( PickerCell formsCell ) : base(formsCell)
 		{
-			Accessory = UITableViewCellAccessory.DisclosureIndicator;
+			Accessory        = UITableViewCellAccessory.DisclosureIndicator;
 			EditingAccessory = UITableViewCellAccessory.DisclosureIndicator;
-			SelectionStyle = UITableViewCellSelectionStyle.Default;
+			SelectionStyle   = UITableViewCellSelectionStyle.Default;
 			SetRightMarginZero(_MainStack);
 		}
 
@@ -39,6 +42,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+
 			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
 				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
 				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
@@ -54,19 +58,20 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )
 		{
-			if ( _PickerCell.ItemsSource is null )
+			if ( Cell.ItemsSource is null )
 			{
 				tableView.DeselectRow(indexPath, true);
 				return;
 			}
 
-			_PickerVC?.Dispose();
+			_PickerVc?.Dispose();
 
-			UINavigationController? navigationController = GetUINavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
+			UINavigationController? navigationController = GetUiNavigationController(UIApplication.SharedApplication.KeyWindow.RootViewController);
+
 			if ( navigationController is ShellSectionRenderer shell )
 			{
 				// When use Shell, the NativeView is wrapped in a Forms.ContentPage.
-				_PickerVC = new PickerTableViewController(this, tableView, shell.ShellSection.Navigation)
+				_PickerVc = new PickerTableViewController(this, tableView, shell.ShellSection.Navigation)
 							{
 								TableView =
 								{
@@ -77,31 +82,34 @@ namespace Jakar.SettingsView.iOS.Cells
 				// Fix height broken. For some reason, TableView ContentSize is broken.
 				var page = new ContentPage
 						   {
-							   Content = _PickerVC.TableView.ToView(),
-							   Title = _PickerCell.Prompt.Properties.Title
+							   Content = _PickerVc.TableView.ToView(),
+							   Title   = Cell.Prompt.Properties.Title
 						   };
 
 
 				// Fire manually because INavigation.PushAsync does not work ViewDidAppear and ViewWillAppear.
-				_PickerVC.ViewDidAppear(false);
-				_PickerVC.InitializeView();
+				_PickerVc.ViewDidAppear(false);
+				_PickerVc.InitializeView();
+
 				BeginInvokeOnMainThread(async () =>
 										{
 											await shell.ShellSection.Navigation.PushAsync(page, true);
-											_PickerVC.InitializeScroll();
+											_PickerVc.InitializeScroll();
 										}
 									   );
 			}
 			else
 			{
 				// When use traditional navigation.
-				_PickerVC = new PickerTableViewController(this, tableView);
-				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVC, true));
+				_PickerVc = new PickerTableViewController(this, tableView);
+				BeginInvokeOnMainThread(() => navigationController?.PushViewController(_PickerVc, true));
 			}
 
 
-			if ( !_PickerCell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
+			if ( !Cell.KeepSelectedUntilBack ) { tableView.DeselectRow(indexPath, true); }
 		}
+
+
 
 		protected class NavDelegate : UINavigationControllerDelegate
 		{
@@ -111,8 +119,13 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			public override void DidShowViewController( UINavigationController navigationController, [Transient] UIViewController viewController, bool animated ) { }
 
-			public override void WillShowViewController( UINavigationController navigationController, [Transient] UIViewController viewController, bool animated ) { navigationController.SetNavigationBarHidden(false, true); }
+			public override void WillShowViewController( UINavigationController navigationController, [Transient] UIViewController viewController, bool animated )
+			{
+				navigationController.SetNavigationBarHidden(false, true);
+			}
 		}
+
+
 
 		public override void UpdateCell( UITableView tableView )
 		{
@@ -125,11 +138,11 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _SelectedCollection is not null ) { _SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged; }
 
-			_SelectedCollection = _PickerCell.SelectedItems as INotifyCollectionChanged;
+			_SelectedCollection = Cell.SelectedItems as INotifyCollectionChanged;
 
 			if ( _SelectedCollection is not null ) { _SelectedCollection.CollectionChanged += SelectedItems_CollectionChanged; }
 
-			string text = _PickerCell.GetSelectedItemsText();
+			string text = Cell.GetSelectedItemsText();
 			_Value.UpdateText(text);
 		}
 
@@ -137,7 +150,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _NotifyCollection is not null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
 
-			_NotifyCollection = _PickerCell.ItemsSource as INotifyCollectionChanged;
+			_NotifyCollection = Cell.ItemsSource as INotifyCollectionChanged;
 
 			if ( _NotifyCollection is not null )
 			{
@@ -148,8 +161,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		protected override void UpdateIsEnabled()
 		{
-			if ( _PickerCell.ItemsSource is not null &&
-				 _PickerCell.ItemsSource.Count == 0 ) { return; }
+			if ( Cell.ItemsSource is not null &&
+				 Cell.ItemsSource.Count == 0 ) { return; }
 
 			base.UpdateIsEnabled();
 		}
@@ -160,7 +173,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			if ( !_CellBase.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_PickerCell.ItemsSource?.Count > 0);
+			SetEnabledAppearance(Cell.ItemsSource?.Count > 0);
 		}
 
 		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(); }
@@ -169,19 +182,19 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( disposing )
 			{
-				_PickerVC?.Dispose();
-				_PickerVC = null;
+				_PickerVc?.Dispose();
+				_PickerVc = null;
 
 				if ( _NotifyCollection is not null )
 				{
 					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
-					_NotifyCollection = null;
+					_NotifyCollection                   =  null;
 				}
 
 				if ( _SelectedCollection is not null )
 				{
 					_SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
-					_SelectedCollection = null;
+					_SelectedCollection                   =  null;
 				}
 			}
 
@@ -189,7 +202,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		}
 
 		// Refer to https://forums.xamarin.com/discussion/comment/294088/#Comment_294088
-		protected static UINavigationController? GetUINavigationController( UIViewController? controller )
+		protected static UINavigationController? GetUiNavigationController( UIViewController? controller )
 		{
 			// if ( controller is null ) return null;
 
@@ -197,12 +210,12 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			return controller switch
 				   {
-					   null => null,
+					   null                              => null,
 					   UINavigationController navigation => navigation,
-					   UITabBarController tabBar => GetUINavigationController(tabBar.SelectedViewController), // in case Root->Tab->Navi->Page
+					   UITabBarController tabBar         => GetUiNavigationController(tabBar.SelectedViewController), // in case Root->Tab->Navi->Page
 					   // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-					   { } when controller.PresentedViewController is not null => GetUINavigationController(controller.PresentedViewController),
-					   _ => ( from child in controller.ChildViewControllers let result = GetUINavigationController(child) where child is not null select result ).FirstOrDefault()
+					   { } when controller.PresentedViewController is not null => GetUiNavigationController(controller.PresentedViewController),
+					   _ => ( from child in controller.ChildViewControllers let result = GetUiNavigationController(child) where child is not null select result ).FirstOrDefault()
 				   };
 
 			// var count = controller.ChildViewControllers.Count();

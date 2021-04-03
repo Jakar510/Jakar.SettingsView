@@ -69,8 +69,8 @@ namespace Jakar.SettingsView.Droid.Controls.Core
 		}
 
 
-		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
+		public void Enable() { Alpha = SvConstants.Cell.ENABLED_ALPHA; }
+		public void Disable() { Alpha = SvConstants.Cell.DISABLED_ALPHA; }
 
 
 		public abstract bool UpdateText();

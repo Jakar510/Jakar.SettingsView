@@ -24,9 +24,8 @@ namespace Jakar.SettingsView.iOS.Cells
 	/// Date picker cell view.
 	/// </summary>
 	[Preserve(AllMembers = true)]
-	public class DatePickerCellView : BaseLabelCellView<LabelCell>
+	public class DatePickerCellView : BaseLabelCellView<DatePickerCell>
 	{
-		private DatePickerCell _DatePickerCell => Cell as DatePickerCell ?? throw new NullReferenceException(nameof(_DatePickerCell));
 
 		public UITextField DummyField { get; set; }
 
@@ -34,7 +33,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		private UIDatePicker? _Picker { get; set; }
 
 
-		public DatePickerCellView( Cell formsCell ) : base(formsCell)
+		public DatePickerCellView( DatePickerCell formsCell ) : base(formsCell)
 		{
 			DummyField = new NoCaretField();
 			DummyField.BorderStyle = UITextBorderStyle.None;
@@ -104,9 +103,9 @@ namespace Jakar.SettingsView.iOS.Cells
 												 DoneHandler
 												);
 
-			if ( !string.IsNullOrEmpty(_DatePickerCell.TodayText) )
+			if ( !string.IsNullOrEmpty(Cell.TodayText) )
 			{
-				var labelButton = new UIBarButtonItem(_DatePickerCell.TodayText, UIBarButtonItemStyle.Plain, ( sender, e ) => { SetToday(); });
+				var labelButton = new UIBarButtonItem(Cell.TodayText, UIBarButtonItemStyle.Plain, ( sender, e ) => { SetToday(); });
 				var fixSpacer = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace)
 								{
 									Width = 20
@@ -162,8 +161,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_DatePickerCell.Date = _Picker.Date.ToDateTime().Date;
-			var text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			Cell.Date = _Picker.Date.ToDateTime().Date;
+			var text = Cell.Date.ToString(Cell.Format);
 			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
@@ -172,17 +171,17 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_Picker.SetDate(_DatePickerCell.Date.ToNSDate(), false);
-			var text = _DatePickerCell.Date.ToString(_DatePickerCell.Format);
+			_Picker.SetDate(Cell.Date.ToNSDate(), false);
+			var text = Cell.Date.ToString(Cell.Format);
 			_Value.UpdateText(text);
-			_PreSelectedDate = _DatePickerCell.Date.ToNSDate();
+			_PreSelectedDate = Cell.Date.ToNSDate();
 		}
 
 		private void UpdateMaximumDate()
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_Picker.MaximumDate = _DatePickerCell.MaximumDate.ToNSDate();
+			_Picker.MaximumDate = Cell.MaximumDate.ToNSDate();
 			UpdateDate(); //without this code, selected date isn't sometimes correct when it is shown first.
 		}
 
@@ -190,7 +189,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_Picker.MinimumDate = _DatePickerCell.MinimumDate.ToNSDate();
+			_Picker.MinimumDate = Cell.MinimumDate.ToNSDate();
 			UpdateDate();
 		}
 

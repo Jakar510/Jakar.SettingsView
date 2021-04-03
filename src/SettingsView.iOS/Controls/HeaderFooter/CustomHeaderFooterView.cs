@@ -93,7 +93,7 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 					}
 
 					_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(finalH);
-					_HeightConstraint.Priority = SVConstants.Layout.Priority.HIGH;
+					_HeightConstraint.Priority = SvConstants.Layout.Priority.Highest;
 					_HeightConstraint.Active = true;
 					renderer.NativeView.AddConstraint(_HeightConstraint);
 
@@ -148,8 +148,8 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 		}
 
 
-		public void SetContent( ISectionHeader content, Section section, UITableView table ) => SetContent(content, section, table, SVConstants.Section.Header.MinRowHeight);
-		public void SetContent( ISectionFooter content, Section section, UITableView table ) => SetContent(content, section, table, SVConstants.Section.Footer.MinRowHeight);
+		public void SetContent( ISectionHeader content, Section section, UITableView table ) => SetContent(content, section, table, SvConstants.Section.Header.MIN_ROW_HEIGHT);
+		public void SetContent( ISectionFooter content, Section section, UITableView table ) => SetContent(content, section, table, SvConstants.Section.Footer.MIN_ROW_HEIGHT);
 		protected void SetContent( ISectionFooterHeader content,
 								   Section section,
 								   UITableView table,

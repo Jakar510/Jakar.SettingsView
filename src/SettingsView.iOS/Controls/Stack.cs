@@ -6,43 +6,48 @@ using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.Shared.Config;
 using UIKit;
 
+
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	public class Stack : UIStackView
 	{
 		public Stack( UILayoutConstraintAxis axis, nfloat spacing ) : this(axis, spacing, UIStackViewAlignment.Fill, UIStackViewDistribution.Fill) { }
-		public Stack( UILayoutConstraintAxis axis,
-					  nfloat spacing,
-					  UIStackViewAlignment alignment,
-					  UIStackViewDistribution distribution ) : base()
+
+		public Stack( UILayoutConstraintAxis  axis,
+					  nfloat                  spacing,
+					  UIStackViewAlignment    alignment,
+					  UIStackViewDistribution distribution
+		) : base()
 		{
 			Axis = axis;
 			Alignment = alignment;
 			Spacing = spacing;
 			Distribution = distribution;
+
 			// LayoutMargins = new UIEdgeInsets(6, 16, 6, 16);
-			LayoutMargins = SVConstants.Cell.PADDING.ToUIEdgeInsets();
+			LayoutMargins = SvConstants.Cell.padding.ToUIEdgeInsets();
 			LayoutMarginsRelativeArrangement = true;
 		}
 
-		public static Stack ValueStack() => new (UILayoutConstraintAxis.Vertical, 6);
-		public static Stack TitleStack() => new (UILayoutConstraintAxis.Vertical, 4);
-		public static Stack ContentStack() => new (UILayoutConstraintAxis.Vertical, 6);
-		public static Stack MainStack() => new (UILayoutConstraintAxis.Horizontal, 16);
+		public static Stack ValueStack() => new(UILayoutConstraintAxis.Vertical, 6);
+		public static Stack TitleStack() => new(UILayoutConstraintAxis.Vertical, 4);
+		public static Stack ContentStack() => new(UILayoutConstraintAxis.Vertical, 6);
+		public static Stack MainStack() => new(UILayoutConstraintAxis.Horizontal, 16);
 
 
 		protected void Priorities()
 		{
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
+			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal);
+			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Vertical);
 
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
+			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
 		}
 
 
 		public void Root( in BaseCellView cell ) => Root(cell.ContentView);
+
 		public void Root( in UIView ContentView )
 		{
 			ContentView.AddSubview(this);
@@ -70,6 +75,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			Priorities();
 		}
+
 		public void Title( in Stack root, in Stack value, in IconView icon )
 		{
 			root.AddArrangedSubview(this);
@@ -116,10 +122,17 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 
 
-		
+		private bool _disposed;
+
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing ) { RemoveFromSuperview(); }
+			if ( disposing )
+			{
+				if ( _disposed ) { return; }
+
+				_disposed = true;
+				RemoveFromSuperview();
+			}
 
 			base.Dispose(disposing);
 		}

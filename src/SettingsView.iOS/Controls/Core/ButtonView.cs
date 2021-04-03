@@ -4,7 +4,6 @@ using System.Windows.Input;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
@@ -12,8 +11,9 @@ using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 
+
 #nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	public class ButtonView : BaseViewManager<UIButton, ButtonCell>
 	{
@@ -23,6 +23,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			UIControlState.Highlighted,
 			UIControlState.Disabled
 		};
+
 		protected override IUseConfiguration _Config => _Cell.TitleConfig;
 
 		public ICommand? Command { get; set; }
@@ -32,6 +33,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 
 		public ButtonView( ButtonCell cell ) : this(new UIButton(), cell) { }
+
 		public ButtonView( UIButton button, ButtonCell cell ) : base(button,
 																	 cell,
 																	 button.TitleLabel.TextColor,
@@ -39,28 +41,29 @@ namespace Jakar.SettingsView.iOS.Controls
 																	 button.ContentScaleFactor
 																	)
 		{
-			Control.AutoresizingMask = UIViewAutoresizing.All;
+			Control.AutoresizingMask    = UIViewAutoresizing.All;
 			Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
-			Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
+			Control.VerticalAlignment   = UIControlContentVerticalAlignment.Center;
 
-			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-			Control.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
+			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
+			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
 
 			Control.UserInteractionEnabled = Control.Enabled = true;
 
-			_Recognizer = new UILongPressGestureRecognizer(RunLong);
+			_Recognizer       =  new UILongPressGestureRecognizer(RunLong);
 			Control.TouchDown += OnClick;              // https://stackoverflow.com/a/51593238/9530917
 			Control.AddGestureRecognizer(_Recognizer); // https://stackoverflow.com/a/6179591/9530917
 		}
+
 		public override void Initialize( Stack parent )
 		{
 			parent.AddArrangedSubview(Control);
 
-			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active = true;
+			Control.LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active   = true;
 			Control.RightAnchor.ConstraintEqualTo(parent.RightAnchor).Active = true;
 
 			Control.BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = true;
-			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active = true;
+			Control.TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active       = true;
 
 			Control.UpdateConstraintsIfNeeded();
 		}
@@ -84,6 +87,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return false;
 		}
+
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.sv.SettingsView.CellButtonBackgroundColorProperty.PropertyName ) { return UpdateTextColor(); }
@@ -104,6 +108,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected void OnClick( object sender, EventArgs e ) { Run(); }
 		public void Run() => Run(_Cell.CommandParameter);
+
 		protected void Run( in object? parameter )
 		{
 			if ( Command is null ||
@@ -114,6 +119,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 
 		public void RunLong() => RunLong(_Cell.LongClickCommandParameter);
+
 		protected void RunLong( in object? parameter )
 		{
 			if ( LongClickCommand is null ||
@@ -130,6 +136,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			UpdateCommand();
 			UpdateLongClickCommand();
 		}
+
 		protected bool UpdateCommand()
 		{
 			if ( Command != null ) { Command.CanExecuteChanged -= Command_CanExecuteChanged; }
@@ -143,6 +150,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return true;
 		}
+
 		protected bool UpdateLongClickCommand()
 		{
 			if ( LongClickCommand != null ) { LongClickCommand.CanExecuteChanged -= LockClickCommand_CanExecuteChanged; }
@@ -162,14 +170,16 @@ namespace Jakar.SettingsView.iOS.Controls
 		public override bool UpdateFont()
 		{
 			IUseConfiguration cfg = _Config;
+
 			UIFont font = string.IsNullOrWhiteSpace(cfg.FontFamily)
 							  ? UIFont.SystemFontOfSize(cfg.FontSize.ToFloat())
 							  : FontUtility.CreateNativeFont(cfg.FontFamily, cfg.FontSize.ToFloat(), cfg.FontAttributes);
-			
+
 			Control.TitleLabel.Font = font;
-			Control.Font = font;
+			Control.Font            = font;
 			return true;
 		}
+
 		public override bool UpdateFontSize()
 		{
 			Control.TitleLabel.MinimumFontSize = _Config.FontSize.ToNFloat();
@@ -178,10 +188,11 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 
 		public override bool UpdateText() => UpdateText(_Cell.Title);
+
 		public override bool UpdateText( string? s )
 		{
 			foreach ( UIControlState state in _controlStates ) { Control.SetTitle(s, state); }
-			
+
 			return true;
 		}
 
@@ -203,6 +214,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return true;
 		}
+
 		public bool UpdateButtonBackgroundColor()
 		{
 			Control.BackgroundColor = _Cell.GetButtonColor().ToUIColor();
@@ -212,14 +224,15 @@ namespace Jakar.SettingsView.iOS.Controls
 
 
 		protected override void UpdateIsEnabled() { SetEnabledAppearance(ShouldBeEnabled()); }
+
 		protected bool ShouldBeEnabled()
 		{
-			bool click = Command != null && !Command.CanExecute(_Cell.CommandParameter);
+			bool click     = Command != null && !Command.CanExecute(_Cell.CommandParameter);
 			bool longClick = LongClickCommand != null && !LongClickCommand.CanExecute(_Cell.LongClickCommandParameter);
 			return _Cell.IsEnabled && ( click || longClick );
 		}
 
-		private void Command_CanExecuteChanged( object sender, EventArgs e ) { UpdateIsEnabled(); }
+		private void Command_CanExecuteChanged( object          sender, EventArgs e ) { UpdateIsEnabled(); }
 		private void LockClickCommand_CanExecuteChanged( object sender, EventArgs e ) { UpdateIsEnabled(); }
 
 
@@ -231,10 +244,11 @@ namespace Jakar.SettingsView.iOS.Controls
 
 				if ( LongClickCommand is not null ) { LongClickCommand.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				Command = null;
+				Command          = null;
 				LongClickCommand = null;
 
 				Control.TouchDown -= OnClick;
+
 				// TouchUpInside -= OnClick;
 
 				Control.RemoveGestureRecognizer(_Recognizer);

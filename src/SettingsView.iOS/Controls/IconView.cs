@@ -17,6 +17,7 @@ using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms.PlatformConfiguration;
 using Size = Xamarin.Forms.Size;
 
+
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
@@ -24,7 +25,7 @@ namespace Jakar.SettingsView.iOS.Controls
 	public class IconView : UIImageView, IUpdateIcon<BaseCellView, UIImage, IImageSourceHandler>, IInitializeControl
 	{
 		protected IconCellBase _CurrentCell => _Renderer.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
-		
+
 		protected Size _iconSize;
 		internal NSLayoutConstraint? HeightConstraint { get; set; } = new();
 		internal NSLayoutConstraint? WidthConstraint { get; set; } = new();
@@ -37,38 +38,41 @@ namespace Jakar.SettingsView.iOS.Controls
 		{
 			_Renderer = renderer;
 
-			ClipsToBounds = true;
+			ClipsToBounds   = true;
 			BackgroundColor = UIColor.Clear;
-			
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-			SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
-			SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
-			SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);      //if possible, not to expand.
+
+			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
+			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Vertical);
+			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
+			SetContentHuggingPriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);               //if possible, not to expand.
 		}
 
 
 		public void Initialize( Stack parent )
 		{
 			parent.AddArrangedSubview(this);
+
 			// parent.BringSubviewToFront(this);
-			
-			TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active = true;
+
+			TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active       = true;
 			BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = true;
-			LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active = true;
-			
+			LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active     = true;
+
 			UpdateConstraintsIfNeeded();
 			LayoutIfNeeded();
 			UpdateIconSize();
 		}
+
 		public void SetCell( BaseCellView renderer ) { _Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
 
-		
+
 		public bool UpdateIconSize()
 		{
 			Size size;
-			if ( _CurrentCell.IconSize != default ) { size = _CurrentCell.GetIconSize(); }
+
+			if ( _CurrentCell.IconSize != default ) { size                 = _CurrentCell.GetIconSize(); }
 			else if ( _CurrentCell.Parent.CellIconSize != default ) { size = _CurrentCell.Parent.CellIconSize; }
-			else { size = new Size(32, 32); }
+			else { size                                                    = new Size(32, 32); }
 
 			//do nothing when current size is previous size
 			if ( size == _iconSize ) { return false; }
@@ -89,12 +93,12 @@ namespace Jakar.SettingsView.iOS.Controls
 				}
 			}
 
-			WidthConstraint = WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
+			WidthConstraint        = WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
 			WidthConstraint.Active = true;
 
-			HeightConstraint = HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
-			HeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // fix warning-log:Unable to simultaneously satisfy constraints.
-			HeightConstraint.Active = true;
+			HeightConstraint          = HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
+			HeightConstraint.Priority = SvConstants.Layout.Priority.Highest; // fix warning-log:Unable to simultaneously satisfy constraints.
+			HeightConstraint.Active   = true;
 
 			UpdateConstraints();
 
@@ -102,12 +106,14 @@ namespace Jakar.SettingsView.iOS.Controls
 			_Renderer.SetNeedsLayout();
 			return true;
 		}
+
 		public bool UpdateIconRadius()
 		{
 			Layer.CornerRadius = (float) _CurrentCell.GetIconRadius();
 			_Renderer.SetNeedsLayout();
 			return true;
 		}
+
 		protected void UpdateIcon()
 		{
 			if ( _IconTokenSource is not null &&
@@ -136,6 +142,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			_Renderer.SetNeedsLayout();
 		}
+
 		protected void LoadIconImage( IImageSourceHandler handler, ImageSource source )
 		{
 			_IconTokenSource?.Cancel();
@@ -144,9 +151,10 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			_IconTokenSource = new CancellationTokenSource();
 			CancellationToken token = _IconTokenSource.Token;
-			UIImage? image = null;
+			UIImage?          image = null;
 
 			var scale = (float) UIScreen.MainScreen.Scale;
+
 			Task.Run(async () =>
 					 {
 						 if ( source is FontImageSource ) { DispatchQueue.MainQueue.DispatchSync(async () => { image = await handler.LoadImageAsync(source, token, scale: scale); }); }
@@ -159,9 +167,12 @@ namespace Jakar.SettingsView.iOS.Controls
 				.ContinueWith(t =>
 							  {
 								  if ( !t.IsCompleted ) return;
+
 								  if ( image is null ||
 									   _CurrentCell.IconSource is null ) return;
+
 								  ImageCacheController.Instance.SetObjectforKey(image, FromObject(_CurrentCell.IconSource.GetHashCode()));
+
 								  BeginInvokeOnMainThread(() =>
 														  {
 															  Image = image;
@@ -190,6 +201,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( _CurrentCell.IconSource is not null )
 			{
 				Hidden = false;
+
 				if ( ImageCacheController.Instance.ObjectForKey(FromObject(_CurrentCell.IconSource.GetHashCode())) is UIImage cache )
 				{
 					Image = cache;
@@ -207,23 +219,31 @@ namespace Jakar.SettingsView.iOS.Controls
 			_Renderer.SetNeedsLayout();
 			return true;
 		}
-		public void LoadIconImage( IImageSourceHandler handler, ImageSource source, CancellationToken token ) { Task.Run(async () => { await LoadImage(handler, source, token).ConfigureAwait(true); }, token); }
+
+		public void LoadIconImage( IImageSourceHandler handler, ImageSource source, CancellationToken token )
+		{
+			Task.Run(async () => { await LoadImage(handler, source, token).ConfigureAwait(true); }, token);
+		}
+
 		protected async Task LoadImage( IImageSourceHandler handler, ImageSource source, CancellationToken token )
 		{
 			token.ThrowIfCancellationRequested();
 			UIImage? image = null;
 
 			var scale = (float) UIScreen.MainScreen.Scale;
+
 			if ( source is FontImageSource ) { DispatchQueue.MainQueue.DispatchSync(async () => { image = await handler.LoadImageAsync(source, token, scale); }); }
 			else { image = await handler.LoadImageAsync(source, token, scale); }
 
 			if ( image is null ) return;
+
 			// image = CreateRoundImage(image);
 
 			if ( image is null ||
 				 _CurrentCell.IconSource is null ) return;
 
 			ImageCacheController.Instance.SetObjectforKey(image, FromObject(_CurrentCell.IconSource.GetHashCode()));
+
 			await Device.InvokeOnMainThreadAsync(async () =>
 												 {
 													 Image?.Dispose();
@@ -239,6 +259,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 
 		public UIImage CreateRoundImage( UIImage image ) =>
+
 			// using ( image )
 			// {
 			// 	// using var clipArea = Bitmap.CreateBitmap(image.Width, image.Height, Bitmap.Config.Argb8888 ?? throw new NullReferenceException(nameof(Bitmap.Config.Argb8888)));
@@ -256,6 +277,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			//
 			// }
 			image;
+
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == IconCellBase.IconSizeProperty.PropertyName ||
@@ -264,13 +286,16 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return false;
 		}
+
 		public bool Update()
 		{
 			UpdateIconRadius();
 			Refresh(true);
+
 			// _Cell.Invalidate();
 			return true;
 		}
+
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.sv.SettingsView.CellIconRadiusProperty.PropertyName ) { return Update(); }
@@ -279,10 +304,10 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return false;
 		}
-		
-		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
-		
+
+		public void Enable() { Alpha  = SvConstants.Cell.ENABLED_ALPHA; }
+		public void Disable() { Alpha = SvConstants.Cell.DISABLED_ALPHA; }
+
 		// private void UpdateIconSize()
 		// {
 		// 	if ( _Icon is null ) return;
@@ -391,14 +416,19 @@ namespace Jakar.SettingsView.iOS.Controls
 		// 					 );
 		// }
 
+		private bool _disposed;
 
 		protected override void Dispose( bool disposing )
 		{
 			if ( disposing )
 			{
+				if ( _disposed ) { return; }
+
+				_disposed = true;
+
 				RemoveFromSuperview();
 				Image?.Dispose();
-				
+
 				WidthConstraint?.Dispose();
 				HeightConstraint?.Dispose();
 

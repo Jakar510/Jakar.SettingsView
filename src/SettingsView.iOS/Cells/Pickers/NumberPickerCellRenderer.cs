@@ -11,6 +11,7 @@ using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms;
 
+
 #nullable enable
 [assembly: ExportRenderer(typeof(NumberPickerCell), typeof(NumberPickerCellRenderer))]
 
@@ -19,8 +20,10 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)]
 	public class NumberPickerCellRenderer : CellBaseRenderer<NumberPickerCellView> { }
 
+
+
 	[Preserve(AllMembers = true)]
-	public class NumberPickerCellView : BaseLabelCellView<LabelCell>
+	public class NumberPickerCellView : BaseLabelCellView<NumberPickerCell>
 	{
 		public UITextField DummyField { get; set; }
 
@@ -29,15 +32,15 @@ namespace Jakar.SettingsView.iOS.Cells
 		private UIPickerView? _Picker { get; set; }
 		private ICommand? _Command { get; set; }
 
-		private NumberPickerCell _NumberPickerCell => Cell as NumberPickerCell ?? throw new NullReferenceException(nameof(_NumberPickerCell));
 
-		public NumberPickerCellView( Cell formsCell ) : base(formsCell)
+		public NumberPickerCellView( NumberPickerCell formsCell ) : base(formsCell)
 		{
 			DummyField = new NoCaretField
 						 {
-							 BorderStyle = UITextBorderStyle.None,
+							 BorderStyle     = UITextBorderStyle.None,
 							 BackgroundColor = UIColor.Clear
 						 };
+
 			ContentView.AddSubview(DummyField);
 			ContentView.SendSubviewToBack(DummyField);
 
@@ -49,6 +52,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
+
 			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ||
 				 e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateNumberList(); }
 			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
@@ -88,7 +92,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 				_Model = null;
 				_Picker?.Dispose();
-				_Picker = null;
+				_Picker  = null;
 				_Command = null;
 			}
 
@@ -108,15 +112,17 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			var toolbar = new UIToolbar(new CGRect(0, 0, (float) width, 44))
 						  {
-							  BarStyle = UIBarStyle.Default,
+							  BarStyle    = UIBarStyle.Default,
 							  Translucent = true
 						  };
+
 			var cancelButton = new UIBarButtonItem(UIBarButtonSystemItem.Cancel,
 												   CancelHandler
 												  );
 
 			var labelButton = new UIBarButtonItem(_TitleLabel);
-			var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
+			var spacer      = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
+
 			var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done,
 												 DoneHandler
 												);
@@ -132,19 +138,21 @@ namespace Jakar.SettingsView.iOS.Cells
 							 false
 							);
 
-			DummyField.InputView = _Picker;
+			DummyField.InputView          = _Picker;
 			DummyField.InputAccessoryView = toolbar;
 
-			_Model = new NumberPickerSource();
+			_Model        = new NumberPickerSource();
 			_Picker.Model = _Model;
 
 			_Model.UpdatePickerFromModel += Model_UpdatePickerFromModel;
 		}
+
 		private void CancelHandler( object o, EventArgs e )
 		{
 			DummyField.ResignFirstResponder();
 			Select(_Model?.PreSelectedItem ?? -1);
 		}
+
 		private void DoneHandler( object o, EventArgs a )
 		{
 			if ( _Model is null ) return;
@@ -155,31 +163,31 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		private void UpdateNumber()
 		{
-			Select(_NumberPickerCell.Number);
-			string text = _NumberPickerCell.Number.ToString();
+			Select(Cell.Number);
+			string text = Cell.Number.ToString();
 			_Value.UpdateText(text);
 		}
 
 		private void UpdateNumberList()
 		{
-			_Model?.SetNumbers(_NumberPickerCell.Min, _NumberPickerCell.Max);
-			Select(_NumberPickerCell.Number);
+			_Model?.SetNumbers(Cell.Min, Cell.Max);
+			Select(Cell.Number);
 		}
 
 		private void UpdateTitle()
 		{
 			if ( _TitleLabel is null ) return;
-			_TitleLabel.Text = _NumberPickerCell.Prompt.Properties.Title;
+			_TitleLabel.Text = Cell.Prompt.Properties.Title;
 			_TitleLabel.SizeToFit();
 			_TitleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}
 
-		private void UpdateCommand() { _Command = _NumberPickerCell.SelectedCommand; }
+		private void UpdateCommand() { _Command = Cell.SelectedCommand; }
 
 		private void Model_UpdatePickerFromModel( object sender, EventArgs e )
 		{
 			if ( _Model is null ) return;
-			_NumberPickerCell.Number = _Model.SelectedItem;
+			Cell.Number = _Model.SelectedItem;
 			string text = _Model.SelectedItem.ToString();
 			_Value.UpdateText(text);
 		}
@@ -195,15 +203,16 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Model is null ) return;
 			int idx = _Model.Items.IndexOf(number);
+
 			if ( idx == -1 )
 			{
 				number = _Model.Items[0];
-				idx = 0;
+				idx    = 0;
 			}
 
 			_Picker?.Select(idx, 0, false);
-			_Model.SelectedItem = number;
-			_Model.SelectedIndex = idx;
+			_Model.SelectedItem    = number;
+			_Model.SelectedIndex   = idx;
 			_Model.PreSelectedItem = number;
 		}
 	}

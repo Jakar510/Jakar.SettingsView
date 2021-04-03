@@ -60,7 +60,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Enable();
 			_Description.Enable();
 			_Accessory.Enabled = true;
-			_Accessory.Alpha = SVConstants.Cell.ENABLED_ALPHA;
+			_Accessory.Alpha = SvConstants.Cell.ENABLED_ALPHA;
 		}
 		protected override void DisableCell()
 		{
@@ -68,7 +68,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Disable();
 			_Description.Disable();
 			_Accessory.Enabled = false;
-			_Accessory.Alpha = SVConstants.Cell.DISABLED_ALPHA;
+			_Accessory.Alpha = SvConstants.Cell.DISABLED_ALPHA;
 		}
 
 		protected internal override void UpdateCell()

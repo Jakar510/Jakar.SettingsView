@@ -20,11 +20,11 @@ namespace Jakar.SettingsView.Shared.CellBase
 		public static BindableProperty IsVisibleProperty = BindableProperty.Create(nameof(IsVisible),
 																				   typeof(bool),
 																				   typeof(CellBase),
-																				   SVConstants.Cell.VISIBLE,
+																				   SvConstants.Cell.VISIBLE,
 																				   defaultBindingMode: BindingMode.OneWay
 																				  );
 
-		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), SVConstants.Cell.COLOR);
+		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), SvConstants.Cell.color);
 
 
 		public bool IsVisible
@@ -43,12 +43,12 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 		public new sv.SettingsView Parent
 		{
-			get => (sv.SettingsView) base.Parent;
+			get => base.Parent as sv.SettingsView ?? throw new NullReferenceException(nameof(Parent));
 			set => base.Parent = value;
 		}
 
 		internal Color GetBackground() =>
-			BackgroundColor == SVConstants.Cell.COLOR
+			BackgroundColor == SvConstants.Cell.color
 				? Parent.CellBackgroundColor
 				: BackgroundColor;
 

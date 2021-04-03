@@ -13,11 +13,11 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class CellBaseRenderer<TnativeCell> : CellRenderer where TnativeCell : BaseCellView
+	public class CellBaseRenderer<TNativeCell> : CellRenderer where TNativeCell : BaseCellView
 	{
 		public override UITableViewCell GetCell( Cell item, UITableViewCell reusableCell, UITableView table )
 		{
-			if ( reusableCell is not TnativeCell nativeCell ) { nativeCell = InstanceCreator.Create<TnativeCell>(item); }
+			if ( reusableCell is not TNativeCell nativeCell ) { nativeCell = InstanceCreator.Create<TNativeCell>(item); }
 
 			ClearPropertyChanged(nativeCell);
 
@@ -30,7 +30,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			return nativeCell;
 		}
 
-		protected void SetUpPropertyChanged( BaseCellView  nativeCell )
+		protected void SetUpPropertyChanged( TNativeCell nativeCell )
 		{
 			if ( nativeCell.Cell is not CellBase formsCell ) return;
 			Shared.sv.SettingsView parentElement = formsCell.Parent;
@@ -46,7 +46,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			formsCell.Section = section;
 			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
 		}
-		protected void ClearPropertyChanged( BaseCellView  nativeCell )
+		protected void ClearPropertyChanged( TNativeCell nativeCell )
 		{
 			if ( nativeCell.Cell is not CellBase formsCell ) return;
 			Shared.sv.SettingsView parentElement = formsCell.Parent;

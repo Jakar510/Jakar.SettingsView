@@ -13,8 +13,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	public class HintTextCellBase : DescriptionCellBase
 	{
 		public static readonly BindableProperty HintProperty = BindableProperty.Create(nameof(Hint), typeof(string), typeof(HintTextCellBase), default(string));
-		public static readonly BindableProperty HintColorProperty = BindableProperty.Create(nameof(HintColor), typeof(Color?), typeof(HintTextCellBase), SVConstants.Cell.COLOR);
-		public static readonly BindableProperty HintFontSizeProperty = BindableProperty.Create(nameof(HintFontSize), typeof(double?), typeof(HintTextCellBase), SVConstants.Cell.FONT_SIZE);
+		public static readonly BindableProperty HintColorProperty = BindableProperty.Create(nameof(HintColor), typeof(Color?), typeof(HintTextCellBase), SvConstants.Cell.color);
+		public static readonly BindableProperty HintFontSizeProperty = BindableProperty.Create(nameof(HintFontSize), typeof(double?), typeof(HintTextCellBase), SvConstants.Cell.font_Size);
 		public static readonly BindableProperty HintFontFamilyProperty = BindableProperty.Create(nameof(HintFontFamily), typeof(string), typeof(HintTextCellBase), default(string));
 		public static readonly BindableProperty HintFontAttributesProperty = BindableProperty.Create(nameof(HintFontAttributes), typeof(FontAttributes?), typeof(HintTextCellBase));
 		public static readonly BindableProperty HintAlignmentProperty = BindableProperty.Create(nameof(HintAlignment), typeof(TextAlignment?), typeof(HintTextCellBase));
@@ -87,7 +87,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			public TextAlignment TextAlignment => _cell.HintAlignment ?? _cell.Parent.CellHintAlignment;
 
 			public Color Color =>
-				_cell.HintColor == SVConstants.Cell.COLOR
+				_cell.HintColor == SvConstants.Cell.color
 					? _cell.Parent.CellHintTextColor
 					: _cell.HintColor;
 

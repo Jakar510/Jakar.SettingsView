@@ -14,8 +14,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class CheckableCellBase : DescriptionCellBase, IValueChanged<bool>
 	{
-		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color?), typeof(CheckboxCell), SVConstants.Cell.COLOR);
-		public static BindableProperty OffColorProperty = BindableProperty.Create(nameof(OffColor), typeof(Color?), typeof(CheckboxCell), SVConstants.Cell.COLOR);
+		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color?), typeof(CheckboxCell), SvConstants.Cell.color);
+		public static BindableProperty OffColorProperty = BindableProperty.Create(nameof(OffColor), typeof(Color?), typeof(CheckboxCell), SvConstants.Cell.color);
 
 		public static BindableProperty CheckedProperty = BindableProperty.Create(nameof(Checked),
 																				 typeof(bool),
@@ -53,11 +53,11 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 
 		internal Color GetAccentColor() =>
-			AccentColor == SVConstants.Cell.COLOR
+			AccentColor == SvConstants.Cell.color
 				? Parent.CellAccentColor
 				: AccentColor;
 		internal Color GetOffColor() =>
-			OffColor == SVConstants.Cell.COLOR
+			OffColor == SvConstants.Cell.color
 				? Parent.CellOffColor
 				: OffColor;
 	}

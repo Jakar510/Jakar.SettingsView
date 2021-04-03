@@ -108,8 +108,8 @@ namespace Jakar.SettingsView.Droid.Controls
 		public HeaderFooterContainer( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) => Clickable = true;
 
 
-		public void SetContent( ISectionHeader content, Section section, CustomViewHolder holder ) => SetContent(content, section, holder, SVConstants.Section.Header.MinRowHeight);
-		public void SetContent( ISectionFooter content, Section section, CustomViewHolder holder ) => SetContent(content, section, holder, SVConstants.Section.Footer.MinRowHeight);
+		public void SetContent( ISectionHeader content, Section section, CustomViewHolder holder ) => SetContent(content, section, holder, SvConstants.Section.Header.MIN_ROW_HEIGHT);
+		public void SetContent( ISectionFooter content, Section section, CustomViewHolder holder ) => SetContent(content, section, holder, SvConstants.Section.Footer.MIN_ROW_HEIGHT);
 		protected void SetContent( ISectionFooterHeader content,
 								   Section section,
 								   CustomViewHolder holder,

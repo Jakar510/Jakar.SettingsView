@@ -104,8 +104,8 @@ namespace Jakar.SettingsView.Droid.Controls
 		}
 
 
-		public void Enable() { Alpha = SVConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SVConstants.Cell.DISABLED_ALPHA; }
+		public void Enable() { Alpha = SvConstants.Cell.ENABLED_ALPHA; }
+		public void Disable() { Alpha = SvConstants.Cell.DISABLED_ALPHA; }
 
 		protected override void OnFocusChanged( bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, Android.Graphics.Rect? previouslyFocusedRect )
 		{

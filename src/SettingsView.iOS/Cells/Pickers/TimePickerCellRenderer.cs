@@ -18,9 +18,8 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)] public class TimePickerCellRenderer : CellBaseRenderer<TimePickerCellView> { }
 
 	[Preserve(AllMembers = true)]
-	public class TimePickerCellView : BaseLabelCellView<LabelCell>
+	public class TimePickerCellView : BaseLabelCellView<TimePickerCell>
 	{
-		private TimePickerCell _TimePickerCell => Cell as TimePickerCell ?? throw new NullReferenceException(nameof(_TimePickerCell));
 		private UIDatePicker? _Picker { get; set; }
 
 		public UITextField DummyField { get; set; }
@@ -29,7 +28,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		private NSDate? _PreSelectedDate { get; set; }
 
 
-		public TimePickerCellView( Cell formsCell ) : base(formsCell)
+		public TimePickerCellView( TimePickerCell formsCell ) : base(formsCell)
 		{
 			DummyField = new NoCaretField();
 			DummyField.BorderStyle = UITextBorderStyle.None;
@@ -149,8 +148,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_TimePickerCell.Time = _Picker.Date.ToDateTime() - new DateTime(1, 1, 1);
-			var text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			Cell.Time = _Picker.Date.ToDateTime() - new DateTime(1, 1, 1);
+			var text = DateTime.Today.Add(Cell.Time).ToString(Cell.Format);
 			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
@@ -159,8 +158,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _Picker is null ) { throw new NullReferenceException(nameof(_Picker)); }
 
-			_Picker.Date = new DateTime(1, 1, 1).Add(_TimePickerCell.Time).ToNSDate();
-			var text = DateTime.Today.Add(_TimePickerCell.Time).ToString(_TimePickerCell.Format);
+			_Picker.Date = new DateTime(1, 1, 1).Add(Cell.Time).ToNSDate();
+			var text = DateTime.Today.Add(Cell.Time).ToString(Cell.Format);
 			_Value.UpdateText(text);
 			_PreSelectedDate = _Picker.Date;
 		}
@@ -169,7 +168,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			if ( _TitleLabel is null ) { return; }
 
-			_TitleLabel.Text = _TimePickerCell.Prompt.Properties.Title;
+			_TitleLabel.Text = Cell.Prompt.Properties.Title;
 			_TitleLabel.SizeToFit();
 			_TitleLabel.Frame = new CGRect(0, 0, 160, 44);
 		}

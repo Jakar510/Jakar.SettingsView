@@ -82,7 +82,7 @@ namespace Jakar.SettingsView.Shared.sv
 		public new static readonly BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor),
 																								typeof(Color),
 																								typeof(BaseHeaderFooterView),
-																								SVConstants.Section.Header.TEXT_COLOR,
+																								SvConstants.Section.Header.text_Color,
 																								propertyChanging: ( bindable, old_value, new_value ) =>
 																												  {
 																													  if ( old_value == new_value ) return;
@@ -101,7 +101,7 @@ namespace Jakar.SettingsView.Shared.sv
 																									  }
 																				   );
 
-		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SVConstants.Section.Footer.Visible);
+		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SvConstants.Section.Footer.VISIBLE);
 
 		// --------------------------------------------------------------------------------------
 
@@ -215,7 +215,7 @@ namespace Jakar.SettingsView.Shared.sv
 		{
 			CollectionChanged += OnCollectionChanged;
 			PropertyChanged += OnPropertyChanged;
-			TextColor = SVConstants.Section.Header.TEXT_COLOR;
+			TextColor = SvConstants.Section.Header.text_Color;
 		}
 		public Section( string title ) : this() => Title = title;
 		public Section( SettingsView parent ) : this(parent, string.Empty) { }

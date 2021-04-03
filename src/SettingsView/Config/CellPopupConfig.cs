@@ -9,27 +9,27 @@ namespace Jakar.SettingsView.Shared.Config
 	public class CellPopupConfig : SVConfig
 	{
 		public static BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(CellPopupConfig), default(string));
-		public static BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Title.COLOR);
-		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Title.FONT_SIZE);
+		public static BindableProperty TitleColorProperty = BindableProperty.Create(nameof(TitleColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.Title.color);
+		public static readonly BindableProperty TitleFontSizeProperty = BindableProperty.Create(nameof(TitleFontSize), typeof(double), typeof(CellPopupConfig), SvConstants.Prompt.Title.FONT_SIZE);
 
 
-		public static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.BACKGROUND_COLOR);
-		public static BindableProperty AcceptProperty = BindableProperty.Create(nameof(Accept), typeof(string), typeof(CellPopupConfig), SVConstants.Prompt.ACCEPT_TEXT);
-		public static BindableProperty CancelProperty = BindableProperty.Create(nameof(Cancel), typeof(string), typeof(CellPopupConfig), SVConstants.Prompt.CANCEL_TEXT);
+		public static BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.background_Color);
+		public static BindableProperty AcceptProperty = BindableProperty.Create(nameof(Accept), typeof(string), typeof(CellPopupConfig), SvConstants.Prompt.ACCEPT_TEXT);
+		public static BindableProperty CancelProperty = BindableProperty.Create(nameof(Cancel), typeof(string), typeof(CellPopupConfig), SvConstants.Prompt.CANCEL_TEXT);
 
 
-		public static readonly BindableProperty SelectedFontSizeProperty = BindableProperty.Create(nameof(SelectedFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Selected.FONT_SIZE);
-		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Selected.TEXT_COLOR);
-		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Defaults.ACCENT);
-		public static readonly BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.SEPARATOR_COLOR);
+		public static readonly BindableProperty SelectedFontSizeProperty = BindableProperty.Create(nameof(SelectedFontSize), typeof(double), typeof(CellPopupConfig), SvConstants.Prompt.Selected.FONT_SIZE);
+		public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.Selected.text_Color);
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Defaults.accent);
+		public static readonly BindableProperty SeparatorColorProperty = BindableProperty.Create(nameof(SeparatorColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.separator_Color);
 
 
-		public static readonly BindableProperty ItemFontSizeProperty = BindableProperty.Create(nameof(ItemFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Item.FONT_SIZE);
-		public static BindableProperty ItemColorProperty = BindableProperty.Create(nameof(ItemColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Item.COLOR);
+		public static readonly BindableProperty ItemFontSizeProperty = BindableProperty.Create(nameof(ItemFontSize), typeof(double), typeof(CellPopupConfig), SvConstants.Prompt.Item.FONT_SIZE);
+		public static BindableProperty ItemColorProperty = BindableProperty.Create(nameof(ItemColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.Item.color);
 
 
-		public static BindableProperty ItemDescriptionColorProperty = BindableProperty.Create(nameof(ItemDescriptionColor), typeof(Color), typeof(CellPopupConfig), SVConstants.Prompt.Item.Description.Color);
-		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double), typeof(CellPopupConfig), SVConstants.Prompt.Item.Description.FontSize);
+		public static BindableProperty ItemDescriptionColorProperty = BindableProperty.Create(nameof(ItemDescriptionColor), typeof(Color), typeof(CellPopupConfig), SvConstants.Prompt.Item.Description.color);
+		public static readonly BindableProperty ItemDescriptionFontSizeProperty = BindableProperty.Create(nameof(ItemDescriptionFontSize), typeof(double), typeof(CellPopupConfig), SvConstants.Prompt.Item.Description.FONT_SIZE);
 
 
 		[TypeConverter(typeof(ColorTypeConverter))]

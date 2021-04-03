@@ -47,11 +47,11 @@ namespace Jakar.SettingsView.Shared.sv
 			// ExpandedIcon = Icons.ExpandSolidWhite;
 			Source = ExpandedIcon;
 
-			Padding = SVConstants.Section.Header.PADDING;
-			HeightRequest = SVConstants.Section.Header.MinRowHeight;
-			BackgroundColor = SVConstants.Section.Header.BACKGROUND_COLOR;
-			TitleLabel.FontSize = SVConstants.Section.Header.FONT_SIZE;
-			SetTextColor(SVConstants.Section.Header.TEXT_COLOR);
+			Padding = SvConstants.Section.Header.padding;
+			HeightRequest = SvConstants.Section.Header.MIN_ROW_HEIGHT;
+			BackgroundColor = SvConstants.Section.Header.background_Color;
+			TitleLabel.FontSize = SvConstants.Section.Header.FONT_SIZE;
+			SetTextColor(SvConstants.Section.Header.text_Color);
 		}
 	}
 }

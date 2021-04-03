@@ -16,10 +16,10 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+
 #nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
-	[Preserve(AllMembers = true)]
 	public abstract class BaseCellView : CellTableViewCell
 	{
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected CellBase? _CellBase => Cell as CellBase;
 
-		public Shared.sv.SettingsView? CellParent => Cell.Parent as Shared.sv.SettingsView;
+		public Shared.sv.SettingsView? CellParent => Cell?.Parent as Shared.sv.SettingsView;
 
 		protected NSLayoutConstraint? _MinHeightConstraint { get; set; }
 
@@ -58,16 +58,18 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			else if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
 		}
+
 		public virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.IsEqual(Shared.sv.SettingsView.CellBackgroundColorProperty) ) { UpdateBackgroundColor(); }
 
 			else if ( e.IsEqual(Shared.sv.SettingsView.SelectedColorProperty) ) { UpdateSelectedColor(); }
 		}
+
 		public virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
 
 
-		public virtual void RowSelected( UITableView tableView, NSIndexPath indexPath ) { }
+		public virtual void RowSelected( UITableView    tableView, NSIndexPath indexPath ) { }
 		public virtual bool RowLongPressed( UITableView tableView, NSIndexPath indexPath ) => false;
 
 
@@ -76,6 +78,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			updateAction();
 			SetNeedsLayout();
 		}
+
 		public bool UpdateWithForceLayout( Func<bool> updateAction )
 		{
 			bool result = updateAction();
@@ -225,7 +228,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			if ( CellParent.HasUnevenRows )
 			{
 				_MinHeightConstraint = mainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
-				_MinHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH;
+				_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest;
 				_MinHeightConstraint.Active = true;
 			}
 
@@ -375,36 +378,50 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// protected virtual void AccessoryCellSetup() { DescriptiveTitleSetup(); }
 
 
-		private bool _disposed;
-		protected virtual void RunDispose()
-		{
-			_disposed = true;
+		protected bool _disposed;
 
-			if ( _CellBase != null )
-			{
-				_CellBase.PropertyChanged -= CellPropertyChanged;
-
-				if ( _CellBase.Section is not null )
-				{
-					_CellBase.Section.PropertyChanged -= SectionPropertyChanged;
-					_CellBase.Section = null;
-				}
-			}
-
-			if ( CellParent != null ) CellParent.PropertyChanged -= ParentPropertyChanged;
-
-			SelectedBackgroundView?.Dispose();
-			SelectedBackgroundView = null;
-
-			Cell = null;
-
-			_MainStack.Dispose();
-		}
 		protected override void Dispose( bool disposing )
 		{
-			if ( disposing && !_disposed ) { Device.BeginInvokeOnMainThread(RunDispose); }
+			if ( disposing && !_disposed )
+			{
+				_disposed = true;
+
+				if ( _CellBase != null )
+				{
+					_CellBase.PropertyChanged -= CellPropertyChanged;
+
+					if ( _CellBase.Section is not null )
+					{
+						_CellBase.Section.PropertyChanged -= SectionPropertyChanged;
+						_CellBase.Section = null;
+					}
+				}
+
+				if ( CellParent != null ) CellParent.PropertyChanged -= ParentPropertyChanged;
+
+				SelectedBackgroundView?.Dispose();
+				SelectedBackgroundView = null;
+
+				Cell = null;
+
+				_MainStack.Dispose();
+			}
 
 			base.Dispose(disposing);
 		}
+	}
+
+
+
+	[Preserve(AllMembers = true)]
+	public abstract class BaseCellView<TCell> : BaseCellView where TCell : CellBase
+	{
+		public new TCell Cell
+		{
+			get => base.Cell as TCell ?? throw new NullReferenceException(nameof(Cell));
+			set => base.Cell = value;
+		}
+
+		protected BaseCellView( TCell formsCell ) : base(formsCell) { }
 	}
 }

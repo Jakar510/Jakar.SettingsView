@@ -14,18 +14,34 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using TextAlignment = Xamarin.Forms.TextAlignment;
 
+
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public class ValueView<TCell> : BaseTextView<TCell, BaseLabelCellView<TCell>>, IRenderValue where TCell : ValueTextCellBase
+	public class ValueView<TCell> : BaseTextView<TCell, BaseLabelCellView<TCell>>, IRenderValue where TCell : ValueCellBase
 	{
 		protected override IUseConfiguration _Config => _Cell.ValueTextConfig;
 		public ValueView( BaseLabelCellView<TCell> renderer ) : base(renderer) { }
 
-		public override void Initialize( Stack parent ) { }
+		public override void Initialize( Stack parent )
+		{
+			parent.AddArrangedSubview(Control);
 
-		public override bool UpdateText() => UpdateText(_Cell.ValueText);
+			Control.AutoresizingMask = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
+			Control.TranslatesAutoresizingMaskIntoConstraints = true;
+
+			Control.WidthAnchor.ConstraintEqualTo(parent.WidthAnchor).Active = true;
+			
+			base.Initialize(parent);
+		}
+
+		public override bool UpdateText()
+		{
+			if ( _Cell is not ValueTextCellBase cell ) { return false; }
+
+			return UpdateText(cell.ValueText);
+		}
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
@@ -44,6 +60,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 			return false;
 		}
+
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == Shared.sv.SettingsView.CellValueTextColorProperty.PropertyName ) { return UpdateTextColor(); }

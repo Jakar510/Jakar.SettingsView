@@ -13,8 +13,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	public abstract class DescriptionCellBase : IconCellBase
 	{
 		public static readonly BindableProperty DescriptionProperty = BindableProperty.Create(nameof(Description), typeof(string), typeof(DescriptionCellBase), default(string));
-		public static readonly BindableProperty DescriptionColorProperty = BindableProperty.Create(nameof(DescriptionColor), typeof(Color?), typeof(DescriptionCellBase), SVConstants.Cell.COLOR);
-		public static readonly BindableProperty DescriptionFontSizeProperty = BindableProperty.Create(nameof(DescriptionFontSize), typeof(double?), typeof(DescriptionCellBase), SVConstants.Cell.FONT_SIZE);
+		public static readonly BindableProperty DescriptionColorProperty = BindableProperty.Create(nameof(DescriptionColor), typeof(Color?), typeof(DescriptionCellBase), SvConstants.Cell.color);
+		public static readonly BindableProperty DescriptionFontSizeProperty = BindableProperty.Create(nameof(DescriptionFontSize), typeof(double?), typeof(DescriptionCellBase), SvConstants.Cell.font_Size);
 		public static readonly BindableProperty DescriptionFontFamilyProperty = BindableProperty.Create(nameof(DescriptionFontFamily), typeof(string), typeof(DescriptionCellBase), default(string));
 		public static readonly BindableProperty DescriptionFontAttributesProperty = BindableProperty.Create(nameof(DescriptionFontAttributes), typeof(FontAttributes?), typeof(DescriptionCellBase));
 		public static readonly BindableProperty DescriptionAlignmentProperty = BindableProperty.Create(nameof(DescriptionAlignment), typeof(TextAlignment?), typeof(DescriptionCellBase));
@@ -87,7 +87,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			public TextAlignment TextAlignment => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
 
 			public Color Color =>
-				_cell.DescriptionColor == SVConstants.Cell.COLOR
+				_cell.DescriptionColor == SvConstants.Cell.color
 					? _cell.Parent.CellDescriptionColor
 					: _cell.DescriptionColor;
 

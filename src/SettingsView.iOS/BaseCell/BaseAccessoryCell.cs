@@ -5,38 +5,79 @@ using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.iOS.Interfaces;
+using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
+using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
+
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
-	public abstract class BaseAccessoryCell<TAccessory> : BaseCellView where TAccessory : UIView, IRenderAccessory
+	public abstract class BaseAccessoryCell<TCell, TAccessory> : BaseCellView<TCell> where TAccessory : UIView, IRenderAccessory
+																					 where TCell : CheckableCellBase
 	{
-		protected IconView _Icon { get; set; }
+		private TAccessory?      _accessory;
+		private IconView?        _icon;
+		private Stack?           _titleStack;
+		private Stack?           _contentStack;
+		private TitleView?       _title;
+		private DescriptionView? _description;
+
+
+		public IUseConfiguration TitleConfiguration       => Cell.TitleConfig;
+		public IUseConfiguration DescriptionConfiguration => Cell.DescriptionConfig;
+
+
+		protected IconView _Icon
+		{
+			get => _icon ?? throw new NullReferenceException(nameof(_icon));
+			set => _icon = value;
+		}
 
 		/// <summary>
 		/// Vertical StackView that is arranged at right. ( put Title and Description ) 
 		/// </summary>
-		protected Stack _TitleStack { get; set; }
+		protected Stack _TitleStack
+		{
+			get => _titleStack ?? throw new NullReferenceException(nameof(_titleStack));
+			set => _titleStack = value;
+		}
 
 		/// <summary>
 		/// Vertical  StackView that is wrapper for the TitleView
 		/// </summary>
-		protected Stack _ContentStack { get; set; }
+		protected Stack _ContentStack
+		{
+			get => _contentStack ?? throw new NullReferenceException(nameof(_contentStack));
+			set => _contentStack = value;
+		}
 
-		protected TitleView _Title { get; set; }
-		protected DescriptionView _Description { get; set; }
+		protected TitleView _Title
+		{
+			get => _title ?? throw new NullReferenceException(nameof(_title));
+			set => _title = value;
+		}
+
+		protected DescriptionView _Description
+		{
+			get => _description ?? throw new NullReferenceException(nameof(_description));
+			set => _description = value;
+		}
 
 		protected TAccessory _Accessory
 		{
-			get => (TAccessory) ( AccessoryView ?? throw new NullReferenceException(nameof(AccessoryView)) );
-			set => AccessoryView = EditingAccessoryView = value;
+			get => _accessory ?? throw new NullReferenceException(nameof(_accessory));
+			set
+			{
+				_accessory = value;
+				AccessoryView = EditingAccessoryView = value;
+			}
 		}
 
 
-		protected BaseAccessoryCell( Cell formsCell ) : base(formsCell)
+		protected BaseAccessoryCell( TCell formsCell ) : base(formsCell)
 		{
 			_Icon = new IconView(this);
 
@@ -53,20 +94,25 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_TitleStack.AddArrangedSubview(_ContentStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
 
-			_ContentStack.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-			_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.DefaultHigh, UILayoutConstraintAxis.Vertical);
+			_Icon.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
+			_TitleStack.RightExtended(_MainStack, _Icon);
 
-			
+			_ContentStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ContentStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+
+			_TitleStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_TitleStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+
+
 			_MainStack.Root(this);
 
-			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
+			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
 			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
+			_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest; //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
 			_MinHeightConstraint.Active = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
-			
+
 			SetNeedsLayout();
 		}
 
@@ -83,6 +129,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			base.CellPropertyChanged(sender, e);
 		}
+
 		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( _Icon.UpdateParent(sender, e) ) { return; }
@@ -130,17 +177,30 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		}
 
 
-		protected override void RunDispose()
+		protected override void Dispose( bool disposing )
 		{
-			AccessoryView?.Dispose();
-			EditingAccessoryView?.Dispose();
+			if ( disposing && !_disposed )
+			{
+				_icon?.Dispose();
+				_icon = null;
 
-			_Title.Dispose();
-			_Description.Dispose();
-			_Icon.Dispose();
-			_TitleStack.Dispose();
-			_MainStack.Dispose();
-			base.RunDispose();
+				_title?.Dispose();
+				_title = null;
+
+				_description?.Dispose();
+				_title = null;
+
+				_title?.Dispose();
+				_title = null;
+
+				_titleStack?.Dispose();
+				_titleStack = null;
+
+				_contentStack?.Dispose();
+				_contentStack = null;
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

@@ -14,7 +14,7 @@
 		<PackageReference Include="Xam.Plugin.Screenshot" Version="2.0.3" />
 		<PackageReference Include="Xamarin.Forms.Svg" Version="1.0.3" />
 		<PackageReference Include="Prism.Unity.Forms" Version="8.0.0.1909" />
-		<PackageReference Include="ReactiveProperty" Version="7.8.1" />
+		<PackageReference Include="ReactiveProperty" Version="7.8.3" />
 
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
 		<PackageReference Include="AiForms.Effects" Version="1.6.10" />
