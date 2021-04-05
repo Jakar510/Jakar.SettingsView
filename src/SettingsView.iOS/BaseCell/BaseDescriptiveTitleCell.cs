@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
@@ -17,8 +18,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 	public abstract class BaseDescriptiveTitleCell<TCell> : BaseCellView<TCell> where TCell : DescriptionCellBase
 	{
 		private IconView?        _icon;
-		private Stack?           _titleStack;
-		private Stack?           _contentStack;
+		private UIStackView?     _titleStack;
+		private UIStackView
+			?     _contentStack;
 		private TitleView?       _title;
 		private DescriptionView? _description;
 
@@ -36,7 +38,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Vertical StackView that is arranged at right. ( put Title and Description ) 
 		/// </summary>
-		protected Stack _TitleStack
+		protected UIStackView _TitleStack
 		{
 			get => _titleStack ?? throw new NullReferenceException(nameof(_titleStack));
 			set => _titleStack = value;
@@ -45,7 +47,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Vertical  StackView that is wrapper for the TitleView
 		/// </summary>
-		protected Stack _ContentStack
+		protected UIStackView _ContentStack
 		{
 			get => _contentStack ?? throw new NullReferenceException(nameof(_contentStack));
 			set => _contentStack = value;
@@ -66,12 +68,12 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected BaseDescriptiveTitleCell( TCell formsCell ) : base(formsCell)
 		{
-			_Icon = new IconView(this);
+			_Icon = new IconView(this, Cell);
 
-			_TitleStack = Stack.TitleStack();
-			_ContentStack = Stack.ContentStack();
-			_Title = new TitleView(this);
-			_Description = new DescriptionView(this);
+			_TitleStack   = Stack.Title();
+			_ContentStack = Stack.Content();
+			_Title        = new TitleView(this);
+			_Description  = new DescriptionView(this);
 
 			_Icon.Initialize(_MainStack);
 			_Title.Initialize(_ContentStack);
@@ -79,22 +81,22 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_TitleStack.AddArrangedSubview(_ContentStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
 
-			_Icon.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
-			_TitleStack.RightExtended(_MainStack, _Icon);
+			_Icon.Control.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
+			_TitleStack.RightExtended(_MainStack, _Icon.Control);
 
-			_ContentStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_ContentStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ContentStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ContentStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			_TitleStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_TitleStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 
-			_MainStack.Root(this);
+			this.Root(_MainStack);
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
-			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest; //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
-			_MinHeightConstraint.Active = true;
+			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
+			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
+			_MinHeightConstraint.Active   = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
 
@@ -131,23 +133,23 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// 	
 		// 	_MainStack.AddArrangedSubview(_TitleStack);
 		//
-		// 	_Icon.SetContentHuggingPriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal); //if possible, not to expand.
-		// 	_TitleStack.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-		// 	_ContentStack.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-		// 	_Title.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
-		// 	_Description.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Horizontal);
+		// 	_Icon.SetContentHuggingPriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal); //if possible, not to expand.
+		// 	_TitleStack.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Horizontal);
+		// 	_ContentStack.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Horizontal);
+		// 	_Title.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Horizontal);
+		// 	_Description.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Horizontal);
 		//
 		//
-		// 	_Icon.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
-		// 	_TitleStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-		// 	_ContentStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-		// 	_Title.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
-		// 	_Description.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Horizontal);
+		// 	_Icon.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
+		// 	_TitleStack.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal);
+		// 	_ContentStack.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal);
+		// 	_Title.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal);
+		// 	_Description.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Horizontal);
 		//
-		// 	_Icon.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-		// 	_Icon.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
-		// 	_TitleStack.SetContentCompressionResistancePriority(SVConstants.Layout.Priority.HIGH, UILayoutConstraintAxis.Vertical);
-		// 	_TitleStack.SetContentHuggingPriority(SVConstants.Layout.Priority.LOW, UILayoutConstraintAxis.Vertical);
+		// 	_Icon.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Vertical);
+		// 	_Icon.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Vertical);
+		// 	_TitleStack.SetContentCompressionResistancePriority(LayoutPriority.HIGH, UILayoutConstraintAxis.Vertical);
+		// 	_TitleStack.SetContentHuggingPriority(LayoutPriority.LOW, UILayoutConstraintAxis.Vertical);
 		//
 		// 	ContentView.AddSubview(_MainStack);
 		//
@@ -161,7 +163,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// 	double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SVConstants.Defaults.MIN_ROW_HEIGHT);
 		// 	_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
 		// 	// fix warning-log:Unable to simultaneously satisfy constraints.
-		// 	_MinHeightConstraint.Priority = SVConstants.Layout.Priority.HIGH; // this is superior to any other view.
+		// 	_MinHeightConstraint.Priority = LayoutPriority.HIGH; // this is superior to any other view.
 		// 	_MinHeightConstraint.Active = true;
 		//
 		// 	if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _ContentStack.AccessibilityIdentifier = Cell.AutomationId; }

@@ -24,7 +24,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AiForms.Effects" Version="1.6.10" />
-		<PackageReference Include="Jakar.Api" Version="1.2.0" />
+		<PackageReference Include="Jakar.Api" Version="1.2.2" />
 		<PackageReference Include="Xam.Plugin.Screenshot" Version="2.0.3" />
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
 		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />
@@ -33,11 +33,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="project.json" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="..\nuget\AzurePipelines.nuspec">
-			<Link>AzurePipelines.nuspec</Link>
-		</None>
 	</ItemGroup>
 	<ItemGroup>
 	  <EmbeddedResource Update="sv\DefaultFooterView.xaml">

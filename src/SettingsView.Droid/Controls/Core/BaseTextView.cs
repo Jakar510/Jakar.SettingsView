@@ -62,7 +62,7 @@ namespace Jakar.SettingsView.Droid.Controls.Core
 
 			// CanScrollHorizontally(0); // Negative to check scrolling up, positive to check scrolling down.
 			// CanScrollVertically(0);
-			// SetScroller(new Scroller(_Cell.AndroidContext));
+			// SetScroller(new Scroller(Renderer.AndroidContext));
 
 			SetBackgroundColor(Color.Transparent.ToAndroid());
 			if ( Background != null ) { Background.Alpha = 0; } // hide underline

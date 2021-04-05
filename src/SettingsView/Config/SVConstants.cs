@@ -34,11 +34,11 @@ namespace Jakar.SettingsView.Shared.Config
 			public static readonly Color placeholderColor = Color.LightGray;
 			public static readonly Brush brush            = Brush.Default;
 
-			public static readonly double? font_Size = null;
-			public static readonly double? icon_Size = null;
+			public static readonly double? font_Size  = null;
+			public static readonly double? iconRadius = null;
 
 			public const           bool      VISIBLE  = true;
-			public static readonly Size?     iconSize = default;
+			public static readonly Size?      iconSize = null;
 			public static readonly Thickness padding  = new(10, 4);
 
 			public const           string         FONT_FAMILY     = default;

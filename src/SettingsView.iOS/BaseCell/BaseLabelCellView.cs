@@ -3,7 +3,6 @@
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.Shared.CellBase;
 using UIKit;
-using Xamarin.Forms;
 
 
 namespace Jakar.SettingsView.iOS.BaseCell

@@ -5,7 +5,6 @@ using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Enumerations;
 using UIKit;
 using Xamarin.Forms;
 
@@ -52,8 +51,8 @@ namespace Jakar.SettingsView.iOS.Cells
 
 			if ( Cell.UseFullSize )
 			{
-				_MainStack.RemoveArrangedSubview(_Icon);
-				_Icon.RemoveFromSuperview();
+				_MainStack.RemoveArrangedSubview(_Icon.Control);
+				_Icon.Control.RemoveFromSuperview();
 
 				_MainStack.LayoutMargins = new UIEdgeInsets(0, 0, 0, 0);
 				_MainStack.Spacing       = 0;

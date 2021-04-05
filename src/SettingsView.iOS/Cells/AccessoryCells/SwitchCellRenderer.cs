@@ -1,6 +1,5 @@
 ﻿using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using AiSwitchCellRenderer = Jakar.SettingsView.iOS.Cells.SwitchCellRenderer;
 using AiSwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;

@@ -11,25 +11,30 @@ using Jakar.SettingsView.Shared.Config;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 
+
 namespace Jakar.SettingsView.iOS.Controls
 {
 	public class AiSwitch : UISwitch, IRenderAccessory
 	{
 		protected BaseAccessoryCell<SwitchCell, AiSwitch> _Renderer { get; }
+
 		public AiSwitch( BaseAccessoryCell<SwitchCell, AiSwitch> renderer ) : base()
 		{
-			_Renderer = renderer;
-			ValueChanged += OnValueChanged;
+			_Renderer     =  renderer;
+			ValueChanged  += OnValueChanged;
 			TouchUpInside += OnTouchUpInside;
 		}
+
 		protected void OnTouchUpInside( object sender, EventArgs e ) => Toggle();
+
 		protected void OnValueChanged( object sender, EventArgs e )
 		{
 			_Renderer.Cell.Checked = On;
 			_Renderer.Cell.ValueChangedHandler.SendValueChanged(On);
 		}
 
-		public void Initialize( Stack parent ) { }
+		public void Initialize( UIStackView parent ) { parent.AddArrangedSubview(this); }
+
 		public void Update()
 		{
 			UpdateChecked();
@@ -44,6 +49,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			return false;
 		}
+
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
@@ -56,6 +62,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			TintColor = _Renderer.Cell.GetAccentColor().ToUIColor();
 			return true;
 		}
+
 		protected bool UpdateChecked()
 		{
 			On = _Renderer.Cell.Checked;
@@ -65,12 +72,13 @@ namespace Jakar.SettingsView.iOS.Controls
 		public void Enable()
 		{
 			Enabled = true;
-			Alpha = SvConstants.Cell.ENABLED_ALPHA;
+			Alpha   = SvConstants.Cell.ENABLED_ALPHA;
 		}
+
 		public void Disable()
 		{
 			Enabled = true;
-			Alpha = SvConstants.Cell.DISABLED_ALPHA;
+			Alpha   = SvConstants.Cell.DISABLED_ALPHA;
 		}
 
 		public void Toggle()
@@ -78,7 +86,8 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( On ) { Deselect(); }
 			else { Select(); }
 		}
-		public void Select() { On = true; }
+
+		public void Select() { On   = true; }
 		public void Deselect() { On = false; }
 
 
@@ -86,7 +95,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		{
 			if ( disposing )
 			{
-				ValueChanged -= OnValueChanged;
+				ValueChanged  -= OnValueChanged;
 				TouchUpInside -= OnTouchUpInside;
 			}
 

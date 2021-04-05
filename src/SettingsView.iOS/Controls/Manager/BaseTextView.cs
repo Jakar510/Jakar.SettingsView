@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using CoreGraphics;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Interfaces;
@@ -16,18 +17,19 @@ using Xamarin.Forms.Platform.iOS;
 namespace Jakar.SettingsView.iOS.Controls.Manager
 {
 	[Foundation.Preserve(AllMembers = true)]
-	public abstract class BaseTextView<TCell, TCellRenderer> : BaseViewManager<UITextView, TCell>, IRenderValue, IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable
+	public abstract class BaseTextView<TCell, TCellRenderer> : BaseTextViewManager<UITextView, TCell>, IRenderValue, IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable
 		where TCell : TitleCellBase
 		where TCellRenderer : BaseCellView
 	{
-		protected TCellRenderer _Renderer { get; set; }
-		protected bool _IsAvailable { get; private set; } = true;
+		protected TCellRenderer _Renderer    { get; set; }
+		protected bool          _IsAvailable { get; private set; } = true;
 
 
 		protected BaseTextView( TCellRenderer renderer ) : this(new UITextView(), renderer) { }
 
-		protected BaseTextView( UITextView control, TCellRenderer renderer ) : base(control,
+		protected BaseTextView( UITextView control, TCellRenderer renderer ) : base(renderer, 
 																					renderer.Cell as TCell ?? throw new NullReferenceException(nameof(renderer.Cell)),
+																					control,
 																					control.TextColor,
 																					control.BackgroundColor,
 																					control.MinimumZoomScale
@@ -43,10 +45,9 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 		// 	Initialize();
 		// 	SetUsed(renderer.Cell);
 		// }
-		public override void Initialize( Stack parent )
+		public override void Initialize( UIStackView parent )
 		{
-			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.High, UILayoutConstraintAxis.Horizontal);
-			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.High, UILayoutConstraintAxis.Vertical);
+			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 			Control.UpdateConstraintsIfNeeded();
 		}
@@ -56,8 +57,8 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 
 		public override void Initialize()
 		{
-			Control.SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal);
-			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
+			Control.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal);
+			Control.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal);
 
 			// Control.LineBreakMode = UILineBreakMode.WordWrap;
 			// Control.Lines = 10;

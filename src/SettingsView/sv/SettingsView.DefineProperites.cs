@@ -442,8 +442,8 @@ namespace Jakar.SettingsView.Shared.sv
 
 	#region Cell Icon
 
-		public static BindableProperty CellIconSizeProperty = BindableProperty.Create(nameof(CellIconSize), typeof(Size), typeof(SettingsView), SvConstants.Sv.Icon.size);
-		public static BindableProperty CellIconRadiusProperty = BindableProperty.Create(nameof(CellIconRadius), typeof(double), typeof(SettingsView), SvConstants.Sv.Icon.RADIUS);
+		public static readonly BindableProperty CellIconSizeProperty = BindableProperty.Create(nameof(CellIconSize), typeof(Size), typeof(SettingsView), SvConstants.Sv.Icon.size);
+		public static readonly BindableProperty CellIconRadiusProperty = BindableProperty.Create(nameof(CellIconRadius), typeof(double), typeof(SettingsView), SvConstants.Sv.Icon.RADIUS);
 
 
 		[Xamarin.Forms.TypeConverter(typeof(SizeConverter))]

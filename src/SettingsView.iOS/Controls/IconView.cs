@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreFoundation;
+using Foundation;
+using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
+using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
@@ -14,103 +16,99 @@ using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using Xamarin.Forms.PlatformConfiguration;
 using Size = Xamarin.Forms.Size;
 
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
-	[Foundation.Preserve(AllMembers = true)]
-	public class IconView : UIImageView, IUpdateIcon<BaseCellView, UIImage, IImageSourceHandler>, IInitializeControl
+	[Preserve(AllMembers = true)]
+	public class IconView : BaseViewManager<UIImageView, IconCellBase>, IUpdateIcon<BaseCellView, UIImage, IImageSourceHandler>, IInitializeControl
 	{
-		protected IconCellBase _CurrentCell => _Renderer.Cell as IconCellBase ?? throw new NullReferenceException(nameof(_CurrentCell));
+		protected override IUseConfiguration _Config => throw new NotImplementedException(nameof(IUseConfiguration));
 
-		protected Size _iconSize;
-		internal NSLayoutConstraint? HeightConstraint { get; set; } = new();
-		internal NSLayoutConstraint? WidthConstraint { get; set; } = new();
+		protected Size                     _IconSize        { get; set; }
+		internal  NSLayoutConstraint?      HeightConstraint { get; set; } = new();
+		internal  NSLayoutConstraint?      WidthConstraint  { get; set; } = new();
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
-		protected float _IconRadius { get; set; }
-		protected BaseCellView _Renderer { get; private set; }
+		protected float                    _IconRadius      { get; set; }
 
 
-		public IconView( BaseCellView renderer ) : base()
+		public IconView( BaseCellView renderer, IconCellBase cell ) : this(new UIImageView(), renderer, cell) { }
+
+		public IconView( UIImageView control, BaseCellView renderer, IconCellBase cell ) : base(renderer,
+																								cell,
+																								control,
+																								control.TintColor,
+																								control.BackgroundColor,
+																								-1
+																							   )
 		{
-			_Renderer = renderer;
+			Control.ClipsToBounds   = true;
+			Control.BackgroundColor = UIColor.Clear;
 
-			ClipsToBounds   = true;
-			BackgroundColor = UIColor.Clear;
+			Control.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Vertical, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
 
-			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
-			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Vertical);
-			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
-			SetContentHuggingPriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);               //if possible, not to expand.
+			Control.HuggingPriority(LayoutPriority.Low,     UILayoutConstraintAxis.Vertical);
+			Control.HuggingPriority(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal); //if possible, not to expand.
 		}
 
 
-		public void Initialize( Stack parent )
+		public override void Initialize( UIStackView root )
 		{
-			parent.AddArrangedSubview(this);
+			root.AddArrangedSubview(Control);
 
-			// parent.BringSubviewToFront(this);
+			// Control.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
+			// Control.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
+			Control.LeftAnchor.ConstraintEqualTo(root.LeftAnchor).Active = true;
 
-			TopAnchor.ConstraintEqualTo(parent.TopAnchor).Active       = true;
-			BottomAnchor.ConstraintEqualTo(parent.BottomAnchor).Active = true;
-			LeftAnchor.ConstraintEqualTo(parent.LeftAnchor).Active     = true;
-
-			UpdateConstraintsIfNeeded();
-			LayoutIfNeeded();
+			Control.UpdateConstraintsIfNeeded();
+			Control.LayoutIfNeeded();
 			UpdateIconSize();
 		}
-
-		public void SetCell( BaseCellView renderer ) { _Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
 
 
 		public bool UpdateIconSize()
 		{
-			Size size;
+			Size size = _Cell.GetIconSize();
 
-			if ( _CurrentCell.IconSize != default ) { size                 = _CurrentCell.GetIconSize(); }
-			else if ( _CurrentCell.Parent.CellIconSize != default ) { size = _CurrentCell.Parent.CellIconSize; }
-			else { size                                                    = new Size(32, 32); }
+			// do nothing when current size is previous size
+			if ( _IconSize == size ) { return false; }
 
-			//do nothing when current size is previous size
-			if ( size == _iconSize ) { return false; }
-
-			if ( _iconSize != default )
+			//remove previous constraint
+			if ( HeightConstraint != null )
 			{
-				//remove previous constraint
-				if ( HeightConstraint != null )
-				{
-					HeightConstraint.Active = false;
-					HeightConstraint.Dispose();
-				}
-
-				if ( WidthConstraint != null )
-				{
-					WidthConstraint.Active = false;
-					WidthConstraint.Dispose();
-				}
+				HeightConstraint.Active = false;
+				HeightConstraint.Dispose();
 			}
 
-			WidthConstraint        = WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
-			WidthConstraint.Active = true;
+			if ( WidthConstraint != null )
+			{
+				WidthConstraint.Active = false;
+				WidthConstraint.Dispose();
+			}
 
-			HeightConstraint          = HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
-			HeightConstraint.Priority = SvConstants.Layout.Priority.Highest; // fix warning-log:Unable to simultaneously satisfy constraints.
+			if ( size == default ) { size = SvConstants.Sv.Icon.size; }
+
+			WidthConstraint          = Control.WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
+			WidthConstraint.Priority = LayoutPriority.High.ToFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
+			WidthConstraint.Active   = true;
+
+			HeightConstraint          = Control.HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
+			HeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
 			HeightConstraint.Active   = true;
 
-			UpdateConstraints();
+			Control.UpdateConstraints();
 
-			_iconSize = size;
-			_Renderer.SetNeedsLayout();
+			_IconSize = size;
+			Renderer.SetNeedsLayout();
 			return true;
 		}
 
 		public bool UpdateIconRadius()
 		{
-			Layer.CornerRadius = (float) _CurrentCell.GetIconRadius();
-			_Renderer.SetNeedsLayout();
+			Control.Layer.CornerRadius = (float) _Cell.GetIconRadius();
+			Renderer.SetNeedsLayout();
 			return true;
 		}
 
@@ -121,26 +119,26 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			UpdateIconSize();
 
-			Image?.Dispose();
-			Image = null;
+			Control.Image?.Dispose();
+			Control.Image = null;
 
-			if ( _CurrentCell.IconSource is not null )
+			if ( _Cell.IconSource is not null )
 			{
 				//hide IconView because UIStackView Distribution won't work when a image isn't set.
-				Hidden = false;
+				Control.Hidden = false;
 
-				if ( ImageCacheController.Instance.ObjectForKey(FromObject(_CurrentCell.IconSource.GetHashCode())) is UIImage cache )
+				if ( ImageCacheController.Instance.ObjectForKey(NSObject.FromObject(_Cell.IconSource.GetHashCode())) is UIImage cache )
 				{
-					Image = cache;
+					Control.Image = cache;
 					return;
 				}
 
-				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_CurrentCell.IconSource.GetType());
-				LoadIconImage(handler, _CurrentCell.IconSource);
+				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_Cell.IconSource.GetType());
+				LoadIconImage(handler, _Cell.IconSource);
 			}
-			else { Hidden = true; }
+			else { Control.Hidden = true; }
 
-			_Renderer.SetNeedsLayout();
+			Renderer.SetNeedsLayout();
 		}
 
 		protected void LoadIconImage( IImageSourceHandler handler, ImageSource source )
@@ -169,22 +167,22 @@ namespace Jakar.SettingsView.iOS.Controls
 								  if ( !t.IsCompleted ) return;
 
 								  if ( image is null ||
-									   _CurrentCell.IconSource is null ) return;
+									   _Cell.IconSource is null ) return;
 
-								  ImageCacheController.Instance.SetObjectforKey(image, FromObject(_CurrentCell.IconSource.GetHashCode()));
+								  ImageCacheController.Instance.SetObjectforKey(image, NSObject.FromObject(_Cell.IconSource.GetHashCode()));
 
-								  BeginInvokeOnMainThread(() =>
-														  {
-															  Image = image;
-															  SetNeedsLayout();
-														  }
-														 );
+								  Device.BeginInvokeOnMainThread(() =>
+																 {
+																	 Control.Image = image;
+																	 Control.SetNeedsLayout();
+																 }
+																);
 							  },
 							  token
 							 );
 		}
 
-		public Size GetIconSize() => _CurrentCell.GetIconSize();
+		public Size GetIconSize() => _Cell.GetIconSize();
 
 
 		public bool Refresh( bool forceLoad = false )
@@ -198,25 +196,25 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			UpdateIconSize();
 
-			if ( _CurrentCell.IconSource is not null )
+			if ( _Cell.IconSource is not null )
 			{
-				Hidden = false;
+				Control.Hidden = false;
 
-				if ( ImageCacheController.Instance.ObjectForKey(FromObject(_CurrentCell.IconSource.GetHashCode())) is UIImage cache )
+				if ( ImageCacheController.Instance.ObjectForKey(NSObject.FromObject(_Cell.IconSource.GetHashCode())) is UIImage cache )
 				{
-					Image = cache;
+					Control.Image = cache;
 					return true;
 				}
 
 				_IconTokenSource?.Dispose();
 				_IconTokenSource = new CancellationTokenSource();
 
-				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_CurrentCell.IconSource.GetType());
-				LoadIconImage(handler, _CurrentCell.IconSource, _IconTokenSource.Token);
+				var handler = Xamarin.Forms.Internals.Registrar.Registered.GetHandler<IImageSourceHandler>(_Cell.IconSource.GetType());
+				LoadIconImage(handler, _Cell.IconSource, _IconTokenSource.Token);
 			}
-			else { Hidden = true; }
+			else { Control.Hidden = true; }
 
-			_Renderer.SetNeedsLayout();
+			Renderer.SetNeedsLayout();
 			return true;
 		}
 
@@ -240,18 +238,18 @@ namespace Jakar.SettingsView.iOS.Controls
 			// image = CreateRoundImage(image);
 
 			if ( image is null ||
-				 _CurrentCell.IconSource is null ) return;
+				 _Cell.IconSource is null ) return;
 
-			ImageCacheController.Instance.SetObjectforKey(image, FromObject(_CurrentCell.IconSource.GetHashCode()));
+			ImageCacheController.Instance.SetObjectforKey(image, NSObject.FromObject(_Cell.IconSource.GetHashCode()));
 
 			await Device.InvokeOnMainThreadAsync(async () =>
 												 {
-													 Image?.Dispose();
-													 Image = null;
+													 Control.Image?.Dispose();
+													 Control.Image = null;
 
 													 await Task.Delay(50, token); // in case repeating the same source, sometimes the icon not be shown. by inserting delay it be shown.
-													 Image = image;
-													 SetNeedsLayout();
+													 Control.Image = image;
+													 Control.SetNeedsLayout();
 												 }
 												);
 
@@ -278,35 +276,34 @@ namespace Jakar.SettingsView.iOS.Controls
 			// }
 			image;
 
-		public bool Update( object sender, PropertyChangedEventArgs e )
+		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == IconCellBase.IconSizeProperty.PropertyName ||
-				 e.PropertyName == IconCellBase.IconRadiusProperty.PropertyName ||
-				 e.PropertyName == IconCellBase.IconSourceProperty.PropertyName ) { return Update(); }
+			if ( e.IsOneOf(IconCellBase.IconSizeProperty, IconCellBase.IconRadiusProperty, IconCellBase.IconSourceProperty) )
+			{
+				Update();
+				return true;
+			}
 
 			return false;
 		}
 
-		public bool Update()
+		public override void Update()
 		{
 			UpdateIconRadius();
 			Refresh(true);
-
-			// _Cell.Invalidate();
-			return true;
+			base.Update();
 		}
 
-		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
+		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.sv.SettingsView.CellIconRadiusProperty.PropertyName ) { return Update(); }
-
-			if ( e.PropertyName == Shared.sv.SettingsView.CellIconSizeProperty.PropertyName ) { return Update(); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.CellIconRadiusProperty, Shared.sv.SettingsView.CellIconSizeProperty) )
+			{
+				Update();
+				return true;
+			}
 
 			return false;
 		}
-
-		public void Enable() { Alpha  = SvConstants.Cell.ENABLED_ALPHA; }
-		public void Disable() { Alpha = SvConstants.Cell.DISABLED_ALPHA; }
 
 		// private void UpdateIconSize()
 		// {
@@ -426,8 +423,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 				_disposed = true;
 
-				RemoveFromSuperview();
-				Image?.Dispose();
+				Control.Image?.Dispose();
 
 				WidthConstraint?.Dispose();
 				HeightConstraint?.Dispose();

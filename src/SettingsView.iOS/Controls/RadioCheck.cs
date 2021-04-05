@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using CoreGraphics;
 using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;

@@ -265,14 +265,14 @@ namespace Jakar.SettingsView.Shared.Cells
 
 		internal string GetSelectedItemsText()
 		{
-			IList? ITEMS = MergedSelectedList;
-			if ( ITEMS is null ) return string.Empty;
+			IList? items = MergedSelectedList;
+			if ( items is null ) return string.Empty;
 
 			List<string> sortedList;
 			if ( KeyValue is not null )
 			{
 				var dict = new Dictionary<object, string>();
-				foreach ( object item in ITEMS )
+				foreach ( object item in items )
 				{
 					object? key = KeyValue?.Invoke(item);
 					var value = DisplayValue?.Invoke(item)?.ToString();
@@ -288,7 +288,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			}
 			else
 			{
-				List<string> strList = ( from object item in ITEMS select DisplayValue?.Invoke(item)?.ToString() ).ToList();
+				List<string> strList = ( from object item in items select DisplayValue?.Invoke(item)?.ToString() ).ToList();
 
 				NaturalComparer? comparer = UseNaturalSort
 												? new NaturalComparer()
@@ -302,7 +302,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			Console.Write(trace);
 			Console.WriteLine('\n');
 			Console.WriteLine('\n');
-			return string.Join(", ", sortedList.ToArray());
+			return string.Join(", ", sortedList);
 		}
 
 
@@ -315,9 +315,9 @@ namespace Jakar.SettingsView.Shared.Cells
 		}
 
 		// Create all property getters
-		private static Dictionary<string, Func<object, object?>> CreateGetProperty( Type t )
+		private static Dictionary<string, Func<object, object?>> CreateGetProperty( Type type )
 		{
-			IEnumerable<PropertyInfo> prop = t.GetRuntimeProperties().Where(x => x.DeclaringType == t && !x.Name.StartsWith("_", StringComparison.Ordinal));
+			IEnumerable<PropertyInfo> prop = type.GetRuntimeProperties().Where(x => x.DeclaringType == type && !x.Name.StartsWith("_", StringComparison.Ordinal));
 
 			ParameterExpression target = Expression.Parameter(typeof(object), "target");
 
@@ -325,7 +325,7 @@ namespace Jakar.SettingsView.Shared.Cells
 
 			foreach ( PropertyInfo p in prop )
 			{
-				MemberExpression body = Expression.PropertyOrField(Expression.Convert(target, t), p.Name);
+				MemberExpression body = Expression.PropertyOrField(Expression.Convert(target, type), p.Name);
 
 				Expression<Func<object, object?>> lambda = Expression.Lambda<Func<object, object?>>(Expression.Convert(body, typeof(object)), target);
 

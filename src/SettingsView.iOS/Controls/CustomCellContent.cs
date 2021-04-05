@@ -7,20 +7,21 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
+
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class CustomCellContent : UIView
 	{
-		protected WeakReference<IVisualElementRenderer>? _RendererRef { get; set; }
-		protected bool _Disposed { get; set; }
-		protected NSLayoutConstraint? _HeightConstraint { get; set; }
-		protected View? _View { get; set; }
-		protected CustomCell _CustomCell { get; set; }
+		protected WeakReference<IVisualElementRenderer>? _RendererRef      { get; set; }
+		protected bool                                   _Disposed         { get; set; }
+		protected NSLayoutConstraint?                    _HeightConstraint { get; set; }
+		protected View?                                  _View             { get; set; }
+		protected CustomCell                             _CustomCell       { get; set; }
 
-		protected double _lastFrameWidth = -9999d;
-		protected double _lastMeasureWidth = -9999d;
+		protected double _lastFrameWidth    = -9999d;
+		protected double _lastMeasureWidth  = -9999d;
 		protected double _lastMeasureHeight = -9999d;
 
 		public CustomCellContent( CustomCell cell ) => _CustomCell = cell;
@@ -37,6 +38,7 @@ namespace Jakar.SettingsView.iOS.Controls
 				_HeightConstraint = null;
 
 				IVisualElementRenderer? renderer = null;
+
 				if ( _RendererRef != null &&
 					 _RendererRef.TryGetTarget(out renderer) &&
 					 renderer.Element != null )
@@ -64,7 +66,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected virtual void UpdateIsEnabled() { UserInteractionEnabled = _View?.IsEnabled ?? false; }
 
-		public virtual void UpdateCell( View cell, UITableView? tableView )
+		public virtual void UpdateCell( View cell, UITableView tableView )
 		{
 			if ( _View == cell &&
 				 !_CustomCell.IsForceLayout ) { return; }
@@ -74,6 +76,7 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( _View != null ) { _View.PropertyChanged -= CellPropertyChanged; }
 
 			_View = cell;
+
 			_View.PropertyChanged += CellPropertyChanged;
 
 			if ( _RendererRef == null ||
@@ -85,12 +88,14 @@ namespace Jakar.SettingsView.iOS.Controls
 					renderer.Element.ClearValue(FormsInternals.RendererProperty);
 
 				Type type = Xamarin.Forms.Internals.Registrar.Registered.GetHandlerTypeForObject(_View);
+
 				// ReSharper disable once SuspiciousTypeConversion.Global
 				if ( renderer is IReflectableType reflectable )
 				{
 					Type rendererType = reflectable.GetTypeInfo().AsType();
+
 					if ( rendererType == type ||
-						 ( renderer.GetType() == FormsInternals.DefaultRenderer ) && type == null )
+						 ( ( renderer.GetType() == FormsInternals.DefaultRenderer ) && type == null ) )
 						renderer.SetElement(_View);
 					else
 					{
@@ -104,14 +109,15 @@ namespace Jakar.SettingsView.iOS.Controls
 
 			Platform.SetRenderer(_View, renderer);
 
-			if ( tableView != null &&
-				 ( !_CustomCell.IsMeasureOnce || !tableView.Frame.Width.ToDouble().Equals(_lastFrameWidth) ) )
+			if ( !_CustomCell.IsMeasureOnce || !tableView.Frame.Width.ToDouble().Equals(_lastFrameWidth) )
 			{
 				_lastFrameWidth = tableView.Frame.Width;
-				nfloat width = tableView.Frame.Width -
+
+				double width = _lastFrameWidth -
 							   ( _CustomCell.UseFullSize
 									 ? 0
 									 : 32 ); // CellBaseView layout margin
+
 				if ( renderer.Element != null )
 				{
 					SizeRequest result = renderer.Element.Measure(tableView.Frame.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
@@ -127,9 +133,9 @@ namespace Jakar.SettingsView.iOS.Controls
 					_HeightConstraint?.Dispose();
 				}
 
-				_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(_lastMeasureHeight.ToNFloat());
+				_HeightConstraint          = renderer.NativeView.HeightAnchor.ConstraintEqualTo(_lastMeasureHeight.ToNFloat());
 				_HeightConstraint.Priority = 999f;
-				_HeightConstraint.Active = true;
+				_HeightConstraint.Active   = true;
 
 				renderer.NativeView.UpdateConstraintsIfNeeded();
 			}
@@ -144,15 +150,17 @@ namespace Jakar.SettingsView.iOS.Controls
 		{
 			IVisualElementRenderer newRenderer = Platform.CreateRenderer(_View);
 			_RendererRef = new WeakReference<IVisualElementRenderer>(newRenderer);
-			AddSubview(newRenderer.NativeView);
 
-			UIView native = newRenderer.NativeView;
-			native.TranslatesAutoresizingMaskIntoConstraints = false;
+			this.AddFull(newRenderer.NativeView);
 
-			native.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
-			native.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
-			native.BottomAnchor.ConstraintEqualTo(BottomAnchor).Active = true;
-			native.RightAnchor.ConstraintEqualTo(RightAnchor).Active = true;
+			// UIView native = newRenderer.NativeView;
+			// AddSubview(native);
+			// native.TranslatesAutoresizingMaskIntoConstraints = false;
+			//
+			// native.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
+			// native.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
+			// native.BottomAnchor.ConstraintEqualTo(BottomAnchor).Active = true;
+			// native.RightAnchor.ConstraintEqualTo(RightAnchor).Active = true;
 
 			return newRenderer;
 		}

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreFoundation;
 using Foundation;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
@@ -25,7 +26,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Outer Horizontal StackView
 		/// </summary>
-		protected Stack _MainStack { get; }
+		protected UIStackView _MainStack { get; }
 
 		protected CellBase? _CellBase => Cell as CellBase;
 
@@ -36,10 +37,10 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected BaseCellView( Cell formsCell ) : base(UITableViewCellStyle.Default, formsCell.GetType().FullName)
 		{
-			_MainStack = Stack.MainStack();
+			_MainStack = Stack.Main();
 
 			SelectionStyle = UITableViewCellSelectionStyle.None;
-			Cell = formsCell;
+			Cell           = formsCell;
 
 			// remove existing views 
 			ImageView.RemoveFromSuperview();
@@ -214,7 +215,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// 	UpdateSelectedColor();
 		// }
 
-		protected void UpdateMinRowHeight( in Stack mainStack )
+		protected void UpdateMinRowHeight( in UIStackView mainStack )
 		{
 			if ( CellParent is null ) throw new NullReferenceException(nameof(CellParent));
 
@@ -227,9 +228,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			if ( CellParent.HasUnevenRows )
 			{
-				_MinHeightConstraint = mainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
-				_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest;
-				_MinHeightConstraint.Active = true;
+				_MinHeightConstraint          = mainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
+				_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat();
+				_MinHeightConstraint.Active   = true;
 			}
 
 			mainStack.UpdateConstraints();
@@ -242,11 +243,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			SetNeedsLayout();
 		}
 
-		protected void SetRightMarginZero( in Stack mainStack )
+		protected void SetRightMarginZero( in UIStackView mainStack )
 		{
 			if ( !UIDevice.CurrentDevice.CheckSystemVersion(11, 0) ) return;
 			UIEdgeInsets margins = mainStack.LayoutMargins;
-			margins.Right = 0;
+			margins.Right           = 0;
 			mainStack.LayoutMargins = margins;
 		}
 
@@ -393,7 +394,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 					if ( _CellBase.Section is not null )
 					{
 						_CellBase.Section.PropertyChanged -= SectionPropertyChanged;
-						_CellBase.Section = null;
+						_CellBase.Section                 =  null;
 					}
 				}
 

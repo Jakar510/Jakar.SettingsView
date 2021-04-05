@@ -6,8 +6,6 @@ using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 #nullable enable

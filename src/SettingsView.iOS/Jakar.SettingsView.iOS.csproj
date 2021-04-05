@@ -60,6 +60,7 @@
     <Compile Include="BaseCell\BaseValueCell.cs" />
     <Compile Include="BaseCell\BaseLabelCellView.cs" />
     <Compile Include="Controls\AiSwitch.cs" />
+    <Compile Include="Controls\Manager\BaseTextViewManager.cs" />
     <Compile Include="Controls\Manager\BaseViewManager.cs" />
     <Compile Include="Interfaces\IRenderAccessory.cs" />
     <Compile Include="Cells\CommandCells\ButtonCellRenderer.cs" />
@@ -123,7 +124,7 @@
       <Version>1.6.10</Version>
     </PackageReference>
     <PackageReference Include="Jakar.Api">
-      <Version>1.2.0</Version>
+      <Version>1.2.2</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>

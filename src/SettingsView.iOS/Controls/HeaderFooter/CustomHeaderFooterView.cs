@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Reflection;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
-using Jakar.SettingsView.Shared.Misc;
 using Jakar.SettingsView.Shared.sv;
 using UIKit;
 using Xamarin.Forms;
@@ -93,7 +93,7 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 					}
 
 					_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(finalH);
-					_HeightConstraint.Priority = SvConstants.Layout.Priority.Highest;
+					_HeightConstraint.Priority = LayoutPriority.Highest.ToFloat();
 					_HeightConstraint.Active = true;
 					renderer.NativeView.AddConstraint(_HeightConstraint);
 

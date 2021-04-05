@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Foundation;
 using Jakar.Api.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;

@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
@@ -25,11 +26,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 																								where TValueManager : BaseViewManager<TValueView, TCell>
 	{
 		private IconView?        _icon;
-		private Stack?           _titleStack;
-		private Stack?           _contentStack;
+		private UIStackView?     _titleStack;
+		private UIStackView?     _contentStack;
 		private TitleView?       _title;
 		private DescriptionView? _description;
-		private Stack?           _valueStack;
+		private UIStackView?     _valueStack;
 		private HintView?        _hint;
 		private TValueManager?   _value;
 
@@ -51,7 +52,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Vertical StackView that is arranged at right. ( put Title and Description ) 
 		/// </summary>
-		protected Stack _TitleStack
+		protected UIStackView _TitleStack
 		{
 			get => _titleStack ?? throw new NullReferenceException(nameof(_titleStack));
 			set => _titleStack = value;
@@ -60,7 +61,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Vertical  StackView that is wrapper for the TitleView
 		/// </summary>
-		protected Stack _ContentStack
+		protected UIStackView _ContentStack
 		{
 			get => _contentStack ?? throw new NullReferenceException(nameof(_contentStack));
 			set => _contentStack = value;
@@ -82,7 +83,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// <summary>
 		/// Vertical StackView that is arranged at left of the _TitleStack.( put Hint and ValueText)
 		/// </summary>
-		protected Stack _ValueStack
+		protected UIStackView _ValueStack
 		{
 			get => _valueStack ?? throw new NullReferenceException(nameof(_valueStack));
 			set => _valueStack = value;
@@ -101,16 +102,16 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		protected BaseValueCell( TCell formsCell ) : base(formsCell)
 		{
-			_Icon = new IconView(this);
+			_Icon = new IconView(this, Cell);
 
-			_TitleStack = Stack.TitleStack();
-			_ContentStack = Stack.ContentStack();
-			_Title = new TitleView(this);
-			_Description = new DescriptionView(this);
+			_TitleStack   = Stack.Title();
+			_ContentStack = Stack.Content();
+			_Title        = new TitleView(this);
+			_Description  = new DescriptionView(this);
 
-			_ValueStack = Stack.ValueStack();
-			_Hint = new HintView(this);
-			_value = InstanceCreator.Create<TValueManager>(this);
+			_ValueStack = Stack.Value();
+			_Hint       = new HintView(this);
+			_value      = InstanceCreator.Create<TValueManager>(this);
 
 
 			_Icon.Initialize(_MainStack);
@@ -123,28 +124,28 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Value.Initialize(_ValueStack);
 			_MainStack.AddArrangedSubview(_ValueStack);
 
-			_TitleStack.InBetween(_MainStack, _Icon, _ValueStack);
+			_TitleStack.InBetween(_MainStack, _Icon.Control, _ValueStack);
 			_ValueStack.RightExtended(_MainStack, _TitleStack);
 
-			_Icon.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
+			_Icon.Control.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
 			_TitleStack.WidthOfParent(_MainStack, SvConstants.Layout.ColumnFactors.TITLE_STACK, SvConstants.Layout.ColumnFactors.VALUE_STACK);
 			_ValueStack.WidthOfParent(_MainStack, SvConstants.Layout.ColumnFactors.VALUE_STACK, 1);
 
-			_ContentStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_ContentStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ContentStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ContentStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			_ValueStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_ValueStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ValueStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ValueStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			_TitleStack.HuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_TitleStack.CompressionPriorities(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			_MainStack.Root(this);
+			this.Root(_MainStack);
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
-			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest; //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
-			_MinHeightConstraint.Active = true;
+			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
+			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
+			_MinHeightConstraint.Active   = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
 

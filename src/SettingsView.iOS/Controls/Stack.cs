@@ -1,140 +1,131 @@
 ﻿// unset
 
-using System;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.Shared.Config;
 using UIKit;
 
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
-	public class Stack : UIStackView
+	public static class Stack
 	{
-		public Stack( UILayoutConstraintAxis axis, nfloat spacing ) : this(axis, spacing, UIStackViewAlignment.Fill, UIStackViewDistribution.Fill) { }
-
-		public Stack( UILayoutConstraintAxis  axis,
-					  nfloat                  spacing,
-					  UIStackViewAlignment    alignment,
-					  UIStackViewDistribution distribution
-		) : base()
-		{
-			Axis = axis;
-			Alignment = alignment;
-			Spacing = spacing;
-			Distribution = distribution;
-
-			// LayoutMargins = new UIEdgeInsets(6, 16, 6, 16);
-			LayoutMargins = SvConstants.Cell.padding.ToUIEdgeInsets();
-			LayoutMarginsRelativeArrangement = true;
-		}
-
-		public static Stack ValueStack() => new(UILayoutConstraintAxis.Vertical, 6);
-		public static Stack TitleStack() => new(UILayoutConstraintAxis.Vertical, 4);
-		public static Stack ContentStack() => new(UILayoutConstraintAxis.Vertical, 6);
-		public static Stack MainStack() => new(UILayoutConstraintAxis.Horizontal, 16);
+		public static UIStackView Value() => new()
+											 {
+												 Axis         = UILayoutConstraintAxis.Vertical,
+												 Alignment    = UIStackViewAlignment.Fill,
+												 Distribution = UIStackViewDistribution.Fill,
+												 Spacing      = 6,
+											 };
 
 
-		protected void Priorities()
-		{
-			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Horizontal);
-			SetContentHuggingPriority(SvConstants.Layout.Priority.Minimum, UILayoutConstraintAxis.Vertical);
-
-			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
-			SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
-		}
-
-
-		public void Root( in BaseCellView cell ) => Root(cell.ContentView);
-
-		public void Root( in UIView ContentView )
-		{
-			ContentView.AddSubview(this);
-
-			TranslatesAutoresizingMaskIntoConstraints = false;
-			TopAnchor.ConstraintEqualTo(ContentView.TopAnchor).Active = true;
-			LeftAnchor.ConstraintEqualTo(ContentView.LeftAnchor).Active = true;
-			BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
-			RightAnchor.ConstraintEqualTo(ContentView.RightAnchor).Active = true;
-
-			Priorities();
-		}
-
-		public void Title( in Stack root, in IconView icon )
-		{
-			root.AddArrangedSubview(this);
-
-			TranslatesAutoresizingMaskIntoConstraints = false;
-
-			TopAnchor.ConstraintEqualTo(root.TopAnchor).Active = true;
-			BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-
-			LeftAnchor.ConstraintEqualTo(icon.RightAnchor).Active = true;
-			RightAnchor.ConstraintEqualTo(root.RightAnchor).Active = true;
-
-			Priorities();
-		}
-
-		public void Title( in Stack root, in Stack value, in IconView icon )
-		{
-			root.AddArrangedSubview(this);
-
-			TranslatesAutoresizingMaskIntoConstraints = false;
-
-			TopAnchor.ConstraintEqualTo(root.TopAnchor).Active = true;
-			BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-
-			LeftAnchor.ConstraintEqualTo(icon.RightAnchor).Active = true;
-			RightAnchor.ConstraintEqualTo(value.LeftAnchor).Active = true;
-
-			Priorities();
-		}
-
-		public void Accessory( in Stack root, in IconView icon, in UIView accessory )
-		{
-			root.AddArrangedSubview(this);
-
-			TranslatesAutoresizingMaskIntoConstraints = false;
-
-			TopAnchor.ConstraintEqualTo(root.TopAnchor).Active = true;
-			BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-
-			LeftAnchor.ConstraintEqualTo(icon.RightAnchor).Active = true;
-			RightAnchor.ConstraintEqualTo(accessory.LeftAnchor).Active = true;
-
-			Priorities();
-		}
-
-		public void Value( in Stack root, in Stack title )
-		{
-			root.AddArrangedSubview(this);
-
-			TranslatesAutoresizingMaskIntoConstraints = false;
-
-			TopAnchor.ConstraintEqualTo(root.TopAnchor).Active = true;
-			BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-
-			LeftAnchor.ConstraintEqualTo(title.RightAnchor).Active = true;
-			RightAnchor.ConstraintEqualTo(root.LeftAnchor).Active = true;
-
-			Priorities();
-		}
+		public static UIStackView Title() => new()
+											 {
+												 Axis         = UILayoutConstraintAxis.Vertical,
+												 Alignment    = UIStackViewAlignment.Fill,
+												 Distribution = UIStackViewDistribution.Fill,
+												 Spacing      = 4,
+											 };
 
 
-		private bool _disposed;
+		public static UIStackView Content() => new()
+											   {
+												   Axis         = UILayoutConstraintAxis.Vertical,
+												   Alignment    = UIStackViewAlignment.Fill,
+												   Distribution = UIStackViewDistribution.Fill,
+												   Spacing      = 6,
+											   };
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				if ( _disposed ) { return; }
 
-				_disposed = true;
-				RemoveFromSuperview();
-			}
+		public static UIStackView Main() => new()
+											{
+												Axis         = UILayoutConstraintAxis.Vertical,
+												Alignment    = UIStackViewAlignment.Fill,
+												Distribution = UIStackViewDistribution.Fill,
+												Spacing      = 16,
+											};
 
-			base.Dispose(disposing);
-		}
+
+		public static void Root( this BaseCellView cell, in UIStackView root ) => cell.ContentView.AddFull(root);
+
+
+		//
+		// public static void Root( this UIView contentView, in UIStackView root )
+		// {
+		// 	contentView.AddSubview(root);
+		//
+		// 	root.TranslatesAutoresizingMaskIntoConstraints                       = false;
+		// 	root.TopAnchor.ConstraintEqualTo(contentView.TopAnchor).Active       = true;
+		// 	root.LeftAnchor.ConstraintEqualTo(contentView.LeftAnchor).Active     = true;
+		// 	root.BottomAnchor.ConstraintEqualTo(contentView.BottomAnchor).Active = true;
+		// 	root.RightAnchor.ConstraintEqualTo(contentView.RightAnchor).Active   = true;
+		//
+		// 	root.Priorities();
+		// }
+		//
+		//
+		// public static void Title( this UIStackView root, in UIStackView stack, in IconView icon )
+		// {
+		// 	root.AddArrangedSubview(stack);
+		//
+		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
+		//
+		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
+		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
+		//
+		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
+		// 	stack.RightAnchor.ConstraintEqualTo(root.RightAnchor).Active        = true;
+		//
+		// 	stack.Priorities();
+		// }
+		//
+		//
+		// public static void Title( this UIStackView root, in UIStackView stack, in UIStackView value, in IconView icon )
+		// {
+		// 	root.AddArrangedSubview(stack);
+		//
+		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
+		//
+		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
+		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
+		//
+		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
+		// 	stack.RightAnchor.ConstraintEqualTo(value.LeftAnchor).Active        = true;
+		//
+		// 	stack.Priorities();
+		// }
+		//
+		//
+		// public static void Accessory( this UIStackView root, in UIStackView stack, in IconView icon, in UIView accessory )
+		// {
+		// 	root.AddArrangedSubview(stack);
+		//
+		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
+		//
+		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
+		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
+		//
+		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
+		// 	stack.RightAnchor.ConstraintEqualTo(accessory.LeftAnchor).Active    = true;
+		//
+		// 	stack.Priorities();
+		// }
+		//
+		//
+		// public static void Value( this UIStackView root, in UIStackView stack, in UIStackView title )
+		// {
+		// 	root.AddArrangedSubview(stack);
+		//
+		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
+		//
+		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
+		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
+		//
+		// 	stack.LeftAnchor.ConstraintEqualTo(title.RightAnchor).Active = true;
+		// 	stack.RightAnchor.ConstraintEqualTo(root.LeftAnchor).Active  = true;
+		//
+		// 	stack.Priorities();
+		// }
 	}
 }

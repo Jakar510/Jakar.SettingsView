@@ -2,11 +2,12 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
@@ -15,7 +16,7 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
-	public class ButtonView : BaseViewManager<UIButton, ButtonCell>
+	public class ButtonView : BaseTextViewManager<UIButton, ButtonCell>
 	{
 		protected static readonly UIControlState[] _controlStates =
 		{
@@ -32,21 +33,21 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		protected UILongPressGestureRecognizer _Recognizer { get; set; }
 
 
-		public ButtonView( ButtonCell cell ) : this(new UIButton(), cell) { }
+		public ButtonView( ButtonCellView renderer ) : this(new UIButton(), renderer) { }
 
-		public ButtonView( UIButton button, ButtonCell cell ) : base(button,
-																	 cell,
-																	 button.TitleLabel.TextColor,
-																	 button.BackgroundColor,
-																	 button.ContentScaleFactor
-																	)
+		public ButtonView( UIButton button, ButtonCellView renderer ) : base(renderer,
+																			 renderer.ButtonCell,
+																			 button,
+																			 button.TitleLabel.TextColor,
+																			 button.BackgroundColor,
+																			 button.ContentScaleFactor
+																			)
 		{
 			Control.AutoresizingMask    = UIViewAutoresizing.All;
 			Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
 			Control.VerticalAlignment   = UIControlContentVerticalAlignment.Center;
 
-			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Horizontal);
-			Control.SetContentCompressionResistancePriority(SvConstants.Layout.Priority.Highest, UILayoutConstraintAxis.Vertical);
+			Control.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 			Control.UserInteractionEnabled = Control.Enabled = true;
 
@@ -55,7 +56,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			Control.AddGestureRecognizer(_Recognizer); // https://stackoverflow.com/a/6179591/9530917
 		}
 
-		public override void Initialize( Stack parent )
+		public override void Initialize( UIStackView parent )
 		{
 			parent.AddArrangedSubview(Control);
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
+﻿using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+
 
 [assembly: ExportRenderer(typeof(LabelCell), typeof(LabelCellRenderer))]
 

@@ -12,61 +12,46 @@ using UIKit;
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Manager
 {
-	public abstract class BaseViewManager<TView, TCell> : IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable where TCell : CellBase
-																																		where TView : UIView
+	public abstract class BaseViewManager<TView, TCell> : IDefaultColors<UIColor?>, IInitializeControl, IDisposable where TCell : CellBase
+																													where TView : UIView
 	{
-		public float    DefaultFontSize        { get; }
-		public UIColor? DefaultTextColor       { get; }
-		public UIColor? DefaultBackgroundColor { get; }
+		public BaseCellView Renderer               { get; private set; }
+		public float        DefaultFontSize        { get; }
+		public UIColor?     DefaultTextColor       { get; }
+		public UIColor?     DefaultBackgroundColor { get; }
 
 
 		protected abstract IUseConfiguration _Config { get; }
 		protected          TCell             _Cell   { get; private set; }
-		public             TView             Control { get; protected set; }
+		public             TView             Control { get; }
 
 
-		protected BaseViewManager( TView    control,
-								   TCell    cell,
-								   UIColor? textColor,
-								   UIColor? backgroundColor,
-								   nfloat   fontSize
+		protected BaseViewManager( BaseCellView renderer,
+								   TCell        cell,
+								   TView        control,
+								   UIColor?     textColor,
+								   UIColor?     backgroundColor,
+								   nfloat       fontSize
 		)
 		{
-			Control = control;
-			_Cell = cell;
+			Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
+			Control  = control ?? throw new NullReferenceException(nameof(control));
+			_Cell    = cell ?? throw new NullReferenceException(nameof(cell));
 
 			DefaultBackgroundColor = backgroundColor;
-			DefaultTextColor = textColor;
-			DefaultFontSize = fontSize.ToFloat();
+			DefaultTextColor       = textColor;
+			DefaultFontSize        = fontSize.ToFloat();
 		}
 
+		public void SetRenderer( BaseCellView  renderer ) { Renderer = renderer ?? throw new NullReferenceException(nameof(renderer)); }
 		public void SetCell( TCell             cell ) => _Cell = cell;
-		public abstract void Initialize( Stack parent );
-		public virtual void Initialize() { }
+		public abstract void Initialize( UIStackView parent );
 
 
-		public virtual void Update()
-		{
-			UpdateText();
-			UpdateTextColor();
-			UpdateTextAlignment();
-			UpdateFont();
-			UpdateFontSize();
-			UpdateIsEnabled();
-		}
+		public virtual void Update() { UpdateIsEnabled(); }
 
 		public abstract bool Update( object       sender, PropertyChangedEventArgs e );
 		public abstract bool UpdateParent( object sender, PropertyChangedEventArgs e );
-
-
-		public abstract bool UpdateFont();
-		public abstract bool UpdateTextColor();
-		public abstract bool UpdateFontSize();
-		public abstract bool UpdateTextAlignment();
-
-
-		public abstract bool UpdateText();
-		public abstract bool UpdateText( string? s );
 
 
 		protected virtual void UpdateIsEnabled() => SetEnabledAppearance(_Cell.IsEnabled);
@@ -79,7 +64,7 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 			Control.UserInteractionEnabled = isEnabled;
 		}
 
-		public virtual void Enable() { Control.Alpha = SvConstants.Cell.ENABLED_ALPHA; }
+		public virtual void Enable() { Control.Alpha  = SvConstants.Cell.ENABLED_ALPHA; }
 		public virtual void Disable() { Control.Alpha = SvConstants.Cell.DISABLED_ALPHA; }
 
 
@@ -93,6 +78,9 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 			if ( _disposed ) { return; }
 
 			_disposed = true;
+			Control.RemoveFromSuperview();
+			Control.Dispose();
+
 			DefaultTextColor?.Dispose();
 
 			DefaultBackgroundColor?.Dispose();

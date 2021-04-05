@@ -51,7 +51,7 @@ namespace Jakar.SettingsView.Droid.BaseCell
 			// GridLengthTypeConverter
 			// GridLength.Star
 		}
-#pragma warning disable 8618 // _Cell
+#pragma warning disable 8618 // Renderer
 		protected BaseCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
 #pragma warning restore 8618
 		{

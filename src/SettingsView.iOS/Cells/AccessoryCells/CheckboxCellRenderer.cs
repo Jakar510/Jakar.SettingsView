@@ -1,16 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using CoreGraphics;
-using Foundation;
+﻿using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+
 
 #nullable enable
 [assembly: ExportRenderer(typeof(CheckboxCell), typeof(CheckboxCellRenderer))]

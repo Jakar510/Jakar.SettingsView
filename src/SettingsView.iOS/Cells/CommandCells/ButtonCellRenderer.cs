@@ -1,24 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Input;
-using CoreText;
 using Foundation;
 using Jakar.Api.Extensions;
+using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Misc;
 using UIKit;
-using WatchKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Material.iOS;
-using Xamarin.Forms.Platform.iOS;
+
 
 [assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
 
@@ -30,7 +24,7 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)]
 	public class ButtonCellView : BaseCellView
 	{
-		private ButtonCell _ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(_ButtonCell));
+		protected internal ButtonCell ButtonCell => Cell as ButtonCell ?? throw new NullReferenceException(nameof(ButtonCell));
 
 		protected ButtonView _Button { get; set; }
 
@@ -38,15 +32,15 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			SelectionStyle = UITableViewCellSelectionStyle.None;
 
-			_Button = new ButtonView(_ButtonCell);
+			_Button = new ButtonView(this);
 			_Button.Initialize(_MainStack);
 
 
-			_MainStack.Root(this);
+			this.Root(_MainStack);
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
 			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = SvConstants.Layout.Priority.Highest; //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
+			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
 			_MinHeightConstraint.Active = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }

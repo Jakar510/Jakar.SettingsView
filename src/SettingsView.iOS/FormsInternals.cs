@@ -10,10 +10,10 @@ namespace Jakar.SettingsView.iOS
 	public static class FormsInternals
 	{
 		// Get internal members... why? xamarin.forms why internal??
-		public static BindableProperty? RendererProperty = (BindableProperty?) typeof(Platform).GetField("RendererProperty", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
-		public static Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.Platform+DefaultRenderer");
-		public static Type ModalWrapper = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.ModalWrapper");
-		public static MethodInfo? ModalWrapperDispose = ModalWrapper.GetMethod("Dispose");
+		public static readonly BindableProperty? RendererProperty = (BindableProperty?) typeof(Platform).GetField("RendererProperty", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
+		public static readonly Type DefaultRenderer = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.Platform+DefaultRenderer");
+		public static readonly Type ModalWrapper = typeof(Platform).Assembly.GetType("Xamarin.Forms.Platform.iOS.ModalWrapper");
+		public static readonly MethodInfo? ModalWrapperDispose = ModalWrapper.GetMethod("Dispose");
 
 		// From internal Platform class
 		public static void DisposeModelAndChildrenRenderers( Element view )

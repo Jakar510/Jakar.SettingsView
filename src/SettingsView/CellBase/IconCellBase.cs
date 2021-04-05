@@ -13,7 +13,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 	{
 		public static readonly BindableProperty IconSourceProperty = BindableProperty.Create(nameof(IconSource), typeof(ImageSource), typeof(IconCellBase), default(ImageSource?));
 		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size?), typeof(IconCellBase), default(Size?));
-		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?), typeof(IconCellBase), SvConstants.Cell.icon_Size);
+		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?), typeof(IconCellBase), SvConstants.Cell.iconRadius);
 
 
 		[TypeConverter(typeof(NullableImageSourceConverter))]

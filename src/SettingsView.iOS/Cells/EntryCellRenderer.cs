@@ -1,15 +1,9 @@
-﻿using System;
-using CoreGraphics;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Extensions;
+﻿using Foundation;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
 using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
 using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using EntryCellRenderer = Jakar.SettingsView.iOS.Cells.EntryCellRenderer;
 
@@ -27,10 +21,6 @@ namespace Jakar.SettingsView.iOS.Cells
 	[Preserve(AllMembers = true)]
 	public class EntryCellView : BaseValueCell<UITextField, AiEntryCell, AiEditText>, IEntryCellRenderer
 	{
-		protected internal AiEntryCell EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(EntryCell));
-		// private bool _hasFocus;
-
-
 		public EntryCellView( AiEntryCell formsCell ) : base(formsCell)
 		{
 			// _Value.EditingChanged += TextField_EditingChanged;
@@ -166,7 +156,7 @@ namespace Jakar.SettingsView.iOS.Cells
 		// 	return true;
 		// }
 
-		public void DoneEdit() { EntryCell.SendCompleted(); }
+		public void DoneEdit() { Cell.SendCompleted(); }
 
 		// protected override void RunDispose()
 		// {

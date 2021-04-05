@@ -1,16 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using Jakar.Api.iOS.Extensions;
+﻿using System.ComponentModel;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
-using Jakar.SettingsView.Shared.Misc;
 using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-using TextAlignment = Xamarin.Forms.TextAlignment;
+
 
 #nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
@@ -23,7 +17,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public DescriptionView( BaseCellView renderer ) : base(renderer) { }
 
-		public override void Initialize( Stack parent )
+		public override void Initialize( UIStackView parent )
 		{
 			parent.AddArrangedSubview(Control);
 
