@@ -47,7 +47,6 @@ namespace Jakar.SettingsView.iOS.Controls
 											};
 
 
-		public static void Root( this BaseCellView cell, in UIStackView root ) => cell.ContentView.AddFull(root);
 
 
 		//

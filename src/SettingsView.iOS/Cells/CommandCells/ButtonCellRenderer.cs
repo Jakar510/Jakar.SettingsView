@@ -36,7 +36,7 @@ namespace Jakar.SettingsView.iOS.Cells
 			_Button.Initialize(_MainStack);
 
 
-			this.Root(_MainStack);
+			this.SetContent(_MainStack);
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
 			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());

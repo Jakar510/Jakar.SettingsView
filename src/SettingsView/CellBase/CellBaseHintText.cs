@@ -25,7 +25,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(HintProperty, value);
 		}
 
-		// [TypeConverter(typeof(NullableColorTypeConverter))]
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color HintColor
 		{
 			get => (Color) GetValue(HintColorProperty);
@@ -45,13 +45,14 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(HintFontFamilyProperty, value);
 		}
 
-		[TypeConverter(typeof(FontAttributesConverter))]
+		[TypeConverter(typeof(NullableFontAttributesConverter))]
 		public FontAttributes? HintFontAttributes
 		{
 			get => (FontAttributes?) GetValue(HintFontAttributesProperty);
 			set => SetValue(HintFontAttributesProperty, value);
 		}
-
+		
+		[TypeConverter(typeof(NullableTextAlignmentConverter))]
 		public TextAlignment? HintAlignment
 		{
 			get => (TextAlignment?) GetValue(HintAlignmentProperty);

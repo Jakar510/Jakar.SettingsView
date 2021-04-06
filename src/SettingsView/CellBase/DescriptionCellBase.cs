@@ -29,7 +29,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(DescriptionProperty, value);
 		}
 
-		// [TypeConverter(typeof(NullableColorTypeConverter))]
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color DescriptionColor
 		{
 			get => (Color) GetValue(DescriptionColorProperty);
@@ -56,7 +56,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (FontAttributes?) GetValue(DescriptionFontAttributesProperty);
 			set => SetValue(DescriptionFontAttributesProperty, value);
 		}
-
+		
+		[TypeConverter(typeof(NullableTextAlignmentConverter))]
 		public TextAlignment? DescriptionAlignment
 		{
 			get => (TextAlignment?) GetValue(DescriptionAlignmentProperty);

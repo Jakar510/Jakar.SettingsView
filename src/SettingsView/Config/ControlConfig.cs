@@ -7,7 +7,7 @@ using Xamarin.Forms;
 namespace Jakar.SettingsView.Shared.Config
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public class ControlConfig : SVConfig, IConfigControl
+	public class ControlConfig : SvConfig, IConfigControl
 	{
 		public static BindableProperty ColorProperty = BindableProperty.Create(nameof(Color), typeof(Color), typeof(ControlConfig), SvConstants.Defaults.color);
 

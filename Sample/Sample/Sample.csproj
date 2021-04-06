@@ -10,6 +10,7 @@
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
 	<ItemGroup>
 		<PackageReference Include="AiForms.Layouts" Version="1.1.0" />
+		<PackageReference Include="Microsoft.NETCore.Platforms" Version="5.0.2" />
 		<PackageReference Include="NETStandard.Library" Version="2.0.3" />
 		<PackageReference Include="Xam.Plugin.Screenshot" Version="2.0.3" />
 		<PackageReference Include="Xamarin.Forms.Svg" Version="1.0.3" />

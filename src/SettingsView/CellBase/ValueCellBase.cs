@@ -23,7 +23,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 		public static readonly BindableProperty ValueTextAlignmentProperty = BindableProperty.Create(nameof(ValueTextAlignment), typeof(TextAlignment?), typeof(ValueTextCellBase));
 
 
-		// [TypeConverter(typeof(NullableColorTypeConverter))]
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color ValueTextColor
 		{
 			get => (Color) GetValue(ValueTextColorProperty);
@@ -49,7 +49,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (FontAttributes?) GetValue(ValueTextFontAttributesProperty);
 			set => SetValue(ValueTextFontAttributesProperty, value);
 		}
-
+		
+		[TypeConverter(typeof(NullableTextAlignmentConverter))]
 		public TextAlignment? ValueTextAlignment
 		{
 			get => (TextAlignment?) GetValue(ValueTextAlignmentProperty);

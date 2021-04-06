@@ -26,7 +26,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(TitleProperty, value);
 		}
 
-		// [TypeConverter(typeof(NullableColorTypeConverter))]
+		[TypeConverter(typeof(ColorTypeConverter))]
 		public Color TitleColor
 		{
 			get => (Color) GetValue(TitleColorProperty);
@@ -53,6 +53,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(TitleFontAttributesProperty, value);
 		}
 
+		[TypeConverter(typeof(NullableTextAlignmentConverter))]
 		public TextAlignment? TitleAlignment
 		{
 			get => (TextAlignment?) GetValue(TitleAlignmentProperty);
