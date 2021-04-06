@@ -143,7 +143,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		}
 		protected bool UpdateAccentColor()
 		{
-			OnColor = _Renderer.Cell.GetAccentColor().ToCGColor();
+			OnColor = _Renderer.Cell.CheckableConfig.AccentColor.ToCGColor();
 			return true;
 		}
 		protected bool UpdateChecked()

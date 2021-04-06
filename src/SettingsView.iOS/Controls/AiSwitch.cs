@@ -59,7 +59,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected bool UpdateAccentColor()
 		{
-			TintColor = _Renderer.Cell.GetAccentColor().ToUIColor();
+			TintColor = _Renderer.Cell.CheckableConfig.AccentColor.ToUIColor();
 			return true;
 		}
 

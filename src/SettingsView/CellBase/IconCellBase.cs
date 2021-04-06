@@ -3,7 +3,9 @@
 using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
+
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
@@ -12,8 +14,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	public abstract class IconCellBase : TitleCellBase
 	{
 		public static readonly BindableProperty IconSourceProperty = BindableProperty.Create(nameof(IconSource), typeof(ImageSource), typeof(IconCellBase), default(ImageSource?));
-		public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(nameof(IconSize), typeof(Size?), typeof(IconCellBase), default(Size?));
-		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?), typeof(IconCellBase), SvConstants.Cell.iconRadius);
+		public static readonly BindableProperty IconSizeProperty   = BindableProperty.Create(nameof(IconSize),   typeof(Size?),       typeof(IconCellBase), default(Size?));
+		public static readonly BindableProperty IconRadiusProperty = BindableProperty.Create(nameof(IconRadius), typeof(double?),     typeof(IconCellBase), SvConstants.Cell.iconRadius);
 
 
 		[TypeConverter(typeof(NullableImageSourceConverter))]
@@ -37,7 +39,28 @@ namespace Jakar.SettingsView.Shared.CellBase
 			set => SetValue(IconRadiusProperty, value);
 		}
 
-		internal double GetIconRadius() => IconRadius ?? Parent.CellIconRadius;
-		internal Size GetIconSize() => IconSize ?? Parent.CellIconSize;
+
+		private IUseIconConfiguration? _config;
+
+		protected internal IUseIconConfiguration IconConfig
+		{
+			get
+			{
+				_config ??= new IconConfiguration(this);
+				return _config;
+			}
+		}
+
+
+
+		public sealed class IconConfiguration : IUseIconConfiguration
+		{
+			private readonly IconCellBase _cell;
+			public IconConfiguration( IconCellBase cell ) => _cell = cell;
+
+			public ImageSource? Source => _cell.IconSource;
+			public double IconRadius => _cell.IconRadius ?? _cell.Parent.CellIconRadius;
+			public Size   IconSize   => _cell.IconSize ?? _cell.Parent.CellIconSize;
+		}
 	}
 }

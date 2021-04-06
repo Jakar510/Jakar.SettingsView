@@ -84,6 +84,6 @@ namespace Jakar.SettingsView.iOS.Cells
 							: UITableViewCellAccessory.None;
 		}
 
-		protected void UpdateAccentColor() { TintColor = Cell.GetAccentColor().ToUIColor(); }
+		protected void UpdateAccentColor() { TintColor = Cell.CheckableConfig.AccentColor.ToUIColor(); }
 	}
 }

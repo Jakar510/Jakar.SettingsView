@@ -70,7 +70,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public bool UpdateIconSize()
 		{
-			Size size = _Cell.GetIconSize();
+			Size size = _Cell.IconConfig.IconSize;
 
 			// do nothing when current size is previous size
 			if ( _IconSize == size ) { return false; }
@@ -107,7 +107,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public bool UpdateIconRadius()
 		{
-			Control.Layer.CornerRadius = (float) _Cell.GetIconRadius();
+			Control.Layer.CornerRadius = _Cell.IconConfig.IconRadius.ToFloat();
 			Renderer.SetNeedsLayout();
 			return true;
 		}
@@ -182,7 +182,7 @@ namespace Jakar.SettingsView.iOS.Controls
 							 );
 		}
 
-		public Size GetIconSize() => _Cell.GetIconSize();
+		public Size GetIconSize() => _Cell.IconConfig.IconSize;
 
 
 		public bool Refresh( bool forceLoad = false )

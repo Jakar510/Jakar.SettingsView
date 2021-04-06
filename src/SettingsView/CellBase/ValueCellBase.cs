@@ -9,6 +9,7 @@ using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 
+
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
@@ -56,9 +57,9 @@ namespace Jakar.SettingsView.Shared.CellBase
 		}
 
 
-		private ValueTextConfiguration? _config;
+		private IUseConfiguration? _config;
 
-		protected internal ValueTextConfiguration ValueTextConfig
+		protected internal IUseConfiguration ValueTextConfig
 		{
 			get
 			{
@@ -67,14 +68,16 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		public class ValueTextConfiguration : IUseConfiguration
+
+
+		public sealed class ValueTextConfiguration : IUseConfiguration
 		{
 			private readonly ValueCellBase _cell;
 			public ValueTextConfiguration( ValueCellBase cell ) => _cell = cell;
 
-			public string? FontFamily => _cell.ValueTextFontFamily ?? _cell.Parent.CellValueTextFontFamily;
+			public string?        FontFamily     => _cell.ValueTextFontFamily ?? _cell.Parent.CellValueTextFontFamily;
 			public FontAttributes FontAttributes => _cell.ValueTextFontAttributes ?? _cell.Parent.CellValueTextFontAttributes;
-			public TextAlignment TextAlignment => _cell.ValueTextAlignment ?? _cell.Parent.CellValueTextAlignment;
+			public TextAlignment  TextAlignment  => _cell.ValueTextAlignment ?? _cell.Parent.CellValueTextAlignment;
 
 			public Color Color =>
 				_cell.ValueTextColor == SvConstants.Cell.color
@@ -84,6 +87,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 			public double FontSize => _cell.ValueTextFontSize ?? _cell.Parent.CellValueTextFontSize;
 		}
 	}
+
+
 
 	public abstract class ValueCellBase<TValue> : ValueCellBase, IValueChanged<TValue>
 	{

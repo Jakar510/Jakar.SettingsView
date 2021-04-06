@@ -6,15 +6,19 @@ using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
+
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class DescriptionCellBase : IconCellBase
 	{
-		public static readonly BindableProperty DescriptionProperty = BindableProperty.Create(nameof(Description), typeof(string), typeof(DescriptionCellBase), default(string));
+		public static readonly BindableProperty DescriptionProperty      = BindableProperty.Create(nameof(Description),      typeof(string), typeof(DescriptionCellBase), default(string));
 		public static readonly BindableProperty DescriptionColorProperty = BindableProperty.Create(nameof(DescriptionColor), typeof(Color?), typeof(DescriptionCellBase), SvConstants.Cell.color);
-		public static readonly BindableProperty DescriptionFontSizeProperty = BindableProperty.Create(nameof(DescriptionFontSize), typeof(double?), typeof(DescriptionCellBase), SvConstants.Cell.font_Size);
+
+		public static readonly BindableProperty DescriptionFontSizeProperty =
+			BindableProperty.Create(nameof(DescriptionFontSize), typeof(double?), typeof(DescriptionCellBase), SvConstants.Cell.font_Size);
+
 		public static readonly BindableProperty DescriptionFontFamilyProperty = BindableProperty.Create(nameof(DescriptionFontFamily), typeof(string), typeof(DescriptionCellBase), default(string));
 		public static readonly BindableProperty DescriptionFontAttributesProperty = BindableProperty.Create(nameof(DescriptionFontAttributes), typeof(FontAttributes?), typeof(DescriptionCellBase));
 		public static readonly BindableProperty DescriptionAlignmentProperty = BindableProperty.Create(nameof(DescriptionAlignment), typeof(TextAlignment?), typeof(DescriptionCellBase));
@@ -77,14 +81,16 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		public class DescriptionConfiguration : IUseConfiguration
+
+
+		public sealed class DescriptionConfiguration : IUseConfiguration
 		{
 			private readonly DescriptionCellBase _cell;
 			public DescriptionConfiguration( DescriptionCellBase cell ) => _cell = cell;
 
-			public string? FontFamily => _cell.DescriptionFontFamily ?? _cell.Parent.CellDescriptionFontFamily;
+			public string?        FontFamily     => _cell.DescriptionFontFamily ?? _cell.Parent.CellDescriptionFontFamily;
 			public FontAttributes FontAttributes => _cell.DescriptionFontAttributes ?? _cell.Parent.CellDescriptionFontAttributes;
-			public TextAlignment TextAlignment => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
+			public TextAlignment  TextAlignment  => _cell.DescriptionAlignment ?? _cell.Parent.CellDescriptionAlignment;
 
 			public Color Color =>
 				_cell.DescriptionColor == SvConstants.Cell.color

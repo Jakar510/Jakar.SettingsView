@@ -66,9 +66,9 @@ namespace Jakar.SettingsView.Shared.CellBase
 		// internal double GetHintFontSize() => HintFontSize ?? Parent.CellHintFontSize;
 
 
-		private HintConfiguration? _config;
+		private IUseConfiguration? _config;
 
-		protected internal HintConfiguration HintConfig
+		protected internal IUseConfiguration HintConfig
 		{
 			get
 			{
@@ -77,7 +77,9 @@ namespace Jakar.SettingsView.Shared.CellBase
 			}
 		}
 
-		public class HintConfiguration : IUseConfiguration
+
+
+		public sealed class HintConfiguration : IUseConfiguration
 		{
 			private readonly HintTextCellBase _cell;
 			public HintConfiguration( HintTextCellBase cell ) => _cell = cell;
@@ -92,7 +94,6 @@ namespace Jakar.SettingsView.Shared.CellBase
 					: _cell.HintColor;
 
 			public double FontSize => _cell.HintFontSize ?? _cell.Parent.CellHintFontSize;
-			public string? Text => _cell.Hint;
 		}
 	}
 }

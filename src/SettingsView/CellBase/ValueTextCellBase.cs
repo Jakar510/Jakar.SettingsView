@@ -5,6 +5,7 @@ using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
 
+
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
 {
@@ -43,6 +44,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 
 			if ( newString.Length <= maxlength ) return;
 			string oldString = oldValue?.ToString() ?? string.Empty;
+
 			if ( oldString.Length > maxlength )
 			{
 				string trimStr = oldString.Substring(0, maxlength);
@@ -51,6 +53,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			else { bindable.SetValue(ValueTextProperty, oldString); }
 		}
 	}
+
 
 
 	public abstract class ValueTextCellBase<TValue> : ValueTextCellBase, IValueChanged<TValue>
