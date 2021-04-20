@@ -57,7 +57,10 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public override void Initialize( UIStackView parent )
 		{
 			parent.AddArrangedSubview(Control);
-			parent.BringSubviewToFront(Control);
+			
+			Control.HuggingPriority(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+
 			Control.UpdateConstraintsIfNeeded();
 			Control.LayoutIfNeeded();
 		}

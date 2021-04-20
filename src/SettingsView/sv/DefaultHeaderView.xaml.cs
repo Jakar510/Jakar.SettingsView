@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

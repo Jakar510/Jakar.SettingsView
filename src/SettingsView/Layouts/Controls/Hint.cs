@@ -1,7 +1,4 @@
-﻿using Xamarin.Forms;
-
-
-namespace Jakar.SettingsView.Shared.Layouts.Controls
+﻿namespace Jakar.SettingsView.Shared.Layouts.Controls
 {
 	public class Hint : BaseLabel
 	{

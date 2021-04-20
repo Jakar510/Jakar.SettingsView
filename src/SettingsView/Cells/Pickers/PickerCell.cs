@@ -2,14 +2,12 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
 using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Enumerations;
 using Xamarin.Forms;

@@ -4,10 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
 using Jakar.Api.Converters;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Converters;
-using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 using DropEventArgs = Jakar.SettingsView.Shared.Events.DropEventArgs;
 

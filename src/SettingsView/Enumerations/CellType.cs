@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Jakar.SettingsView.Shared.Misc;
-
-namespace Jakar.SettingsView.Shared.Enumerations
+﻿namespace Jakar.SettingsView.Shared.Enumerations
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public enum CellType

@@ -76,7 +76,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		protected bool UpdateAccentColor()
 		{
-			CheckBoxTintColor = _Renderer.Cell.GetAccentColor();
+			CheckBoxTintColor = _Renderer.Cell.CheckableConfig.AccentColor;
 			return true;
 		}
 		protected bool UpdateChecked()

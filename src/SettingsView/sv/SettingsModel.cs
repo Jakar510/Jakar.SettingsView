@@ -10,9 +10,12 @@ namespace Jakar.SettingsView.Shared.sv
 	[Preserve(true, false)]
 	public class SettingsModel : TableModel
 	{
+		// ReSharper disable once InconsistentNaming
 		protected static readonly BindableProperty PathProperty = BindableProperty.Create("Path", typeof(Tuple<int, int>), typeof(Cell));
 
 		protected SettingsRoot _Root { get; }
+
+
 		public SettingsModel( SettingsRoot settingsRoot ) => _Root = settingsRoot;
 		
 
@@ -63,6 +66,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			return (Tuple<int, int>) item.GetValue(PathProperty);
 		}
+
 		// ReSharper disable once SuggestBaseTypeForParameter
 		protected static void SetPath( Cell item, Tuple<int, int> index ) { item.SetValue(PathProperty, index); }
 	}

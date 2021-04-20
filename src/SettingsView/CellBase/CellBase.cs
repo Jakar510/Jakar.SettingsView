@@ -1,10 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Converters;
+using Jakar.SettingsView.Shared.Events;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
+
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.CellBase
@@ -12,17 +12,17 @@ namespace Jakar.SettingsView.Shared.CellBase
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public abstract class CellBase : Cell, IVisibleCell
 	{
-		public new event EventHandler? Tapped;
+		public new event EventHandler<CellTappedEventArgs>? Tapped;
 
-		internal new void OnTapped() { Tapped?.Invoke(this, EventArgs.Empty); }
+		internal new void OnTapped() { Tapped?.Invoke(this, new CellTappedEventArgs(this)); }
 
 
-		public static BindableProperty IsVisibleProperty = BindableProperty.Create(nameof(IsVisible),
-																				   typeof(bool),
-																				   typeof(CellBase),
-																				   SvConstants.Cell.VISIBLE,
-																				   defaultBindingMode: BindingMode.OneWay
-																				  );
+		public static readonly BindableProperty IsVisibleProperty = BindableProperty.Create(nameof(IsVisible),
+																							typeof(bool),
+																							typeof(CellBase),
+																							SvConstants.Cell.VISIBLE,
+																							defaultBindingMode: BindingMode.OneWay
+																						   );
 
 		public static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(CellBase), SvConstants.Cell.color);
 

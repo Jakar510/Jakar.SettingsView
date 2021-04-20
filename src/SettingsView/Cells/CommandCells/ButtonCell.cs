@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Xamarin.Forms;

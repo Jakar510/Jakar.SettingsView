@@ -1,6 +1,5 @@
 ﻿// unset
 
-using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Config

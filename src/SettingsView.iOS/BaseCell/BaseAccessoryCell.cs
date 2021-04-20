@@ -22,7 +22,6 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		private TAccessory?      _accessory;
 		private IconView?        _icon;
 		private UIStackView?     _titleStack;
-		private UIStackView?     _contentStack;
 		private TitleView?       _title;
 		private DescriptionView? _description;
 
@@ -44,15 +43,6 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			get => _titleStack ?? throw new NullReferenceException(nameof(_titleStack));
 			set => _titleStack = value;
-		}
-
-		/// <summary>
-		/// Vertical  StackView that is wrapper for the TitleView
-		/// </summary>
-		protected UIStackView _ContentStack
-		{
-			get => _contentStack ?? throw new NullReferenceException(nameof(_contentStack));
-			set => _contentStack = value;
 		}
 
 		protected TitleView _Title
@@ -83,23 +73,20 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Icon = new IconView(this, Cell);
 
 			_TitleStack   = Stack.Title();
-			_ContentStack = Stack.Content();
 			_Title        = new TitleView(this);
 			_Description  = new DescriptionView(this);
 
 			_Accessory = InstanceCreator.Create<TAccessory>(this);
 
 			_Icon.Initialize(_MainStack);
-			_Title.Initialize(_ContentStack);
+			_Title.Initialize(_TitleStack);
 			_Description.Initialize(_TitleStack);
-			_TitleStack.AddArrangedSubview(_ContentStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
+
+			_MainStack.AddArrangedSubview(_Accessory);
 
 			_Icon.Control.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
 			_TitleStack.RightExtended(_MainStack, _Icon.Control);
-
-			_ContentStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			_ContentStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
@@ -196,9 +183,6 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 				_titleStack?.Dispose();
 				_titleStack = null;
-
-				_contentStack?.Dispose();
-				_contentStack = null;
 			}
 
 			base.Dispose(disposing);

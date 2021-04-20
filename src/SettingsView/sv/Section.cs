@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
+
 
 #nullable enable
 namespace Jakar.SettingsView.Shared.sv
@@ -17,33 +15,33 @@ namespace Jakar.SettingsView.Shared.sv
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class Section : TableSectionBase<Cell>
 	{
-		public static BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(Section), default(DataTemplate));
-		public static BindableProperty UseDragSortProperty = BindableProperty.Create(nameof(UseDragSort), typeof(bool), typeof(Section), default(bool));
-		public static BindableProperty TemplateStartIndexProperty = BindableProperty.Create(nameof(TemplateStartIndex), typeof(int), typeof(Section), default(int));
-		public static BindableProperty IsVisibleProperty = BindableProperty.Create(nameof(IsVisible), typeof(bool), typeof(Section), true);
+		public static readonly BindableProperty ItemTemplateProperty       = BindableProperty.Create(nameof(ItemTemplate),       typeof(DataTemplate), typeof(Section));
+		public static readonly BindableProperty UseDragSortProperty        = BindableProperty.Create(nameof(UseDragSort),        typeof(bool),         typeof(Section), default(bool));
+		public static readonly BindableProperty TemplateStartIndexProperty = BindableProperty.Create(nameof(TemplateStartIndex), typeof(int),          typeof(Section), default(int));
+		public static readonly BindableProperty IsVisibleProperty          = BindableProperty.Create(nameof(IsVisible),          typeof(bool),         typeof(Section), true);
 
-		public static BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
-																					 typeof(IList),
-																					 typeof(Section),
-																					 default(IList?),
-																					 BindingMode.OneWay,
-																					 propertyChanged: ItemsChanged
-																					);
+		public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
+																							  typeof(IList),
+																							  typeof(Section),
+																							  default(IList?),
+																							  BindingMode.OneWay,
+																							  propertyChanged: ItemsChanged
+																							 );
 
 
-		public static BindableProperty HeaderViewProperty = BindableProperty.Create(nameof(HeaderView),
-																					typeof(ISectionHeader),
-																					typeof(Section),
-																					new DefaultHeaderView(),
-																					propertyChanging: HeaderViewPropertyChanging
-																				   );
+		public static readonly BindableProperty HeaderViewProperty = BindableProperty.Create(nameof(HeaderView),
+																							 typeof(ISectionHeader),
+																							 typeof(Section),
+																							 new DefaultHeaderView(),
+																							 propertyChanging: HeaderViewPropertyChanging
+																							);
 
-		public static BindableProperty FooterViewProperty = BindableProperty.Create(nameof(FooterView),
-																					typeof(ISectionFooter),
-																					typeof(Section),
-																					new DefaultFooterView(),
-																					propertyChanging: FooterViewPropertyChanging
-																				   );
+		public static readonly BindableProperty FooterViewProperty = BindableProperty.Create(nameof(FooterView),
+																							 typeof(ISectionFooter),
+																							 typeof(Section),
+																							 new DefaultFooterView(),
+																							 propertyChanging: FooterViewPropertyChanging
+																							);
 
 		private static void HeaderViewPropertyChanging( BindableObject bindable, object oldValue, object newValue )
 		{
@@ -53,6 +51,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			if ( newValue is ISectionHeader item ) { Update(item, section); }
 		}
+
 		private static void FooterViewPropertyChanging( BindableObject bindable, object oldValue, object newValue )
 		{
 			if ( bindable is not Section section ) return;
@@ -61,9 +60,10 @@ namespace Jakar.SettingsView.Shared.sv
 
 			if ( newValue is ISectionFooter item ) { Update(item, section); }
 		}
+
 		private static void Update( ISectionFooterHeader item, Section? section )
 		{
-			item.Section = section;
+			item.Section        = section;
 			item.BindingContext = section?.BindingContext;
 		}
 
@@ -75,7 +75,11 @@ namespace Jakar.SettingsView.Shared.sv
 																							propertyChanging: ( bindable, old_value, new_value ) =>
 																											  {
 																												  if ( old_value == new_value ) return;
-																												  if ( bindable is Section section ) { section.HeaderView.SetText(new_value?.ToString()); }
+
+																												  if ( bindable is Section section )
+																												  {
+																													  section.HeaderView.SetText(new_value?.ToString());
+																												  }
 																											  }
 																						   );
 
@@ -86,22 +90,30 @@ namespace Jakar.SettingsView.Shared.sv
 																								propertyChanging: ( bindable, old_value, new_value ) =>
 																												  {
 																													  if ( old_value == new_value ) return;
-																													  if ( bindable is Section section ) { section.HeaderView.SetTextColor((Color) new_value); }
+
+																													  if ( bindable is Section section )
+																													  {
+																														  section.HeaderView.SetTextColor((Color) new_value);
+																													  }
 																												  }
 																							   );
 
-		public static BindableProperty FooterTextProperty = BindableProperty.Create(nameof(FooterText),
-																					typeof(string),
-																					typeof(Section),
-																					default(string),
-																					propertyChanging: ( bindable, old_value, new_value ) =>
-																									  {
-																										  if ( old_value == new_value ) return;
-																										  if ( bindable is Section section ) { section.FooterView.SetText(new_value?.ToString()); }
-																									  }
-																				   );
+		public static readonly BindableProperty FooterTextProperty = BindableProperty.Create(nameof(FooterText),
+																							 typeof(string),
+																							 typeof(Section),
+																							 default(string),
+																							 propertyChanging: ( bindable, old_value, new_value ) =>
+																											   {
+																												   if ( old_value == new_value ) return;
 
-		public static BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SvConstants.Section.Footer.VISIBLE);
+																												   if ( bindable is Section section )
+																												   {
+																													   section.FooterView.SetText(new_value?.ToString());
+																												   }
+																											   }
+																							);
+
+		public static readonly BindableProperty FooterVisibleProperty = BindableProperty.Create(nameof(FooterVisible), typeof(bool), typeof(Section), SvConstants.Section.Footer.VISIBLE);
 
 		// --------------------------------------------------------------------------------------
 
@@ -118,7 +130,7 @@ namespace Jakar.SettingsView.Shared.sv
 			get => (Color) GetValue(TextColorProperty);
 			set => SetValue(TextColorProperty, value);
 		}
-		
+
 		public DefaultHeaderView? DefaultHeader =>
 			HeaderView is DefaultHeaderView header
 				? header
@@ -214,25 +226,29 @@ namespace Jakar.SettingsView.Shared.sv
 		public Section()
 		{
 			CollectionChanged += OnCollectionChanged;
-			PropertyChanged += OnPropertyChanged;
-			TextColor = SvConstants.Section.Header.text_Color;
+			PropertyChanged   += OnPropertyChanged;
+			TextColor         =  SvConstants.Section.Header.text_Color;
 		}
-		public Section( string title ) : this() => Title = title;
+
+		public Section( string       title ) : this() => Title = title;
 		public Section( SettingsView parent ) : this(parent, string.Empty) { }
+
 		public Section( SettingsView parent, string? title ) : this()
 		{
-			Title = title;
+			Title  = title;
 			Parent = parent;
 		}
-		public Section( Cell cell ) : this() { Add(cell); }
+
+		public Section( Cell              cell ) : this() { Add(cell); }
 		public Section( IEnumerable<Cell> cells ) : this() { Add(cells); }
-		public Section( params Cell[] cells ) : this() { Add(cells); }
-		public Section( SettingsView parent, Cell cell ) : this(parent) { Add(cell); }
-		public Section( SettingsView parent, IEnumerable<Cell> cells ) : this(parent) { Add(cells); }
-		public Section( SettingsView parent, params Cell[] cells ) : this(parent) { Add(cells); }
-		public Section( SettingsView parent, string? title, Cell cell ) : this(parent, title) { Add(cell); }
-		public Section( SettingsView parent, string? title, IEnumerable<Cell> cells ) : this(parent, title) { Add(cells); }
-		public Section( SettingsView parent, string? title, params Cell[] cells ) : this(parent, title) { Add(cells); }
+		public Section( params Cell[]     cells ) : this() { Add(cells); }
+		public Section( SettingsView      parent, Cell              cell ) : this(parent) { Add(cell); }
+		public Section( SettingsView      parent, IEnumerable<Cell> cells ) : this(parent) { Add(cells); }
+		public Section( SettingsView      parent, params Cell[]     cells ) : this(parent) { Add(cells); }
+		public Section( SettingsView      parent, string?           title, Cell              cell ) : this(parent, title) { Add(cell); }
+		public Section( SettingsView      parent, string?           title, IEnumerable<Cell> cells ) : this(parent, title) { Add(cells); }
+		public Section( SettingsView      parent, string?           title, params Cell[]     cells ) : this(parent, title) { Add(cells); }
+
 		~Section()
 		{
 			if ( Debugger.IsAttached ) { Console.WriteLine($"------------ Section \"{Title}\" is being destructed. ------------"); }
@@ -247,7 +263,7 @@ namespace Jakar.SettingsView.Shared.sv
 		public event PropertyChangedEventHandler? SectionPropertyChanged;
 
 		private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { SectionCollectionChanged?.Invoke(this, e); }
-		private void OnPropertyChanged( object sender, PropertyChangedEventArgs e ) { SectionPropertyChanged?.Invoke(this, e); }
+		private void OnPropertyChanged( object   sender, PropertyChangedEventArgs         e ) { SectionPropertyChanged?.Invoke(this, e); }
 
 		public void Collapse()
 		{
@@ -262,34 +278,40 @@ namespace Jakar.SettingsView.Shared.sv
 			}
 			else { Expand(); }
 		}
+
 		public void Expand()
 		{
 			ShowVisibleCells();
 			IsCollapsed = false;
 		}
+
 		internal void ShowHideSection()
 		{
 			if ( IsCollapsed ) { Collapse(); }
 			else { Expand(); }
 		}
+
 		internal void ShowVisibleCells()
 		{
 			Clear();
+
 			foreach ( Cell cell in Cache )
 			{
 				// ReSharper disable once SuspiciousTypeConversion.Global
-				switch (cell)
+				switch ( cell )
 				{
 					case CellBase.CellBase baseCell:
 					{
 						if ( baseCell.IsVisible ) base.Add(baseCell);
 						break;
 					}
+
 					case IVisibleCell iCell:
 					{
 						if ( iCell.IsVisible ) base.Add(cell);
 						break;
 					}
+
 					default:
 						base.Add(cell);
 						break;
@@ -302,6 +324,7 @@ namespace Jakar.SettingsView.Shared.sv
 			HeaderView.SetText(Title);
 			HeaderView.SetTextColor(TextColor);
 		}
+
 		internal void UpdateFooter() { FooterView.SetText(FooterText); }
 
 		public new void Add( Cell cell )
@@ -309,10 +332,12 @@ namespace Jakar.SettingsView.Shared.sv
 			Cache.Add(cell);
 			base.Add(cell);
 		}
+
 		public new void Add( IEnumerable<Cell> cells )
 		{
 			foreach ( Cell item in cells ) { Add(item); }
 		}
+
 		public void Add( params Cell[] cells )
 		{
 			foreach ( Cell item in cells ) { Add(item); }
@@ -345,6 +370,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			CollectionChanged += OnCollectionChanged;
 		}
+
 		public void MoveCellWithoutNotify( int from, int to )
 		{
 			CollectionChanged -= OnCollectionChanged;
@@ -353,12 +379,14 @@ namespace Jakar.SettingsView.Shared.sv
 			Insert(to, tmp);
 			CollectionChanged += OnCollectionChanged;
 		}
+
 		public (Cell? Cell, object? Item) DeleteSourceItemWithoutNotify( int from )
 		{
 			CollectionChanged -= OnCollectionChanged;
 			if ( ItemsSource is INotifyCollectionChanged notifyCollection ) { notifyCollection.CollectionChanged -= OnItemsSourceCollectionChanged; }
 
 			(Cell deletedCell, object? deletedItem) result;
+
 			if ( ItemsSource is null )
 			{
 				Cell deleted = this[from];
@@ -381,6 +409,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			return result;
 		}
+
 		public void InsertSourceItemWithoutNotify( Cell? cell, object? item, int to )
 		{
 			if ( cell is null ) return;
@@ -396,6 +425,7 @@ namespace Jakar.SettingsView.Shared.sv
 
 			CollectionChanged += OnCollectionChanged;
 		}
+
 		public Cell DeleteCellWithoutNotify( int from )
 		{
 			Cell deletedCell = this[from];
@@ -404,6 +434,7 @@ namespace Jakar.SettingsView.Shared.sv
 			CollectionChanged += OnCollectionChanged;
 			return deletedCell;
 		}
+
 		public void InsertCellWithoutNotify( Cell cell, int to )
 		{
 			CollectionChanged -= OnCollectionChanged;
@@ -446,6 +477,7 @@ namespace Jakar.SettingsView.Shared.sv
 			// Notify manually Collection Reset.
 			section.SectionCollectionChanged?.Invoke(section, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
+
 		private void OnItemsSourceCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
 		{
 			switch ( e.Action )
@@ -455,7 +487,7 @@ namespace Jakar.SettingsView.Shared.sv
 					//RemoveAt(e.OldStartingIndex + TemplateStartIndex);
 
 					object item = e.NewItems[0];
-					Cell? view = CreateChildViewFor(ItemTemplate, item, this);
+					Cell?  view = CreateChildViewFor(ItemTemplate, item, this);
 					if ( view is null ) return;
 
 					//Insert(e.NewStartingIndex + TemplateStartIndex, view);
@@ -470,7 +502,7 @@ namespace Jakar.SettingsView.Shared.sv
 						for ( var i = 0; i < e.NewItems.Count; i++ )
 						{
 							object item = e.NewItems[i];
-							Cell? view = CreateChildViewFor(ItemTemplate, item, this);
+							Cell?  view = CreateChildViewFor(ItemTemplate, item, this);
 
 							if ( view is null ) continue;
 							Insert(i + e.NewStartingIndex + TemplateStartIndex, view);

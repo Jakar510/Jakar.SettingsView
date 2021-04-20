@@ -13,118 +13,34 @@ namespace Jakar.SettingsView.iOS.Controls
 	{
 		public static UIStackView Value() => new()
 											 {
-												 Axis         = UILayoutConstraintAxis.Vertical,
-												 Alignment    = UIStackViewAlignment.Fill,
-												 Distribution = UIStackViewDistribution.Fill,
-												 Spacing      = 6,
+												 Axis                                      = UILayoutConstraintAxis.Vertical,
+												 Alignment                                 = UIStackViewAlignment.Fill,
+												 Distribution                              = UIStackViewDistribution.FillProportionally,
+												 Spacing                                   = 6,
+												 TranslatesAutoresizingMaskIntoConstraints = false,
+												 BackgroundColor = UIColor.Red	
 											 };
 
 
 		public static UIStackView Title() => new()
 											 {
-												 Axis         = UILayoutConstraintAxis.Vertical,
-												 Alignment    = UIStackViewAlignment.Fill,
-												 Distribution = UIStackViewDistribution.Fill,
-												 Spacing      = 4,
+												 Axis                                      = UILayoutConstraintAxis.Vertical,
+												 Alignment                                 = UIStackViewAlignment.Fill,
+												 Distribution                              = UIStackViewDistribution.FillProportionally,
+												 Spacing                                   = 4,
+												 TranslatesAutoresizingMaskIntoConstraints = false,
+												 BackgroundColor = UIColor.Blue
 											 };
-
-
-		public static UIStackView Content() => new()
-											   {
-												   Axis         = UILayoutConstraintAxis.Vertical,
-												   Alignment    = UIStackViewAlignment.Fill,
-												   Distribution = UIStackViewDistribution.Fill,
-												   Spacing      = 6,
-											   };
 
 
 		public static UIStackView Main() => new()
 											{
-												Axis         = UILayoutConstraintAxis.Vertical,
-												Alignment    = UIStackViewAlignment.Fill,
-												Distribution = UIStackViewDistribution.Fill,
-												Spacing      = 16,
+												Axis                                      = UILayoutConstraintAxis.Horizontal,
+												Alignment                                 = UIStackViewAlignment.Top,
+												Distribution                              = UIStackViewDistribution.FillProportionally,
+												Spacing                                   = 10,
+												TranslatesAutoresizingMaskIntoConstraints = false,
+												BackgroundColor = UIColor.Black
 											};
-
-
-
-
-		//
-		// public static void Root( this UIView contentView, in UIStackView root )
-		// {
-		// 	contentView.AddSubview(root);
-		//
-		// 	root.TranslatesAutoresizingMaskIntoConstraints                       = false;
-		// 	root.TopAnchor.ConstraintEqualTo(contentView.TopAnchor).Active       = true;
-		// 	root.LeftAnchor.ConstraintEqualTo(contentView.LeftAnchor).Active     = true;
-		// 	root.BottomAnchor.ConstraintEqualTo(contentView.BottomAnchor).Active = true;
-		// 	root.RightAnchor.ConstraintEqualTo(contentView.RightAnchor).Active   = true;
-		//
-		// 	root.Priorities();
-		// }
-		//
-		//
-		// public static void Title( this UIStackView root, in UIStackView stack, in IconView icon )
-		// {
-		// 	root.AddArrangedSubview(stack);
-		//
-		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
-		//
-		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
-		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-		//
-		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
-		// 	stack.RightAnchor.ConstraintEqualTo(root.RightAnchor).Active        = true;
-		//
-		// 	stack.Priorities();
-		// }
-		//
-		//
-		// public static void Title( this UIStackView root, in UIStackView stack, in UIStackView value, in IconView icon )
-		// {
-		// 	root.AddArrangedSubview(stack);
-		//
-		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
-		//
-		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
-		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-		//
-		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
-		// 	stack.RightAnchor.ConstraintEqualTo(value.LeftAnchor).Active        = true;
-		//
-		// 	stack.Priorities();
-		// }
-		//
-		//
-		// public static void Accessory( this UIStackView root, in UIStackView stack, in IconView icon, in UIView accessory )
-		// {
-		// 	root.AddArrangedSubview(stack);
-		//
-		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
-		//
-		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
-		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-		//
-		// 	stack.LeftAnchor.ConstraintEqualTo(icon.Control.RightAnchor).Active = true;
-		// 	stack.RightAnchor.ConstraintEqualTo(accessory.LeftAnchor).Active    = true;
-		//
-		// 	stack.Priorities();
-		// }
-		//
-		//
-		// public static void Value( this UIStackView root, in UIStackView stack, in UIStackView title )
-		// {
-		// 	root.AddArrangedSubview(stack);
-		//
-		// 	stack.TranslatesAutoresizingMaskIntoConstraints = false;
-		//
-		// 	stack.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
-		// 	stack.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-		//
-		// 	stack.LeftAnchor.ConstraintEqualTo(title.RightAnchor).Active = true;
-		// 	stack.RightAnchor.ConstraintEqualTo(root.LeftAnchor).Active  = true;
-		//
-		// 	stack.Priorities();
-		// }
 	}
 }

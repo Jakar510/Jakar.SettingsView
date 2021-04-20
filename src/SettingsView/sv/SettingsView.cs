@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using Jakar.Api.Extensions;
+using Jakar.SettingsView.Shared.Events;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -14,8 +15,10 @@ namespace Jakar.SettingsView.Shared.sv
 	[ContentProperty(nameof(Root))]
 	public partial class SettingsView : TableView
 	{
-		internal static Action?       _clearCache;
-		private         SettingsRoot? _root;
+		// ReSharper disable once InconsistentNaming
+		protected internal static Action? _clearCache;
+
+		private SettingsRoot? _root;
 
 		public new SettingsRoot Root
 		{
@@ -47,10 +50,12 @@ namespace Jakar.SettingsView.Shared.sv
 
 		public new SettingsModel Model { get; set; }
 
-		public new event EventHandler?                        ModelChanged;
-		public event     NotifyCollectionChangedEventHandler? CollectionChanged;
-		public event     NotifyCollectionChangedEventHandler? SectionCollectionChanged;
-		public event     PropertyChangedEventHandler?         SectionPropertyChanged;
+
+		public new event EventHandler?                          ModelChanged;
+		public event     EventHandler<RowSelectedEventHandler>? RowSelected;
+		public event     NotifyCollectionChangedEventHandler?   CollectionChanged;
+		public event     NotifyCollectionChangedEventHandler?   SectionCollectionChanged;
+		public event     PropertyChangedEventHandler?           SectionPropertyChanged;
 
 
 		public SettingsView() : this(new SettingsRoot()) { }
@@ -65,13 +70,13 @@ namespace Jakar.SettingsView.Shared.sv
 							 LayoutOptions vertical
 		)
 		{
-			Root              = root;
-			Model             = model;
+			Root  = root;
+			Model = model;
 
 			VerticalOptions   = horizontal;
 			HorizontalOptions = vertical;
 
-			HasUnevenRows     = true;
+			HasUnevenRows = true;
 		}
 
 
@@ -109,7 +114,7 @@ namespace Jakar.SettingsView.Shared.sv
 						   FooterBackgroundColorProperty,
 						   FooterPaddingProperty) ) { OnModelChanged(); }
 		}
-		
+
 		internal void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { OnPropertyChanged(e); }
 
 		public void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
@@ -183,10 +188,14 @@ namespace Jakar.SettingsView.Shared.sv
 			ModelChanged?.Invoke(this, EventArgs.Empty); // notify Native
 		}
 
+		protected internal void SendRowSelected( Section                 section, Cell cell ) => SendRowSelected(new RowSelectedEventHandler(section, cell));
+		protected internal void SendRowSelected( RowSelectedEventHandler e ) => RowSelected?.Invoke(this, e);
+
 
 		// make the unnecessary property existing at TableView sealed.
 		#pragma warning disable IDE1006 // Naming Styles
 		#pragma warning disable IDE0051 // Remove unused private members
+
 		// ReSharper disable once InconsistentNaming
 		// ReSharper disable once UnusedMember.Local
 		private new TableIntent Intent

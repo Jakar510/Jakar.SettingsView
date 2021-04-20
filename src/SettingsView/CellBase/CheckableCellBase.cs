@@ -3,7 +3,6 @@
 using System;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;

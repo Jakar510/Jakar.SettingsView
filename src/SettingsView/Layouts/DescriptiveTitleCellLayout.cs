@@ -1,8 +1,4 @@
-﻿using Jakar.SettingsView.Shared.Config;
-using Xamarin.Forms;
-
-
-namespace Jakar.SettingsView.Shared.Layouts
+﻿namespace Jakar.SettingsView.Shared.Layouts
 {
 	public class DescriptiveTitleCellLayout : BaseCellTitleLayout
 	{

@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 
 		protected BaseTextView( TCellRenderer renderer ) : this(new UITextView(), renderer) { }
 
-		protected BaseTextView( UITextView control, TCellRenderer renderer ) : base(renderer, 
+		protected BaseTextView( UITextView control, TCellRenderer renderer ) : base(renderer,
 																					renderer.Cell as TCell ?? throw new NullReferenceException(nameof(renderer.Cell)),
 																					control,
 																					control.TextColor,
@@ -38,15 +38,13 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 			Initialize();
 			_Renderer = renderer;
 		}
-
-		// protected BaseTextView( BaseCellView renderer ) : base()
-		// {
-		// 	_Renderer = renderer ?? throw new NullReferenceException(nameof(renderer));
-		// 	Initialize();
-		// 	SetUsed(renderer.Cell);
-		// }
+		
 		public override void Initialize( UIStackView parent )
 		{
+			// Control.AutoresizingMask                          = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
+			// Control.TranslatesAutoresizingMaskIntoConstraints = true;
+
+			Control.HuggingPriority(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 			Control.UpdateConstraintsIfNeeded();

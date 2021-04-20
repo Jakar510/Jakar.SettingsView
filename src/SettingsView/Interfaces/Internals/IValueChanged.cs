@@ -1,7 +1,6 @@
 ﻿// unset
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Jakar.SettingsView.Shared.Misc;
 

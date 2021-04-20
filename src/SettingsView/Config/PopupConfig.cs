@@ -1,8 +1,6 @@
 ﻿// unset
 
-using System.Data;
 using Jakar.Api.Converters;
-using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 

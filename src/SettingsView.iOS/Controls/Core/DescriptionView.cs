@@ -20,12 +20,7 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		public override void Initialize( UIStackView parent )
 		{
 			parent.AddArrangedSubview(Control);
-
-			Control.AutoresizingMask = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
-			Control.TranslatesAutoresizingMaskIntoConstraints = true;
-
-			Control.WidthAnchor.ConstraintEqualTo(parent.WidthAnchor).Active = true;
-
+			
 			base.Initialize(parent);
 		}
 

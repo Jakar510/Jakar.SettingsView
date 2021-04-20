@@ -1,7 +1,6 @@
 ﻿// unset
 
 using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 #nullable enable

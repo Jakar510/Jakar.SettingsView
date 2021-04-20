@@ -57,10 +57,9 @@ namespace Jakar.SettingsView.iOS.Controls
 		public override void Initialize( UIStackView root )
 		{
 			root.AddArrangedSubview(Control);
-
-			// Control.TopAnchor.ConstraintEqualTo(root.TopAnchor).Active       = true;
-			// Control.BottomAnchor.ConstraintEqualTo(root.BottomAnchor).Active = true;
-			Control.LeftAnchor.ConstraintEqualTo(root.LeftAnchor).Active = true;
+			
+			Control.HuggingPriority(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
 			Control.UpdateConstraintsIfNeeded();
 			Control.LayoutIfNeeded();

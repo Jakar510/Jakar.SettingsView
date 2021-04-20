@@ -143,7 +143,7 @@
       <Version>1.6.10</Version>
     </PackageReference>
     <PackageReference Include="Jakar.Api">
-      <Version>1.2.4</Version>
+      <Version>1.8.2</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>

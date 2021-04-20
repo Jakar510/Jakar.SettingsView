@@ -21,6 +21,13 @@ using Xamarin.Forms.Platform.iOS;
 #nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
+	/// <summary>
+	/// Xamarin.iOS Documentation.
+	/// 
+	/// Xamarin.iOS UIStackView - René Ruppert - Xamarin University Lightning Lecture -- https://www.youtube.com/watch?v=p3po6507Ip8.
+	/// Stack All The Things! A Deep Dive into UIStackView (/dev/world/2017) -- https://www.youtube.com/watch?v=Cyp9O26E8M0.
+	/// 
+	/// </summary>
 	public abstract class BaseCellView : CellTableViewCell
 	{
 		/// <summary>
