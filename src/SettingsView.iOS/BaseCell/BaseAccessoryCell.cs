@@ -85,7 +85,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			_MainStack.AddArrangedSubview(_Accessory);
 
-			_Icon.Control.WidthOf(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
+			_Icon.Control.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.ICON);
 			_TitleStack.RightExtended(_MainStack, _Icon.Control);
 
 			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);

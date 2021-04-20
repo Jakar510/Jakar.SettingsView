@@ -79,7 +79,7 @@ namespace Jakar.SettingsView.Droid.Cells
 		}
 		private void UpdateOn() { _Accessory.Checked = _AccessoryCell.Checked; }
 
-		private void UpdateAccentColor() { ChangeCheckColor(_AccessoryCell.GetAccentColor().ToAndroid(), _AccessoryCell.GetOffColor().ToAndroid()); }
+		private void UpdateAccentColor() { ChangeCheckColor(_AccessoryCell.CheckableConfig.AccentColor.ToAndroid(), _AccessoryCell.CheckableConfig.OffColor.ToAndroid()); }
 
 		protected void ChangeCheckColor( AColor accent ) { ChangeCheckColor(accent, AColor.Argb(76, 117, 117, 117)); }
 		protected void ChangeCheckColor( AColor accent, AColor off )

@@ -27,7 +27,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		protected Bitmap?                  _Image           { get; set; }
 		protected CancellationTokenSource? _IconTokenSource { get; set; }
-		public BaseCellView             Renderer            { get; private set; }
+		public    BaseCellView             Renderer         { get; private set; }
 		protected float                    _IconRadius      { get; set; }
 
 
@@ -51,7 +51,7 @@ namespace Jakar.SettingsView.Droid.Controls
 
 		public bool UpdateIconRadius()
 		{
-			_IconRadius = Renderer.AndroidContext.ToPixels(_CurrentCell.GetIconRadius());
+			_IconRadius = Renderer.AndroidContext.ToPixels(_CurrentCell.IconConfig.IconRadius);
 			return true;
 		}
 
@@ -65,7 +65,7 @@ namespace Jakar.SettingsView.Droid.Controls
 			return true;
 		}
 
-		public Size GetIconSize() => _CurrentCell.GetIconSize();
+		public Size GetIconSize() => _CurrentCell.IconConfig.IconSize;
 
 
 		public bool Refresh( bool forceLoad = false )

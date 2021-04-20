@@ -24,7 +24,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AiForms.Effects" Version="1.6.10" />
-		<PackageReference Include="Jakar.Api" Version="1.8.2" />
+		<PackageReference Include="Jakar.Api" Version="1.9.0" />
 		<PackageReference Include="Xam.Plugin.Screenshot" Version="2.0.3" />
 		<PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
 		<PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />
