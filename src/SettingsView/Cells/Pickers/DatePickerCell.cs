@@ -1,5 +1,6 @@
 ﻿using System;
 using Jakar.SettingsView.Shared.CellBase;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
 
 namespace Jakar.SettingsView.Shared.Cells
@@ -7,7 +8,7 @@ namespace Jakar.SettingsView.Shared.Cells
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class DatePickerCell : PromptCellBase<DateTime>
 	{
-		public static BindableProperty DateProperty = BindableProperty.Create(nameof(Date),
+		public static readonly BindableProperty DateProperty = BindableProperty.Create(nameof(Date),
 																			  typeof(DateTime),
 																			  typeof(DatePickerCell),
 																			  default(DateTime),

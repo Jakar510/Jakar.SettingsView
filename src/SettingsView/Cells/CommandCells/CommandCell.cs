@@ -7,10 +7,10 @@ namespace Jakar.SettingsView.Shared.Cells
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class CommandCell : DescriptionCellBase
 	{
-		public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CommandCell), default(ICommand));
-		public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell));
-		public static BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(CommandCell), default(bool));
-		public static BindableProperty HideArrowIndicatorProperty = BindableProperty.Create(nameof(HideArrowIndicator), typeof(bool), typeof(CommandCell), default(bool));
+		public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CommandCell), default(ICommand));
+		public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CommandCell));
+		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(CommandCell), default(bool));
+		public static readonly BindableProperty HideArrowIndicatorProperty = BindableProperty.Create(nameof(HideArrowIndicator), typeof(bool), typeof(CommandCell), default(bool));
 
 		public ICommand Command
 		{

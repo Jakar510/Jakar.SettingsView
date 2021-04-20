@@ -1,6 +1,7 @@
 ﻿// unset
 
 using System;
+using System.Collections.Generic;
 using Jakar.Api.Converters;
 using Jakar.SettingsView.Shared.Config;
 using Jakar.SettingsView.Shared.Interfaces;
@@ -47,7 +48,7 @@ namespace Jakar.SettingsView.Shared.CellBase
 			get => (FontAttributes?) GetValue(ValueTextFontAttributesProperty);
 			set => SetValue(ValueTextFontAttributesProperty, value);
 		}
-		
+
 		[TypeConverter(typeof(NullableTextAlignmentConverter))]
 		public TextAlignment? ValueTextAlignment
 		{
@@ -93,7 +94,9 @@ namespace Jakar.SettingsView.Shared.CellBase
 	{
 		public event EventHandler<SVValueChangedEventArgs<TValue>>? ValueChanged;
 
-		void IValueChanged<TValue>.SendValueChanged( TValue value ) { ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value)); }
+		void IValueChanged<TValue>.SendValueChanged( TValue              value ) => ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value));
+		void IValueChanged<TValue>.SendValueChanged( IEnumerable<TValue> value ) => ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value));
+
 
 		internal IValueChanged<TValue> ValueChangedHandler => this;
 	}

@@ -22,15 +22,15 @@ namespace Jakar.SettingsView.iOS.Cells
 	{
 		protected internal object? SelectedValue
 		{
-			get => RadioCell.GetSelectedValue(Cell.Section) ?? RadioCell.GetSelectedValue(CellParent);
+			get => Cell.Section?.GetSelectedValue() ?? CellParent?.GetSelectedValue();
 			set
 			{
-				if ( RadioCell.GetSelectedValue(Cell.Section) is not null ) { RadioCell.SetSelectedValue(Cell.Section, value); }
-				else { RadioCell.SetSelectedValue(CellParent, value); }
+				if ( Cell.Section?.GetSelectedValue() is not null ) { Cell.Section.SetSelectedValue(value); }
+				else { CellParent?.SetSelectedValue(value); }
 			}
 		}
 
-		public RadioCellView( RadioCell formsCell ) : base(formsCell) { SelectionStyle = UITableViewCellSelectionStyle.Default; }
+		public RadioCellView( RadioCell formsCell ) : base(formsCell) => SelectionStyle = UITableViewCellSelectionStyle.Default;
 
 		protected override void Dispose( bool disposing ) { base.Dispose(disposing); }
 

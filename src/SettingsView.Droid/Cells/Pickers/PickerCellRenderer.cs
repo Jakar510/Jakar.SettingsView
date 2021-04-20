@@ -15,26 +15,29 @@ using Xamarin.Forms.Platform.Android;
 using AListView = Android.Widget.ListView;
 using Switch = Android.Widget.Switch;
 
+
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
 #nullable enable
 namespace Jakar.SettingsView.Droid.Cells
 {
-	[Preserve(AllMembers = true)] public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
+	[Preserve(AllMembers = true)]
+	public class PickerCellRenderer : CellBaseRenderer<PickerCellView> { }
+
 
 
 	[Preserve(AllMembers = true)]
 	public class PickerCellView : BaseAiValueCell, IDialogInterfaceOnShowListener, IDialogInterfaceOnDismissListener
 	{
-		protected PickerCell _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
-		protected AlertDialog? _Dialog { get; set; }
-		protected AListView? _ListView { get; set; }
-		protected PickerAdapter? _Adapter { get; set; }
-		protected TextView? _TitleLabel { get; set; }
-		
+		protected PickerCell     _PickerCell => Cell as PickerCell ?? throw new NullReferenceException(nameof(_PickerCell));
+		protected AlertDialog?   _Dialog     { get; set; }
+		protected AListView?     _ListView   { get; set; }
+		protected PickerAdapter? _Adapter    { get; set; }
+		protected TextView?      _TitleLabel { get; set; }
+
 		protected string _ValueTextCache { get; set; } = string.Empty;
 
-		protected INotifyCollectionChanged? _NotifyCollection { get; set; }
+		protected INotifyCollectionChanged? _NotifyCollection   { get; set; }
 		protected INotifyCollectionChanged? _SelectedCollection { get; set; }
 
 
@@ -45,6 +48,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			// _IndicatorView.SetImageResource(Resource.Drawable.ic_navigate_next);
 			// AddAccessory(_IndicatorView);
 		}
+
 		public PickerCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
 		protected internal override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -78,6 +82,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			UpdateSelectedItems(false);
 			UpdateCollectionChanged();
 		}
+
 		public void UpdateSelectedItems( bool force )
 		{
 			if ( force || string.IsNullOrWhiteSpace(_ValueTextCache) )
@@ -93,15 +98,17 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_Value.UpdateText(_ValueTextCache);
 		}
+
 		private void UpdateCollectionChanged()
 		{
 			if ( _NotifyCollection != null ) { _NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged; }
 
 			if ( !( _PickerCell.ItemsSource is INotifyCollectionChanged collection ) ) return;
-			_NotifyCollection = collection;
+			_NotifyCollection                   =  collection;
 			_NotifyCollection.CollectionChanged += ItemsSourceCollectionChanged;
 			ItemsSourceCollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
+
 		protected override void UpdateIsEnabled()
 		{
 			if ( _PickerCell.ItemsSource != null &&
@@ -116,10 +123,12 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			SetEnabledAppearance(_PickerCell.ItemsSource?.Count > 0);
 		}
+
 		private void SelectedItems_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e ) { UpdateSelectedItems(true); }
 
 
 		internal void ShowDialog() { CreateDialog(); }
+
 		protected void CreateDialog()
 		{
 			_TitleLabel?.Dispose();
@@ -128,31 +137,34 @@ namespace Jakar.SettingsView.Droid.Cells
 
 			_ListView = new AListView(AndroidContext)
 						{
-							Focusable = false,
+							Focusable              = false,
 							DescendantFocusability = DescendantFocusability.AfterDescendants,
 							ChoiceMode = _PickerCell.SelectionMode switch
 										 {
 											 SelectMode.Single => ChoiceMode.Single,
-											 _ => ChoiceMode.Multiple,
+											 _                 => ChoiceMode.Multiple,
 										 }
 						};
+
 			_ListView.SetDrawSelectorOnTop(true);
 			_Adapter = new PickerAdapter(AndroidContext, this, _PickerCell, _ListView);
 
 			_ListView.OnItemClickListener = _Adapter;
-			_ListView.Adapter = _Adapter;
+			_ListView.Adapter             = _Adapter;
 
 			_TitleLabel = new TextView(AndroidContext)
 						  {
-							  Text = _PickerCell.Prompt.Title,
+							  Text    = _PickerCell.Prompt.Title,
 							  Gravity = GravityFlags.Center
 						  };
+
 			_TitleLabel.SetBackgroundColor(_Adapter.BackgroundColor);
 			_TitleLabel.SetTextColor(_Adapter.TitleTextColor);
 			_TitleLabel.SetTextSize(ComplexUnitType.Sp, _Adapter.FontSize);
-			
+
 
 			if ( _Dialog is not null ) return;
+
 			using ( var builder = new AlertDialog.Builder(AndroidContext) )
 			{
 				// builder.SetTitle(_PickerCell.PopupTitle);
@@ -176,20 +188,23 @@ namespace Jakar.SettingsView.Droid.Cells
 			//_dialog.GetButton((int)DialogButtonType.Positive).SetTextColor(buttonTextColor);
 			//_dialog.GetButton((int)DialogButtonType.Negative).SetTextColor(buttonTextColor);
 		}
+
 		protected internal void CloseAction() { _Dialog?.GetButton((int) DialogButtonType.Positive)?.PerformClick(); }
 		protected void CancelEventHandler( object o, DialogClickEventArgs args ) { ClearFocus(); }
+
 		protected void AcceptEventHandler( object o, DialogClickEventArgs args )
 		{
 			_Adapter?.DoneSelect();
 			UpdateSelectedItems(true);
 
-			_PickerCell.InvokeSelectedEvent();
-			_PickerCell.InvokeCommand();
+			_PickerCell.SendValueChanged();
+			_PickerCell.InvokeSelectedCommand();
 			ClearFocus();
 		}
 
 
 		public void OnShow( IDialogInterface? dialog ) { _Adapter?.RestoreSelect(); }
+
 		public void OnDismiss( IDialogInterface? dialog )
 		{
 			_Dialog?.SetOnShowListener(null);
@@ -212,6 +227,7 @@ namespace Jakar.SettingsView.Droid.Cells
 			_Title.Enable();
 			_Description.Enable();
 		}
+
 		protected override void DisableCell()
 		{
 			base.DisableCell();
@@ -238,13 +254,13 @@ namespace Jakar.SettingsView.Droid.Cells
 				if ( _NotifyCollection != null )
 				{
 					_NotifyCollection.CollectionChanged -= ItemsSourceCollectionChanged;
-					_NotifyCollection = null;
+					_NotifyCollection                   =  null;
 				}
 
 				if ( _SelectedCollection != null )
 				{
 					_SelectedCollection.CollectionChanged -= SelectedItems_CollectionChanged;
-					_SelectedCollection = null;
+					_SelectedCollection                   =  null;
 				}
 
 				// _IndicatorView?.RemoveFromParent();

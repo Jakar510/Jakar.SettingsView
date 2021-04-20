@@ -193,8 +193,9 @@ namespace Jakar.SettingsView.iOS.Cells.Sources
 			//_pickerCellNative.UpdateSelectedItems(true);
 
 			if ( _PickerCell.KeepSelectedUntilBack ) { _tableView.DeselectRow(_tableView.IndexPathForSelectedRow, true); }
-
-			_PickerCell.InvokeCommand();
+			
+			_PickerCell.SendValueChanged();
+			_PickerCell.InvokeSelectedCommand();
 		}
 
 		protected override void Dispose( bool disposing )

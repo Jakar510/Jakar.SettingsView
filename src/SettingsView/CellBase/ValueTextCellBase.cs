@@ -1,6 +1,7 @@
 ﻿// unset
 
 using System;
+using System.Collections.Generic;
 using Jakar.SettingsView.Shared.Interfaces;
 using Jakar.SettingsView.Shared.Misc;
 using Xamarin.Forms;
@@ -60,7 +61,8 @@ namespace Jakar.SettingsView.Shared.CellBase
 	{
 		public event EventHandler<SVValueChangedEventArgs<TValue>>? ValueChanged;
 
-		void IValueChanged<TValue>.SendValueChanged( TValue value ) { ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value)); }
+		void IValueChanged<TValue>.SendValueChanged( TValue value ) => ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value));
+		void IValueChanged<TValue>.SendValueChanged( IEnumerable<TValue> value ) => ValueChanged?.Invoke(this, new SVValueChangedEventArgs<TValue>(value));
 		internal IValueChanged<TValue> ValueChangedHandler => this;
 	}
 }

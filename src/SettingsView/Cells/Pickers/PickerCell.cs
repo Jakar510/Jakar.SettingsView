@@ -7,23 +7,26 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Converters;
 using Jakar.SettingsView.Shared.Enumerations;
+using Jakar.SettingsView.Shared.Interfaces;
 using Xamarin.Forms;
+
 
 namespace Jakar.SettingsView.Shared.Cells
 {
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class PickerCell : PromptCellBase<object>
 	{
-		public static readonly BindableProperty UseNaturalSortProperty = BindableProperty.Create(nameof(UseNaturalSort), typeof(bool), typeof(PickerCell), false);
-		public static readonly BindableProperty UsePickToCloseProperty = BindableProperty.Create(nameof(UsePickToClose), typeof(bool), typeof(PickerCell), default(bool));
-		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool), typeof(PickerCell), true);
-		public static readonly BindableProperty SelectedItemsOrderKeyProperty = BindableProperty.Create(nameof(SelectedItemsOrderKey), typeof(string), typeof(PickerCell), default(string));
-		public static readonly BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(PickerCell), default(ICommand));
-		public static readonly BindableProperty DisplayMemberProperty = BindableProperty.Create(nameof(DisplayMember), typeof(string), typeof(PickerCell), default(string?));
-		public static readonly BindableProperty SubDisplayMemberProperty = BindableProperty.Create(nameof(SubDisplayMember), typeof(string), typeof(PickerCell), default(string?));
+		public static readonly BindableProperty UseNaturalSortProperty        = BindableProperty.Create(nameof(UseNaturalSort),        typeof(bool),     typeof(PickerCell), false);
+		public static readonly BindableProperty UsePickToCloseProperty        = BindableProperty.Create(nameof(UsePickToClose),        typeof(bool),     typeof(PickerCell), default(bool));
+		public static readonly BindableProperty KeepSelectedUntilBackProperty = BindableProperty.Create(nameof(KeepSelectedUntilBack), typeof(bool),     typeof(PickerCell), true);
+		public static readonly BindableProperty SelectedItemsOrderKeyProperty = BindableProperty.Create(nameof(SelectedItemsOrderKey), typeof(string),   typeof(PickerCell), default(string));
+		public static readonly BindableProperty SelectedCommandProperty       = BindableProperty.Create(nameof(SelectedCommand),       typeof(ICommand), typeof(PickerCell), default(ICommand));
+		public static readonly BindableProperty DisplayMemberProperty         = BindableProperty.Create(nameof(DisplayMember),         typeof(string),   typeof(PickerCell), default(string?));
+		public static readonly BindableProperty SubDisplayMemberProperty      = BindableProperty.Create(nameof(SubDisplayMember),      typeof(string),   typeof(PickerCell), default(string?));
 
 
 		public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource),
@@ -39,6 +42,7 @@ namespace Jakar.SettingsView.Shared.Cells
 																								typeof(PickerCell),
 																								default(IList),
 																								BindingMode.TwoWay
+
 																								// propertyChanged: SelectedItemPropertyChanged
 																							   );
 
@@ -47,6 +51,7 @@ namespace Jakar.SettingsView.Shared.Cells
 																							   typeof(PickerCell),
 																							   default,
 																							   BindingMode.TwoWay
+
 																							   // propertyChanged: SelectedItemPropertyChanged
 																							  );
 
@@ -64,12 +69,14 @@ namespace Jakar.SettingsView.Shared.Cells
 																								propertyChanged: ( bindable, old_value, new_value ) =>
 																												 {
 																													 if ( old_value == new_value ) return;
+
 																													 int mode = new_value switch
 																																{
 																																	SelectMode.Unlimited => -1,
 																																	SelectMode.Single => 1,
 																																	_ => (int) bindable.GetValue(MaxSelectedNumberProperty)
 																																};
+
 																													 bindable.SetValue(MaxSelectedNumberProperty, mode);
 																												 }
 																							   );
@@ -84,8 +91,8 @@ namespace Jakar.SettingsView.Shared.Cells
 																													 return (SelectMode) bindable.GetValue(SelectionModeProperty) switch
 																															{
 																																SelectMode.Unlimited => -1,
-																																SelectMode.Single => 1,
-																																_ => value
+																																SelectMode.Single    => 1,
+																																_                    => value
 																															};
 																												 }
 																								   );
@@ -133,11 +140,12 @@ namespace Jakar.SettingsView.Shared.Cells
 			set
 			{
 				SetValue(MaxSelectedNumberProperty, value);
+
 				SelectionMode = value switch
 								{
 									< 0 => SelectMode.Unlimited,
-									0 => SelectMode.NotSet,
-									1 => SelectMode.Single,
+									0   => SelectMode.NotSet,
+									1   => SelectMode.Single,
 									> 1 => SelectMode.Multiple,
 								};
 			}
@@ -165,11 +173,9 @@ namespace Jakar.SettingsView.Shared.Cells
 			}
 		}
 
-		internal bool IsUnLimited => SelectionMode == SelectMode.Unlimited;
+		internal bool IsUnLimited  => SelectionMode == SelectMode.Unlimited;
 		internal bool IsSingleMode => SelectionMode == SelectMode.Single;
-		internal bool IsValidMode => SelectionMode != SelectMode.NotSet;
-		internal void InvokeSelectedEvent() { SelectedEvent?.Invoke(this, new ItemChanged(MergedSelectedList, SelectionMode)); }
-		public EventHandler<ItemChanged>? SelectedEvent;
+		internal bool IsValidMode  => SelectionMode != SelectMode.NotSet;
 
 		public bool KeepSelectedUntilBack
 		{
@@ -202,9 +208,19 @@ namespace Jakar.SettingsView.Shared.Cells
 			set => SetValue(UsePickToCloseProperty, value);
 		}
 
-		internal void InvokeCommand()
+
+		// ---------------------------------------------------------------------------------------
+
+
+		internal void SendValueChanged()
 		{
-			SelectedCommand?.Execute(SelectionMode == SelectMode.Single
+			if ( IsSingleMode ) { ValueChangedHandler.SendValueChanged(SelectedItem ?? throw new NullReferenceException(nameof(SelectedItem))); }
+			else { ValueChangedHandler.SendValueChanged(SelectedItems ?? throw new NullReferenceException(nameof(SelectedItems))); }
+		}
+
+		internal void InvokeSelectedCommand()
+		{
+			SelectedCommand?.Execute(IsSingleMode
 										 ? SelectedItem
 										 : SelectedItems
 									);
@@ -267,13 +283,16 @@ namespace Jakar.SettingsView.Shared.Cells
 			if ( items is null ) return string.Empty;
 
 			List<string> sortedList;
+
 			if ( KeyValue is not null )
 			{
 				var dict = new Dictionary<object, string>();
+
 				foreach ( object item in items )
 				{
-					object? key = KeyValue?.Invoke(item);
-					var value = DisplayValue?.Invoke(item)?.ToString();
+					object? key   = KeyValue?.Invoke(item);
+					var     value = DisplayValue?.Invoke(item)?.ToString();
+
 					if ( key is null ||
 						 string.IsNullOrWhiteSpace(value) ) continue;
 
@@ -291,6 +310,7 @@ namespace Jakar.SettingsView.Shared.Cells
 				NaturalComparer? comparer = UseNaturalSort
 												? new NaturalComparer()
 												: null;
+
 				sortedList = strList.OrderBy(x => x, comparer).ToList();
 			}
 
@@ -341,7 +361,7 @@ namespace Jakar.SettingsView.Shared.Cells
 			if ( !typeArg.Any() ) { throw new ArgumentException("ItemsSource must be GenericType."); }
 
 			// If the type is a system built-in-type, it doesn't create GetProperty.
-			if ( IsBuiltInType(typeArg[0]) )
+			if ( typeArg[0].IsBuiltInType() )
 			{
 				_getters = null;
 
@@ -350,41 +370,6 @@ namespace Jakar.SettingsView.Shared.Cells
 
 			_getters = DisplayValueCache.GetOrAdd(typeArg[0], CreateGetProperty);
 		}
-
-		private static bool IsBuiltInType( Type type )
-		{
-			return type.FullName switch
-				   {
-					   "System.Boolean" => true,
-					   "System.Byte" => true,
-					   "System.SByte" => true,
-					   "System.Char" => true,
-					   "System.Int16" => true,
-					   "System.UInt16" => true,
-					   "System.Int32" => true,
-					   "System.UInt32" => true,
-					   "System.Int64" => true,
-					   "System.UInt64" => true,
-					   "System.Single" => true,
-					   "System.Double" => true,
-					   "System.Decimal" => true,
-					   "System.String" => true,
-					   "System.Object" => true,
-					   _ => false
-				   };
-		}
-
-
-		public class ItemChanged : EventArgs
-		{
-			public IEnumerable? Items { get; }
-			public SelectMode Mode { get; }
-
-			public ItemChanged( IEnumerable? items, SelectMode mode )
-			{
-				Items = items;
-				Mode = mode;
-			}
-		}
+		
 	}
 }

@@ -114,9 +114,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_TitleStack.InBetween(_MainStack, _Icon.Control, _ValueStack);
 			_ValueStack.RightExtended(_MainStack, _TitleStack);
 
-			_Icon.Control.WidthOfParent(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
-			_TitleStack.WidthOfParent(_MainStack, SvConstants.Layout.ColumnFactors.TITLE_STACK, SvConstants.Layout.ColumnFactors.VALUE_STACK);
-			_ValueStack.WidthOfParent(_MainStack, SvConstants.Layout.ColumnFactors.VALUE_STACK, 1);
+			_Icon.Control.WidthOf(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
+			_TitleStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.TITLE_STACK, SvConstants.Layout.ColumnFactors.VALUE_STACK);
+			_ValueStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.VALUE_STACK, 1);
 			
 			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);

@@ -9,16 +9,16 @@ namespace Jakar.SettingsView.Shared.Cells
 	[Xamarin.Forms.Internals.Preserve(true, false)]
 	public class TextPickerCell : PromptCellBase<string>
 	{
-		public static BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>());
-		public static BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand));
-		public static BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), Color.Default);
+		public static readonly BindableProperty ItemsProperty = BindableProperty.Create(nameof(Items), typeof(IList<string>), typeof(TextPickerCell), new List<string>());
+		public static readonly BindableProperty SelectedCommandProperty = BindableProperty.Create(nameof(SelectedCommand), typeof(ICommand), typeof(TextPickerCell), default(ICommand));
+		public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(nameof(AccentColor), typeof(Color), typeof(PickerCell), Color.Default);
 
-		public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem),
-																					  typeof(string),
-																					  typeof(TextPickerCell),
-																					  default,
-																					  BindingMode.TwoWay
-																					 );
+		public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem),
+																							   typeof(string),
+																							   typeof(TextPickerCell),
+																							   default,
+																							   BindingMode.TwoWay
+																							  );
 
 
 		public IList<string>? Items
