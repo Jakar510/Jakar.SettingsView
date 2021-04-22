@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Reactive.Bindings;
 using Xamarin.Forms;
-using System.Collections.Generic;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class RadioCellTestViewModel : ViewModelBase
 	{

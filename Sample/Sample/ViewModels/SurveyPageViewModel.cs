@@ -5,7 +5,8 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class SurveyPageViewModel : BindableBase, INavigatedAware
 	{

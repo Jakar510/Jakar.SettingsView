@@ -16,7 +16,7 @@ using ListView = Android.Widget.ListView;
 using RelativeLayout = Android.Widget.RelativeLayout;
 
 #nullable enable
-namespace Jakar.SettingsView.Droid.Cells
+namespace Jakar.SettingsView.Droid.Cells.Sources
 {
 	[Preserve(AllMembers = true)]
 	public class PickerAdapter : BaseAdapter<object>, AdapterView.IOnItemClickListener

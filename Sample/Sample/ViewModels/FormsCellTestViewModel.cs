@@ -1,7 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-
-namespace Sample.ViewModels
+﻿namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class FormsCellTestViewModel : ViewModelBase
 	{

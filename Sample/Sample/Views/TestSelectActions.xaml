@@ -5,11 +5,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:shared="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
-			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+             xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 mc:Ignorable="d"
-			 x:Class="Sample.Views.TestSelectActions">
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.TestSelectActions">
 	<ContentPage.Content>
 		<sv:SettingsView>
 			<sv:Section Title="Test EntryCell Checked Select Actions">

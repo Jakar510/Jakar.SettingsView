@@ -9,6 +9,7 @@ using Jakar.SettingsView.Shared.sv;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+
 #nullable enable
 namespace Jakar.SettingsView.Droid
 {
@@ -21,20 +22,24 @@ namespace Jakar.SettingsView.Droid
 		CustomFooter,
 	}
 
+
+
 	[Android.Runtime.Preserve(AllMembers = true)]
 	public class RowInfo
 	{
-		public Section Section { get; set; }
-		public Cell? Cell { get; set; }
+		public Section  Section  { get; set; }
+		public Cell?    Cell     { get; set; }
 		public ViewType ViewType { get; set; }
 		public RowInfo( Section section, ViewType viewType ) : this(section, null, viewType) { }
+
 		public RowInfo( Section section, Cell? cell, ViewType viewType )
 		{
-			Section = section;
-			Cell = cell;
+			Section  = section;
+			Cell     = cell;
 			ViewType = viewType;
 		}
 	}
+
 
 
 	[Android.Runtime.Preserve(AllMembers = true)]
@@ -42,20 +47,20 @@ namespace Jakar.SettingsView.Droid
 	{
 		public Dictionary<Type, int> ViewTypes { get; private set; }
 
-		private SettingsModel _Model { get; set; }
-		private SettingsRoot _Root { get; set; }
-		private SettingsViewRecyclerAdapter _Adapter { get; set; }
-		private RecyclerView _RecyclerView { get; set; }
+		private SettingsModel               _Model        { get; set; }
+		private SettingsRoot                _Root         { get; set; }
+		private SettingsViewRecyclerAdapter _Adapter      { get; set; }
+		private RecyclerView                _RecyclerView { get; set; }
 
 		public ModelProxy( Shared.sv.SettingsView settingsView, SettingsViewRecyclerAdapter adapter, RecyclerView recyclerView )
 		{
-			_Model = settingsView.Model;
-			_Root = settingsView.Root;
-			_Adapter = adapter;
+			_Model        = settingsView.Model;
+			_Root         = settingsView.Root;
+			_Adapter      = adapter;
 			_RecyclerView = recyclerView;
 
 			_Root.SectionCollectionChanged += OnRootSectionCollectionChanged;
-			_Root.CollectionChanged += OnRootCollectionChanged;
+			_Root.CollectionChanged        += OnRootCollectionChanged;
 
 			ViewTypes = UpdateTypes();
 		}
@@ -70,11 +75,13 @@ namespace Jakar.SettingsView.Droid
 
 					AddSection(e);
 					break;
+
 				case NotifyCollectionChangedAction.Remove:
 					if ( e.OldStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
 					RemoveSection(e);
 					break;
+
 				case NotifyCollectionChangedAction.Replace: // no support on Android.
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset:
@@ -98,11 +105,13 @@ namespace Jakar.SettingsView.Droid
 
 					AddCell(sender, e);
 					break;
+
 				case NotifyCollectionChangedAction.Remove:
 					if ( e.OldStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
 					RemoveCell(sender, e);
 					break;
+
 				case NotifyCollectionChangedAction.Replace:
 					if ( e.OldStartingIndex == -1 ) { goto case NotifyCollectionChangedAction.Reset; }
 
@@ -125,6 +134,7 @@ namespace Jakar.SettingsView.Droid
 			if ( e.NewItems[0] is not Section section ) return;
 			int startIndex = RowIndexFromParentCollection(e.NewStartingIndex);
 			Insert(startIndex, new RowInfo(section, ViewType.CustomHeader));
+
 			// Insert(startIndex, new RowInfo(section, section.HeaderView == null ? ViewType.TextHeader : ViewType.CustomHeader));
 
 			for ( var i = 0; i < section.Count; i++ )
@@ -138,6 +148,7 @@ namespace Jakar.SettingsView.Droid
 			}
 
 			Insert(startIndex + section.Count() + 1, new RowInfo(section, ViewType.CustomFooter));
+
 			// Insert(startIndex + section.Count() + 1, new RowInfo(section, section.FooterView == null ? ViewType.TextFooter : ViewType.CustomFooter));
 
 			_Adapter.NotifyItemRangeInserted(startIndex, section.Count + 2); // add a header and footer
@@ -159,10 +170,13 @@ namespace Jakar.SettingsView.Droid
 
 		private void AddCell( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( !( sender is Section section ) ) throw new ArgumentException("Sender must be of type(Section)", nameof(sender));
+			if ( e is null ) { throw new NullReferenceException(nameof(e)); }
 
-			int startIndex = RowIndexFromChildCollection(section, e.NewStartingIndex);
-			List<Cell> newCells = e.NewItems.Cast<Cell>().ToList();
+			if ( sender is not Section section ) { throw new ArgumentException("Sender must be of type(Section)", nameof(sender)); }
+
+			int        startIndex = RowIndexFromChildCollection(section, e.NewStartingIndex);
+			List<Cell> newCells   = e.NewItems.Cast<Cell>().ToList();
+
 			for ( var i = 0; i < newCells.Count; i++ )
 			{
 				Cell cell = newCells[i];
@@ -177,8 +191,9 @@ namespace Jakar.SettingsView.Droid
 
 		private void RemoveCell( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( e is null ) throw new NullReferenceException(nameof(e));
-			if ( !( sender is Section section ) ) throw new ArgumentException("Sender must be of type(Section)", nameof(sender));
+			if ( e is null ) { throw new NullReferenceException(nameof(e)); }
+
+			if ( sender is not Section section ) { throw new ArgumentException("Sender must be of type(Section)", nameof(sender)); }
 
 			int startIndex = RowIndexFromChildCollection(section, e.OldStartingIndex);
 			RemoveAt(startIndex);
@@ -188,8 +203,9 @@ namespace Jakar.SettingsView.Droid
 
 		private void ReplaceCell( object sender, NotifyCollectionChangedEventArgs e )
 		{
-			if ( e is null ) throw new NullReferenceException(nameof(e));
-			if ( !( sender is Section section ) ) throw new ArgumentException("Sender must be of type(Section)", nameof(sender));
+			if ( e is null ) { throw new NullReferenceException(nameof(e)); }
+
+			if ( sender is not Section section ) { throw new ArgumentException("Sender must be of type(Section)", nameof(sender)); }
 
 			int startIndex = RowIndexFromChildCollection(section, e.OldStartingIndex);
 			if ( e.OldItems[0] is Cell repCell ) { this[startIndex] = new RowInfo(section, repCell, (ViewType) ViewTypes[repCell.GetType()]); }
@@ -199,18 +215,23 @@ namespace Jakar.SettingsView.Droid
 
 			_Adapter.NotifyItemRangeChanged(startIndex, 1);
 
-			new Handler().PostDelayed(() =>
-									  {
-										  // Restart animation.
-										  if ( _RecyclerView.GetItemAnimator() is DefaultItemAnimator _animator ) { _animator.SupportsChangeAnimations = false; }
-									  },
-									  100
-									 );
+			if ( Looper.MainLooper is not null )
+			{
+				new Handler(Looper.MainLooper).PostDelayed(ReplaceCellHandler,
+														   100
+														  );
+			}
+		}
+
+		private void ReplaceCellHandler()
+		{
+			// Restart animation.
+			if ( _RecyclerView.GetItemAnimator() is DefaultItemAnimator animator ) { animator.SupportsChangeAnimations = false; }
 		}
 
 		private int RowIndexFromChildCollection( Section section, int index )
 		{
-			if ( section is null ) throw new NullReferenceException(nameof(section));
+			if ( section is null ) { throw new NullReferenceException(nameof(section)); }
 
 			int targetSectionIndex = this.IndexOf(x => x.Section == section);
 
@@ -228,6 +249,7 @@ namespace Jakar.SettingsView.Droid
 												   }
 									)
 							 .GroupBy(x => x.Section);
+
 			int? match = groups.ElementAtOrDefault(index)?.Min(x => x.index);
 
 			return match ?? Count;
@@ -236,12 +258,14 @@ namespace Jakar.SettingsView.Droid
 		private int GetNextTypeIndex()
 		{
 			int idx = ViewTypes.Values.LastOrDefault();
+
 			return idx == 0
 					   ? Enum.GetNames(typeof(ViewType)).Length
 					   : idx + 1;
 		}
 
 		public void FillProxy() { ViewTypes = UpdateTypes(); }
+
 		protected Dictionary<Type, int> UpdateTypes()
 		{
 			Clear();
@@ -261,8 +285,9 @@ namespace Jakar.SettingsView.Droid
 
 			for ( var sectionIndex = 0; sectionIndex < sectionCount; sectionIndex++ )
 			{
-				int sectionRowCount = _Model.GetRowCount(sectionIndex);
-				Section? curSection = _Model.GetSection(sectionIndex);
+				int      sectionRowCount = _Model.GetRowCount(sectionIndex);
+				Section? curSection      = _Model.GetSection(sectionIndex);
+
 				// bool isTextHeader = _Model.GetSectionHeaderView(sectionIndex) is null;
 				// Add(new RowInfo(curSection, isTextHeader ? ViewType.TextHeader : ViewType.CustomHeader));
 				if ( curSection is null ) { continue; }
@@ -286,7 +311,7 @@ namespace Jakar.SettingsView.Droid
 		public void Dispose()
 		{
 			_Root.SectionCollectionChanged -= OnRootSectionCollectionChanged;
-			_Root.CollectionChanged -= OnRootCollectionChanged;
+			_Root.CollectionChanged        -= OnRootCollectionChanged;
 			Clear();
 			ViewTypes.Clear();
 		}

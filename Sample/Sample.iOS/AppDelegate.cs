@@ -1,11 +1,13 @@
 ﻿using Foundation;
-using Jakar.SettingsView.iOS;
 using Jakar.Api.iOS;
+using Jakar.SettingsView.iOS;
+using Jakar.SettingsView.Sample.Shared;
 using Prism;
 using Prism.Ioc;
 using UIKit;
 
-namespace Sample.iOS
+
+namespace Jakar.SettingsView.Sample.iOS
 {
 	[Register(nameof(AppDelegate))]
 	public class AppDelegate : BaseApplication

@@ -1,7 +1,4 @@
-﻿using System;
-using Reactive.Bindings;
-
-namespace Sample.ViewModels
+﻿namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	//試してみたが表示はされるけどほぼアクション系がAdaptorの方で処理しているので動かない。
 	//なのでTableViewやListViewでは基本的には使えないものとする。

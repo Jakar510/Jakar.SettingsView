@@ -4,11 +4,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:l="clr-namespace:AiForms.Layouts;assembly=AiForms.Layouts"
-			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
-			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
-			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+             xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.CollectionChangedTest">
+			 xmlns:views = "clr-namespace:Jakar.SettingsView.Sample.Shared.Views;assembly=Jakar.SettingsView.Sample.Shared"
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.CollectionChangedTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
 			<Style TargetType="Label">
@@ -46,7 +45,7 @@
 		</ScrollView>
 		<ScrollView VerticalOptions="Start"
 					HeightRequest="60">
-			<me:ParentController />
+			<views:ParentController />
 		</ScrollView>
 
 		<sv:SettingsView x:Name="settings"

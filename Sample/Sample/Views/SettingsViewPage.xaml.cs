@@ -1,6 +1,7 @@
 ﻿using Xamarin.Forms;
 
-namespace Sample.Views
+
+namespace Jakar.SettingsView.Sample.Shared.Views
 {
 	public partial class SettingsViewPage : ContentPage
 	{

@@ -1,9 +1,10 @@
 ﻿using System;
+using Prism.Services;
 using Reactive.Bindings;
 using Xamarin.Forms;
-using Prism.Services;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class ButtonCellTestViewModel : ViewModelBase
 	{

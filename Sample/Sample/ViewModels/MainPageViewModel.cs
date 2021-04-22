@@ -1,12 +1,10 @@
-﻿using Prism.Commands;
+﻿using System;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class MainPageViewModel : BindableBase, INavigationAware
 	{

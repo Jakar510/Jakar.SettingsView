@@ -3,14 +3,14 @@ using System.Reflection;
 using Prism;
 using Prism.Ioc;
 using Prism.Unity;
+using Unity;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
-using Sample.Views;
-using Unity;
+
 
 [assembly: Xamarin.Forms.Xaml.XamlCompilation(Xamarin.Forms.Xaml.XamlCompilationOptions.Compile)]
 
-namespace Sample
+namespace Jakar.SettingsView.Sample.Shared
 {
 	public partial class App : PrismApplication
 	{

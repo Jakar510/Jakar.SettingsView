@@ -1,8 +1,7 @@
-﻿using System;
-using Reactive.Bindings;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class ReorderTestViewModel
 	{

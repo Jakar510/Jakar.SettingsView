@@ -9,6 +9,7 @@ using Android.Widget;
 using Jakar.SettingsView.Droid.BaseCell;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Droid.Cells;
+using Jakar.SettingsView.Droid.Cells.Sources;
 using Jakar.SettingsView.Shared.Enumerations;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;

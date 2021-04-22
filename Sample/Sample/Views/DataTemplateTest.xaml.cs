@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace Sample.Views
+
+namespace Jakar.SettingsView.Sample.Shared.Views
 {
 	public partial class DataTemplateTest : ContentPage
 	{

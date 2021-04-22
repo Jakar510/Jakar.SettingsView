@@ -1,8 +1,7 @@
-﻿using System;
-using Xamarin.Forms;
-using static Sample.ViewModels.DataTemplateTestViewModel;
+﻿using Xamarin.Forms;
+using static Jakar.SettingsView.Sample.Shared.ViewModels.DataTemplateTestViewModel;
 
-namespace Sample.Views
+namespace Jakar.SettingsView.Sample.Shared.Views
 {
 	public class TestSelector : DataTemplateSelector
 	{

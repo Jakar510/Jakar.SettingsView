@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Jakar.SettingsView;
-using Jakar.SettingsView.Shared;
 using Jakar.SettingsView.Shared.CellBase;
 using Jakar.SettingsView.Shared.Cells;
 using Prism.Mvvm;
@@ -10,9 +8,9 @@ using Reactive.Bindings;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Svg;
-using SettingsView = Jakar.SettingsView.Shared.sv.SettingsView;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class ViewModelBase : BindableBase
 	{
@@ -219,95 +217,95 @@ namespace Sample.ViewModels
 			string text = ( obj as Label ).Text;
 			switch ( text )
 			{
-				case nameof(SettingsView.BackgroundColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.BackgroundColor):
 					NextColor(BackgroundColor, OuterColors);
 					break;
-				case nameof(SettingsView.SeparatorColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.SeparatorColor):
 					NextColor(SeparatorColor, AccentColors);
 					break;
-				case nameof(SettingsView.SelectedColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.SelectedColor):
 					NextColor(SelectedColor, BackColors);
 					break;
-				case nameof(SettingsView.HeaderTextColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.HeaderTextColor):
 					NextColor(HeaderTextColor, DeepTextColors);
 					break;
-				case nameof(SettingsView.HeaderBackgroundColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.HeaderBackgroundColor):
 					NextColor(HeaderBackgroundColor, BackColors);
 					break;
-				case nameof(SettingsView.FooterTextColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.FooterTextColor):
 					NextColor(FooterTextColor, DeepTextColors);
 					break;
-				case nameof(SettingsView.FooterBackgroundColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.FooterBackgroundColor):
 					NextColor(FooterBackgroundColor, BackColors);
 					break;
-				case nameof(SettingsView.CellTitleColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellTitleColor):
 					NextColor(CellTitleColor, DeepTextColors);
 					break;
-				case nameof(SettingsView.CellValueTextColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellValueTextColor):
 					NextColor(CellValueTextColor, PaleTextColors);
 					break;
-				case nameof(SettingsView.CellDescriptionColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellDescriptionColor):
 					NextColor(CellDescriptionColor, PaleTextColors);
 					break;
-				case nameof(SettingsView.CellBackgroundColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellBackgroundColor):
 					NextColor(CellBackgroundColor, CellBackColors);
 					break;
-				case nameof(SettingsView.CellAccentColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellAccentColor):
 					NextColor(CellAccentColor, AccentColors);
 					break;
-				case nameof(SettingsView.CellHintTextColor):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellHintTextColor):
 					NextColor(CellHintTextColor, AccentColors);
 					break;
-				case nameof(SettingsView.ShowSectionTopBottomBorder):
+				case nameof(SettingsView.Shared.sv.SettingsView.ShowSectionTopBottomBorder):
 					ToggleBool(ShowSectionTopBottomBorder);
 					break;
-				case nameof(SettingsView.UseDescriptionAsValue):
+				case nameof(SettingsView.Shared.sv.SettingsView.UseDescriptionAsValue):
 					ToggleBool(UseDescriptionAsValue);
 					break;
-				case nameof(SettingsView.HasUnevenRows):
+				case nameof(SettingsView.Shared.sv.SettingsView.HasUnevenRows):
 					ToggleBool(HasUnevenRows);
 					break;
-				case nameof(SettingsView.HeaderPadding):
+				case nameof(SettingsView.Shared.sv.SettingsView.HeaderPadding):
 					ChangeThickness(HeaderPadding);
 					break;
-				case nameof(SettingsView.FooterPadding):
+				case nameof(SettingsView.Shared.sv.SettingsView.FooterPadding):
 					ChangeThickness(FooterPadding);
 					break;
-				case nameof(SettingsView.HeaderFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.HeaderFontSize):
 					ChangeFontSize(HeaderFontSize);
 					break;
-				case nameof(SettingsView.FooterFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.FooterFontSize):
 					ChangeFontSize(FooterFontSize);
 					break;
-				case nameof(SettingsView.CellTitleFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellTitleFontSize):
 					ChangeFontSize(CellTitleFontSize);
 					break;
-				case nameof(SettingsView.CellValueTextFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellValueTextFontSize):
 					ChangeFontSize(CellValueTextFontSize);
 					break;
-				case nameof(SettingsView.CellDescriptionFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellDescriptionFontSize):
 					ChangeFontSize(CellDescriptionFontSize);
 					break;
-				case nameof(SettingsView.CellHintFontSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellHintFontSize):
 					ChangeFontSize(CellHintFontSize);
 					break;
-				case nameof(SettingsView.HeaderHeight):
+				case nameof(SettingsView.Shared.sv.SettingsView.HeaderHeight):
 					ChangeHeight(HeaderHeight);
 					break;
 				// case nameof(SettingsView.HeaderTextVerticalAlign):
 					// ChangeAlign(HeaderTextVerticalAlign);
 					// break;
-				case nameof(SettingsView.CellIconSize):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellIconSize):
 					ChangeSize(CellIconSize);
 					break;
-				case nameof(SettingsView.CellIconRadius):
+				case nameof(SettingsView.Shared.sv.SettingsView.CellIconRadius):
 					ChangeHeight(CellIconRadius);
 					break;
-				case nameof(SettingsView.RowHeight):
+				case nameof(SettingsView.Shared.sv.SettingsView.RowHeight):
 					ChangeRowHeight(RowHeight);
 					break;
 				case "CacheClear":
-					SettingsView.ClearCache();
+					SettingsView.Shared.sv.SettingsView.ClearCache();
 					break;
 				default:
 					break;

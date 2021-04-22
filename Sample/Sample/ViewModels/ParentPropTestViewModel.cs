@@ -1,12 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using Reactive.Bindings;
-using static Sample.ViewModels.ViewModelBase;
-using Xamarin.Forms.Internals;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Sample.ViewModels
+﻿namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class ParentPropTestViewModel : ViewModelBase
 	{

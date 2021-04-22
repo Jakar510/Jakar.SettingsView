@@ -4,9 +4,8 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
 						xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 						xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
-						xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
 						xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
-						x:Class="Sample.App">
+						x:Class="Jakar.SettingsView.Sample.Shared.App">
 
 	<Application.Resources>
 		<ResourceDictionary>

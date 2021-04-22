@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class CustomCellTestViewModel
 	{

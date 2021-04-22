@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AiForms.Effects;
 using Xamarin.Forms;
-using AiForms.Effects;
 
-namespace Sample.Views
+
+namespace Jakar.SettingsView.Sample.Shared.Views
 {
 	public class MyNavigationPage : NavigationPage
 	{

@@ -1,19 +1,17 @@
 ﻿using System;
-using Prism.Services;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Reactive.Bindings;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Reactive.Bindings;
 using Xamarin.Forms;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class CustomFontTestViewModel : BindableBase
 	{

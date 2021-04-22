@@ -3,36 +3,35 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:cell="clr-namespace:Sample.Views.Cells"
-			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
-			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+             xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.CustomCellTest">
+			 xmlns:cells1 = "clr-namespace:Jakar.SettingsView.Sample.Shared.Views.Cells;assembly=Jakar.SettingsView.Sample.Shared"
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.CustomCellTest">
 
 	<sv:SettingsView Style="{StaticResource settingsView}"
 							   HasUnevenRows="True">
 
 		<sv:Section Title="CustomCell">
-			<cell:SliderCell IconSource="icon.png"
+			<cells1:SliderCell IconSource="icon.png"
 							 Min="0"
 							 Max="1.0"
 							 Value="0.3"
 							 ChangedCommand="{Binding ChangedCommand}" />
-			<cell:MyCellA Text="LastText" />
-			<cell:MyCellB />
-			<cell:MyCellC />
+			<cells1:MyCellA Text="LastText" />
+			<cells1:MyCellB />
+			<cells1:MyCellC />
 		</sv:Section>
 
 		<sv:Section Title="CustomCell">
-			<cell:SliderCell IconSource="icon.png"
+			<cells1:SliderCell IconSource="icon.png"
 							 Min="0"
 							 Max="1.0"
 							 Value="0.7"
 							 ChangedCommand="{Binding ChangedCommand}" />
-			<cell:MyCellA Text="FirstText"
+			<cells1:MyCellA Text="FirstText"
 						  IconSource="icon.png" />
-			<cell:MyCellB IconSource="icon.png" />
-			<cell:MyCellC IconSource="icon.png" />
+			<cells1:MyCellB IconSource="icon.png" />
+			<cells1:MyCellC IconSource="icon.png" />
 
 		</sv:Section>
 

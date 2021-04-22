@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using UIKit;
 
-using Foundation;
-using UIKit;
 
-namespace Sample.iOS
+namespace Jakar.SettingsView.Sample.iOS
 {
 	public class Application
 	{

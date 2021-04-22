@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Jakar.SettingsView.Shared.Cells;
+using Xamarin.Forms;
 
-namespace Sample.Views.Cells
+
+namespace Jakar.SettingsView.Sample.Shared.Views.Cells
 {
 	public partial class SliderCell : CustomCell
 	{

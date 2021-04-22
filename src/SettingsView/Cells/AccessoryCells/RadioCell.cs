@@ -15,6 +15,9 @@ namespace Jakar.SettingsView.Shared.Cells
 																										BindingMode.TwoWay
 																									   );
 
+		public static void SetSelectedValue( BindableObject    view, object? value ) { view.SetValue(SelectedValueProperty, value); }
+		public static object? GetSelectedValue( BindableObject view ) => view.GetValue(SelectedValueProperty);
+
 		public static readonly BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell));
 
 		public object? Value
@@ -28,7 +31,7 @@ namespace Jakar.SettingsView.Shared.Cells
 
 	public static class RadioCellExtensions
 	{
-		public static void SetSelectedValue( this    BindableObject view, object? value ) { view.SetValue(RadioCell.SelectedValueProperty, value); }
-		public static object? GetSelectedValue( this BindableObject view ) => view.GetValue(RadioCell.SelectedValueProperty);
+		public static void SetSelectedValue( this    BindableObject view, object? value ) { RadioCell.SetSelectedValue(view, value); }
+		public static object? GetSelectedValue( this BindableObject view ) => RadioCell.GetSelectedValue(view);
 	}
 }

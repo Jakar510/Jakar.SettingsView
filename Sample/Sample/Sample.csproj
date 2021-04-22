@@ -2,8 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<AssemblyName>SettingsSample</AssemblyName>
+		<AssemblyName>Jakar.SettingsView.Sample.Shared</AssemblyName>
 		<LangVersion>latest</LangVersion>
+		<RootNamespace>Jakar.SettingsView.Sample.Shared</RootNamespace>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />

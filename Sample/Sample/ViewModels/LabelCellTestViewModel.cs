@@ -1,16 +1,15 @@
 ﻿using System;
-using Reactive.Bindings;
-using Xamarin.Forms;
-using Xamarin.Forms.Internals;
-using Prism.Services;
-using System.Reactive.Linq;
-using Prism.Navigation;
 using System.Collections;
 using System.Collections.Generic;
 using Jakar.SettingsView.Shared.Cells;
 using Jakar.SettingsView.Shared.Config;
+using Prism.Navigation;
+using Prism.Services;
+using Reactive.Bindings;
+using Xamarin.Forms;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	/// <summary>
 	/// 各Cellの各項目の

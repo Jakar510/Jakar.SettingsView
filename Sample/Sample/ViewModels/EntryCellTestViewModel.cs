@@ -1,10 +1,11 @@
 ﻿using System;
-using Reactive.Bindings;
-using Xamarin.Forms;
 using Prism.Navigation;
 using Prism.Services;
+using Reactive.Bindings;
+using Xamarin.Forms;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class EntryCellTestViewModel : ViewModelBase, IDestructible
 	{

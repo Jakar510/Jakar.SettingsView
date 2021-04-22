@@ -1,8 +1,9 @@
 ﻿using System;
-using Reactive.Bindings;
 using System.Diagnostics;
+using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class CollectionChangedTestViewModel : ViewModelBase
 	{

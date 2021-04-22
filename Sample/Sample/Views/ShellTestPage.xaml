@@ -6,7 +6,7 @@
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.ShellTestPage"
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.ShellTestPage"
 			 NavigationPage.BackButtonTitle=""
 			 Title="ShellTest">
 	<sv:SettingsView BackgroundColor="AliceBlue"

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Sample.ViewModels;
+﻿using System.Collections.ObjectModel;
+using Jakar.SettingsView.Sample.Shared.ViewModels;
 using Xamarin.Forms;
 
-namespace Sample.Views
+
+namespace Jakar.SettingsView.Sample.Shared.Views
 {
 	public partial class ShellTestPage : ContentPage
 	{

@@ -1,9 +1,8 @@
-﻿using System;
-using Reactive.Bindings;
+﻿using Reactive.Bindings;
 using Xamarin.Forms;
-using System.Diagnostics;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class SwitchCellTestViewModel : ViewModelBase
 	{

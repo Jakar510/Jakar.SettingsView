@@ -5,10 +5,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:l="clr-namespace:AiForms.Layouts;assembly=AiForms.Layouts"
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
-			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
+			 xmlns:me="clr-namespace:Jakar.SettingsView.Sample.Shared.Views;assembly=Jakar.SettingsView.Sample.Shared"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.ButtonCellTest">
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.ButtonCellTest">
 	<ContentPage.Resources>
 		<ResourceDictionary>
 			<Style TargetType="Label">

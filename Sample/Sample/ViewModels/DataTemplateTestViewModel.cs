@@ -1,11 +1,12 @@
 ﻿using System;
-using Reactive.Bindings;
-using Prism.Services;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Services;
+using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class DataTemplateTestViewModel : ViewModelBase
 	{

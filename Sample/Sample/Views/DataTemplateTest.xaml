@@ -4,12 +4,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:l="clr-namespace:AiForms.Layouts;assembly=AiForms.Layouts"
-			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
-			 xmlns:me="clr-namespace:Sample.Views;assembly=SettingsSample"
+             xmlns:me="clr-namespace:Jakar.SettingsView.Sample.Shared.Views;assembly=SettingsSample"
 			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
-			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
-			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.DataTemplateTest"
+             xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
+             xmlns:views = "clr-namespace:Jakar.SettingsView.Sample.Shared.Views;assembly=Jakar.SettingsView.Sample.Shared"
+             x:Class="Jakar.SettingsView.Sample.Shared.Views.DataTemplateTest"
 			 x:Name="self">
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -29,7 +28,7 @@
 								   Command="{Binding BindingContext.DoCommand,Source={x:Reference self}}"
 								   TitleColor="Blue" />
 			</DataTemplate>
-			<me:TestSelector x:Key="selector"
+			<views:TestSelector x:Key="selector"
 							 TemplateA="{StaticResource templateA}"
 							 TemplateB="{StaticResource templateB}" />
 		</ResourceDictionary>
@@ -55,7 +54,7 @@
 		</ScrollView>
 		<ScrollView VerticalOptions="Start"
 					HeightRequest="60">
-			<me:ParentController />
+			<views:ParentController />
 		</ScrollView>
 
 		<sv:SettingsView x:Name="settings"

@@ -1,21 +1,18 @@
 ﻿using System;
-using Reactive.Bindings;
-using Prism.Mvvm;
-using Xamarin.Forms;
-using Xamarin.Forms.Svg;
-using Prism.Navigation;
-using Prism.Services;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
-using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Prism.Mvvm;
+using Prism.Navigation;
+using Prism.Services;
+using Reactive.Bindings;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class SettingsViewPageViewModel : BindableBase
 	{

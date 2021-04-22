@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Jakar.SettingsView.Shared.Cells;
-using Xamarin.Forms;
+﻿using Jakar.SettingsView.Shared.Cells;
 using Xamarin.Forms.Xaml;
 
-namespace Sample.Views.Cells
+
+namespace Jakar.SettingsView.Sample.Shared.Views.Cells
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MyCellC : CustomCell

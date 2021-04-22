@@ -4,12 +4,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:ef="clr-namespace:AiForms.Effects;assembly=AiForms.Effects"
-			 xmlns:cell="clr-namespace:Sample.Views.Cells"
-			 xmlns:settingsView="clr-namespace:Jakar.SettingsView.Shared;assembly=Jakar.SettingsView"
-			 xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
+             xmlns:cells="clr-namespace:Jakar.SettingsView.Shared.Cells;assembly=Jakar.SettingsView"
 			 xmlns:sv="clr-namespace:Jakar.SettingsView.Shared.sv;assembly=Jakar.SettingsView"
 			 xmlns:config="clr-namespace:Jakar.SettingsView.Shared.Config;assembly=Jakar.SettingsView"
-			 x:Class="Sample.Views.CustomFontTest">
+			 xmlns:cells1 = "clr-namespace:Jakar.SettingsView.Sample.Shared.Views.Cells;assembly=Jakar.SettingsView.Sample.Shared"
+			 x:Class="Jakar.SettingsView.Sample.Shared.Views.CustomFontTest">
 
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -263,7 +262,7 @@
 						   TextColor="DeepSkyBlue"
 						   Padding="10,6,10,0" />
 				</sv:Section.FooterView>-->
-				<cell:SliderCell Value="0.5"
+				<cells1:SliderCell Value="0.5"
 								 Description="CustomCell" />
 			</sv:Section>
 

@@ -1,11 +1,11 @@
 ﻿using System;
-using Xamarin.Forms;
-using Reactive.Bindings;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System.Linq;
+using Reactive.Bindings;
+using Xamarin.Forms;
 
-namespace Sample.ViewModels
+
+namespace Jakar.SettingsView.Sample.Shared.ViewModels
 {
 	public class PickerCellTestViewModel : ViewModelBase
 	{
