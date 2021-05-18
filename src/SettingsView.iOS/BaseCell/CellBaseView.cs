@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,11 +36,13 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		/// </summary>
 		protected UIStackView _MainStack { get; }
 
+		// protected IList<NSLayoutConstraint> _Constraints { get; } = new List<NSLayoutConstraint>();
+
 		protected CellBase? _CellBase => Cell as CellBase;
 
 		public Shared.sv.SettingsView? CellParent => Cell?.Parent as Shared.sv.SettingsView;
 
-		protected NSLayoutConstraint? _MinHeightConstraint { get; set; }
+		protected NSLayoutConstraint? _MinHeightConstraint { get; private set; }
 
 
 		protected BaseCellView( Cell formsCell ) : base(UITableViewCellStyle.Default, formsCell.GetType().FullName)
@@ -63,6 +66,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			
+			else if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(); }
 
 			else if ( e.PropertyName == Cell.IsEnabledProperty.PropertyName ) { UpdateIsEnabled(); }
 		}
@@ -222,7 +227,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		// 	UpdateSelectedColor();
 		// }
 
-		protected void UpdateMinRowHeight( in UIStackView mainStack )
+		private void UpdateMinRowHeight()
 		{
 			if ( CellParent is null ) throw new NullReferenceException(nameof(CellParent));
 
@@ -233,24 +238,26 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				_MinHeightConstraint = null;
 			}
 
-			if ( CellParent.HasUnevenRows )
-			{
-				_MinHeightConstraint          = mainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(CellParent.RowHeight);
-				_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat();
-				_MinHeightConstraint.Active   = true;
-			}
+			if ( CellParent.HasUnevenRows ) { }
 
-			mainStack.UpdateConstraints();
+			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
+			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
+			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. This is superior to any other view.
+			_MinHeightConstraint.Active   = true;
+
+			_MainStack.UpdateConstraintsIfNeeded();
+			SetNeedsLayout();
 		}
 
 		public virtual void UpdateCell( UITableView tableView )
 		{
+			UpdateMinRowHeight();
 			UpdateBackgroundColor();
 			UpdateIsEnabled();
 			SetNeedsLayout();
 		}
 
-		protected void SetRightMarginZero( in UIStackView mainStack )
+		protected static void SetRightMarginZero( in UIStackView mainStack )
 		{
 			if ( !UIDevice.CurrentDevice.CheckSystemVersion(11, 0) ) return;
 			UIEdgeInsets margins = mainStack.LayoutMargins;
@@ -411,6 +418,14 @@ namespace Jakar.SettingsView.iOS.BaseCell
 				SelectedBackgroundView = null;
 
 				Cell = null;
+
+				// foreach ( var constraint in _Constraints )
+				// {
+				// 	constraint.Active = false;
+				// 	constraint.Dispose();
+				// }
+				//
+				// _Constraints.Clear();
 
 				_MainStack.Dispose();
 			}

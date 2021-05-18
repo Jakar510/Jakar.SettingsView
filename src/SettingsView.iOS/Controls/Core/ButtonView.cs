@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;

@@ -7,6 +7,7 @@ using Foundation;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.iOS.Interfaces;
@@ -46,7 +47,7 @@ namespace Jakar.SettingsView.iOS.Controls
 		{
 			Control.ClipsToBounds   = true;
 			Control.BackgroundColor = UIColor.Clear;
-
+			
 			Control.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Vertical, UILayoutConstraintAxis.Horizontal); //if possible, not to shrink. 
 
 			Control.HuggingPriority(LayoutPriority.Low,     UILayoutConstraintAxis.Vertical);
@@ -58,11 +59,13 @@ namespace Jakar.SettingsView.iOS.Controls
 		{
 			root.AddArrangedSubview(Control);
 			
+			Control.TranslatesAutoresizingMaskIntoConstraints = false;
+			Control.WidthOf(root, SvConstants.Layout.ColumnFactors.ICON);
+			Control.HeightOf(root, 1);
+			
 			Control.HuggingPriority(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			Control.UpdateConstraintsIfNeeded();
-			Control.LayoutIfNeeded();
 			UpdateIconSize();
 		}
 

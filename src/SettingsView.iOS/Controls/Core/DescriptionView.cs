@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Jakar.Api.Extensions;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Controls.Manager;
 using Jakar.SettingsView.Shared.CellBase;
@@ -30,16 +31,15 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			if ( !_IsAvailable ) return false;
 
-			if ( e.PropertyName == DescriptionCellBase.DescriptionProperty.PropertyName ) { return UpdateText(); }
+			if ( e.IsEqual(DescriptionCellBase.DescriptionProperty) ) { return UpdateText(); }
 
-			if ( e.PropertyName == DescriptionCellBase.DescriptionFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.IsEqual(DescriptionCellBase.DescriptionFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == DescriptionCellBase.DescriptionFontFamilyProperty.PropertyName ||
-				 e.PropertyName == DescriptionCellBase.DescriptionFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.IsOneOf(DescriptionCellBase.DescriptionFontFamilyProperty, DescriptionCellBase.DescriptionFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.PropertyName == DescriptionCellBase.DescriptionColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.IsEqual(DescriptionCellBase.DescriptionColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == DescriptionCellBase.DescriptionAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(DescriptionCellBase.DescriptionAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 			// if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.iOS.Controls.Manager;
@@ -56,7 +57,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			get => _titleStack ?? throw new NullReferenceException(nameof(_titleStack));
 			set => _titleStack = value;
 		}
-		
+
 		protected TitleView _Title
 		{
 			get => _title ?? throw new NullReferenceException(nameof(_title));
@@ -94,42 +95,43 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			_Icon = new IconView(this, Cell);
 
-			_TitleStack   = Stack.Title();
-			_Title        = new TitleView(this);
-			_Description  = new DescriptionView(this);
+			_TitleStack  = Stack.Title();
+			_Title       = new TitleView(this);
+			_Description = new DescriptionView(this);
 
 			_ValueStack = Stack.Value();
 			_Hint       = new HintView(this);
 			_value      = InstanceCreator.Create<TValueManager>(this);
-			
+
 			_Icon.Initialize(_MainStack);
 			_Title.Initialize(_TitleStack);
 			_Description.Initialize(_TitleStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
+			_TitleStack.HeightOf(_MainStack, 1);
+			_TitleStack.UpdateConstraintsIfNeeded();
 
 			_Hint.Initialize(_ValueStack);
 			_Value.Initialize(_ValueStack);
 			_MainStack.AddArrangedSubview(_ValueStack);
+			_ValueStack.HeightOf(_MainStack, 1);
+			_ValueStack.UpdateConstraintsIfNeeded();
 
 			_TitleStack.InBetween(_MainStack, _Icon.Control, _ValueStack);
 			_ValueStack.RightExtended(_MainStack, _TitleStack);
 
-			_Icon.Control.WidthOf(_MainStack, 0, SvConstants.Layout.ColumnFactors.ICON);
-			_TitleStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.TITLE_STACK, SvConstants.Layout.ColumnFactors.VALUE_STACK);
-			_ValueStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.VALUE_STACK, 1);
-			
-			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_Icon.Control.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.ICON);
+			_TitleStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.TITLE_STACK);
+			_ValueStack.RightExtended(_MainStack, _TitleStack);
+
+			// _ValueStack.WidthOf(_MainStack, SvConstants.Layout.ColumnFactors.VALUE_STACK);
+
+			_TitleStack.HuggingPriority(LayoutPriority.Low, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-			_ValueStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
+			_ValueStack.HuggingPriority(LayoutPriority.Low, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			_ValueStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-			
-			this.SetContent(_MainStack);
 
-			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
-			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
-			_MinHeightConstraint.Active   = true;
+			this.SetContent(_MainStack);
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
 
@@ -165,14 +167,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			if ( _Value.UpdateParent(sender, e) ) { return; }
 
-			if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(_MainStack); }
-
 			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		public override void UpdateCell( UITableView tableView )
 		{
-			UpdateMinRowHeight(_MainStack);
 			_Icon.Update();
 			_Title.Update();
 			_Description.Update();

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using CoreGraphics;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Interfaces;
 using Jakar.SettingsView.Shared.CellBase;
@@ -41,13 +42,10 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 		
 		public override void Initialize( UIStackView parent )
 		{
-			// Control.AutoresizingMask                          = UIViewAutoresizing.FlexibleMargins | UIViewAutoresizing.FlexibleHeight;
-			// Control.TranslatesAutoresizingMaskIntoConstraints = true;
+			Control.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			Control.HuggingPriority(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			Control.CompressionPriorities(LayoutPriority.High, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
-
-			Control.UpdateConstraintsIfNeeded();
 		}
 
 
@@ -55,14 +53,9 @@ namespace Jakar.SettingsView.iOS.Controls.Manager
 
 		public override void Initialize()
 		{
-			Control.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal);
+			Control.HuggingPriority(LayoutPriority.Low, UILayoutConstraintAxis.Horizontal);
 			Control.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal);
-
-			// Control.LineBreakMode = UILineBreakMode.WordWrap;
-			// Control.Lines = 10;
-			// Control.BaselineAdjustment = UIBaselineAdjustment.AlignCenters;
-			// Control.AdjustsLetterSpacingToFitWidth = true;
-			// Control.AdjustsFontSizeToFitWidth = true;
+			
 			Control.TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
 
 			Control.BackgroundColor = UIColor.Clear;

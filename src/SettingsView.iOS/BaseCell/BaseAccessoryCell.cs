@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.Controls;
 using Jakar.SettingsView.iOS.Controls.Core;
 using Jakar.SettingsView.iOS.Interfaces;
@@ -72,9 +73,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 		{
 			_Icon = new IconView(this, Cell);
 
-			_TitleStack   = Stack.Title();
-			_Title        = new TitleView(this);
-			_Description  = new DescriptionView(this);
+			_TitleStack  = Stack.Title();
+			_Title       = new TitleView(this);
+			_Description = new DescriptionView(this);
 
 			_Accessory = InstanceCreator.Create<TAccessory>(this);
 
@@ -82,6 +83,8 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_Title.Initialize(_TitleStack);
 			_Description.Initialize(_TitleStack);
 			_MainStack.AddArrangedSubview(_TitleStack);
+			_TitleStack.HeightOf(_MainStack, 1);
+			_TitleStack.UpdateConstraintsIfNeeded();
 
 			_MainStack.AddArrangedSubview(_Accessory);
 
@@ -91,13 +94,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 			_TitleStack.HuggingPriority(LayoutPriority.Minimum, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 			_TitleStack.CompressionPriorities(LayoutPriority.Highest, UILayoutConstraintAxis.Horizontal, UILayoutConstraintAxis.Vertical);
 
-
 			this.SetContent(_MainStack);
-
-			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
-			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
-			_MinHeightConstraint.Active   = true;
 
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
 
@@ -128,14 +125,11 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			if ( _Accessory.UpdateParent(sender, e) ) { return; }
 
-			if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(_MainStack); }
-
-			else { base.CellPropertyChanged(sender, e); }
+			base.CellPropertyChanged(sender, e);
 		}
 
 		public override void UpdateCell( UITableView tableView )
 		{
-			UpdateMinRowHeight(_MainStack);
 			_Icon.Update();
 			_Title.Update();
 			_Description.Update();

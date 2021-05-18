@@ -124,7 +124,7 @@
       <Version>1.6.10</Version>
     </PackageReference>
     <PackageReference Include="Jakar.Api">
-      <Version>1.10.0</Version>
+      <Version>1.10.1</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -143,6 +143,7 @@
   <ItemGroup>
     <InterfaceDefinition Include="Layout.storyboard" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets" Condition="Exists('..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets')" />
 </Project>

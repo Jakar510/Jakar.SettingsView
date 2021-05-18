@@ -4,6 +4,7 @@ using Foundation;
 using Jakar.Api.Extensions;
 using Jakar.Api.iOS.Enumerations;
 using Jakar.Api.iOS.Extensions;
+using Jakar.Api.iOS.Extensions.Layout;
 using Jakar.SettingsView.iOS.BaseCell;
 using Jakar.SettingsView.iOS.Cells;
 using Jakar.SettingsView.iOS.Controls;
@@ -37,12 +38,7 @@ namespace Jakar.SettingsView.iOS.Cells
 
 
 			this.SetContent(_MainStack);
-
-			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
-			_MinHeightConstraint = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. this is superior to any other view.
-			_MinHeightConstraint.Active = true;
-
+			
 			if ( !string.IsNullOrEmpty(Cell.AutomationId) ) { _MainStack.AccessibilityIdentifier = Cell.AutomationId; }
 
 			SetNeedsLayout();
