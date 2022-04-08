@@ -1,17 +1,11 @@
-﻿using Jakar.SettingsView.Shared.sv;
-using Xamarin.Forms;
+﻿namespace Jakar.SettingsView.Shared.Interfaces;
 
-
-#nullable enable
-namespace Jakar.SettingsView.Shared.Interfaces
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface ICellBase : IVisibleCell
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface ICellBase : IVisibleCell
-	{
-		public Cell            Cell            { get; }
-		public Section?        Section         { get; set; }
-		public sv.SettingsView Parent          { get; set; }
-		public Color           BackgroundColor { get; set; }
-		public void Reload();
-	}
+    public Cell            Cell            { get; }
+    public Section?        Section         { get; set; }
+    public sv.SettingsView Parent          { get; set; }
+    public Color           BackgroundColor { get; set; }
+    public void Reload();
 }

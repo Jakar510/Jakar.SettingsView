@@ -1,24 +1,6 @@
 ﻿// unset
 
-using System;
-using System.ComponentModel;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using Jakar.SettingsView.Shared.Misc;
-using UIKit;
-using Xamarin.Forms;
 
-
-#nullable enable
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]
@@ -101,7 +83,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			_ValueStack = Stack.Value();
 			_Hint       = new HintView(this);
-			_value      = InstanceCreator.Create<TValueManager>(this);
+			_value      = InstanceCreator<TValueManager>.Create(this);
 
 			_Icon.Initialize(_MainStack);
 			_Title.Initialize(_TitleStack);

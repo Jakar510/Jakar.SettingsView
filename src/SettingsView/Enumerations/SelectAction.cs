@@ -1,12 +1,11 @@
 ﻿// unset
 
-namespace Jakar.SettingsView.Shared.Enumerations
+namespace Jakar.SettingsView.Shared.Enumerations;
+
+public enum SelectAction
 {
-	public enum SelectAction
-	{
-		None,
-		Start,
-		End,
-		All
-	}
+    None,
+    Start,
+    End,
+    All
 }

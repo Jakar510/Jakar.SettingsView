@@ -11,6 +11,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +49,7 @@
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -112,6 +115,7 @@
     <Compile Include="Controls\CustomCellContent.cs" />
     <Compile Include="Controls\PaddingLabel.cs" />
     <Compile Include="FontUtility.cs" />
+    <Compile Include="Usings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SettingsView\Jakar.SettingsView.csproj">
@@ -121,10 +125,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AiForms.Effects">
-      <Version>1.6.10</Version>
+      <Version>1.6.11</Version>
     </PackageReference>
-    <PackageReference Include="Jakar.Api">
-      <Version>1.10.1</Version>
+    <PackageReference Include="Jakar.Extensions">
+      <Version>5.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="Jakar.Extensions.Xamarin.Forms">
+      <Version>5.7.0</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -132,18 +139,17 @@
     <PackageReference Include="Xam.Plugin.Screenshot">
       <Version>2.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material">
-      <Version>4.8.0.1821</Version>
+    <PackageReference Include="Xamarin.CommunityToolkit">
+      <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Toolkit.Effects">
-      <Version>1.0.0</Version>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material">
+      <Version>5.0.0.2291</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Layout.storyboard" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets" Condition="Exists('..\packages\Xamarin.Android.Support.CustomTabs.28.0.0.3\build\monoandroid90\Xamarin.Android.Support.CustomTabs.targets')" />
 </Project>

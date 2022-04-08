@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UIKit;
-using Xamarin.Forms;
-
-namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
+﻿namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 {
 	public class TextHeaderView : UITableViewHeaderFooterView
 	{

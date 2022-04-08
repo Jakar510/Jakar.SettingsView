@@ -1,8 +1,4 @@
-﻿using System;
-using Foundation;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS
+﻿namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]
 	public static class ImageCacheController

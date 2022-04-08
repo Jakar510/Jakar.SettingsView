@@ -1,69 +1,61 @@
-﻿using System.Linq;
-using Android.Graphics;
-using Android.Graphics.Drawables;
-using Android.Views;
-using AndroidX.RecyclerView.Widget;
+﻿namespace Jakar.SettingsView.Droid;
 
-#nullable enable
-namespace Jakar.SettingsView.Droid
+[Preserve(AllMembers = true)]
+public class SVItemDecoration : RecyclerView.ItemDecoration
 {
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public class SVItemDecoration : RecyclerView.ItemDecoration
-	{
-		private Drawable _Drawable { get; set; }
-		private Shared.sv.SettingsView _SettingsView { get; set; }
+    private Drawable               _Drawable     { get; set; }
+    private Shared.sv.SettingsView _SettingsView { get; set; }
 
-		public SVItemDecoration( Drawable drawable, Shared.sv.SettingsView settingsView )
-		{
-			_Drawable = drawable;
-			_SettingsView = settingsView;
-		}
+    public SVItemDecoration( Drawable drawable, Shared.sv.SettingsView settingsView )
+    {
+        _Drawable     = drawable;
+        _SettingsView = settingsView;
+    }
 
-		public override void GetItemOffsets( Rect outRect,
-											 View view,
-											 RecyclerView parent,
-											 RecyclerView.State state )
-		{
-			outRect.Set(0, _Drawable.IntrinsicHeight, 0, 0);
-		}
+    public override void GetItemOffsets( ARect outRect,
+                                         AView               view,
+                                         RecyclerView       parent,
+                                         RecyclerView.State state )
+    {
+        outRect.Set(0, _Drawable.IntrinsicHeight, 0, 0);
+    }
 
-		public override void OnDraw( Canvas c, RecyclerView parent, RecyclerView.State state )
-		{
-			int left = parent.Left;
-			int right = parent.Right;
+    public override void OnDraw( Canvas c, RecyclerView parent, RecyclerView.State state )
+    {
+        int left  = parent.Left;
+        int right = parent.Right;
 
-			int childCount = parent.ChildCount;
-			CustomViewHolder? prevHolder = null;
-			for ( var i = 0; i < childCount; i++ )
-			{
-				View? child = parent.GetChildAt(i);
+        int               childCount = parent.ChildCount;
+        CustomViewHolder? prevHolder = null;
+        for ( var i = 0; i < childCount; i++ )
+        {
+            AView? child = parent.GetChildAt(i);
 
-				if ( child is null ) continue;
-				if ( !( parent.GetChildViewHolder(child) is CustomViewHolder holder ) ) continue;
-				if ( holder.RowInfo is null ) continue;
-				if ( ( prevHolder is IHeaderViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
-					 ( holder is IFooterViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
-					 ( holder is IFooterViewHolder && !holder.RowInfo.Section.Any() ) ||
-					 ( holder is IHeaderViewHolder || !holder.RowInfo.Section.IsVisible ) )
-				{
-					prevHolder = holder;
-					continue;
-				}
+            if ( child is null ) continue;
+            if ( parent.GetChildViewHolder(child) is not CustomViewHolder holder ) continue;
+            if ( holder.RowInfo is null ) continue;
+            if ( ( prevHolder is IHeaderViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
+                 ( holder is IFooterViewHolder && !_SettingsView.ShowSectionTopBottomBorder ) ||
+                 ( holder is IFooterViewHolder && !holder.RowInfo.Section.Any() ) ||
+                 ( holder is IHeaderViewHolder || !holder.RowInfo.Section.IsVisible ) )
+            {
+                prevHolder = holder;
+                continue;
+            }
 
-				int bottom = child.Top;
-				int top = bottom - _Drawable.IntrinsicHeight;
-				_Drawable.SetBounds(left, top, right, bottom);
-				_Drawable.Draw(c);
+            int bottom = child.Top;
+            int top    = bottom - _Drawable.IntrinsicHeight;
+            _Drawable.SetBounds(left, top, right, bottom);
+            _Drawable.Draw(c);
 
-				prevHolder = holder;
-			}
-		}
+            prevHolder = holder;
+        }
+    }
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing ) { }
+    protected override void Dispose( bool disposing )
+    {
+        if ( disposing ) { }
 
-			base.Dispose(disposing);
-		}
-	}
+        base.Dispose(disposing);
+    }
 }

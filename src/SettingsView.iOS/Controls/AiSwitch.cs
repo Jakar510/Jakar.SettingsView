@@ -1,15 +1,5 @@
 ﻿// unset
 
-using System;
-using System.ComponentModel;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms.Platform.iOS;
 
 
 namespace Jakar.SettingsView.iOS.Controls
@@ -43,16 +33,16 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(CheckableCellBase.AccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(CheckableCellBase.accentColorProperty) ) { return UpdateAccentColor(); }
 
-			if ( e.IsEqual(CheckableCellBase.CheckedProperty) ) { return UpdateChecked(); }
+			if ( e.IsEqual(CheckableCellBase.checkedProperty) ) { return UpdateChecked(); }
 
 			return false;
 		}
 
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellAccentColorProperty) ) { return UpdateAccentColor(); }
 
 			return false;
 		}

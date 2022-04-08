@@ -1,18 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using CoreGraphics;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+﻿namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class BaseUIView : UIView
@@ -94,25 +80,25 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(CheckableCellBase.AccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(CheckableCellBase.accentColorProperty) ) { return UpdateAccentColor(); }
 
-			if ( e.IsEqual(CheckableCellBase.CheckedProperty) ) { return UpdateChecked(); }
+			if ( e.IsEqual(CheckableCellBase.checkedProperty) ) { return UpdateChecked(); }
 
 			return false;
 		}
 		public bool UpdateSection( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { return UpdateSelectedValue(); }
+			if ( e.IsEqual(RadioCell.selectedValueProperty) ) { return UpdateSelectedValue(); }
 
 			return false;
 		}
 		public bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellAccentColorProperty) ) { return UpdateAccentColor(); }
 
-			if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { return UpdateSelectedValue(); }
+			if ( e.IsEqual(RadioCell.selectedValueProperty) ) { return UpdateSelectedValue(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellAccentColorProperty) ) { return UpdateAccentColor(); }
 
 			return false;
 		}

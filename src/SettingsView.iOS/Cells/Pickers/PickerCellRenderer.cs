@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Cells.Sources;
-using Jakar.SettingsView.Shared.Cells;
-using ObjCRuntime;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+﻿using ObjCRuntime;
 
 
-#nullable enable
 [assembly: ExportRenderer(typeof(PickerCell), typeof(PickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
@@ -43,13 +31,13 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( e.PropertyName == PickerCell.SelectedItemsProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemProperty.PropertyName ||
-				 e.PropertyName == PickerCell.DisplayMemberProperty.PropertyName ||
-				 e.PropertyName == PickerCell.UseNaturalSortProperty.PropertyName ||
-				 e.PropertyName == PickerCell.SelectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(); }
+			if ( e.PropertyName == PickerCell.selectedItemsProperty.PropertyName ||
+				 e.PropertyName == PickerCell.selectedItemProperty.PropertyName ||
+				 e.PropertyName == PickerCell.displayMemberProperty.PropertyName ||
+				 e.PropertyName == PickerCell.useNaturalSortProperty.PropertyName ||
+				 e.PropertyName == PickerCell.selectedItemsOrderKeyProperty.PropertyName ) { UpdateSelectedItems(); }
 
-			if ( e.PropertyName == PickerCell.ItemsSourceProperty.PropertyName )
+			if ( e.PropertyName == PickerCell.itemsSourceProperty.PropertyName )
 			{
 				UpdateCollectionChanged();
 				UpdateSelectedItems();

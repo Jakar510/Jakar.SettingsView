@@ -1,21 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Input;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-using Xamarin.Forms.Platform.iOS;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.Core
+﻿namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	public class ButtonView : BaseTextViewManager<UIButton, ButtonCell>
 	{
@@ -73,36 +56,36 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsOneOf(ButtonCell.CommandProperty, ButtonCell.CommandParameterProperty) ) { return UpdateCommand(); }
+			if ( e.IsOneOf(ButtonCell.commandProperty, ButtonCell.commandParameterProperty) ) { return UpdateCommand(); }
 
-			if ( e.IsOneOf(ButtonCell.LongClickCommandProperty, ButtonCell.LongClickCommandParameterProperty) ) { return UpdateLongClickCommand(); }
+			if ( e.IsOneOf(ButtonCell.longClickCommandProperty, ButtonCell.longClickCommandParameterProperty) ) { return UpdateLongClickCommand(); }
 
-			if ( e.IsEqual(ButtonCell.ButtonBackgroundColorProperty) ) { return UpdateButtonBackgroundColor(); }
+			if ( e.IsEqual(ButtonCell.buttonBackgroundColorProperty) ) { return UpdateButtonBackgroundColor(); }
 
-			if ( e.IsOneOf(TitleCellBase.TitleFontAttributesProperty, TitleCellBase.TitleFontFamilyProperty, TitleCellBase.TitleFontSizeProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(TitleCellBase.titleFontAttributesProperty, TitleCellBase.titleFontFamilyProperty, TitleCellBase.titleFontSizeProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleProperty) ) { return UpdateText(); }
+			if ( e.IsEqual(TitleCellBase.titleProperty) ) { return UpdateText(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(TitleCellBase.titleColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleAlignmentProperty) ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(TitleCellBase.titleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 			return false;
 		}
 
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == Shared.sv.SettingsView.CellButtonBackgroundColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellButtonBackgroundColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellBackgroundColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleFontSizeProperty) ) { return UpdateFont(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleFontSizeProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleAlignmentProperty) ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
-			if ( e.IsOneOf(Shared.sv.SettingsView.CellTitleFontFamilyProperty, Shared.sv.SettingsView.CellTitleFontAttributesProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.cellTitleFontFamilyProperty, Shared.sv.SettingsView.cellTitleFontAttributesProperty) ) { return UpdateFont(); }
 
 			return false;
 		}
@@ -174,8 +157,8 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 			IUseConfiguration cfg = _Config;
 
 			UIFont font = string.IsNullOrWhiteSpace(cfg.FontFamily)
-							  ? UIFont.SystemFontOfSize(cfg.FontSize.ToFloat())
-							  : FontUtility.CreateNativeFont(cfg.FontFamily, cfg.FontSize.ToFloat(), cfg.FontAttributes);
+							  ? UIFont.SystemFontOfSize(cfg.FontSize.AsFloat())
+							  : FontUtility.CreateNativeFont(cfg.FontFamily, cfg.FontSize.AsFloat(), cfg.FontAttributes);
 
 			Control.TitleLabel.Font = font;
 			Control.Font            = font;

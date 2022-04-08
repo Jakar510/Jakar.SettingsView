@@ -1,19 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using CoreGraphics;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Cells.Sources;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
-
-#nullable enable
-[assembly: ExportRenderer(typeof(TextPickerCell), typeof(TextPickerCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(TextPickerCell), typeof(TextPickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -48,10 +33,10 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( e.PropertyName == TextPickerCell.SelectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
-			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdateTitle(); }
-			else if ( e.PropertyName == TextPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
-			else if ( e.PropertyName == TextPickerCell.ItemsProperty.PropertyName ) { UpdateItems(); }
+			if ( e.PropertyName == TextPickerCell.selectedItemProperty.PropertyName ) { UpdateSelectedItem(); }
+			else if ( e.PropertyName == PopupConfig.titleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == TextPickerCell.selectedCommandProperty.PropertyName ) { UpdateCommand(); }
+			else if ( e.PropertyName == TextPickerCell.itemsProperty.PropertyName ) { UpdateItems(); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )

@@ -1,10 +1,6 @@
-﻿using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls;
-using Xamarin.Forms;
-using AiSwitchCellRenderer = Jakar.SettingsView.iOS.Cells.SwitchCellRenderer;
-using AiSwitchCell = Jakar.SettingsView.Shared.Cells.SwitchCell;
+﻿using AiSwitchCellRenderer = Jakar.SettingsView.iOS.Cells.SwitchCellRenderer;
 
-[assembly: ExportRenderer(typeof(AiSwitchCell), typeof(AiSwitchCellRenderer))]
+[assembly: ExportRenderer(typeof(SwitchCell), typeof(AiSwitchCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -12,9 +8,9 @@ namespace Jakar.SettingsView.iOS.Cells
 	public class SwitchCellRenderer : CellBaseRenderer<SwitchCellView> { }
 
 	[Foundation.Preserve(AllMembers = true)]
-	public class SwitchCellView : BaseAccessoryCell<AiSwitchCell, AiSwitch>
+	public class SwitchCellView : BaseAccessoryCell<SwitchCell, AiSwitch>
 	{
-		public SwitchCellView( AiSwitchCell formsCell ) : base(formsCell) { }
+		public SwitchCellView( SwitchCell formsCell ) : base(formsCell) { }
 		
 		protected override void Dispose( bool disposing )
 		{

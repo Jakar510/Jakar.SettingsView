@@ -1,16 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.Manager
+﻿namespace Jakar.SettingsView.iOS.Controls.Manager
 {
 	public abstract class BaseViewManager<TView, TCell> : IDefaultColors<UIColor?>, IInitializeControl, IDisposable where TCell : CellBase
 																													where TView : UIView

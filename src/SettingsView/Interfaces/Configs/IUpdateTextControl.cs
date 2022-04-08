@@ -1,30 +1,29 @@
-﻿namespace Jakar.SettingsView.Shared.Interfaces
+﻿namespace Jakar.SettingsView.Shared.Interfaces;
+
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IUpdateTextControl
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IUpdateTextControl
-	{
-		public void Update( IUseConfiguration configuration );
-		public void SetText( string?          text );
-	}
+    public void Update( IUseConfiguration configuration );
+    public void SetText( string?          text );
+}
 
 
 
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IUpdateIconControl
-	{
-		public void Update( IUseIconConfiguration configuration );
-	}
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IUpdateIconControl
+{
+    public void Update( IUseIconConfiguration configuration );
+}
 
 
 
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IUpdateAccessoryControl
-	{
-		public bool Checked { get; set; }
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IUpdateAccessoryControl
+{
+    public bool Checked { get; set; }
 
-		public void Update( IUseCheckableConfiguration configuration );
+    public void Update( IUseCheckableConfiguration configuration );
 		
-		public void Select();
-		public void Deselect();
-	}
+    public void Select();
+    public void Deselect();
 }

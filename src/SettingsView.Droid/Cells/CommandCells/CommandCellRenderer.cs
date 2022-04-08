@@ -1,139 +1,123 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Input;
-using Android.Content;
-using Android.Runtime;
-using Android.Widget;
-using Jakar.Api.Droid.Extensions;
-using Jakar.SettingsView.Droid.BaseCell;
-using Jakar.SettingsView.Droid.Cells;
-using Jakar.SettingsView.Shared.Cells;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
-using AExtensions = Jakar.Api.Droid.Extensions;
-#pragma warning disable 8618
+﻿[assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
-[assembly: ExportRenderer(typeof(CommandCell), typeof(CommandCellRenderer))]
 
-#nullable enable
-namespace Jakar.SettingsView.Droid.Cells
+namespace Jakar.SettingsView.Droid.Cells;
+
+[Preserve(AllMembers = true)] public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
+
+
+[Preserve(AllMembers = true)]
+public class CommandCellView : BaseAiDescriptionCell
 {
-	[Preserve(AllMembers = true)] public class CommandCellRenderer : CellBaseRenderer<CommandCellView> { }
+    protected ICommand?   _Command     { get; set; }
+    protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
+
+    protected LinearLayout _AccessoryStack { get; }
+    protected ImageView    _Accessory      { get; set; }
 
 
-	[Preserve(AllMembers = true)]
-	public class CommandCellView : BaseAiDescriptionCell
-	{
-		protected ICommand? _Command { get; set; }
-		protected CommandCell _CommandCell => Cell as CommandCell ?? throw new NullReferenceException(nameof(_CommandCell));
+    public CommandCellView( Context context, Cell cell ) : base(context, cell)
+    {
+        _Accessory      = new ImageView(AndroidContext);
+        _AccessoryStack = AccessoryStack();
+        _AccessoryStack.Add(_Accessory, ALayout.Wrap, ALayout.Wrap);
 
-		protected LinearLayout _AccessoryStack { get; }
-		protected ImageView _Accessory { get; set; }
+        RemoveHint();
+        RemoveCellValueStack();
 
+        if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
+             _CommandCell.HideArrowIndicator ) { return; }
 
-		public CommandCellView( Context context, Cell cell ) : base(context, cell)
-		{
-			_Accessory = new ImageView(AndroidContext);
-			_AccessoryStack = AccessoryStack();
-			_AccessoryStack.Add(_Accessory, AExtensions.Layout.Wrap, AExtensions.Layout.Wrap);
+        _Accessory.RemoveFromParent();
+        _AccessoryStack.RemoveFromParent();
+    }
+    public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
 
-			RemoveHint();
-			RemoveCellValueStack();
+    protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+    {
+        base.CellPropertyChanged(sender, e);
 
-			if ( !( CellParent?.ShowArrowIndicatorForAndroid ?? false ) ||
-				 _CommandCell.HideArrowIndicator ) { return; }
+        if ( e.PropertyName == CommandCell.commandProperty.PropertyName ||
+             e.PropertyName == CommandCell.commandParameterProperty.PropertyName ) { UpdateCommand(); }
+    }
 
-			_Accessory.RemoveFromParent();
-			_AccessoryStack.RemoveFromParent();
-		}
-		public CommandCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer) { }
+    protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
+    {
+        Run();
+        if ( _CommandCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
+    }
 
-		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
+    protected override void EnableCell()
+    {
+        base.EnableCell();
+        _Title.Enable();
+        _Description.Enable();
+    }
+    protected override void DisableCell()
+    {
+        base.DisableCell();
+        _Title.Disable();
+        _Description.Disable();
+    }
 
-			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
-				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
-		}
+    protected internal override void UpdateCell()
+    {
+        base.UpdateCell();
+        UpdateCommand();
+    }
+    protected void UpdateCommand()
+    {
+        if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-		protected internal override void RowSelected( SettingsViewRecyclerAdapter adapter, int position )
-		{
-			Run();
-			if ( _CommandCell.KeepSelectedUntilBack ) { adapter.SelectedRow(this, position); }
-		}
+        _Command = _CommandCell.Command;
 
-		protected override void EnableCell()
-		{
-			base.EnableCell();
-			_Title.Enable();
-			_Description.Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Title.Disable();
-			_Description.Disable();
-		}
+        if ( _Command is null ) return;
+        _Command.CanExecuteChanged += Command_CanExecuteChanged;
+        Command_CanExecuteChanged(_Command, EventArgs.Empty);
+    }
+    protected virtual void Run()
+    {
+        if ( _Command == null ) { return; }
 
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			UpdateCommand();
-		}
-		protected void UpdateCommand()
-		{
-			if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+        if ( _Command.CanExecute(_CommandCell.CommandParameter) ) { _Command.Execute(_CommandCell.CommandParameter); }
+    }
+    protected override void UpdateIsEnabled()
+    {
+        if ( _Command != null &&
+             !_Command.CanExecute(_CommandCell.CommandParameter) ) { return; }
 
-			_Command = _CommandCell.Command;
-
-			if ( _Command is null ) return;
-			_Command.CanExecuteChanged += Command_CanExecuteChanged;
-			Command_CanExecuteChanged(_Command, EventArgs.Empty);
-		}
-		protected virtual void Run()
-		{
-			if ( _Command == null ) { return; }
-
-			if ( _Command.CanExecute(_CommandCell.CommandParameter) ) { _Command.Execute(_CommandCell.CommandParameter); }
-		}
-		protected override void UpdateIsEnabled()
-		{
-			if ( _Command != null &&
-				 !_Command.CanExecute(_CommandCell.CommandParameter) ) { return; }
-
-			base.UpdateIsEnabled();
-		}
+        base.UpdateIsEnabled();
+    }
 
 
-		protected void Command_CanExecuteChanged( object sender, EventArgs e )
-		{
-			if ( !Cell.IsEnabled ) { return; }
+    protected void Command_CanExecuteChanged( object sender, EventArgs e )
+    {
+        if ( !Cell.IsEnabled ) { return; }
 
-			SetEnabledAppearance(_Command?.CanExecute(_CommandCell.CommandParameter) ?? true);
-		}
+        SetEnabledAppearance(_Command?.CanExecute(_CommandCell.CommandParameter) ?? true);
+    }
 
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
+    protected override void Dispose( bool disposing )
+    {
+        if ( disposing )
+        {
+            if ( _Command != null ) { _Command.CanExecuteChanged -= Command_CanExecuteChanged; }
 
-				_Command = null;
+            _Command = null;
 
-				_Title.Dispose();
+            _Title.Dispose();
 
-				_Description.Dispose();
+            _Description.Dispose();
 
-				_Accessory.RemoveFromParent();
-				_Accessory.SetImageDrawable(null);
-				_Accessory.SetImageBitmap(null);
-				_Accessory.Dispose();
+            _Accessory.RemoveFromParent();
+            _Accessory.SetImageDrawable(null);
+            _Accessory.SetImageBitmap(null);
+            _Accessory.Dispose();
 
-				_CellLayout.Dispose();
-			}
+            _CellLayout.Dispose();
+        }
 
-			base.Dispose(disposing);
-		}
-	}
+        base.Dispose(disposing);
+    }
 }

@@ -1,10 +1,9 @@
 ﻿
-#nullable enable
-namespace Jakar.SettingsView.Shared.Interfaces
+
+namespace Jakar.SettingsView.Shared.Interfaces;
+
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IParent<TParent>
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IParent<TParent>
-	{
-		public TParent? Parent { get; set; }
-	}
+    public TParent? Parent { get; set; }
 }

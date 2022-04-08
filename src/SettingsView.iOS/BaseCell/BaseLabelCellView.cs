@@ -1,10 +1,5 @@
 ﻿// unset
 
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.Shared.CellBase;
-using UIKit;
-
-
 namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]

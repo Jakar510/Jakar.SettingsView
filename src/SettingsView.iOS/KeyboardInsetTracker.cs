@@ -1,12 +1,4 @@
-﻿using System;
-using CoreGraphics;
-using UIKit;
-using Xamarin.Forms.Platform.iOS;
-using PointF = CoreGraphics.CGPoint;
-using RectangleF = CoreGraphics.CGRect;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS
+﻿namespace Jakar.SettingsView.iOS
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class KeyboardInsetTracker : IDisposable

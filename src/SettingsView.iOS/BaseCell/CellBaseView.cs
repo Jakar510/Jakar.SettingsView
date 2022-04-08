@@ -1,26 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
-using CoreFoundation;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Enumerations;
-using Jakar.SettingsView.Shared.Misc;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.BaseCell
+﻿namespace Jakar.SettingsView.iOS.BaseCell
 {
 	/// <summary>
 	/// Xamarin.iOS Documentation.
@@ -65,7 +43,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.PropertyName == CellBase.BackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
+			if ( e.PropertyName == CellBase.backgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 			
 			else if ( e.IsEqual(TableView.RowHeightProperty) ) { UpdateMinRowHeight(); }
 
@@ -74,9 +52,9 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 		public virtual void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Shared.sv.SettingsView.CellBackgroundColorProperty) ) { UpdateBackgroundColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellBackgroundColorProperty) ) { UpdateBackgroundColor(); }
 
-			else if ( e.IsEqual(Shared.sv.SettingsView.SelectedColorProperty) ) { UpdateSelectedColor(); }
+			else if ( e.IsEqual(Shared.sv.SettingsView.selectedColorProperty) ) { UpdateSelectedColor(); }
 		}
 
 		public virtual void SectionPropertyChanged( object sender, PropertyChangedEventArgs e ) { }
@@ -242,7 +220,7 @@ namespace Jakar.SettingsView.iOS.BaseCell
 
 			double minHeight = Math.Max(CellParent?.RowHeight ?? -1, SvConstants.Defaults.MIN_ROW_HEIGHT);
 			_MinHeightConstraint          = _MainStack.HeightAnchor.ConstraintGreaterThanOrEqualTo(minHeight.ToNFloat());
-			_MinHeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. This is superior to any other view.
+			_MinHeightConstraint.Priority = LayoutPriority.Highest.AsFloat(); //  fix warning-log:Unable to simultaneously satisfy constraints. This is superior to any other view.
 			_MinHeightConstraint.Active   = true;
 
 			_MainStack.UpdateConstraintsIfNeeded();

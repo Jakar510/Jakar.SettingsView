@@ -1,10 +1,4 @@
-﻿using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.Shared.Cells;
-using Xamarin.Forms;
-
-
-[assembly: ExportRenderer(typeof(LabelCell), typeof(LabelCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(LabelCell), typeof(LabelCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {

@@ -1,18 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using Jakar.SettingsView.Shared.sv;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
+﻿namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 {
 	public class CustomHeaderView : CustomHeaderFooterView
 	{
@@ -93,7 +79,7 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 					}
 
 					_HeightConstraint = renderer.NativeView.HeightAnchor.ConstraintEqualTo(finalH);
-					_HeightConstraint.Priority = LayoutPriority.Highest.ToFloat();
+					_HeightConstraint.Priority = LayoutPriority.Highest.AsFloat();
 					_HeightConstraint.Active = true;
 					renderer.NativeView.AddConstraint(_HeightConstraint);
 
@@ -183,11 +169,11 @@ namespace Jakar.SettingsView.iOS.Controls.HeaderFooter
 		public virtual void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
 			if ( e.IsEqual(Cell.IsEnabledProperty) ) { UpdateIsEnabled(); }
-			else if ( e.IsEqual(Section.TitleProperty) ) { UpdateTitle(); }
-			else if ( e.IsEqual(Section.TextColorProperty) ) { UpdateTextColor(); }
+			else if ( e.IsEqual(Section.titleProperty) ) { UpdateTitle(); }
+			else if ( e.IsEqual(Section.textColorProperty) ) { UpdateTextColor(); }
 			else if ( e.IsEqual(VisualElement.IsEnabledProperty) ) { UpdateIsEnabled(); }
-			else if ( e.IsEqual(HeaderView.IsCollapsedProperty) ) { ShowHideSection(); }
-			else if ( e.IsEqual(HeaderView.IsCollapsibleProperty) ) { UpdateIsCollapsible(); }
+			else if ( e.IsEqual(HeaderView.isCollapsedProperty) ) { ShowHideSection(); }
+			else if ( e.IsEqual(HeaderView.isCollapsibleProperty) ) { UpdateIsCollapsible(); }
 		}
 		public virtual void Update()
 		{

@@ -1,14 +1,4 @@
-﻿using System.ComponentModel;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.Core
+﻿namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class TitleView : BaseTextView<TitleCellBase, BaseCellView>
@@ -31,15 +21,15 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			if ( !_IsAvailable ) return false;
 
-			if ( e.IsEqual(TitleCellBase.TitleProperty) ) { return UpdateText(); }
+			if ( e.IsEqual(TitleCellBase.titleProperty) ) { return UpdateText(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(TitleCellBase.titleColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleFontSizeProperty) ) { return UpdateFontSize(); }
+			if ( e.IsEqual(TitleCellBase.titleFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.IsOneOf(TitleCellBase.TitleFontFamilyProperty, TitleCellBase.TitleFontAttributesProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(TitleCellBase.titleFontFamilyProperty, TitleCellBase.titleFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(TitleCellBase.TitleAlignmentProperty) ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(TitleCellBase.titleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 			return base.Update(sender, e);
 		}
@@ -47,13 +37,13 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			if ( !_IsAvailable ) return false;
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleFontSizeProperty) ) { return UpdateFontSize(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellTitleAlignmentProperty) ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellTitleAlignmentProperty) ) { return UpdateTextAlignment(); }
 
-			if ( e.IsOneOf(Shared.sv.SettingsView.CellTitleFontFamilyProperty, Shared.sv.SettingsView.CellTitleFontAttributesProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.cellTitleFontFamilyProperty, Shared.sv.SettingsView.cellTitleFontAttributesProperty) ) { return UpdateFont(); }
 
 			return base.UpdateParent(sender, e);
 		}

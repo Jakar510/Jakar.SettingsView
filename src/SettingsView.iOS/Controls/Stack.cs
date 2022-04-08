@@ -1,12 +1,6 @@
 ﻿// unset
 
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using UIKit;
 
-
-#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	public static class Stack

@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Internals;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS
+﻿namespace Jakar.SettingsView.iOS
 {
 	public static class FontUtility
 	{

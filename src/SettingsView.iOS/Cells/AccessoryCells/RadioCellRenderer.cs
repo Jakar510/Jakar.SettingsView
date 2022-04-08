@@ -1,17 +1,4 @@
-﻿using System.ComponentModel;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Cells;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-[assembly: ExportRenderer(typeof(RadioCell), typeof(RadioCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(RadioCell), typeof(RadioCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -43,20 +30,20 @@ namespace Jakar.SettingsView.iOS.Cells
 
 		public override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(CheckableCellBase.AccentColorProperty) ) { UpdateAccentColor(); }
+			if ( e.IsEqual(CheckableCellBase.accentColorProperty) ) { UpdateAccentColor(); }
 			else { base.CellPropertyChanged(sender, e); }
 		}
 
 		public override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { UpdateAccentColor(); }
-			else if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { UpdateSelectedValue(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellAccentColorProperty) ) { UpdateAccentColor(); }
+			else if ( e.IsEqual(RadioCell.selectedValueProperty) ) { UpdateSelectedValue(); }
 			else { base.ParentPropertyChanged(sender, e); }
 		}
 
 		public override void SectionPropertyChanged( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(RadioCell.SelectedValueProperty) ) { UpdateSelectedValue(); }
+			if ( e.IsEqual(RadioCell.selectedValueProperty) ) { UpdateSelectedValue(); }
 			else { base.SectionPropertyChanged(sender, e); }
 		}
 

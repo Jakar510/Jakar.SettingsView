@@ -1,19 +1,4 @@
-﻿using System;
-using System.Windows.Input;
-using CoreGraphics;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Cells.Sources;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
-
-
-#nullable enable
-[assembly: ExportRenderer(typeof(NumberPickerCell), typeof(NumberPickerCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(NumberPickerCell), typeof(NumberPickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -53,11 +38,11 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( e.PropertyName == NumberPickerCell.MinProperty.PropertyName ||
-				 e.PropertyName == NumberPickerCell.MaxProperty.PropertyName ) { UpdateNumberList(); }
-			else if ( e.PropertyName == NumberPickerCell.NumberProperty.PropertyName ) { UpdateNumber(); }
-			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdateTitle(); }
-			else if ( e.PropertyName == NumberPickerCell.SelectedCommandProperty.PropertyName ) { UpdateCommand(); }
+			if ( e.PropertyName == NumberPickerCell.minProperty.PropertyName ||
+				 e.PropertyName == NumberPickerCell.maxProperty.PropertyName ) { UpdateNumberList(); }
+			else if ( e.PropertyName == NumberPickerCell.numberProperty.PropertyName ) { UpdateNumber(); }
+			else if ( e.PropertyName == PopupConfig.titleProperty.PropertyName ) { UpdateTitle(); }
+			else if ( e.PropertyName == NumberPickerCell.selectedCommandProperty.PropertyName ) { UpdateCommand(); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )

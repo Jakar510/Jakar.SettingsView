@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.Shared.Cells;
-using UIKit;
-using Xamarin.Forms;
-
-
-#nullable enable
-[assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(CustomCell), typeof(CustomCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -85,8 +73,8 @@ namespace Jakar.SettingsView.iOS.Cells
 		{
 			base.CellPropertyChanged(sender, e);
 
-			if ( e.PropertyName == CommandCell.CommandProperty.PropertyName ||
-				 e.PropertyName == CommandCell.CommandParameterProperty.PropertyName ) { UpdateCommand(); }
+			if ( e.PropertyName == CommandCell.commandProperty.PropertyName ||
+				 e.PropertyName == CommandCell.commandParameterProperty.PropertyName ) { UpdateCommand(); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )

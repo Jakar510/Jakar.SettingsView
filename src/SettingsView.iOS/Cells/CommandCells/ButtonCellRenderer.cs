@@ -1,23 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
+﻿[assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
 
 
-[assembly: ExportRenderer(typeof(ButtonCell), typeof(ButtonCellRenderer))]
-
-#nullable enable
 namespace Jakar.SettingsView.iOS.Cells
 {
 	[Preserve(AllMembers = true)] public class ButtonCellRenderer : CellBaseRenderer<ButtonCellView> { }

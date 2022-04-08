@@ -1,10 +1,5 @@
 ﻿// unset
 
-using System;
-using CoreGraphics;
-using UIKit;
-
-#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	public class CheckBox : UIButton

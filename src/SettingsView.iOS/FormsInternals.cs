@@ -1,11 +1,4 @@
-﻿using System;
-using System.Reflection;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS
+﻿namespace Jakar.SettingsView.iOS
 {
 	public static class FormsInternals
 	{

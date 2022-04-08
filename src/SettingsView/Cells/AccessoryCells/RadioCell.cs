@@ -1,37 +1,31 @@
-﻿using System;
-using Jakar.SettingsView.Shared.CellBase;
-using Xamarin.Forms;
+﻿namespace Jakar.SettingsView.Shared.Cells;
 
-
-namespace Jakar.SettingsView.Shared.Cells
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public class RadioCell : CheckableCellBase<object>
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public class RadioCell : CheckableCellBase<object>
-	{
-		public static readonly BindableProperty SelectedValueProperty = BindableProperty.CreateAttached("SelectedValue",
-																										typeof(object),
-																										typeof(RadioCell),
-																										default,
-																										BindingMode.TwoWay
-																									   );
+    public static readonly BindableProperty selectedValueProperty = BindableProperty.CreateAttached("selectedValue",
+                                                                                                    typeof(object),
+                                                                                                    typeof(RadioCell),
+                                                                                                    default,
+                                                                                                    BindingMode.TwoWay
+                                                                                                   );
 
-		public static void SetSelectedValue( BindableObject    view, object? value ) { view.SetValue(SelectedValueProperty, value); }
-		public static object? GetSelectedValue( BindableObject view ) => view.GetValue(SelectedValueProperty);
+    public static void SetselectedValue( BindableObject    view, object? value ) { view.SetValue(selectedValueProperty, value); }
+    public static object? GetselectedValue( BindableObject view ) => view.GetValue(selectedValueProperty);
 
-		public static readonly BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell));
+    public static readonly BindableProperty valueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(RadioCell));
 
-		public object? Value
-		{
-			get => GetValue(ValueProperty);
-			set => SetValue(ValueProperty, value);
-		}
-	}
+    public object? Value
+    {
+        get => GetValue(valueProperty);
+        set => SetValue(valueProperty, value);
+    }
+}
 
 
 
-	public static class RadioCellExtensions
-	{
-		public static void SetSelectedValue( this    BindableObject view, object? value ) { RadioCell.SetSelectedValue(view, value); }
-		public static object? GetSelectedValue( this BindableObject view ) => RadioCell.GetSelectedValue(view);
-	}
+public static class RadioCellExtensions
+{
+    public static void SetSelectedValue( this    BindableObject view, object? value ) { RadioCell.SetselectedValue(view, value); }
+    public static object? GetSelectedValue( this BindableObject view ) => RadioCell.GetselectedValue(view);
 }

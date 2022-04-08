@@ -1,17 +1,4 @@
-﻿using System;
-using CoreGraphics;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Config;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-[assembly: ExportRenderer(typeof(TimePickerCell), typeof(TimePickerCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(TimePickerCell), typeof(TimePickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -52,9 +39,9 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == TimePickerCell.TimeProperty.PropertyName ||
-				 e.PropertyName == TimePickerCell.FormatProperty.PropertyName ) { UpdateTime(); }
-			else if ( e.PropertyName == PopupConfig.TitleProperty.PropertyName ) { UpdatePickerTitle(); }
+			if ( e.PropertyName == TimePickerCell.timeProperty.PropertyName ||
+				 e.PropertyName == TimePickerCell.formatProperty.PropertyName ) { UpdateTime(); }
+			else if ( e.PropertyName == PopupConfig.titleProperty.PropertyName ) { UpdatePickerTitle(); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )

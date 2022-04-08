@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UIKit;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Cells.Sources
+﻿namespace Jakar.SettingsView.iOS.Cells.Sources
 {
 	[Foundation.Preserve(AllMembers = true)]
 	internal class TextPickerSource : UIPickerViewModel

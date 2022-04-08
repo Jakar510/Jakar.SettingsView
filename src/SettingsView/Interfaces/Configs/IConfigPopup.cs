@@ -1,54 +1,51 @@
 ﻿// unset
 
-using Xamarin.Forms;
+namespace Jakar.SettingsView.Shared.Interfaces;
 
-namespace Jakar.SettingsView.Shared.Interfaces
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IConfigPopup
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IConfigPopup
-	{
-		public Color BackgroundColor { get; set; }
+    public Color BackgroundColor { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		public string Title { get; set; }
+    public string Title { get; set; }
 
-		public Color TitleColor { get; set; }
+    public Color TitleColor { get; set; }
 
-		[TypeConverter(typeof(FontSizeConverter))]
-		public double? TitleFontSize { get; set; }
+    [TypeConverter(typeof(FontSizeConverter))]
+    public double? TitleFontSize { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		[TypeConverter(typeof(FontSizeConverter))]
-		public double? ItemFontSize { get; set; }
+    [TypeConverter(typeof(FontSizeConverter))]
+    public double? ItemFontSize { get; set; }
 
-		public Color ItemColor { get; set; }
+    public Color ItemColor { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		public Color ItemDescriptionColor { get; set; }
+    public Color ItemDescriptionColor { get; set; }
 
-		[TypeConverter(typeof(FontSizeConverter))]
-		public double? ItemDescriptionFontSize { get; set; }
+    [TypeConverter(typeof(FontSizeConverter))]
+    public double? ItemDescriptionFontSize { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		public Color AccentColor { get; set; }
+    public Color AccentColor { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		[TypeConverter(typeof(FontSizeConverter))]
-		public double? SelectedFontSize { get; set; }
+    [TypeConverter(typeof(FontSizeConverter))]
+    public double? SelectedFontSize { get; set; }
 
-		public Color SelectedColor { get; set; }
+    public Color SelectedColor { get; set; }
 
-		public Color SeparatorColor { get; set; }
+    public Color SeparatorColor { get; set; }
 
-		// -----------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
 
-		public string Accept { get; set; }
+    public string Accept { get; set; }
 
-		public string Cancel { get; set; }
-	}
+    public string Cancel { get; set; }
 }

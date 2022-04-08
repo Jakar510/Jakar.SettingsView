@@ -1,65 +1,61 @@
-﻿using Android.Content;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.sv;
-using Xamarin.Forms.Platform.Android;
+﻿namespace Jakar.SettingsView.Droid.BaseCell;
 
-#nullable enable
-namespace Jakar.SettingsView.Droid.BaseCell
+[Preserve(AllMembers = true)]
+public class CellBaseRenderer<TNativeCell> : CellRenderer where TNativeCell : BaseCellView
 {
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public class CellBaseRenderer<TNativeCell> : CellRenderer where TNativeCell : BaseCellView
-	{
-		protected override Android.Views.View GetCellCore( Xamarin.Forms.Cell item,
-														   Android.Views.View? convertView,
-														   Android.Views.ViewGroup parent,
-														   Context context )
-		{
-			if ( convertView is not TNativeCell nativeCell )
-			{
-				nativeCell = InstanceCreator.Create<TNativeCell>( context, item);
-				// nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TNativeCell>.Create(context, item);
-			}
+    protected override Android.Views.View GetCellCore( Cell                item,
+                                                       Android.Views.View? convertView,
+                                                       ViewGroup           parent,
+                                                       Context             context
+    )
+    {
+        if ( convertView is not TNativeCell nativeCell )
+        {
+            nativeCell = InstanceCreator<TNativeCell>.Create(context, item);
 
-			ClearPropertyChanged(nativeCell);
+            // nativeCell = InstanceCreator<Context, Xamarin.Forms.Cell, TNativeCell>.Create(context, item);
+        }
 
-			nativeCell.Cell = item;
+        ClearPropertyChanged(nativeCell);
 
-			SetUpPropertyChanged(nativeCell);
+        nativeCell.Cell = item;
 
-			nativeCell.UpdateCell();
+        SetUpPropertyChanged(nativeCell);
 
-			// base.GetCellCore()
-			return nativeCell;
-		}
-		// protected override void OnCellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnCellPropertyChanged(sender, e); }
+        nativeCell.UpdateCell();
 
-		protected void SetUpPropertyChanged( BaseCellView nativeCell )
-		{
-			if ( nativeCell.Cell is not CellBase formsCell ) return;
-			Shared.sv.SettingsView? parentElement = formsCell.Parent;
+        // base.GetCellCore()
+        return nativeCell;
+    }
 
-			formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
+    // protected override void OnCellPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnCellPropertyChanged(sender, e); }
 
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			if ( parentElement is null ) return;
-			parentElement.PropertyChanged += nativeCell.ParentPropertyChanged;
-			Section? section = parentElement.Model.GetSectionFromCell(formsCell);
-			if ( section is null ) return;
-			formsCell.Section = section;
-			formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
-		}
+    protected void SetUpPropertyChanged( BaseCellView nativeCell )
+    {
+        if ( nativeCell.Cell is not CellBase formsCell ) return;
+        Shared.sv.SettingsView? parentElement = formsCell.Parent;
 
-		protected void ClearPropertyChanged( BaseCellView nativeCell )
-		{
-			if ( nativeCell.Cell is not CellBase formsCell ) return;
-			Shared.sv.SettingsView? parentElement = formsCell.Parent;
+        formsCell.PropertyChanged += nativeCell.CellPropertyChanged;
 
-			formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			if ( parentElement is null ) return;
-			parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
-			if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }
-		}
-	}
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if ( parentElement is null ) return;
+        parentElement.PropertyChanged += nativeCell.ParentPropertyChanged;
+        Section? section = parentElement.Model.GetSectionFromCell(formsCell);
+        if ( section is null ) return;
+        formsCell.Section                 =  section;
+        formsCell.Section.PropertyChanged += nativeCell.SectionPropertyChanged;
+    }
+
+    protected void ClearPropertyChanged( BaseCellView nativeCell )
+    {
+        if ( nativeCell.Cell is not CellBase formsCell ) return;
+        Shared.sv.SettingsView? parentElement = formsCell.Parent;
+
+        formsCell.PropertyChanged -= nativeCell.CellPropertyChanged;
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if ( parentElement is null ) return;
+        parentElement.PropertyChanged -= nativeCell.ParentPropertyChanged;
+        if ( formsCell.Section != null ) { formsCell.Section.PropertyChanged -= nativeCell.SectionPropertyChanged; }
+    }
 }

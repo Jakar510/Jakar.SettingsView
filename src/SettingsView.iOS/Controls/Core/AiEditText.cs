@@ -1,26 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using CoreGraphics;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Enumerations;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
-using TextAlignment = Xamarin.Forms.TextAlignment;
+﻿using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Preserve(AllMembers = true)]
@@ -285,30 +265,30 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(ValueTextCellBase.ValueTextProperty) ) { return UpdateText(); }
+			if ( e.IsEqual(ValueTextCellBase.valueTextProperty) ) { return UpdateText(); }
 
-			if ( e.IsEqual(ValueCellBase.ValueTextFontSizeProperty) ) { return UpdateFontSize(); }
+			if ( e.IsEqual(ValueCellBase.valueTextFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.IsOneOf(ValueCellBase.ValueTextFontFamilyProperty, ValueCellBase.ValueTextFontAttributesProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(ValueCellBase.valueTextFontFamilyProperty, ValueCellBase.valueTextFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(ValueCellBase.ValueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.IsEqual(ValueCellBase.valueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.IsOneOf(ValueCellBase.ValueTextFontFamilyProperty, ValueCellBase.ValueTextFontAttributesProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
+			if ( e.IsOneOf(ValueCellBase.valueTextFontFamilyProperty, ValueCellBase.valueTextFontAttributesProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFont); }
 
-			if ( e.IsEqual(ValueCellBase.ValueTextColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
+			if ( e.IsEqual(ValueCellBase.valueTextColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateTextColor); }
 
-			if ( e.IsEqual(ValueCellBase.ValueTextAlignmentProperty) ) { return UpdateTextAlignment(); }
+			if ( e.IsEqual(ValueCellBase.valueTextAlignmentProperty) ) { return UpdateTextAlignment(); }
 
 
-			if ( e.IsEqual(AiEntryCell.KeyboardProperty) ) { return UpdateKeyboard(); }
+			if ( e.IsEqual(AiEntryCell.keyboardProperty) ) { return UpdateKeyboard(); }
 
-			if ( e.IsOneOf(AiEntryCell.PlaceholderProperty, AiEntryCell.PlaceholderColorProperty) ) { return UpdatePlaceholder(); }
+			if ( e.IsOneOf(AiEntryCell.placeholderProperty, AiEntryCell.placeholderColorProperty) ) { return UpdatePlaceholder(); }
 
-			if ( e.IsEqual(AiEntryCell.AccentColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateAccentColor); }
+			if ( e.IsEqual(AiEntryCell.accentColorProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateAccentColor); }
 
-			if ( e.IsEqual(AiEntryCell.IsPasswordProperty) ) { return UpdateIsPassword(); }
+			if ( e.IsEqual(AiEntryCell.isPasswordProperty) ) { return UpdateIsPassword(); }
 
-			if ( e.IsEqual(AiEntryCell.OnSelectActionProperty) ) { return UpdateSelectAction(); }
+			if ( e.IsEqual(AiEntryCell.onSelectActionProperty) ) { return UpdateSelectAction(); }
 
 			// if ( e.IsEqual(CellBase.BackgroundColorProperty) ) { UpdateBackgroundColor(); }
 
@@ -317,22 +297,22 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellValueTextColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextFontSizeProperty) ) { return UpdateFontSize(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellValueTextFontSizeProperty) ) { return UpdateFontSize(); }
 
-			if ( e.IsOneOf(Shared.sv.SettingsView.CellValueTextFontFamilyProperty, Shared.sv.SettingsView.CellValueTextFontAttributesProperty) ) { return UpdateFont(); }
+			if ( e.IsOneOf(Shared.sv.SettingsView.cellValueTextFontFamilyProperty, Shared.sv.SettingsView.cellValueTextFontAttributesProperty) ) { return UpdateFont(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextColorProperty) ) { return UpdateTextColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellValueTextColorProperty) ) { return UpdateTextColor(); }
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellValueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellValueTextFontSizeProperty) ) { return _CellRenderer.UpdateWithForceLayout(UpdateFontSize); }
 
-			if ( e.IsOneOf(Shared.sv.SettingsView.CellValueTextFontFamilyProperty, Shared.sv.SettingsView.CellValueTextFontAttributesProperty) )
+			if ( e.IsOneOf(Shared.sv.SettingsView.cellValueTextFontFamilyProperty, Shared.sv.SettingsView.cellValueTextFontAttributesProperty) )
 			{
 				return _CellRenderer.UpdateWithForceLayout(UpdateFont);
 			}
 
-			if ( e.IsEqual(Shared.sv.SettingsView.CellAccentColorProperty) ) { return UpdateAccentColor(); }
+			if ( e.IsEqual(Shared.sv.SettingsView.cellAccentColorProperty) ) { return UpdateAccentColor(); }
 
 			// if ( e.PropertyName == Shared.sv.SettingsView.CellBackgroundColorProperty.PropertyName ) { UpdateBackgroundColor(); }
 

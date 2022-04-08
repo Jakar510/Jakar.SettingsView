@@ -2,7 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Jakar.SettingsView.Droid;
-using Jakar.Api.Droid;
+using Jakar.Extensions.Xamarin.Forms.Droid;
 using Jakar.SettingsView.Sample.Shared;
 using Prism;
 using Prism.Ioc;

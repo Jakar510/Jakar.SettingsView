@@ -1,13 +1,7 @@
-﻿using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.iOS.Interfaces;
-using UIKit;
-using Xamarin.Forms;
-using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
+﻿using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
 using EntryCellRenderer = Jakar.SettingsView.iOS.Cells.EntryCellRenderer;
 
-#nullable enable
+
 [assembly: ExportRenderer(typeof(AiEntryCell), typeof(EntryCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells

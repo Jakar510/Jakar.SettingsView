@@ -1,104 +1,93 @@
 ﻿// unset
 
-using System.Linq;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.Shared.Cells;
-using Jakar.SettingsView.Shared.Enumerations;
+namespace Jakar.SettingsView.Shared.Misc;
 
-
-#nullable enable
-namespace Jakar.SettingsView.Shared.Misc
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public static class CellTypeExtensions
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public static class CellTypeExtensions
-	{
-		public static CellType ToCellType( this Xamarin.Forms.Cell cell )
-		{
-			return cell switch
-				   {
-					   TimePickerCell _   => CellType.TimePickerCell,
-					   DatePickerCell _   => CellType.DatePickerCell,
-					   NumberPickerCell _ => CellType.NumberPickerCell,
-					   TextPickerCell _   => CellType.TextPickerCell,
-					   PickerCell _       => CellType.PickerCell,
-					   LabelCell _        => CellType.LabelCell,
-					   CheckboxCell _     => CellType.CheckboxCell,
-					   RadioCell _        => CellType.RadioCell,
-					   SwitchCell _       => CellType.SwitchCell,
-					   ButtonCell _       => CellType.ButtonCell,
-					   CustomCell _       => CellType.CustomCell,
-					   CommandCell _      => CellType.CommandCell,
-					   EntryCell _        => CellType.EntryCell,
-
-					   // SpacerCell _ => CellType.SpacerCell,
-					   // EditorCell _ => CellType.EditorCell,
-					   // IPCell _ => CellType.IPCell,
-
-					   Xamarin.Forms.EntryCell _  => CellType.EntryCell_Forms,
-					   Xamarin.Forms.ViewCell _   => CellType.ViewCell_Forms,
-					   Xamarin.Forms.ImageCell _  => CellType.ImageCell_Forms,
-					   Xamarin.Forms.SwitchCell _ => CellType.SwitchCell_Forms,
-					   Xamarin.Forms.TextCell _   => CellType.TextCell_Forms,
-
-					   _ => CellType.Unknown,
-				   };
-		}
+    public static CellType ToCellType( this Cell cell )
+    {
+        return cell switch
+               {
+                   // SpacerCell _ => CellType.SpacerCell,
+                   // EditorCell _ => CellType.EditorCell,
+                   // IPCell _ => CellType.IPCell,
+                   TimePickerCell   => CellType.TimePickerCell,
+                   DatePickerCell   => CellType.DatePickerCell,
+                   NumberPickerCell => CellType.NumberPickerCell,
+                   TextPickerCell   => CellType.TextPickerCell,
+                   PickerCell       => CellType.PickerCell,
+                   LabelCell        => CellType.LabelCell,
+                   CheckboxCell     => CellType.CheckboxCell,
+                   RadioCell        => CellType.RadioCell,
+                   SwitchCell       => CellType.SwitchCell,
+                   ButtonCell       => CellType.ButtonCell,
+                   CustomCell       => CellType.CustomCell,
+                   CommandCell      => CellType.CommandCell,
+                   EntryCell        => CellType.EntryCell,
+                   XfSwitchCell     => CellType.EntryCellForms,
+                   XfViewCell       => CellType.ViewCellForms,
+                   XfImageCell      => CellType.ImageCellForms,
+                   XfEntryCell      => CellType.SwitchCellForms,
+                   XfTextCell       => CellType.TextCellForms,
+                   _                => CellType.Unknown,
+               };
+    }
 
 
-		internal static bool IsOneOf( this CellType cell, params CellType[] options ) => options.Any(item => item == cell);
+    internal static bool IsOneOf( this CellType cell, params CellType[] options ) => options.Any(item => item == cell);
 
-		internal static bool IsTitleOnlyCell( this Xamarin.Forms.Cell cell ) => cell.ToCellType().IsEqual(CellType.ButtonCell);
+    internal static bool IsTitleOnlyCell( this Cell cell ) => cell.ToCellType().IsEqual(CellType.ButtonCell);
 
-		internal static bool IsFormsCell( this Xamarin.Forms.Cell cell )
-		{
-			var type = cell.ToCellType();
+    internal static bool IsFormsCell( this Cell cell )
+    {
+        var type = cell.ToCellType();
 
-			return type.IsOneOf(CellType.EntryCell_Forms,
-								CellType.ImageCell_Forms,
-								CellType.ViewCell_Forms,
-								CellType.SwitchCell_Forms,
-								CellType.TextCell_Forms
-							   );
-		}
+        return type.IsOneOf(CellType.EntryCellForms,
+                            CellType.ImageCellForms,
+                            CellType.ViewCellForms,
+                            CellType.SwitchCellForms,
+                            CellType.TextCellForms
+                           );
+    }
 
-		internal static bool IsCommandCell( this Xamarin.Forms.Cell cell ) => cell.ToCellType().IsOneOf(CellType.CommandCell, CellType.CustomCell, CellType.ButtonCell);
+    internal static bool IsCommandCell( this Cell cell ) => cell.ToCellType().IsOneOf(CellType.CommandCell, CellType.CustomCell, CellType.ButtonCell);
 
-		internal static bool IsDescriptiveTitleCell( this Xamarin.Forms.Cell cell ) =>
-			cell.ToCellType()
-				.IsOneOf(CellType.CommandCell,
-						 CellType.CustomCell,
-						 CellType.SwitchCell,
-						 CellType.RadioCell,
-						 CellType.CheckboxCell
-						);
+    internal static bool IsDescriptiveTitleCell( this Cell cell ) =>
+        cell.ToCellType()
+            .IsOneOf(CellType.CommandCell,
+                     CellType.CustomCell,
+                     CellType.SwitchCell,
+                     CellType.RadioCell,
+                     CellType.CheckboxCell
+                    );
 
-		internal static bool IsAccessoryCell( this Xamarin.Forms.Cell cell ) =>
-			cell.ToCellType()
-				.IsOneOf(CellType.SwitchCell,
-						 CellType.RadioCell,
-						 CellType.CheckboxCell,
-						 CellType.CustomCell,
-						 CellType.CommandCell
-						);
+    internal static bool IsAccessoryCell( this Cell cell ) =>
+        cell.ToCellType()
+            .IsOneOf(CellType.SwitchCell,
+                     CellType.RadioCell,
+                     CellType.CheckboxCell,
+                     CellType.CustomCell,
+                     CellType.CommandCell
+                    );
 
-		internal static bool IsPickerCell( this Xamarin.Forms.Cell cell ) =>
-			cell.ToCellType()
-				.IsOneOf(CellType.PickerCell,
-						 CellType.TextPickerCell,
-						 CellType.NumberPickerCell,
-						 CellType.TimePickerCell,
-						 CellType.DatePickerCell
-						);
+    internal static bool IsPickerCell( this Cell cell ) =>
+        cell.ToCellType()
+            .IsOneOf(CellType.PickerCell,
+                     CellType.TextPickerCell,
+                     CellType.NumberPickerCell,
+                     CellType.TimePickerCell,
+                     CellType.DatePickerCell
+                    );
 
-		internal static bool IsValueCell( this Xamarin.Forms.Cell cell ) =>
-			cell.ToCellType()
-				.IsOneOf(CellType.PickerCell,
-						 CellType.TextPickerCell,
-						 CellType.NumberPickerCell,
-						 CellType.TimePickerCell,
-						 CellType.DatePickerCell,
-						 CellType.EntryCell,
-						 CellType.LabelCell
-						);
-	}
+    internal static bool IsValueCell( this Cell cell ) =>
+        cell.ToCellType()
+            .IsOneOf(CellType.PickerCell,
+                     CellType.TextPickerCell,
+                     CellType.NumberPickerCell,
+                     CellType.TimePickerCell,
+                     CellType.DatePickerCell,
+                     CellType.EntryCell,
+                     CellType.LabelCell
+                    );
 }

@@ -1,15 +1,14 @@
-﻿namespace Jakar.SettingsView.Shared.Layouts
-{
-	public class DescriptiveTitleCellLayout : BaseCellTitleLayout
-	{
-		public DescriptiveTitleCellLayout()
-		{
-			RowDefinitions = Definitions.Rows();
-			ColumnDefinitions = Definitions.Columns.Title();
+﻿namespace Jakar.SettingsView.Shared.Layouts;
 
-			Children.Add(Icon);
-			Children.Add(Title);
-			Children.Add(Description);
-		}
-	}
+public class DescriptiveTitleCellLayout : BaseCellTitleLayout
+{
+    public DescriptiveTitleCellLayout()
+    {
+        RowDefinitions    = Definitions.Rows();
+        ColumnDefinitions = Definitions.Columns.Title();
+
+        Children.Add(Icon);
+        Children.Add(Title);
+        Children.Add(Description);
+    }
 }

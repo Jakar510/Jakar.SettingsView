@@ -1,13 +1,10 @@
 ﻿// unset
 
-using Xamarin.Forms;
+namespace Jakar.SettingsView.Shared.Interfaces;
 
-namespace Jakar.SettingsView.Shared.Interfaces
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public interface IBorder
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public interface IBorder
-	{
-		public Thickness BorderThickness { get; set; }
-		public Color BorderColor { get; set; }
-	}
+    public Thickness BorderThickness { get; set; }
+    public Color     BorderColor     { get; set; }
 }

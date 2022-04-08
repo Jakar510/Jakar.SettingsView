@@ -1,16 +1,4 @@
-﻿using System;
-using CoreGraphics;
-using Foundation;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.Shared.Cells;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-[assembly: ExportRenderer(typeof(DatePickerCell), typeof(DatePickerCellRenderer))]
+﻿[assembly: ExportRenderer(typeof(DatePickerCell), typeof(DatePickerCellRenderer))]
 
 namespace Jakar.SettingsView.iOS.Cells
 {
@@ -58,11 +46,11 @@ namespace Jakar.SettingsView.iOS.Cells
 		public override void CellPropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
 		{
 			base.CellPropertyChanged(sender, e);
-			if ( e.PropertyName == DatePickerCell.DateProperty.PropertyName ||
-				 e.PropertyName == DatePickerCell.FormatProperty.PropertyName ) { UpdateDate(); }
-			else if ( e.PropertyName == DatePickerCell.TodayTextProperty.PropertyName ) { UpdateTodayText(); }
-			else if ( e.PropertyName == DatePickerCell.MaximumDateProperty.PropertyName ) { UpdateMaximumDate(); }
-			else if ( e.PropertyName == DatePickerCell.MinimumDateProperty.PropertyName ) { UpdateMinimumDate(); }
+			if ( e.PropertyName == DatePickerCell.dateProperty.PropertyName ||
+				 e.PropertyName == DatePickerCell.formatProperty.PropertyName ) { UpdateDate(); }
+			else if ( e.PropertyName == DatePickerCell.todayTextProperty.PropertyName ) { UpdateTodayText(); }
+			else if ( e.PropertyName == DatePickerCell.maximumDateProperty.PropertyName ) { UpdateMaximumDate(); }
+			else if ( e.PropertyName == DatePickerCell.minimumDateProperty.PropertyName ) { UpdateMinimumDate(); }
 		}
 
 		public override void RowSelected( UITableView tableView, NSIndexPath indexPath )

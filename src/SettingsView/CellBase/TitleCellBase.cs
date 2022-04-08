@@ -1,100 +1,93 @@
 ﻿// unset
 
-using Jakar.Api.Converters;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using Xamarin.Forms;
 
+namespace Jakar.SettingsView.Shared.CellBase;
 
-#nullable enable
-namespace Jakar.SettingsView.Shared.CellBase
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public abstract class TitleCellBase : CellBase
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public abstract class TitleCellBase : CellBase
-	{
-		public static readonly BindableProperty TitleProperty               = BindableProperty.Create(nameof(Title),               typeof(string), typeof(TitleCellBase), default(string));
-		public static readonly BindableProperty TitleColorProperty          = BindableProperty.Create(nameof(TitleColor),          typeof(Color), typeof(TitleCellBase), SvConstants.Cell.color);
-		public static readonly BindableProperty TitleFontSizeProperty       = BindableProperty.Create(nameof(TitleFontSize),       typeof(double?), typeof(TitleCellBase), SvConstants.Cell.font_Size);
-		public static readonly BindableProperty TitleFontFamilyProperty     = BindableProperty.Create(nameof(TitleFontFamily),     typeof(string), typeof(TitleCellBase), default(string));
-		public static readonly BindableProperty TitleFontAttributesProperty = BindableProperty.Create(nameof(TitleFontAttributes), typeof(FontAttributes?), typeof(TitleCellBase));
-		public static readonly BindableProperty TitleAlignmentProperty      = BindableProperty.Create(nameof(TitleAlignment),      typeof(TextAlignment?), typeof(TitleCellBase));
+    public static readonly BindableProperty titleProperty               = BindableProperty.Create(nameof(Title),               typeof(string), typeof(TitleCellBase));
+    public static readonly BindableProperty titleColorProperty          = BindableProperty.Create(nameof(TitleColor),          typeof(Color), typeof(TitleCellBase), SvConstants.Cell.color);
+    public static readonly BindableProperty titleFontSizeProperty       = BindableProperty.Create(nameof(TitleFontSize),       typeof(double?), typeof(TitleCellBase), SvConstants.Cell.font_Size);
+    public static readonly BindableProperty titleFontFamilyProperty     = BindableProperty.Create(nameof(TitleFontFamily),     typeof(string), typeof(TitleCellBase));
+    public static readonly BindableProperty titleFontAttributesProperty = BindableProperty.Create(nameof(TitleFontAttributes), typeof(FontAttributes?), typeof(TitleCellBase));
+    public static readonly BindableProperty titleAlignmentProperty      = BindableProperty.Create(nameof(TitleAlignment),      typeof(TextAlignment?), typeof(TitleCellBase));
 
-		public string? Title
-		{
-			get => (string?) GetValue(TitleProperty);
-			set => SetValue(TitleProperty, value);
-		}
+    public string? Title
+    {
+        get => (string?) GetValue(titleProperty);
+        set => SetValue(titleProperty, value);
+    }
 
-		[TypeConverter(typeof(ColorTypeConverter))]
-		public Color TitleColor
-		{
-			get => (Color) GetValue(TitleColorProperty);
-			set => SetValue(TitleColorProperty, value);
-		}
+    [TypeConverter(typeof(ColorTypeConverter))]
+    public Color TitleColor
+    {
+        get => (Color) GetValue(titleColorProperty);
+        set => SetValue(titleColorProperty, value);
+    }
 
-		[TypeConverter(typeof(NullableFontSizeConverter))]
-		public double? TitleFontSize
-		{
-			get => (double?) GetValue(TitleFontSizeProperty);
-			set => SetValue(TitleFontSizeProperty, value);
-		}
+    [TypeConverter(typeof(NullableFontSizeConverter))]
+    public double? TitleFontSize
+    {
+        get => (double?) GetValue(titleFontSizeProperty);
+        set => SetValue(titleFontSizeProperty, value);
+    }
 
-		public string? TitleFontFamily
-		{
-			get => (string?) GetValue(TitleFontFamilyProperty);
-			set => SetValue(TitleFontFamilyProperty, value);
-		}
+    public string? TitleFontFamily
+    {
+        get => (string?) GetValue(titleFontFamilyProperty);
+        set => SetValue(titleFontFamilyProperty, value);
+    }
 
-		[TypeConverter(typeof(FontAttributesConverter))]
-		public FontAttributes? TitleFontAttributes
-		{
-			get => (FontAttributes?) GetValue(TitleFontAttributesProperty);
-			set => SetValue(TitleFontAttributesProperty, value);
-		}
+    [TypeConverter(typeof(FontAttributesConverter))]
+    public FontAttributes? TitleFontAttributes
+    {
+        get => (FontAttributes?) GetValue(titleFontAttributesProperty);
+        set => SetValue(titleFontAttributesProperty, value);
+    }
 
-		[TypeConverter(typeof(NullableTextAlignmentConverter))]
-		public TextAlignment? TitleAlignment
-		{
-			get => (TextAlignment?) GetValue(TitleAlignmentProperty);
-			set => SetValue(TitleAlignmentProperty, value);
-		}
+    [TypeConverter(typeof(NullableTextAlignmentConverter))]
+    public TextAlignment? TitleAlignment
+    {
+        get => (TextAlignment?) GetValue(titleAlignmentProperty);
+        set => SetValue(titleAlignmentProperty, value);
+    }
 
 
-		// internal string? GetTitleFontFamily() => TitleFontFamily ?? Parent.CellTitleFontFamily;
-		// internal FontAttributes GetTitleFontAttributes() => TitleFontAttributes ?? Parent.CellTitleFontAttributes;
-		// internal TextAlignment GetTitleTextAlignment() => TitleAlignment ?? Parent.CellTitleAlignment;
-		// internal Color GetTitleColor() => TitleColor ?? Parent.CellTitleColor;
-		// internal double GetTitleFontSize() => TitleFontSize ?? Parent.CellTitleFontSize;
+    // internal string? GetTitleFontFamily() => TitleFontFamily ?? Parent.CellTitleFontFamily;
+    // internal FontAttributes GetTitleFontAttributes() => TitleFontAttributes ?? Parent.CellTitleFontAttributes;
+    // internal TextAlignment GetTitleTextAlignment() => TitleAlignment ?? Parent.CellTitleAlignment;
+    // internal Color GetTitleColor() => TitleColor ?? Parent.CellTitleColor;
+    // internal double GetTitleFontSize() => TitleFontSize ?? Parent.CellTitleFontSize;
 
 
-		private IUseConfiguration? _config;
+    private IUseConfiguration? _config;
 
-		protected internal IUseConfiguration TitleConfig
-		{
-			get
-			{
-				_config ??= new TitleConfiguration(this);
-				return _config;
-			}
-		}
+    protected internal IUseConfiguration TitleConfig
+    {
+        get
+        {
+            _config ??= new TitleConfiguration(this);
+            return _config;
+        }
+    }
 
 
 
-		public sealed class TitleConfiguration : IUseConfiguration
-		{
-			private readonly TitleCellBase _cell;
-			public TitleConfiguration( TitleCellBase cell ) => _cell = cell;
+    public sealed class TitleConfiguration : IUseConfiguration
+    {
+        private readonly TitleCellBase _cell;
+        public TitleConfiguration( TitleCellBase cell ) => _cell = cell;
 
-			public string?        FontFamily     => _cell.TitleFontFamily ?? _cell.Parent.CellTitleFontFamily;
-			public FontAttributes FontAttributes => _cell.TitleFontAttributes ?? _cell.Parent.CellTitleFontAttributes;
-			public TextAlignment  TextAlignment  => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
+        public string?        FontFamily     => _cell.TitleFontFamily ?? _cell.Parent.CellTitleFontFamily;
+        public FontAttributes FontAttributes => _cell.TitleFontAttributes ?? _cell.Parent.CellTitleFontAttributes;
+        public TextAlignment  TextAlignment  => _cell.TitleAlignment ?? _cell.Parent.CellTitleAlignment;
 
-			public Color Color =>
-				_cell.TitleColor == SvConstants.Cell.color
-					? _cell.Parent.CellTitleColor
-					: _cell.TitleColor;
+        public Color Color =>
+            _cell.TitleColor == SvConstants.Cell.color
+                ? _cell.Parent.CellTitleColor
+                : _cell.TitleColor;
 
-			public double FontSize => _cell.TitleFontSize ?? _cell.Parent.CellTitleFontSize;
-		}
-	}
+        public double FontSize => _cell.TitleFontSize ?? _cell.Parent.CellTitleFontSize;
+    }
 }

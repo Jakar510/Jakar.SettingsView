@@ -1,7 +1,6 @@
-﻿namespace Jakar.SettingsView.Shared.Layouts.Controls
+﻿namespace Jakar.SettingsView.Shared.Layouts.Controls;
+
+public class Title : BaseLabel
 {
-	public class Title : BaseLabel
-	{
-		public Title() : base(0, 1) { }
-	}
+    public Title() : base(0, 1) { }
 }

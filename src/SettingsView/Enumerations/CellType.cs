@@ -1,38 +1,37 @@
-﻿namespace Jakar.SettingsView.Shared.Enumerations
+﻿namespace Jakar.SettingsView.Shared.Enumerations;
+
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public enum CellType
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public enum CellType
-	{
-		Unknown,
+    Unknown,
 
-		// SettingsView
-		LabelCell,
-		ButtonCell,
-		CommandCell,
-		EntryCell,
-		CustomCell,
-		RadioCell,
-		CheckboxCell,
-		SwitchCell,
-		DatePickerCell,
-		NumberPickerCell,
-		PickerCell,
-		TextPickerCell,
-		TimePickerCell,
+    // SettingsView
+    LabelCell,
+    ButtonCell,
+    CommandCell,
+    EntryCell,
+    CustomCell,
+    RadioCell,
+    CheckboxCell,
+    SwitchCell,
+    DatePickerCell,
+    NumberPickerCell,
+    PickerCell,
+    TextPickerCell,
+    TimePickerCell,
 
-		// Xamarin.Forms
-		EntryCell_Forms,
-		ViewCell_Forms,
-		ImageCell_Forms,
-		SwitchCell_Forms,
-		TextCell_Forms,
+    // Xamarin.Forms
+    EntryCellForms,
+    ViewCellForms,
+    ImageCellForms,
+    SwitchCellForms,
+    TextCellForms,
 
 
-		SpacerCell, // not implemented yet
-		EditorCell, // not implemented yet
-		IPCell,     // not implemented yet
+    SpacerCell, // not implemented yet
+    EditorCell, // not implemented yet
+    IPCell,     // not implemented yet
 
-		// URLCell, // possible?
-		// ImageCell, // possible?
-	}
+    // URLCell, // possible?
+    // ImageCell, // possible?
 }

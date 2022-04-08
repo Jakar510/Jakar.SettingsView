@@ -1,13 +1,4 @@
-﻿using System.ComponentModel;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.Core
+﻿namespace Jakar.SettingsView.iOS.Controls.Core
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class HintView : BaseTextView<HintTextCellBase, BaseCellView>
@@ -31,16 +22,16 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			if ( !_IsAvailable ) return false;
 
-			if ( e.PropertyName == HintTextCellBase.HintProperty.PropertyName ) { return UpdateText(); }
+			if ( e.PropertyName == HintTextCellBase.hintProperty.PropertyName ) { return UpdateText(); }
 
-			if ( e.PropertyName == HintTextCellBase.HintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == HintTextCellBase.hintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == HintTextCellBase.HintFontFamilyProperty.PropertyName ||
-				 e.PropertyName == HintTextCellBase.HintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == HintTextCellBase.hintFontFamilyProperty.PropertyName ||
+				 e.PropertyName == HintTextCellBase.hintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
-			if ( e.PropertyName == HintTextCellBase.HintColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == HintTextCellBase.hintColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == HintTextCellBase.HintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == HintTextCellBase.hintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
 			return base.Update(sender, e);
 		}
@@ -49,14 +40,14 @@ namespace Jakar.SettingsView.iOS.Controls.Core
 		{
 			if ( !_IsAvailable ) return false;
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ) { return UpdateTextColor(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellHintTextColorProperty.PropertyName ) { return UpdateTextColor(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellHintAlignmentProperty.PropertyName ) { return UpdateTextAlignment(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellHintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellHintFontSizeProperty.PropertyName ) { return UpdateFontSize(); }
 
-			if ( e.PropertyName == Shared.sv.SettingsView.CellHintTextColorProperty.PropertyName ||
-				 e.PropertyName == Shared.sv.SettingsView.CellHintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
+			if ( e.PropertyName == Shared.sv.SettingsView.cellHintTextColorProperty.PropertyName ||
+				 e.PropertyName == Shared.sv.SettingsView.cellHintFontAttributesProperty.PropertyName ) { return UpdateFont(); }
 
 			return base.UpdateParent(sender, e);
 		}

@@ -1,163 +1,161 @@
-﻿using System;
-using System.ComponentModel;
-using Android.Content;
-using Android.Runtime;
-using Android.Text;
-using Android.Views;
-using Android.Views.InputMethods;
-using Android.Widget;
-using Jakar.SettingsView.Droid.BaseCell;
-using Jakar.SettingsView.Droid.Controls;
-using Jakar.SettingsView.Droid.Interfaces;
-using Java.Lang;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
-using AiEntryCell = Jakar.SettingsView.Shared.Cells.EntryCell;
-using EntryCellRenderer = Jakar.SettingsView.Droid.Cells.EntryCellRenderer;
+﻿using EntryCellRenderer = Jakar.SettingsView.Droid.Cells.EntryCellRenderer;
 
-[assembly: ExportRenderer(typeof(AiEntryCell), typeof(EntryCellRenderer))]
 
-#nullable enable
-namespace Jakar.SettingsView.Droid.Cells
+[assembly: ExportRenderer(typeof(EntryCell), typeof(EntryCellRenderer))]
+
+
+namespace Jakar.SettingsView.Droid.Cells;
+
+[Preserve(AllMembers = true)]
+public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
+
+
+
+[Preserve(AllMembers = true)]
+public class EntryCellView : BaseValueCell<AiEditText>, IEntryCellRenderer
 {
-	[Preserve(AllMembers = true)] public class EntryCellRenderer : CellBaseRenderer<EntryCellView> { }
+    protected EntryCell _EntryCell => Cell as EntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
 
-	[Preserve(AllMembers = true)]
-	public class EntryCellView : BaseValueCell<AiEditText>, IEntryCellRenderer
-	{
-		protected AiEntryCell _EntryCell => Cell as AiEntryCell ?? throw new NullReferenceException(nameof(_EntryCell));
+    public EntryCellView( Context context, Cell cell ) : base(context, cell)
+    {
+        Click              += EntryCellView_Click;
+        _EntryCell.Focused += EntryCell_Focused;
+        _Value.Init(_EntryCell, this);
+    }
 
-		public EntryCellView( Context context, Cell cell ) : base(context, cell)
-		{
-			Click += EntryCellView_Click;
-			_EntryCell.Focused += EntryCell_Focused;
-			_Value.Init(_EntryCell, this);
-		}
-		public EntryCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
-		{
-			_Value.Init(_EntryCell, this);
+    public EntryCellView( IntPtr javaReference, JniHandleOwnership transfer ) : base(javaReference, transfer)
+    {
+        _Value.Init(_EntryCell, this);
 
-			Click += EntryCellView_Click;
-			_EntryCell.Focused += EntryCell_Focused;
-		}
+        Click              += EntryCellView_Click;
+        _EntryCell.Focused += EntryCell_Focused;
+    }
 
-		protected void EntryCellView_Click( object sender, EventArgs e )
-		{
-			RequestFocus();
-			_Value.PerformSelectAction();
-			ShowKeyboard(_Value); // EntryCellView_Click
-		}
-		protected void EntryCell_Focused( object sender, EventArgs e )
-		{
-			RequestFocus();
-			ShowKeyboard(_Value);
-		}
+    protected void EntryCellView_Click( object sender, EventArgs e )
+    {
+        RequestFocus();
+        _Value.PerformSelectAction();
+        ShowKeyboard(_Value); // EntryCellView_Click
+    }
+
+    protected void EntryCell_Focused( object sender, EventArgs e )
+    {
+        RequestFocus();
+        ShowKeyboard(_Value);
+    }
 
 
-		void ITextWatcher.AfterTextChanged( IEditable? s ) { }
-		void ITextWatcher.BeforeTextChanged( ICharSequence? s,
-											 int start,
-											 int count,
-											 int after ) { }
-		void ITextWatcher.OnTextChanged( ICharSequence? s,
-										 int start,
-										 int before,
-										 int count )
-		{
-			if ( string.IsNullOrEmpty(_EntryCell.ValueText) &&
-				 s != null &&
-				 s.Length() == 0 ) { return; }
+    void ITextWatcher.AfterTextChanged( IEditable? s ) { }
 
-			_EntryCell.ValueText = s?.ToString();
-		}
-		void IOnFocusChangeListener.OnFocusChange( Android.Views.View? v, bool hasFocus )
-		{
-			if ( hasFocus )
-			{
-				if ( Background != null )
-					Background.Alpha = 100; // show underline when on focus.
-			}
-			else
-			{
-				if ( Background != null )
-					Background.Alpha = 0; // hide underline
+    void ITextWatcher.BeforeTextChanged( ICharSequence? s,
+                                         int            start,
+                                         int            count,
+                                         int            after
+    ) { }
 
-				_EntryCell.SendCompleted(); // consider as text input completed.
-			}
-		}
+    void ITextWatcher.OnTextChanged( ICharSequence? s,
+                                     int            start,
+                                     int            before,
+                                     int            count
+    )
+    {
+        if ( string.IsNullOrEmpty(_EntryCell.ValueText) &&
+             s != null &&
+             s.Length() == 0 ) { return; }
 
-		bool TextView.IOnEditorActionListener.OnEditorAction( TextView? v, ImeAction actionId, KeyEvent? e )
-		{
-			if ( v is null )
-				return true;
+        _EntryCell.ValueText = s?.ToString();
+    }
 
-			if ( actionId != ImeAction.Done &&
-				 ( actionId != ImeAction.ImeNull || ( e != null && e.KeyCode != Keycode.Enter ) ) )
-				return true;
+    void IOnFocusChangeListener.OnFocusChange( Android.Views.View? v, bool hasFocus )
+    {
+        if ( hasFocus )
+        {
+            if ( Background != null )
+                Background.Alpha = 100; // show underline when on focus.
+        }
+        else
+        {
+            if ( Background != null )
+                Background.Alpha = 0; // hide underline
 
-			HideKeyboard(v);
-			DoneEdit();
+            _EntryCell.SendCompleted(); // consider as text input completed.
+        }
+    }
 
-			return true;
-		}
-		public void DoneEdit()
-		{
-			_EntryCell.SendCompleted();
-			ClearFocus();
-		}
+    bool TextView.IOnEditorActionListener.OnEditorAction( TextView? v, ImeAction actionId, KeyEvent? e )
+    {
+        if ( v is null )
+            return true;
 
+        if ( actionId != ImeAction.Done &&
+             ( actionId != ImeAction.ImeNull || ( e != null && e.KeyCode != Keycode.Enter ) ) )
+            return true;
 
-		protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.CellPropertyChanged(sender, e);
+        HideKeyboard(v);
+        DoneEdit();
 
-			_Value.Update(sender, e);
-			_Hint.Update(sender, e);
-		}
-		protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
-		{
-			base.ParentPropertyChanged(sender, e);
+        return true;
+    }
 
-			_Value.UpdateParent(sender, e);
-			_Hint.UpdateParent(sender, e);
-		}
+    public void DoneEdit()
+    {
+        _EntryCell.SendCompleted();
+        ClearFocus();
+    }
 
 
-		protected override void EnableCell()
-		{
-			base.EnableCell();
-			_Value.Enable();
-			_Hint.Enable();
-		}
-		protected override void DisableCell()
-		{
-			base.DisableCell();
-			_Value.Disable();
-			_Hint.Disable();
-		}
+    protected internal override void CellPropertyChanged( object sender, PropertyChangedEventArgs e )
+    {
+        base.CellPropertyChanged(sender, e);
 
-		protected internal override void UpdateCell()
-		{
-			base.UpdateCell();
-			_Hint.Update();
-			_Value.Update();
-		}
+        _Value.Update(sender, e);
+        _Hint.Update(sender, e);
+    }
+
+    protected internal override void ParentPropertyChanged( object sender, PropertyChangedEventArgs e )
+    {
+        base.ParentPropertyChanged(sender, e);
+
+        _Value.UpdateParent(sender, e);
+        _Hint.UpdateParent(sender, e);
+    }
 
 
-		protected override void Dispose( bool disposing )
-		{
-			if ( disposing )
-			{
-				Click -= EntryCellView_Click;
-				_EntryCell.Focused -= EntryCell_Focused;
-				_Value.RemoveFromParent();
-				_Value.Dispose();
-				_Hint.Dispose();
-				_CellValueStack.Dispose();
-				OnFocusChangeListener = null;
-			}
+    protected override void EnableCell()
+    {
+        base.EnableCell();
+        _Value.Enable();
+        _Hint.Enable();
+    }
 
-			base.Dispose(disposing);
-		}
-	}
+    protected override void DisableCell()
+    {
+        base.DisableCell();
+        _Value.Disable();
+        _Hint.Disable();
+    }
+
+    protected internal override void UpdateCell()
+    {
+        base.UpdateCell();
+        _Hint.Update();
+        _Value.Update();
+    }
+
+
+    protected override void Dispose( bool disposing )
+    {
+        if ( disposing )
+        {
+            Click              -= EntryCellView_Click;
+            _EntryCell.Focused -= EntryCell_Focused;
+            _Value.RemoveFromParent();
+            _Value.Dispose();
+            _Hint.Dispose();
+            _CellValueStack.Dispose();
+            OnFocusChangeListener = null;
+        }
+
+        base.Dispose(disposing);
+    }
 }

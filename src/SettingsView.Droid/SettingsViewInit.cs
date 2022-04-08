@@ -1,23 +1,18 @@
-﻿using System;
+﻿namespace Jakar.SettingsView.Droid;
 
-namespace Jakar.SettingsView.Droid
+/// <summary>
+/// SettingsViewInit.
+/// </summary>
+[Preserve(AllMembers = true)]
+public static class SettingsViewInit
 {
-	/// <summary>
-	/// SettingsViewInit.
-	/// </summary>
-	[Android.Runtime.Preserve(AllMembers = true)]
-	public static class SettingsViewInit
-	{
-#pragma warning disable 8618
-		internal static Xamarin.Forms.Platform.Android.FormsAppCompatActivity Current { get; set; }
-#pragma warning restore 8618
+    private static FormsAppCompatActivity? _current;
 
-		/// <summary>
-		/// Init this instance.
-		/// </summary>
-		public static void Init( Xamarin.Forms.Platform.Android.FormsAppCompatActivity activity )
-		{
-			Current = activity ?? throw new NullReferenceException(nameof(activity));
-		}
-	}
+    internal static FormsAppCompatActivity Current => _current ?? throw new InvalidOperationException($"Must call {nameof(SettingsViewInit)}.{nameof(Init)}");
+
+
+    /// <summary>
+    /// Init this instance.
+    /// </summary>
+    public static void Init( FormsAppCompatActivity activity ) { _current = activity ?? throw new NullReferenceException(nameof(activity)); }
 }

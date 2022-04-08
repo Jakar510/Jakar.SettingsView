@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UIKit;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Cells.Sources
+﻿namespace Jakar.SettingsView.iOS.Cells.Sources
 {
 	[Foundation.Preserve(AllMembers = true)]
 	internal class NumberPickerSource : UIPickerViewModel

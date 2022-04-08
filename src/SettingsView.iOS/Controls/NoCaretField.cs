@@ -1,8 +1,4 @@
-﻿using CoreGraphics;
-using UIKit;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls
+﻿namespace Jakar.SettingsView.iOS.Controls
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class NoCaretField : UITextField

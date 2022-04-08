@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Foundation;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.Shared.Cells;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Cells.Sources
+﻿namespace Jakar.SettingsView.iOS.Cells.Sources
 {
 	[Preserve(AllMembers = true)]
 	internal class PickerTableViewController : UITableViewController

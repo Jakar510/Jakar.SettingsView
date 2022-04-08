@@ -1,7 +1,6 @@
-﻿namespace Jakar.SettingsView.Shared.Layouts.Controls
+﻿namespace Jakar.SettingsView.Shared.Layouts.Controls;
+
+public class Hint : BaseLabel
 {
-	public class Hint : BaseLabel
-	{
-		public Hint() : base(0, 2) { }
-	}
+    public Hint() : base(0, 2) { }
 }

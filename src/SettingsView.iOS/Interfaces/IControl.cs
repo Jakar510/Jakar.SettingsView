@@ -1,9 +1,5 @@
 ﻿// unset
 
-using Foundation;
-using Jakar.SettingsView.iOS.Controls;
-using UIKit;
-
 namespace Jakar.SettingsView.iOS.Interfaces
 {
 	[Preserve(AllMembers = true)]

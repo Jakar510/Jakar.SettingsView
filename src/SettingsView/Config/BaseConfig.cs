@@ -1,15 +1,10 @@
 ﻿// unset
 
-using System.ComponentModel;
-using Xamarin.Forms;
+namespace Jakar.SettingsView.Shared.Config;
 
-#nullable enable
-namespace Jakar.SettingsView.Shared.Config
+[Xamarin.Forms.Internals.Preserve(true, false)]
+public class BaseConfig : BindableObject
 {
-	[Xamarin.Forms.Internals.Preserve(true, false)]
-	public class BaseConfig : BindableObject
-	{
-		protected void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnPropertyChanged(e.PropertyName); }
+    protected void ParentOnPropertyChanged( object sender, PropertyChangedEventArgs e ) { base.OnPropertyChanged(e.PropertyName); }
 
-	}
 }

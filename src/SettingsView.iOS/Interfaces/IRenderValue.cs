@@ -1,10 +1,5 @@
 ﻿// unset
 
-using System;
-using System.ComponentModel;
-using Jakar.SettingsView.iOS.BaseCell;
-using UIKit;
-
 namespace Jakar.SettingsView.iOS.Interfaces
 {
 	public interface IRenderValue : IInitializeControl, IDisposable 

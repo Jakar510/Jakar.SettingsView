@@ -1,14 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.Shared.Cells;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Cells
+﻿namespace Jakar.SettingsView.iOS.Cells
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class CustomCellContent : UIView

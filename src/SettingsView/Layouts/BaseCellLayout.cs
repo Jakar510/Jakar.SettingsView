@@ -1,15 +1,10 @@
-﻿using Xamarin.Forms;
+﻿namespace Jakar.SettingsView.Shared.Layouts;
 
-
-#nullable enable
-namespace Jakar.SettingsView.Shared.Layouts
+public abstract class BaseCellLayout : Grid
 {
-	public abstract class BaseCellLayout : Grid
-	{
-		protected BaseCellLayout() : base()
-		{
-			HorizontalOptions = LayoutOptions.FillAndExpand;
-			VerticalOptions   = LayoutOptions.FillAndExpand;
-		}
-	}
+    protected BaseCellLayout() : base()
+    {
+        HorizontalOptions = LayoutOptions.FillAndExpand;
+        VerticalOptions   = LayoutOptions.FillAndExpand;
+    }
 }

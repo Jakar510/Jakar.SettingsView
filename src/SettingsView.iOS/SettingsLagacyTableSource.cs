@@ -1,11 +1,4 @@
-﻿using System;
-using Foundation;
-using Jakar.SettingsView.Shared.sv;
-using UIKit;
-using Xamarin.Forms;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS
+﻿namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]
 	public class SettingsLegacyTableSource : SettingsTableSource

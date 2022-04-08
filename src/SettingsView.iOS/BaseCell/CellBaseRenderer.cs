@@ -1,23 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using Jakar.Api.Extensions;
-using Jakar.SettingsView.iOS.Cells;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.sv;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.BaseCell
+﻿namespace Jakar.SettingsView.iOS.BaseCell
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public class CellBaseRenderer<TNativeCell> : CellRenderer where TNativeCell : BaseCellView
 	{
 		public override UITableViewCell GetCell( Cell item, UITableViewCell reusableCell, UITableView table )
 		{
-			if ( reusableCell is not TNativeCell nativeCell ) { nativeCell = InstanceCreator.Create<TNativeCell>(item); }
+			if ( reusableCell is not TNativeCell nativeCell ) { nativeCell = InstanceCreator<TNativeCell>.Create(item); }
 
 			ClearPropertyChanged(nativeCell);
 

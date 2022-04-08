@@ -1,22 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using CoreGraphics;
-using Foundation;
-using Jakar.Api.iOS.Extensions;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Controls.HeaderFooter;
+﻿using ObjCRuntime;
 
-using Jakar.SettingsView.Shared;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using Jakar.SettingsView.Shared.sv;
-using ObjCRuntime;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
 
-#nullable enable
 namespace Jakar.SettingsView.iOS
 {
 	[Preserve(AllMembers = true)]

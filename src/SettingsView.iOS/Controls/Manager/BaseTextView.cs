@@ -1,21 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using CoreGraphics;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.Controls.Manager
+﻿namespace Jakar.SettingsView.iOS.Controls.Manager
 {
 	[Foundation.Preserve(AllMembers = true)]
 	public abstract class BaseTextView<TCell, TCellRenderer> : BaseTextViewManager<UITextView, TCell>, IRenderValue, IUpdateCell<TCell>, IDefaultColors<UIColor?>, IInitializeControl, IDisposable

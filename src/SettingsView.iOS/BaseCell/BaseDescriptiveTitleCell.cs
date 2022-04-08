@@ -1,20 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.Controls;
-using Jakar.SettingsView.iOS.Controls.Core;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-using Xamarin.Forms;
-
-
-#nullable enable
-namespace Jakar.SettingsView.iOS.BaseCell
+﻿namespace Jakar.SettingsView.iOS.BaseCell
 {
 	public abstract class BaseDescriptiveTitleCell<TCell> : BaseCellView<TCell> where TCell : DescriptionCellBase
 	{

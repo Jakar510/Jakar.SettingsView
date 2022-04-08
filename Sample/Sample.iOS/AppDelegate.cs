@@ -1,5 +1,5 @@
 ﻿using Foundation;
-using Jakar.Api.iOS;
+using Jakar.Extensions.Xamarin.Forms.iOS;
 using Jakar.SettingsView.iOS;
 using Jakar.SettingsView.Sample.Shared;
 using Prism;

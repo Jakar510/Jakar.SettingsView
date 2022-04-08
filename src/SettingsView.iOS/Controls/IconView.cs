@@ -1,26 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
-using CoreFoundation;
-using Foundation;
-using Jakar.Api.Extensions;
-using Jakar.Api.iOS.Enumerations;
-using Jakar.Api.iOS.Extensions;
-using Jakar.Api.iOS.Extensions.Layout;
-using Jakar.SettingsView.iOS.BaseCell;
-using Jakar.SettingsView.iOS.Controls.Manager;
-using Jakar.SettingsView.iOS.Interfaces;
-using Jakar.SettingsView.Shared.CellBase;
-using Jakar.SettingsView.Shared.Config;
-using Jakar.SettingsView.Shared.Interfaces;
-using UIKit;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
-using Size = Xamarin.Forms.Size;
+﻿using CoreFoundation;
 
 
-#nullable enable
 namespace Jakar.SettingsView.iOS.Controls
 {
 	[Preserve(AllMembers = true)]
@@ -93,11 +73,11 @@ namespace Jakar.SettingsView.iOS.Controls
 			if ( size == default ) { size = SvConstants.Sv.Icon.size; }
 
 			WidthConstraint          = Control.WidthAnchor.ConstraintEqualTo(size.Width.ToNFloat());
-			WidthConstraint.Priority = LayoutPriority.High.ToFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
+			WidthConstraint.Priority = LayoutPriority.High.AsFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
 			WidthConstraint.Active   = true;
 
 			HeightConstraint          = Control.HeightAnchor.ConstraintEqualTo(size.Height.ToNFloat());
-			HeightConstraint.Priority = LayoutPriority.Highest.ToFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
+			HeightConstraint.Priority = LayoutPriority.Highest.AsFloat(); // fix warning-log:Unable to simultaneously satisfy constraints.
 			HeightConstraint.Active   = true;
 
 			Control.UpdateConstraints();
@@ -109,7 +89,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public bool UpdateIconRadius()
 		{
-			Control.Layer.CornerRadius = _Cell.IconConfig.IconRadius.ToFloat();
+			Control.Layer.CornerRadius = _Cell.IconConfig.IconRadius.AsFloat();
 			Renderer.SetNeedsLayout();
 			return true;
 		}
@@ -280,7 +260,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public override bool Update( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsOneOf(IconCellBase.IconSizeProperty, IconCellBase.IconRadiusProperty, IconCellBase.IconSourceProperty) )
+			if ( e.IsOneOf(IconCellBase.iconSizeProperty, IconCellBase.iconRadiusProperty, IconCellBase.iconSourceProperty) )
 			{
 				Update();
 				return true;
@@ -298,7 +278,7 @@ namespace Jakar.SettingsView.iOS.Controls
 
 		public override bool UpdateParent( object sender, PropertyChangedEventArgs e )
 		{
-			if ( e.IsOneOf(Shared.sv.SettingsView.CellIconRadiusProperty, Shared.sv.SettingsView.CellIconSizeProperty) )
+			if ( e.IsOneOf(Shared.sv.SettingsView.cellIconRadiusProperty, Shared.sv.SettingsView.cellIconSizeProperty) )
 			{
 				Update();
 				return true;
