@@ -12,24 +12,23 @@ public abstract class ValueTextCellBase : ValueCellBase
                                                                                         typeof(ValueTextCellBase),
                                                                                         default(string?),
                                                                                         BindingMode.TwoWay,
-                                                                                        propertyChanging: ValueTextPropertyChanging
-                                                                                       );
+                                                                                        propertyChanging: ValueTextPropertyChanging);
 
     public string? ValueText
     {
-        get => (string?) GetValue(valueTextProperty);
+        get => (string?)GetValue(valueTextProperty);
         set => SetValue(valueTextProperty, value);
     }
 
     public int MaxLength
     {
-        get => (int) GetValue(maxLengthProperty);
+        get => (int)GetValue(maxLengthProperty);
         set => SetValue(maxLengthProperty, value);
     }
 
-    private static void ValueTextPropertyChanging( BindableObject bindable, object oldValue, object newValue )
+    private static void ValueTextPropertyChanging( BindableObject bindable, object? oldValue, object? newValue )
     {
-        var maxlength = (int) bindable.GetValue(maxLengthProperty);
+        var maxlength = (int)bindable.GetValue(maxLengthProperty);
 
         if ( maxlength < 0 ) return;
 
@@ -40,7 +39,7 @@ public abstract class ValueTextCellBase : ValueCellBase
 
         if ( oldString.Length > maxlength )
         {
-            string trimStr = oldString.Substring(0, maxlength);
+            string trimStr = oldString[..maxlength];
             bindable.SetValue(valueTextProperty, trimStr);
         }
         else { bindable.SetValue(valueTextProperty, oldString); }
