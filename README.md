@@ -1,3 +1,7 @@
+# Use [AiForms.SettingsView](https://github.com/muak/AiForms.SettingsView) instead
+
+
+
 # SettingsView for Xamarin.Forms
 
 This is a flexible TableView specialized in settings for Android / iOS.
